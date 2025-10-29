@@ -1,0 +1,1751 @@
+</svg>
+                </a>
+                <a href="mailto:your@email.com" class="email" title="Email">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a data-section="home">Home</a></li>
+            <li><a data-section="projects">Projects</a></li>
+            <li><a data-section="about">About</a></li>
+            <li><a data-section="contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-headshot">
+                        <div class="headshot-placeholder">
+                            <span>Headshot</span>
+                        </div>
+                    </div>
+                    <div class="hero-text">
+                        <h1>YOUR NAME</h1>
+                        <p class="subtitle">Creative Developer & Designer</p>
+                        <p class="description">
+                            Building digital experiences with clean code and minimalist design. 
+                            Specializing in web development, user interfaces, and creative solutions.
+                        </p>
+                        <button class="cta-button" onclick="showSection('projects')">VIEW PROJECTS</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Projects</h2>
+                    <p>A collection of my recent work and ongoing projects</p>
+                </div>
+                
+                <button class="filter-toggle-btn" id="filter-toggle">
+                    ☰ Filters & Sort
+                </button>
+                
+                <div class="projects-container">
+                    <!-- Filter Sidebar -->
+                    <aside class="filter-sidebar" id="filter-sidebar">
+                        <!-- Search -->
+                        <div class="filter-section">
+                            <h3>Search</h3>
+                            <input type="text" class="search-box" id="project-search" placeholder="Search projects...">
+                        </div>
+                        
+                        <!-- View Toggle -->
+                        <div class="filter-section">
+                            <h3>View</h3>
+                            <div class="view-toggle">
+                                <button class="view-btn active" data-view="grid">Grid</button>
+                                <button class="view-btn" data-view="list">List</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Filters -->
+                        <div class="filter-section">
+                            <h3>Status</h3>
+                            <div class="filter-options">
+                                <button class="filter-option active" data-filter-type="status" data-filter-value="all">All Status</button>
+                                <button class="filter-option" data-filter-type="status" data-filter-value="completed">Completed</button>
+                                <button class="filter-option" data-filter-type="status" data-filter-value="in-progress">In Progress</button>
+                                <button class="filter-option" data-filter-type="status" data-filter-value="planned">Planned</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Technology Filters -->
+                        <div class="filter-section">
+                            <h3>Technology</h3>
+                            <div class="filter-options">
+                                <button class="filter-option active" data-filter-type="tech" data-filter-value="all">All Tech</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="React">React</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="Node.js">Node.js</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="Python">Python</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="JavaScript">JavaScript</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="TypeScript">TypeScript</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="MongoDB">MongoDB</button>
+                                <button class="filter-option" data-filter-type="tech" data-filter-value="AWS">AWS</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Sort Options -->
+                        <div class="filter-section">
+                            <h3>Sort By</h3>
+                            <div class="filter-options">
+                                <button class="filter-option active" data-sort="default">Default</button>
+                                <button class="filter-option" data-sort="name-asc">Name (A-Z)</button>
+                                <button class="filter-option" data-sort="name-desc">Name (Z-A)</button>
+                                <button class="filter-option" data-sort="status">Status</button>
+                            </div>
+                        </div>
+                        
+                        <button class="clear-filters-btn" id="clear-filters">Clear All Filters</button>
+                    </aside>
+                    
+                    <!-- Projects Grid/List -->
+                    <div class="projects-content">
+                        <div class="projects-counter" id="projects-counter">
+                            Showing <span id="visible-count">6</span> of <span id="total-count">6</span> projects
+                        </div>
+                        
+                        <div class="projects-grid" id="projects-grid">
+                            <div class="project-card" data-status="completed" data-tech="React,Node.js,MongoDB,Stripe" data-name="E-Commerce Platform" onclick="showSection('project-detail')">
+                                <div class="project-image">
+                                    <span>E-Commerce Preview</span>
+                                </div>
+                                <div class="project-details">
+                                    <span class="status-badge completed">Completed</span>
+                                    <h3>E-Commerce Platform</h3>
+                                    <p>A full-stack e-commerce solution with modern UI, payment integration, and admin dashboard.</p>
+                                    <div class="project-tags">
+                                        <span class="tag">React</span>
+                                        <span class="tag">Node.js</span>
+                                        <span class="tag">MongoDB</span>
+                                        <span class="tag">Stripe</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card" data-status="in-progress" data-tech="Python,TensorFlow,D3.js" data-name="AI Dashboard">
+                                <div class="project-image">
+                                    <span>AI Dashboard Preview</span>
+                                </div>
+                                <div class="project-details">
+                                    <span class="status-badge in-progress">In Progress</span>
+                                    <h3>AI Dashboard</h3>
+                                    <p>Real-time analytics dashboard with AI-powered insights and predictive modeling capabilities.</p>
+                                    <div class="project-tags">
+                                        <span class="tag">Python</span>
+                                        <span class="tag">TensorFlow</span>
+                                        <span class="tag">D3.js</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card" data-status="completed" data-tech="React Native,TypeScript,AWS" data-name="Mobile Banking App">
+                                <div class="project-image">
+                                    <span>Banking App Preview</span>
+                                </div>
+                                <div class="project-details">
+                                    <span class="status-badge completed">Completed</span>
+                                    <h3>Mobile Banking App</h3>
+                                    <p>Secure mobile banking application with biometric authentication and real-time transactions.</p>
+                                    <div class="project-tags">
+                                        <span class="tag">React Native</span>
+                                        <span class="tag">TypeScript</span>
+                                        <span class="tag">AWS</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card" data-status="planned" data-tech="Vue.js,GraphQL,PostgreSQL" data-name="Social Media Platform">
+                                <div class="project-image">
+                                    <span>Social Platform Preview</span>
+                                </div>
+                                <div class="project-details">
+                                    <span class="status-badge planned">Planned</span>
+                                    <h3>Social Media Platform</h3>
+                                    <p>Next-generation social platform focused on privacy and meaningful connections.</p>
+                                    <div class="project-tags">
+                                        <span class="tag">Vue.js</span>
+                                        <span class="tag">GraphQL</span>
+                                        <span class="tag">PostgreSQL</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card" data-status="completed" data-tech="HTML/CSS,JavaScript,GSAP" data-name="Portfolio Website">
+                                <div class="project-image">
+                                    <span>Portfolio Preview</span>
+                                </div>
+                                <div class="project-details">
+                                    <span class="status-badge completed">Completed</span>
+                                    <h3>Portfolio Website</h3>
+                                    <p>Minimalist portfolio showcasing creative work with smooth animations and interactions.</p>
+                                    <div class="project-tags">
+                                        <span class="tag">HTML/CSS</span>
+                                        <span class="tag">JavaScript</span>
+                                        <span class="tag">GSAP</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card" data-status="in-progress" data-tech="C++,OpenGL,Lua" data-name="Game Engine">
+                                <div class="project-image">
+                                    <span>Game Engine Preview</span>
+                                </div>
+                                <div class="project-details">
+                                    <span class="status-badge in-progress">In Progress</span>
+                                    <h3>Game Engine</h3>
+                                    <p>Lightweight 2D game engine built from scratch with physics and particle systems.</p>
+                                    <div class="project-tags">
+                                        <span class="tag">C++</span>
+                                        <span class="tag">OpenGL</span>
+                                        <span class="tag">Lua</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Detail Section -->
+        <section id="project-detail" class="section">
+            <div class="container">
+                <a href="#" class="back-button" onclick="showSection('projects'); return false;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                    Back to Projects
+                </a>
+
+                <div class="project-hero">
+                    <span class="status-badge completed">Completed</span>
+                    <h1>E-Commerce Platform</h1>
+                    <div class="project-meta">
+                        <span>Client: Tech Startup</span>
+                        <span>Duration: 3 months</span>
+                        <span>Year: 2024</span>
+                    </div>
+                </div>
+
+                <div class="project-content">
+                    <div class="project-description">
+                        <h2>Overview</h2>
+                        <p>
+                            This comprehensive e-commerce platform was designed to handle high-volume transactions
+                            while maintaining a seamless user experience. Built with scalability in mind, the platform
+                            features a modern, responsive design that works flawlessly across all devices.
+                        </p>
+                        <p>
+                            The project involved creating a custom CMS for product management, implementing secure
+                            payment processing with Stripe, and developing an intuitive admin dashboard for
+                            real-time analytics and inventory management.
+                        </p>
+
+                        <h2>Technical Approach</h2>
+                        <p>
+                            The architecture follows a microservices pattern with separate services for authentication,
+                            product catalog, orders, and payments. This ensures high availability and allows for
+                            independent scaling of different components.
+                        </p>
+                        <p>
+                            Frontend performance was optimized using lazy loading, code splitting, and aggressive
+                            caching strategies, resulting in sub-second load times even on slower connections.
+                        </p>
+
+                        <h2>Key Features</h2>
+                        <p>
+                            • Real-time inventory tracking with automatic stock updates<br>
+                            • Advanced search with filters and AI-powered recommendations<br>
+                            • Multi-currency support with automatic exchange rate updates<br>
+                            • Comprehensive analytics dashboard with sales forecasting<br>
+                            • Mobile-first responsive design with PWA capabilities
+                        </p>
+                    </div>
+
+                    <div class="project-sidebar">
+                        <div class="sidebar-section">
+                            <h3>Technologies</h3>
+                            <div class="project-tags" style="margin-top: 1rem;">
+                                <span class="tag">React</span>
+                                <span class="tag">Node.js</span>
+                                <span class="tag">MongoDB</span>
+                                <span class="tag">Redis</span>
+                                <span class="tag">Docker</span>
+                                <span class="tag">AWS</span>
+                                <span class="tag">Stripe API</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h3>Role</h3>
+                            <p style="color: var(--light-gray);">Full-Stack Developer & UI Designer</p>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h3>Links</h3>
+                            <a href="#" class="cta-button" style="display: block; text-align: center; margin-bottom: 1rem;">LIVE DEMO</a>
+                            <a href="#" class="cta-button" style="display: block; text-align: center;">VIEW CODE</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-gallery">
+                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">Gallery</h2>
+                    <div class="gallery-grid">
+                        <div class="gallery-item">
+                            <span>Homepage Screenshot</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Product Catalog</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Shopping Cart</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Admin Dashboard</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Mobile View</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Analytics Panel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>About Me</h2>
+                    <p>Passionate developer crafting digital experiences</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <p style="color: var(--light-gray); line-height: 1.8; margin-bottom: 2rem;">
+                            I'm a creative developer passionate about building elegant solutions to complex problems. 
+                            With a background in both design and engineering, I bring a unique perspective to every project.
+                        </p>
+                        <p style="color: var(--light-gray); line-height: 1.8; margin-bottom: 2rem;">
+                            My expertise spans full-stack development, UI/UX design, and system architecture. 
+                            I believe in clean code, minimalist design, and creating experiences that delight users.
+                        </p>
+                        <p style="color: var(--light-gray); line-height: 1.8;">
+                            When I'm not coding, you can find me exploring new technologies, contributing to open source, 
+                            or sharing knowledge through technical writing and mentorship.
+                        </p>
+                    </div>
+                    
+                    <div class="about-skills">
+                        <h3 style="margin-bottom: 1rem;">Technical Skills</h3>
+                        <div class="skills-list">
+                            <div class="skill-item">JavaScript/TypeScript</div>
+                            <div class="skill-item">React & Vue.js</div>
+                            <div class="skill-item">Node.js & Python</div>
+                            <div class="skill-item">MongoDB & PostgreSQL</div>
+                            <div class="skill-item">AWS & Docker</div>
+                            <div class="skill-item">UI/UX Design</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Get In Touch</h2>
+                    <p>Let's discuss your next project</p>
+                </div>
+                
+                <div class="contact-form">
+                    <p style="color: var(--light-gray); line-height: 1.8; margin-bottom: 2rem;">
+                        I'm always interested in hearing about new projects and opportunities. 
+                        Whether you have a question or just want to say hello, feel free to reach out.
+                    </p>
+                    
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    
+                    <button class="cta-button" onclick="handleSubmit(event)">SEND MESSAGE</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Project filtering and sorting state
+        let currentFilters = {
+            status: 'all',
+            tech: 'all',
+            search: ''
+        };
+        let currentSort = 'default';
+        let currentView = 'grid';
+
+        // Section Navigation
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                setTimeout(() => {
+                    targetSection.classList.add('active');
+                }, 50);
+            }
+
+            if (sectionId !== 'project-detail') {
+                window.location.hash = sectionId;
+            }
+
+            updateNavState(sectionId);
+            closeMobileMenu();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Update URL params if on projects page
+            if (sectionId === 'projects') {
+                updateURLParams();
+            }
+        }
+
+        function updateNavState(sectionId) {
+            const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a');
+            navLinks.forEach(link => {
+                if (link.dataset.section === sectionId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileMenuBtn.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileMenuBtn.classList.remove('active');
+            mobileNav.classList.remove('active');
+        }
+
+        // Filter and Sort Functions
+        function filterProjects() {
+            const projectCards = document.querySelectorAll('.project-card');
+            let visibleCount = 0;
+            
+            projectCards.forEach(card => {
+                const status = card.dataset.status;
+                const tech = card.dataset.tech;
+                const name = card.dataset.name.toLowerCase();
+                
+                const statusMatch = currentFilters.status === 'all' || status === currentFilters.status;
+                const techMatch = currentFilters.tech === 'all' || 
+                                (tech && tech.toLowerCase().includes(currentFilters.tech.toLowerCase()));
+                const searchMatch = currentFilters.search === '' || 
+                                   name.includes(currentFilters.search.toLowerCase()) ||
+                                   card.textContent.toLowerCase().includes(currentFilters.search.toLowerCase());
+                
+                if (statusMatch && techMatch && searchMatch) {
+                    card.classList.remove('hidden', 'fade-out');
+                    visibleCount++;
+                } else {
+                    card.classList.add('fade-out');
+                    setTimeout(() => {
+                        card.classList.add('hidden');
+                    }, 300);
+                }
+            });
+            
+            updateProjectCounter(visibleCount, projectCards.length);
+        }
+
+        function updateProjectCounter(visible, total) {
+            const visibleCountEl = document.getElementById('visible-count');
+            const totalCountEl = document.getElementById('total-count');
+            
+            if (visibleCountEl && totalCountEl) {
+                visibleCountEl.textContent = visible;
+                totalCountEl.textContent = total;
+            }
+        }
+
+        function sortProjects(sortBy) {
+            const grid = document.getElementById('projects-grid');
+            const cards = Array.from(grid.children);
+            
+            cards.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name-asc':
+                        return a.dataset.name.localeCompare(b.dataset.name);
+                    case 'name-desc':
+                        return b.dataset.name.localeCompare(a.dataset.name);
+                    case 'status':
+                        const statusOrder = { 'completed': 1, 'in-progress': 2, 'planned': 3 };
+                        return statusOrder[a.dataset.status] - statusOrder[b.dataset.status];
+                    default:
+                        return 0;
+                }
+            });
+            
+            cards.forEach(card => grid.appendChild(card));
+        }
+
+        function clearAllFilters() {
+            currentFilters = {
+                status: 'all',
+                tech: 'all',
+                search: ''
+            };
+            currentSort = 'default';
+            
+            document.getElementById('project-search').value = '';
+            
+            document.querySelectorAll('.filter-option').forEach(btn => {
+                if (btn.dataset.filterValue === 'all' || btn.dataset.sort === 'default') {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            filterProjects();
+            sortProjects('default');
+            updateURLParams();
+        }
+
+        function updateURLParams() {
+            const params = new URLSearchParams();
+            
+            if (currentFilters.status !== 'all') params.set('status', currentFilters.status);
+            if (currentFilters.tech !== 'all') params.set('tech', currentFilters.tech);
+            if (currentFilters.search) params.set('search', currentFilters.search);
+            if (currentSort !== 'default') params.set('sort', currentSort);
+            if (currentView !== 'grid') params.set('view', currentView);
+            
+            const newURL = window.location.pathname + '#projects' + 
+                          (params.toString() ? '?' + params.toString() : '');
+            window.history.replaceState({}, '', newURL);
+        }
+
+        function loadFromURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            
+            currentFilters.status = params.get('status') || 'all';
+            currentFilters.tech = params.get('tech') || 'all';
+            currentFilters.search = params.get('search') || '';
+            currentSort = params.get('sort') || 'default';
+            currentView = params.get('view') || 'grid';
+            
+            // Apply loaded filters
+            if (currentFilters.search) {
+                document.getElementById('project-search').value = currentFilters.search;
+            }
+            
+            // Update UI to reflect loaded state
+            document.querySelectorAll('.filter-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filterValue === currentFilters.status ||
+                    btn.dataset.filterValue === currentFilters.tech ||
+                    btn.dataset.sort === currentSort) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === currentView) {
+                    btn.classList.add('active');
+                    document.getElementById('projects-grid').classList.toggle('list-view', currentView === 'list');
+                }
+            });
+            
+            filterProjects();
+            if (currentSort !== 'default') {
+                sortProjects(currentSort);
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            alert(`Thank you for your message, ${name}! I'll get back to you at ${email} soon.`);
+            
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('message').value = '';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 500);
+
+            // Navigation
+            const navLinks = document.querySelectorAll('[data-section]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.dataset.section;
+                    showSection(sectionId);
+                });
+            });
+
+            document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+            // Filter toggle for mobile
+            const filterToggle = document.getElementById('filter-toggle');
+            const filterSidebar = document.getElementById('filter-sidebar');
+            
+            if (filterToggle) {
+                filterToggle.addEventListener('click', function() {
+                    filterSidebar.classList.toggle('active');
+                });
+            }
+
+            // Search functionality
+            const searchBox = document.getElementById('project-search');
+            if (searchBox) {
+                searchBox.addEventListener('input', function() {
+                    currentFilters.search = this.value;
+                    filterProjects();
+                    updateURLParams();
+                });
+            });
+
+            // Sort buttons
+            document.querySelectorAll('[data-sort]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-sort]').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    currentSort = this.dataset.sort;
+                    sortProjects(currentSort);
+                    updateURLParams();
+                });
+            });
+
+            // View toggle buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    currentView = this.dataset.view;
+                    document.getElementById('projects-grid').classList.toggle('list-view', currentView === 'list');
+                    updateURLParams();
+                });
+            });
+
+            // Clear filters button
+            const clearBtn = document.getElementById('clear-filters');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearAllFilters);
+            }
+
+            // Load filters from URL if on projects page
+            const hash = window.location.hash.substring(1);
+            if (hash === 'projects') {
+                loadFromURLParams();
+            }
+
+            // Handle URL hash on load
+            if (hash && document.getElementById(hash)) {
+                showSection(hash);
+            } else {
+                showSection('home');
+            }
+
+            // Handle browser back/forward buttons
+            window.addEventListener('hashchange', function() {
+                const hash = window.location.hash.substring(1);
+                if (hash && document.getElementById(hash)) {
+                    showSection(hash);
+                }
+            });
+
+            // Add intersection observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe project cards
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+
+            // Initialize project counter
+            const totalProjects = document.querySelectorAll('.project-card').length;
+            updateProjectCounter(totalProjects, totalProjects);
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+                const filterSidebar = document.getElementById('filter-sidebar');
+                if (filterSidebar && window.innerWidth <= 968) {
+                    filterSidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>URLParams();
+                });
+            }
+
+            // Filter buttons
+            document.querySelectorAll('.filter-option[data-filter-type]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filterType = this.dataset.filterType;
+                    const filterValue = this.dataset.filterValue;
+                    
+                    // Update active state
+                    document.querySelectorAll(`[data-filter-type="${filterType}"]`).forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Update filters
+                    currentFilters[filterType] = filterValue;
+                    filterProjects();
+                    update<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Your Name</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --dark-gray: #1a1a1a;
+            --gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+            --blue-accent: #0D28F2;
+            --red-accent: #E60F0F;
+            --blue-hover: #0a1fc7;
+            --red-hover: #b50b0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue-accent), var(--red-accent));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--white);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-btn span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+            background-color: var(--red-accent);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+            background-color: var(--blue-accent);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            width: auto;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-gray);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-2px);
+        }
+
+        .social-icons a.github:hover {
+            color: #ffffff;
+        }
+
+        .social-icons a.linkedin:hover {
+            color: var(--blue-accent);
+        }
+
+        .social-icons a.twitter:hover {
+            color: #1da1f2;
+        }
+
+        .social-icons a.email:hover {
+            color: var(--red-accent);
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+        }
+
+        .section {
+            min-height: calc(100vh - 80px);
+            padding: 4rem 2rem;
+            display: none;
+            opacity: 0;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        #home {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        #home.active {
+            display: flex;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-headshot {
+            flex-shrink: 0;
+        }
+
+        .headshot-placeholder {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dark-gray), var(--gray));
+            border: 3px solid var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .headshot-placeholder::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-accent), var(--red-accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .headshot-placeholder:hover::before {
+            opacity: 1;
+        }
+
+        .headshot-placeholder:hover {
+            transform: scale(1.05);
+        }
+
+        .hero-text {
+            text-align: left;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--white) 60%, var(--blue-accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.5rem;
+            color: var(--light-gray);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .hero-text .description {
+            margin-bottom: 3rem;
+            color: var(--light-gray);
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--white);
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue-accent), var(--red-accent));
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        .cta-button:hover {
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(13, 40, 242, 0.3);
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .section-header p {
+            color: var(--light-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Projects Section with Sidebar */
+        .projects-container {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+
+        /* Filter Sidebar */
+        .filter-sidebar {
+            width: 250px;
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gray);
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-toggle-btn {
+            display: none;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--blue-accent), var(--red-accent));
+            color: var(--white);
+            border: none;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-toggle-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-option {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--gray);
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-option::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue-accent), var(--red-accent));
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .filter-option:hover {
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .filter-option.active::before {
+            left: 0;
+        }
+
+        .filter-option.active {
+            color: var(--white);
+            border-color: transparent;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--black);
+            border: 1px solid var(--gray);
+            color: var(--white);
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--blue-accent);
+        }
+
+        .clear-filters-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 2px solid var(--red-accent);
+            color: var(--red-accent);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .clear-filters-btn:hover {
+            background: var(--red-accent);
+            color: var(--white);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-btn {
+            flex: 1;
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--gray);
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: var(--blue-accent);
+            color: var(--white);
+            border-color: var(--blue-accent);
+        }
+
+        /* Projects Grid */
+        .projects-content {
+            flex: 1;
+        }
+
+        .projects-counter {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .projects-counter span {
+            color: var(--blue-accent);
+            font-weight: 600;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .projects-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        .project-card {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .projects-grid.list-view .project-card {
+            flex-direction: row;
+        }
+
+        .projects-grid.list-view .project-image {
+            width: 200px;
+            height: 150px;
+        }
+
+        .project-card.hidden {
+            display: none;
+        }
+
+        .project-card.fade-out {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--dark-gray), var(--gray));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-gray);
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(13, 40, 242, 0.2), rgba(230, 15, 15, 0.2));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .project-card:hover .project-image::before {
+            opacity: 1;
+        }
+
+        .project-details {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue-accent), var(--red-accent));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--blue-accent);
+            box-shadow: 0 10px 30px rgba(13, 40, 242, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .status-badge.completed {
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+
+        .status-badge.in-progress {
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+
+        .status-badge.planned {
+            color: var(--blue-accent);
+            border: 1px solid var(--blue-accent);
+        }
+
+        .project-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .project-card p {
+            color: var(--light-gray);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: auto;
+        }
+
+        .tag {
+            padding: 0.2rem 0.6rem;
+            background-color: var(--gray);
+            font-size: 0.75rem;
+            color: var(--light-gray);
+            transition: all 0.2s ease;
+        }
+
+        .project-card:hover .tag {
+            background-color: rgba(13, 40, 242, 0.1);
+            color: var(--white);
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .about-text {
+            max-width: 600px;
+        }
+
+        .about-skills {
+            background-color: var(--dark-gray);
+            padding: 2rem;
+            border: 1px solid var(--gray);
+            margin-top: -4.5rem;
+            border-left: 3px solid var(--blue-accent);
+        }
+
+        .skills-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-item {
+            color: var(--light-gray);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            color: var(--white);
+            border-color: var(--blue-accent);
+            padding-left: 0.5rem;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gray);
+            color: var(--white);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--blue-accent);
+            box-shadow: 0 0 0 2px rgba(13, 40, 242, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Back button and other elements */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--light-gray);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--red-accent);
+            transform: translateX(-5px);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background-color: var(--black);
+            border-bottom: 1px solid var(--gray);
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 1rem 2rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a.active {
+            color: var(--white);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .projects-container {
+                flex-direction: column;
+            }
+
+            .filter-sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                max-height: 0;
+                overflow: hidden;
+                padding: 0;
+                border: none;
+                transition: max-height 0.3s ease, padding 0.3s ease;
+            }
+
+            .filter-sidebar.active {
+                max-height: 1000px;
+                padding: 1.5rem;
+                border: 1px solid var(--gray);
+                margin-bottom: 2rem;
+            }
+
+            .filter-toggle-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .social-icons {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text {
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .headshot-placeholder {
+                width: 150px;
+                height: 150px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-skills {
+                margin-top: 2rem;
+            }
+
+            .skills-list {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+            pointer-events: all;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+            display: none;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--gray);
+            border-top-color: var(--blue-accent);
+            border-right-color: var(--red-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="showSection('home')">
+                <div class="logo-icon">
+                    <img src="logo.png" alt="BLOT Logo">
+                </div>
+                <span>BLOT</span>
+            </div>
+            <ul class="nav-links" id="desktop-nav">
+                <li><a data-section="home">Home</a></li>
+                <li><a data-section="projects">Projects</a></li>
+                <li><a data-section="about">About</a></li>
+                <li><a data-section="contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="social-icons">
+                <a href="https://github.com" target="_blank" class="github" title="GitHub">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="linkedin" title="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="twitter" title="Twitter">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>

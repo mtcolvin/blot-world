@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+    
+    <!-- External Stylesheets -->
+	<link rel="stylesheet" href="../../css/root.css">
+    <link rel="stylesheet" href="../../css/minimal-nav.css">	
+	
+	<!-- ==================== FAVICONS ==================== -->
+	<link rel="icon" type="image/png" href="../../images/favicon/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="../../images/favicon/favicon.svg" />
+	<link rel="shortcut icon" href="../../images/favicon/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="../../images/favicon/apple-touch-icon.png" />
+	<meta name="apple-mobile-web-app-title" content="BLOT.WORLD" />
+	<link rel="manifest" href="../../images/favicon/site.webmanifest" />
+    <meta name="theme-color" content="#000000">
+    
+    <title>Poetry Collection | Matthew Colvin</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+		
+		:root {
+			--upon-cream: #faf8f5;
+			--upon-warm-white: #f5f3f0;
+			--upon-warm-white-dark: #d8d0c4;
+			--upon-ink: #2a2418;
+			--upon-faded-ink: #6b6b6b;
+			--upon-accent: #8b7355;
+			--upon-accent-light: #a89080;
+			--upon-border: rgba(42, 36, 24, 0.1);
+		}
+        		
+		html {
+			min-width: 40em;
+		}
+        
+        body {            
+            background: var(--upon-warm-white-dark);
+            color: var(--upon-ink);
+            line-height: 1.8;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem 2rem;
+            position: relative;
+        }
+                
+        /* Header */
+        header {
+            text-align: left;
+            margin-bottom: 2rem;
+            padding: 1.25rem 1.5rem;
+            position: fixed;
+            left: var(--mininav-spacing);
+            top: calc(var(--mininav-height) + var(--mininav-spacing));
+            background: var(--upon-ink);
+            z-index: 50;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+			line-height: 1.3;
+        }
+        
+        /* Light text on dark background when fixed */
+        header h1,
+        header .subtitle,
+        header .author {
+            color: var(--upon-cream);
+            transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        header.scrolled {
+            position: relative;
+            left: auto;
+            top: auto;
+            width: 100%;
+            background: transparent;
+            border-color: transparent;
+            box-shadow: none;
+            text-align: center;
+            padding: 1rem 2rem 0.75rem 2rem;
+        }
+        
+        /* Reset to original lighter colors when scrolled/on top */
+        header.scrolled h1,
+        header.scrolled .subtitle,
+        header.scrolled .author {
+            color: var(--upon-accent-light);
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 1px;
+            background: var(--upon-accent);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        header.scrolled::after {
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--upon-accent-light);
+        }
+        
+        /* Placeholder for header when fixed */
+        .header-placeholder {
+            height: 0;
+            transition: height 0.4s ease;
+        }
+        
+        .header-placeholder.active {
+            height: 120px;
+        }
+        
+        h1 {
+            font-family: 'Baskerville Old Face', 'EB Garamond', serif;
+            font-size: clamp(1.2rem, 3.12vw, 1.56rem);
+            font-weight: 500;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.01em;
+        }
+        
+        .subtitle {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author {
+            font-family: 'EB Garamond', 'Baskerville Old Face', serif;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: 0.35rem;
+            font-weight: 400;
+        }
+        
+        /* Navigation */
+        nav#poem-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            padding: 0.5rem;
+            width: 36px;
+            height: 36px;
+            background: var(--upon-cream);
+            border: 1px solid var(--upon-border);
+            color: var(--upon-faded-ink);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .nav-btn:hover {
+            border-color: var(--upon-accent-light);
+            color: var(--upon-ink);
+            background: var(--upon-warm-white);
+        }
+        
+        .nav-btn.active {
+            background: var(--upon-ink);
+            border-color: var(--upon-ink);
+            color: var(--upon-cream);
+        }
+        
+        /* Tooltip */
+        .nav-btn::before {
+            content: attr(data-title);
+            position: absolute;
+            right: calc(100% + 1rem);
+            background: var(--upon-ink);
+            color: var(--upon-cream);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            font-family: 'EB Garamond', serif;
+            letter-spacing: 0.02em;
+            z-index: 1;
+        }
+
+		.nav-btn:hover::before {
+			opacity: 1;
+		}
+			
+        /* Poems display container */
+        #poems-display {
+            margin-bottom: 2rem;
+        }
+        
+        /* Poem container */
+        .poem-container {
+            display: none;
+        }
+        
+        .poem-container.active {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Individual poem page */
+        .poem-page {
+            background: var(--upon-cream);
+            padding: 3rem 2.5rem;
+            border: 2px solid var(--upon-border);
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .poem-title {
+            font-family: 'Baskerville Old Face', 'EB Garamond', serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 500;
+            color: var(--upon-ink);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .poem-date {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            color: var(--upon-faded-ink);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+        
+        .poem-content {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.95rem;
+            line-height: 2;
+            color: var(--upon-ink);
+            white-space: pre-wrap;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .poem-content::selection {
+            background: rgba(139, 115, 85, 0.2);
+        }
+        
+        /* Responsive */
+		@media (max-width: 1024px) {
+			header {
+                position: relative;
+                left: auto;
+                top: auto;
+                width: 100%;
+                background: transparent;
+			}
+            
+            .header-placeholder {
+                display: none;
+            }
+		}
+		
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem 3rem 1rem;
+            }
+            
+            header {
+                padding: 0.75rem 1rem 0.5rem 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .subtitle {
+                font-size: 0.55rem;
+            }
+            
+            .author {
+                font-size: 0.8rem;
+                margin-top: 0.25rem;
+            }
+            
+            .poem-page {
+                padding: 2rem 1.5rem;
+            }
+            
+            nav#poem-nav {
+                right: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.7rem;
+            }
+            
+            /* Adjust tooltip position for mobile */
+            .nav-btn::before {
+                right: auto;
+                left: calc(100% + 1rem);
+            }
+            
+            .poem-content {
+                font-size: 0.9rem;
+                line-height: 1.9;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .poem-page {
+                padding: 1.5rem 1rem;
+            }
+            
+            h1 {
+                font-size: 1.25rem;
+            }
+            
+            .poem-title {
+                font-size: 1.25rem;
+            }
+            
+            .poem-content {
+                font-size: 0.85rem;
+                line-height: 1.8;
+            }
+            
+            nav#poem-nav {
+                right: 0.5rem;
+            }
+            
+            .nav-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Minimal Navigation -->
+    <nav class="minimal-nav" aria-label="minimal nav" onclick="window.location.href='../../index.html'">
+		<div class="backdrop-blur"></div>
+		<svg class="nav-bg" viewBox="0 0 170 40" preserveAspectRatio="none" width="170" height="40" aria-hidden="true">
+			<defs>
+				<mask id="logo-cut-poetry" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
+					<rect x="0" y="0" width="170" height="40" fill="white"/>
+					<g transform="translate(46,20) scale(0.028) translate(-500,-490)">
+						<path fill="black" d="M991,460.892L991,467.417C990.891,471.541 990.574,475.688 990.043,479.868C985.994,511.733 969.382,546.346 934.452,588.386C910.036,617.773 886.483,628.622 864.884,628.983C843.104,629.347 822.351,618.772 803.15,601.339C781.514,581.694 761.573,553.12 743.353,526.84C732.706,511.483 722.691,496.992 712.824,486.256C706.296,479.154 700.646,473.227 694.144,472.875C688.497,472.57 684.012,477.895 677.96,486.659C667.609,501.651 656.963,525.889 645.189,561.882C624.028,626.57 594.224,674.799 567.479,713.734C518.847,784.532 463.748,816.88 412.069,822.169C406.628,822.726 401.22,823 395.854,823C348.855,823 305.12,801.988 271.212,766.077C230.671,723.142 204,658.105 204,583.15C204,502.498 234.88,410.363 312.59,321.927C417.276,202.792 515.293,156.353 603.237,156.003C603.77,156.001 604.303,156 604.836,156C760.712,156 874.851,246.86 934.732,332.382C968.829,381.081 989.926,420.198 991,460.892ZM429.775,332.043C368.872,386.834 339.368,425.638 310.535,510.048C288.666,574.07 296.348,629.231 331.119,679.616C353.445,711.967 375.334,727.662 397.28,730.179C418.739,732.64 439.297,722.479 458.566,706.838C503.108,670.68 540.149,605.196 561.946,562.113C591.8,503.102 616.674,424.109 619.608,360.732C621.284,324.538 616.936,293.587 597.836,278.396C575.999,261.028 548.344,265.774 510.267,279.007C482.05,288.814 466.82,298.716 429.775,332.043ZM837.246,342.426C803.429,308.395 771.489,288.698 746.968,279.148C733.294,273.823 722.532,271.555 715.878,272.522C714.92,272.661 714.747,273.573 714.588,274.515C714.347,275.942 714.254,277.489 714.247,279.137C714.228,284.039 714.981,289.584 716.186,295.564C723.559,332.177 747.03,381.749 757.783,409.859C767.355,434.879 801.075,501.32 839.443,528.626C848.906,535.361 858.483,539.775 868.084,537.94C878.041,536.037 886.981,527.525 895.925,512.194C927.84,457.492 909.454,415.088 837.246,342.426Z"/>
+					</g>
+				</mask>
+			</defs>
+			<rect class="nav-rect" x="0" y="0" width="170" height="40" mask="url(#logo-cut-poetry)"/>
+		</svg>
+		<div class="minimal-nav-container">
+			<button class="back-btn-minimal">
+				<svg width="18" height="18" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M19 12H5M12 19l-7-7 7-7"/>
+				</svg>
+			</button>
+			<div class="min-logo-title">
+				<span>B</span><span>L</span><span>O</span><span>T</span><span>.</span><span>W</span><span>O</span><span>R</span><span>L</span><span>D&nbsp;</span>
+			</div>
+		</div>
+	</nav>
+	
+    <div class="container">
+        <!-- Header -->
+        <header id="main-header">
+            <h1>Poetry Collection</h1>
+            <p class="subtitle">Selected Works</p>
+            <p class="author">by Matthew Colvin</p>
+        </header>
+        
+        <!-- Header placeholder (for when header is fixed) -->
+        <div class="header-placeholder" id="header-placeholder"></div>
+        
+        <!-- Navigation -->
+        <nav id="poem-nav">
+            <!-- Navigation buttons will be generated dynamically -->
+        </nav>
+        
+        <!-- Poem Containers -->
+        <div id="poems-display">
+            <!-- Poems will be generated dynamically -->
+        </div>
+    </div>
+    
+    <script>
+        // EMBEDDED POEMS DATA - Edit this array to add/change poems
+const poemsRaw = [
+    {	
+        id: "a-fleeting-story",
+        title: "A Fleeting Story",
+        date: "March 2023",
+        content: `Kissed a time, a place, a when;
+Only brothers can amend.
+
+Under Thou shall stories told
+Rest forever, thought, untold.
+
+Thou, shalt know;
+——thou, shalt seek:
+Nothing is,
+——truly weak.
+
+Eternality,
+——itself does die.
+Years, it's felt;
+——have gone by.
+
+I love you dearly,
+——may we meet
+when times are better,
+——bittersweet.`
+    },
+
+    {	
+        id: "misery",
+        title: "Misery",
+        date: "October 2015",
+        content: `I feel the anger boiling high,
+It flies, it flies up to the sky,
+A burning ember red with fie.
+
+Look at me you beastly brute,
+Your mind be hazed with mask of soot.
+You burn me down right to the root,
+And hunt me down and pussyfoot.
+
+For you the devil'll be'a rappin',
+And the imps'll be'a tappin',
+And the clerics'll be'a flappin',
+And the people'll be'a lappin'.
+
+Never has God ever asked for more
+Than for you to scare the devils from moor
+They shall come with hearts and souls of sore,
+Rappin' and tappin' at Heaven's golden door.
+
+The angels beg and plead and shout and pray,
+"Evermore, evermore, evermore."`
+    },
+
+    {
+        id: "upon-a-dove-on-the-railroad-track",
+        title: "Upon a Dove on the Railroad Track",
+        date: "October 2015",
+        content: `A pure, gray dove o'th morning dew,
+Through morning air with grace it flew,
+Did swoop right down to nature's pew,
+A noble action didst Satan rue.
+
+Spitter clack smack on the railroad track,
+A nation's toil and lack of sack
+Did build a monument so grand
+In the pure and golden sand.
+
+Upon this track, a dove did lie,
+Oblivious to lies foretold.
+Mephistopheles did fie,
+and God did mark with purest gold.
+
+The angels beg and plead and shout and pray,
+"Evermore, evermore, evermore."`
+    }
+];
+
+// Parse date string to Date object for sorting
+function parseDate(dateStr) {
+    return new Date(dateStr);
+}
+
+// Sort poems by date, newest first
+const poems = poemsRaw.slice().sort((a, b) => {
+    return parseDate(b.date) - parseDate(a.date);
+});
+        
+        let currentPoemIndex = 0;
+        let resizeTimeout;
+        
+        // Handle header position based on window width only
+        function updateHeaderPosition() {
+            const header = document.getElementById('main-header');
+            const placeholder = document.getElementById('header-placeholder');
+            
+            // Only change position based on screen width
+            if (window.innerWidth <= 1024) {
+                header.classList.add('scrolled');
+                placeholder.classList.remove('active');
+            } else {
+                // On large screens, header stays fixed on the left
+                header.classList.remove('scrolled');
+                placeholder.classList.remove('active');
+            }
+        }
+        
+        // Debounced resize handler
+        function handleResize() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                updateHeaderPosition();
+            }, 150);
+        }
+        
+        // Generate navigation
+        function generateNavigation() {
+            const nav = document.getElementById('poem-nav');
+            // Poems are sorted newest first (index 0 = newest)
+            // Give highest number to newest poem, show at top
+            poems.forEach((poem, index) => {
+                const displayNumber = poems.length - index; // Reverse numbering
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.textContent = `${displayNumber}`;  // Highest number for newest
+                btn.setAttribute('data-title', poem.title);
+                btn.setAttribute('data-index', index);
+                btn.onclick = () => navigateToPoem(index);
+                nav.appendChild(btn);
+            });
+        }
+        
+        // Generate poem pages
+        function generatePoems() {
+            const display = document.getElementById('poems-display');
+            poems.forEach((poem, index) => {
+                const container = document.createElement('div');
+                container.className = 'poem-container';
+                container.id = `poem-${index}`;
+                
+                container.innerHTML = `
+                    <div class="poem-page">
+                        <h2 class="poem-title">${escapeHtml(poem.title)}</h2>
+                        <p class="poem-date">${escapeHtml(poem.date)}</p>
+                        <div class="poem-content">${escapeHtml(poem.content)}</div>
+                    </div>
+                `;
+                
+                display.appendChild(container);
+            });
+        }
+        
+        // Navigate to specific poem and update URL
+        function navigateToPoem(index) {
+            if (index < 0 || index >= poems.length) {
+                index = 0;
+            }
+            
+            currentPoemIndex = index;
+            
+            // Update URL hash without triggering scroll
+            const newHash = `#page-${index + 1}`;
+            if (window.location.hash !== newHash) {
+                history.pushState(null, null, newHash);
+            }
+            
+            showPoem(index);
+        }
+        
+        // Show specific poem
+        function showPoem(index) {
+            // Hide all poems
+            document.querySelectorAll('.poem-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected poem
+            const poemContainer = document.getElementById(`poem-${index}`);
+            if (poemContainer) {
+                poemContainer.classList.add('active');
+            }
+            
+            // Update active button using data-index attribute
+            const activeButton = document.querySelector(`.nav-btn[data-index="${index}"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Handle hash changes (back/forward browser buttons or direct URL access)
+        function handleHashChange() {
+            const hash = window.location.hash;
+            
+            if (hash) {
+                // Extract page number from hash (#page-1, #page-2, etc.)
+                const match = hash.match(/#page-(\d+)/);
+                if (match) {
+                    const pageNum = parseInt(match[1], 10);
+                    const index = pageNum - 1; // Convert to 0-based index
+                    
+                    if (index >= 0 && index < poems.length) {
+                        currentPoemIndex = index;
+                        showPoem(index);
+                        return;
+                    }
+                }
+            }
+            
+            // Default to first poem
+            navigateToPoem(0);
+        }
+        
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Listen for hash changes (browser back/forward)
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Listen for resize events only
+        window.addEventListener('resize', handleResize);
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            generateNavigation();
+            generatePoems();
+            handleHashChange();
+            // Set initial header position based on window width
+            updateHeaderPosition();
+        });
+    </script>
+</body>
+</html>

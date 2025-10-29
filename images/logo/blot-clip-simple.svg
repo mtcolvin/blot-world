@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background = visible -->
+  <rect width="200" height="50" fill="white"/>
+  
+  <!-- Black circle in center = cutout (replace with your logo shape) -->
+  <circle cx="100" cy="25" r="15" fill="black"/>
+</svg>

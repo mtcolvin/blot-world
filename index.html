@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ==================== FONTS ==================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+    
+    <!-- ==================== STYLESHEETS ==================== -->
+    <link rel="stylesheet" href="css/root.css">
+	<link rel="stylesheet" href="css/main.css">
+    
+    <!-- ==================== PRELOAD RESOURCES ==================== -->
+    <link rel="preload" as="image" href="images/headshot.jpeg">
+    <link rel="preload" as="image" href="images/logo/blot-conmark-black-bkgnd.png">
+	<link rel="preload" as="audio" href="sounds/windows-error.mp3">
+    
+    <!-- ==================== FAVICONS ==================== -->
+	<link rel="icon" type="image/png" href="images/favicon/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="images/favicon/favicon.svg" />
+	<link rel="shortcut icon" href="images/favicon/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png" />
+	<meta name="apple-mobile-web-app-title" content="BLOT.WORLD" />
+	<link rel="manifest" href="images/favicon/site.webmanifest" />
+    <meta name="theme-color" content="#000000">
+    
+    <!-- ==================== SEO META TAGS ==================== -->
+    <meta name="description" content="BLOT.WORLD - Portfolio of Matthew Colvin, creative developer and designer specializing in web design, graphic design, and digital experiences.">
+    <meta name="keywords" content="Matthew Colvin, web developer, graphic designer, portfolio, BLOT.WORLD">
+    <meta name="author" content="Matthew Colvin">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://your-actual-domain.com">
+    
+    <!-- ==================== OPEN GRAPH META TAGS ==================== -->
+    <meta property="og:title" content="BLOT.WORLD - Matthew Colvin Portfolio">
+    <meta property="og:description" content="Creative developer crafting digital experiences">
+    <meta property="og:image" content="images/favicon/android-chrome-512x512.png">
+    <meta property="og:url" content="https://your-domain.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="BLOT.WORLD">
+    
+    <!-- ==================== TWITTER CARD META TAGS ==================== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BLOT.WORLD by Matthew Colvin">
+    <meta name="twitter:description" content="Creative developer crafting digital experiences">
+    <meta name="twitter:image" content="images/favicon/android-chrome-512x512.png">
+    
+    <title>BLOT.WORLD by Matthew Colvin</title>
+    
+    <!-- ==================== STRUCTURED DATA ==================== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Matthew Colvin",
+      "jobTitle": "Creative Developer & Designer",
+      "description": "Creative developer crafting digital experiences",
+      "url": "https://your-actual-domain.com",
+      "sameAs": [
+        "https://www.linkedin.com/in/matthew-colvin99/",
+        "https://open.spotify.com/user/your-username"
+      ]
+    }
+    </script>
+</head>
+
+<body>
+    <!-- ==================== LOADER ==================== -->
+	<div class="loader" id="loader">
+		<img src="images/comet_loading_16bit.gif" alt="Loading..." class="loader-spinner">
+	</div>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav>
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="images/logo/blot-iconmark-black-bkgnd.png" alt="BLOT Logo">
+                </div>
+                <div class="logo-title">
+                    <span>B</span><span>L</span><span>O</span><span>T</span><span>.</span>
+                    <span>W</span><span>O</span><span>R</span><span>L</span><span>D</span>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" id="desktop-nav">
+                <li><a data-section="projects">Projects</a></li>
+                <li><a data-section="about">About</a></li>
+            </ul>
+            
+            <!-- Mobile Menu Button -->
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <!-- Social Icons -->
+            <div class="social-icons">
+				<a href="https://github.com/mtcolvin" target="_blank" class="github" title="GitHub" aria-label="GitHub Profile">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+						<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+					</svg>
+				</a>
+                <a href="https://www.linkedin.com/in/matthew-colvin99/" target="_blank" class="linkedin" title="LinkedIn" aria-label="LinkedIn Profile">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+                <a href="https://open.spotify.com/playlist/5oKUCEIusLdlNdGF7QNjV6?si=f4804e3b823e45de&pt=2624d5cb040be6dace96dc79872e2cb9" target="_blank" class="spotify" title="Spotify" aria-label="Spotify Playlist">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                    </svg>
+                </a>
+                <a href="mailto:mtcolvin99@gmail.com" class="email" title="Email" aria-label="Email Contact">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== MOBILE NAVIGATION ==================== -->
+    <div class="mobile-nav" id="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a data-section="home">Home</a></li>
+            <li><a data-section="projects">Projects</a></li>
+            <li><a data-section="about">About</a></li>
+        </ul>
+        <div class="mobile-nav-social">
+            <div class="mobile-social-label">Connect</div>
+            <div class="mobile-social-icons">
+				<a href="https://github.com/mtcolvin" target="_blank" class="github" title="GitHub" aria-label="GitHub Profile">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+						<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+					</svg>
+				</a>
+                <a href="https://www.linkedin.com/in/matthew-colvin99/" target="_blank" class="linkedin" title="LinkedIn" aria-label="LinkedIn Profile">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+                <a href="https://open.spotify.com/playlist/5oKUCEIusLdlNdGF7QNjV6?si=f4804e3b823e45de&pt=2624d5cb040be6dace96dc79872e2cb9" target="_blank" class="spotify" title="Spotify" aria-label="Spotify Playlist">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                    </svg>
+                </a>
+                <a href="mailto:mtcolvin99@gmail.com" class="email" title="Email" aria-label="Email Contact">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== BACKGROUND EFFECTS ==================== -->
+    <div class="global-background" id="global-background">
+        <div class="grid-pattern"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+        <canvas class="night-sky-canvas" id="night-sky-canvas"></canvas>
+    </div>    
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="container">
+                <!-- Hero Content -->
+                <div class="hero-content">
+                    <!-- Left Column -->
+                    <div class="hero-left">
+                        <div class="hero-headshot" onclick="showSection('about')">
+                            <div class="headshot-placeholder">
+                                <img class="headshot-img" src="images/headshot.jpeg" alt="Matthew Colvin headshot" loading="lazy" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vertical Divider -->
+                    <div class="hero-divider"></div>
+                    
+                    <!-- Right Column -->
+                    <div class="hero-right">
+                        <div class="hero-tagline">
+                            <span class="tagline-prefix">an archive by</span>
+                            <div class="tagline-rotator">
+                                <span class="active">Matthew Colvin</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hero-actions">
+                            <button class="btn-gradient-3d" onclick="showSection('projects')">View Projects</button>
+                            <button class="btn-gradient-3d" onclick="window.location.href='mailto:mtcolvin99@gmail.com'">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+									<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
+									<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
+								</svg>
+								Get in touch
+							</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Preview -->
+                <div class="projects-preview-section">
+                    <div class="container">
+                        <div class="projects-preview-header">
+                            <h3>Recent Projects</h3>
+                            <button class="btn-gradient-3d" onclick="showSection('projects')">
+                                >
+                            </button>
+                        </div>
+                        <div class="projects-preview-grid" id="projects-preview-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="section">
+            <div class="container">
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div class="projects-title-row">
+                        <h2>Projects</h2>
+                        <div class="projects-counter" id="projects-counter">
+                            Showing <span id="visible-count"></span> of <span id="total-count"></span> projects
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Projects Container -->
+                <div class="projects-container">
+                    <!-- Filter Sidebar -->
+                    <aside class="filter-sidebar" id="filter-sidebar">
+                        <div class="filter-sidebar-header">
+                            <h3 style="font-size: 1rem; letter-spacing: -0.5px; margin: 0;">Filters</h3>
+                        </div>
+                        
+                        <!-- Filter Controls -->
+                        <div class="filter-controls">
+                            <div class="sort-dropdown-container">
+                                <label for="sort-select">Sort by:</label>
+                                <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
+                                    <option value="default">Default Order</option>
+                                    <option value="name-asc">Name (A-Z)</option>
+                                    <option value="name-desc">Name (Z-A)</option>
+                                </select>
+                            </div>
+                            <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
+                        </div>
+                        
+                        <!-- Area Filters -->
+                        <div class="filter-section">
+                            <h3>Area</h3>
+                            <div class="filter-options" id="area-filter-options"></div>
+                        </div>
+
+                        <!-- Technology Filters -->
+                        <div class="filter-section">
+                            <h3>Technologies</h3>
+                            <div class="filter-options" id="tech-filter-options"></div>
+                        </div>
+                    </aside>
+                    
+                    <!-- Projects Grid -->
+                    <div class="projects-main" id="projects-main">
+                        <div class="projects-grid" id="projects-grid">
+						
+                            <a href="#" class="project-card-link" onclick="event.preventDefault(); showInceptionModal();">
+                                <div class="project-card" 
+									data-area="Web Design" 
+									data-tech="HTML,JavaScript,JSON,CSS,Claude,ChatGPT" 
+									data-name="BLOT.WORLD Portfolio Website" 
+									data-month="September" 
+									data-year="2025">
+                                    <div class="project-image">
+                                        <img src="images/previews/inception-protection.png" alt="Portfolio Website">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Blot.World Portfolio Website</h3>
+                                            </div>
+                                            <p>You're looking at it. :)</p>
+                                            <div class="project-date-container">
+                                                <span class="project-date">September 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+												<span class="tag">ChatGPT</span>
+                                                <span class="tag">Claude</span>
+                                                <span class="tag">CSS</span>
+                                                <span class="tag">HTML</span>
+                                                <span class="tag">JavaScript</span>
+												<span class="tag">JSON</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Web Design</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <a href="projects/cafemex/cafemex.html" class="project-card-link">
+                                <div class="project-card" 
+									data-area="Branding & Identity" 
+									data-tech="Affinity Designer" 
+									data-name="Cafe Mex Brand Redesign" 
+									data-month="September" 
+									data-year="2025">
+                                    <div class="project-image">
+                                        <img src="images/previews/cafemex-preview.jpg" alt="Cafe Mex Logo">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Caf&#233; Mexicali Brand Redesign</h3>
+                                            </div>
+                                            <p>A vibrant identity system for a Californian-Mexican fusion restaurant, blending bold colors and modern design to celebrate the intersection of two rich culinary cultures. Package includes vectors, rasters, favicons, profile pictures, mockups and more.</p>
+                                            <div class="project-date-container">
+                                                <span class="project-date">September 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Affinity Designer</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Branding & Identity</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <a href="projects/amari/amari.html" class="project-card-link">
+                                <div class="project-card" 
+									data-area="Digital Art" 
+									data-tech="Affinity Designer" 
+									data-name="Amari" 
+									data-month="September" 
+									data-year="2023">
+                                    <div class="project-image">
+                                        <img src="images/previews/amari-preview.jpg" alt="Amari Artwork">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Amari</h3>
+                                            </div>
+                                            <div class="project-date-container">
+                                                <span class="project-date">September 2023 - October 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Affinity Designer</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Digital Art</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+							
+							<a href="https://docs.google.com/spreadsheets/d/1EByhB3oMR2nvFlG01ttQgPK-jfNFy6HLMJiqHiELVLU/edit?usp=sharing" class="project-card-link" target="_blank" rel="noopener noreferrer">
+                                <div class="project-card" 
+									data-area="Data Analysis" 
+									data-tech="Google Sheets" 
+									data-name="Retail Scheduling Analysis" 
+									data-month="May" 
+									data-year="2023">
+                                    <div class="project-image">
+                                        <img src="images/previews/dept-scheduling-analysis-preview.png" alt="Walmart Online Pickup & Delivery Scheduling Analysis Image">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>
+													Retail Scheduling Analysis
+													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+														<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
+														<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
+													</svg>
+												</h3>
+                                            </div>
+                                            <p>
+												A Google Sheets workbook analyzing the order volume and person-hours needed
+												to efficiently and effectively reorganize staffing to best suit business needs.
+											</p>
+                                            <div class="project-date-container">
+                                                <span class="project-date">May 2023 - September 2023</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Google Sheets</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Data Analysis</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+							
+							<a href="projects/poetry/poetry-showcase.html" class="project-card-link" target="_blank" rel="noopener noreferrer">
+                                <div class="project-card" 
+									data-area="Poetry" 
+									data-tech="English" 
+									data-name="Upon a Dove on the Railroad Track" 
+									data-month="October" 
+									data-year="2015">
+                                    <div class="project-image">
+                                        <img src="images/previews/poetry-preview.png" alt="Poetry Preview">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Upon a Dove on the Railroad Track</h3>
+                                            </div>
+                                            <p>A collection of poems.</p>
+                                            <div class="project-date-container">
+                                                <span class="project-date">October 2015 - Present</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">English</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Poetry</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+							
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<!-- About Section -->
+		<section id="about" class="section">
+			<div class="container">
+				<!-- Section Header -->
+				<div class="section-header">
+					<h2>About</h2>
+				</div>
+				
+				<!-- Container matching your projects layout -->
+				<div class="about-container">
+					<!-- Sidebar matching filter sidebar style -->
+					<aside class="about-sidebar">
+						<div class="sidebar-section">
+							<h3 class="sidebar-title">Matthew Colvin</h3>	
+							<div class="sidebar-section">
+							<div class="sidebar-areas" id="area-badges-container">
+								<!-- Area badges will auto-populate from projects -->
+							</div>
+						</div>	
+						</div>		
+						
+						<div class="sidebar-actions">
+							<button class="btn-gradient-3d" onclick="window.open('documents/matthew-colvin-resume.pdf')" target="_blank" rel="noopener noreferrer">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M12 3v13m0 0l-4-4m4 4l4-4"/>
+									<path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+								</svg>
+								Résumé
+							</button>
+                            <button class="btn-gradient-3d" onclick="window.location.href='mailto:mtcolvin99@gmail.com'">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+									<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
+									<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
+								</svg>
+								Get in touch
+							</button>
+						</div>
+					</aside>
+					
+					<!-- Main content area -->
+					<div class="about-main">
+						<!-- Brief intro -->
+						<div class="about-intro">
+							<p>Hello! I'm Matthew. Blot</p>
+						</div>
+						
+						<!-- Value cards -->
+						<div class="values-grid">
+							<div class="value-card">
+								<div class="value-header">
+									<span class="value-icon">🔒</span>
+									<h3 class="value-title">Privacy</h3>
+								</div>
+								<p class="value-description">Your data is yours. Digital autonomy matters.</p>
+							</div>
+							
+							<div class="value-card">
+								<div class="value-header">
+									<span class="value-icon">🎨</span>
+									<h3 class="value-title">Sovereignty</h3>
+								</div>
+								<p class="value-description">Every pixel counts. Precision over perfection.</p>
+							</div>
+							
+							<div class="value-card">
+								<div class="value-header">
+									<span class="value-icon">🌈</span>
+									<h3 class="value-title">Diversity</h3>
+								</div>
+								<p class="value-description">Different views create better solutions.</p>
+							</div>
+							
+							<div class="value-card">
+								<div class="value-header">
+									<span class="value-icon">⚡</span>
+									<h3 class="value-title">Authenticity</h3>
+								</div>
+								<p class="value-description">Clean code. Minimal bloat. Maximum impact.</p>
+							</div>
+							
+							<div class="value-card">
+								<div class="value-header">
+									<span class="value-icon">🎨</span>
+									<h3 class="value-title">Craft</h3>
+								</div>
+								<p class="value-description">Every pixel counts. Precision over perfection.</p>
+							</div>
+						</div>
+						
+						<!-- Skills section -->
+						<div class="skills-section">
+							<div class="skills-grid">
+								<div class="skill-group">
+									<div class="skill-category">Development</div>
+									<div class="skill-tags">
+										<span class="tag">HTML</span>
+										<span class="tag">CSS</span>
+										<span class="tag">JavaScript</span>
+										<span class="tag">React</span>
+										<span class="tag">JSON</span>
+									</div>
+								</div>
+								
+								<div class="skill-group">
+									<div class="skill-category">Design</div>
+									<div class="skill-tags">
+										<span class="tag">Affinity Designer</span>
+										<span class="tag">UI/UX</span>
+										<span class="tag">Branding</span>
+									</div>
+								</div>
+								
+								<div class="skill-group">
+									<div class="skill-category">Analysis</div>
+									<div class="skill-tags">
+										<span class="tag">Data Viz</span>
+										<span class="tag">Google Sheets</span>
+										<span class="tag">Strategy</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Quote box -->
+						<div class="quote-section">
+							<blockquote class="quote-text">So remember to look up at the stars and not down at your feet. Try to make sense of what you see and hold on to that childlike wonder about what makes the universe exist.</blockquote>
+							<cite class="quote-author">Stephen Hawking</cite>
+						</div>
+						<div class="quote-section">
+							<blockquote class="quote-text">The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.</blockquote>
+							<cite class="quote-author">Satoshi Nakamoto</cite>
+						</div>
+						<div class="quote-section">
+							<blockquote class="quote-text">If I have seen further, it is by standing on the shoulders of giants.</blockquote>
+							<cite class="quote-author">Isaac Newton</cite>
+						</div>
+						<div class="quote-section">
+							<blockquote class="quote-text">If you want the rainbow, you got to put up with the rain.</blockquote>
+							<cite class="quote-author">Dolly Parton</cite>
+						</div>
+						<div class="quote-section">
+							<blockquote class="quote-text">We do not inherit the earth from our ancestors; we borrow it from our children.</blockquote>
+							<cite class="quote-author">Proverb</cite>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+    </main>
+    
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="global-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- Footer Left -->
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <img src="images/logo/blot-iconmark-black-bkgnd.png" alt="BLOT Logo">
+                        </div>
+                        <span class="footer-brand">BLOT.WORLD</span>
+                    </div>
+                    <p class="footer-tagline">I do too many things and I needed a place to put them all.</p>
+                </div>
+                
+                <!-- Footer Right -->
+                <div class="footer-right">
+                    <div class="footer-links">						
+                        <a href="#" data-section="home">Home</a>
+                        <a href="#" data-section="projects">Projects</a>
+                        <a href="#" data-section="about">About</a>
+                    </div>
+                    <div class="footer-social">
+						<a href="https://github.com/YOUR_USERNAME" target="_blank" class="github" title="GitHub" aria-label="GitHub Profile">
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+							</svg>
+						</a>
+                        <a href="https://www.linkedin.com/in/matthew-colvin99/" target="_blank" class="linkedin" title="LinkedIn" aria-label="LinkedIn Profile">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                        <a href="https://open.spotify.com/playlist/5oKUCEIusLdlNdGF7QNjV6?si=f4804e3b823e45de&pt=2624d5cb040be6dace96dc79872e2cb9" target="_blank" class="spotify" title="Spotify" aria-label="Spotify Playlist">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                            </svg>
+                        </a>
+                        <a href="mailto:mtcolvin99@gmail.com" class="email" title="Email" aria-label="Email Contact">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Matthew Colvin. All rights reserved.</p>
+                </div>
+                <div class="footer-meta" id="bg-toggle-btn">
+                    <span>I'm just here for the vibes.</span>					
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+	<!-- Inception Protection Modal -->
+    <div class="inception-modal" id="inception-modal">
+        <div class="inception-error">
+            <div class="inception-title-bar">
+                <div class="inception-title-text">
+                    <span class="inception-title-icon">⚠️</span>
+                    <span>System Error</span>
+                </div>
+                <button class="inception-close-btn" onclick="closeInceptionModal()">×</button>
+            </div>
+            <div class="inception-content">
+                <div class="inception-icon">❌</div>
+                <div class="inception-message">
+                    Inception Protection is enabled. You cannot access the portfolio page while viewing the portfolio.
+                </div>
+            </div>
+            <div class="inception-buttons">
+                <button class="inception-ok-btn" onclick="closeInceptionModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="js/main.js"></script>
+</body>
+</html>

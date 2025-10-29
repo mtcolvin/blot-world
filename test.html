@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Section - Matched to Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+    <style>
+        /* Using your exact root variables and styles */
+        :root {
+            --blot-black: #000000;
+            --blot-dark-gray: #121212;
+            --blot-gray: #2a2a2a;
+            --little-light-gray: #4d4d4d;
+            --blot-light-gray: #888;
+            --blot-white: #ffffff;
+            --primary-blue: #0D28F2;
+            --accent-red: #E60F0F;
+            --transition-base: 0.3s ease;
+            --nav-height: 65px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--blot-black);
+            color: var(--blot-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Same background as your site */
+        .global-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .grid-pattern {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                linear-gradient(rgba(13, 40, 242, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(13, 40, 242, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 3s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.7;
+            animation: float 20s infinite ease-in-out;
+            mix-blend-mode: screen;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(13, 40, 242, 0.6) 0%, rgba(13, 40, 242, 0.3) 40%, transparent 70%);
+            top: 10%;
+            left: -10%;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(230, 15, 15, 0.5) 0%, rgba(230, 15, 15, 0.2) 40%, transparent 70%);
+            bottom: 15%;
+            right: -5%;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(-30px, -10px) scale(1.05); }
+        }
+        
+        /* Match your section styling exactly */
+        .section {
+            min-height: calc(100vh - 80px);
+            padding: 3rem 3rem 4rem 3rem;
+            background: transparent;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: transparent;
+        }
+        
+        /* Match your exact section header */
+        .section-header {
+            margin-bottom: 1rem;
+        }
+        
+        .section-header h2 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+        
+        /* Layout matching your projects section structure */
+        .about-container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            position: relative;
+            min-height: calc(100vh - 150px);
+        }
+        
+        /* Sidebar styled like your filter sidebar */
+        .about-sidebar {
+            position: sticky;
+            top: 105px;
+            width: 280px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            background-color: var(--blot-dark-gray);
+            border: 1px solid var(--blot-gray);
+            border-radius: 5px;
+            z-index: 10;
+            padding: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--blot-gray);
+        }
+        
+        .sidebar-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .area-badge {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
+            color: var(--blot-white);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+        
+        .area-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+        
+        .area-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .area-badge:hover::before {
+            opacity: 1;
+        }
+        
+        .sidebar-info-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-icon {
+            font-size: 1rem;
+            width: 20px;
+            flex-shrink: 0;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--blot-light-gray);
+            min-width: 70px;
+        }
+        
+        .info-value {
+            color: var(--blot-white);
+        }
+        
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        /* Main content area */
+        .about-main {
+            flex: 1;
+            min-width: 0;
+            background: transparent;
+        }
+        
+        .about-intro {
+            margin-bottom: 2rem;
+            color: var(--blot-light-gray);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        /* Value cards matching project card style and animations */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .value-card {
+            background-color: var(--blot-dark-gray);
+            border: 1px solid var(--blot-gray);
+            border-radius: 5px;
+            padding: 1.5rem 1rem;
+            transition: all var(--transition-base);
+            cursor: default;
+            position: relative;
+            text-align: center;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--blot-light-gray);
+        }
+        
+        .value-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .value-icon {
+            font-size: 2.5rem;
+        }
+        
+        .value-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .value-description {
+            color: var(--blot-light-gray);
+            line-height: 1.6;
+            font-size: 0.85rem;
+        }
+        
+        /* Skills section matching your tag style */
+        .skills-section {
+            margin-bottom: 2rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .skill-group {
+            background-color: var(--blot-dark-gray);
+            border: 1px solid var(--blot-gray);
+            border-radius: 5px;
+            padding: 1.5rem;
+        }
+        
+        .skill-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--blot-light-gray);
+            margin-bottom: 1rem;
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        
+        /* Using your exact tag style */
+        .tag {
+            padding: 0.2rem 0.6rem;
+            background-color: var(--blot-gray);
+            font-size: 0.75rem;
+            color: var(--blot-light-gray);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .tag:hover {
+            background-color: var(--little-light-gray);
+            color: var(--blot-white);
+            transform: translateY(-2px);
+        }
+        
+        /* Quote box with true glassmorphic effect */
+        .quote-section {
+            background: rgba(13, 40, 242, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid;
+            border-image: linear-gradient(135deg, var(--primary-blue), var(--accent-red), var(--primary-blue)) 1;
+            border-radius: 5px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        @keyframes borderFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .quote-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-style: normal;
+            color: var(--blot-white);
+        }
+        
+        .quote-text::before {
+            content: '> ';
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+        
+        .quote-author {
+            font-family: 'Courier New', monospace;
+            color: var(--blot-light-gray);
+            font-size: 0.9rem;
+        }
+        
+        .quote-author::before {
+            content: '// ';
+            color: var(--primary-blue);
+        }
+        
+        /* Your exact button style */
+        .btn-gradient-3d {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 2.2rem 0.9rem 2.2rem;
+            font-size: 0.8rem;
+            font-weight: 525;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: var(--blot-white);
+            border: none;
+            background: linear-gradient(45deg, var(--primary-blue), var(--accent-red), var(--primary-blue));
+            background-size: 300% 300%;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transform-style: preserve-3d;
+            isolation: isolate;
+            animation: gradientShift 3s ease infinite;
+            text-decoration: none;
+            width: 100%;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .btn-gradient-3d::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--blot-black);
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .btn-gradient-3d::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -10px;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-blue), var(--accent-red), var(--primary-blue));
+            background-size: 300% 300%;
+            clip-path: polygon(0 10px, 100% 0, 100% calc(100% - 10px), 0 100%);
+            transform-origin: left center;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .btn-gradient-3d:hover {
+            transform: translate(-6px, -6px);
+            box-shadow: 0 5px 20px rgba(13, 40, 242, 0.3);
+            animation-duration: 1s;
+        }
+        
+        .btn-gradient-3d:hover::before {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        
+        .btn-gradient-3d:hover::after {
+            transform: translateX(3px) translateY(3px);
+            animation-duration: 1s;
+        }
+        
+        .btn-gradient-3d svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        /* Responsive - matching your breakpoints */
+        @media (max-width: 1024px) {
+            .about-container {
+                flex-direction: column;
+            }
+            
+            .about-sidebar {
+                position: relative;
+                top: 0;
+                width: 100%;
+            }
+            
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .values-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quote-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Same background as main site -->
+    <div class="global-background">
+        <div class="grid-pattern"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+    </div>
+    
+    <!-- Using your section structure -->
+    <section class="section">
+        <div class="container">
+            <!-- Same header style as projects -->
+            <div class="section-header">
+                <h2>About</h2>
+            </div>
+            
+            <!-- Container matching your projects layout -->
+            <div class="about-container">
+                <!-- Sidebar matching filter sidebar style -->
+                <aside class="about-sidebar">
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Matthew Colvin</h3>
+                        <div class="sidebar-areas" id="area-badges-container">
+                            <!-- Area badges will auto-populate from projects -->
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <div class="sidebar-info-item">
+                            <span class="info-icon">📍</span>
+                            <span class="info-value">Thornton, CO</span>
+                        </div>
+                        <div class="sidebar-info-item">
+                            <span class="info-icon">🎯</span>
+                            <span class="info-value">Build with intention</span>
+                        </div>
+                        <div class="sidebar-info-item">
+                            <span class="info-icon">⚡</span>
+                            <span class="info-value">Available for work</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-actions">
+                        <a href="#" class="btn-gradient-3d">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            </svg>
+                            View Resume
+                        </a>
+                        <a href="#" class="btn-gradient-3d">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
+                                <path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
+                            </svg>
+                            Get in Touch
+                        </a>
+                    </div>
+                </aside>
+                
+                <!-- Main content area -->
+                <div class="about-main">
+                    <!-- Brief intro -->
+                    <div class="about-intro">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Building digital experiences at the intersection of design and code. Precision over perfection, function as feeling.</p>
+                    </div>
+                    
+                    <!-- Value cards with solid backgrounds -->
+                    <div class="values-grid">
+                        <div class="value-card">
+                            <div class="value-header">
+                                <span class="value-icon">🔒</span>
+                                <h3 class="value-title">Privacy</h3>
+                            </div>
+                            <p class="value-description">Your data is yours. Digital autonomy matters.</p>
+                        </div>
+                        
+                        <div class="value-card">
+                            <div class="value-header">
+                                <span class="value-icon">🌈</span>
+                                <h3 class="value-title">Diversity</h3>
+                            </div>
+                            <p class="value-description">Different views create better solutions.</p>
+                        </div>
+                        
+                        <div class="value-card">
+                            <div class="value-header">
+                                <span class="value-icon">⚡</span>
+                                <h3 class="value-title">Efficiency</h3>
+                            </div>
+                            <p class="value-description">Clean code. Minimal bloat. Maximum impact.</p>
+                        </div>
+                        
+                        <div class="value-card">
+                            <div class="value-header">
+                                <span class="value-icon">🎨</span>
+                                <h3 class="value-title">Craft</h3>
+                            </div>
+                            <p class="value-description">Every pixel counts. Precision over perfection.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills using tag style -->
+                    <div class="skills-section">
+                        <div class="skills-grid">
+                            <div class="skill-group">
+                                <div class="skill-category">Development</div>
+                                <div class="skill-tags">
+                                    <span class="tag">HTML</span>
+                                    <span class="tag">CSS</span>
+                                    <span class="tag">JavaScript</span>
+                                    <span class="tag">React</span>
+                                    <span class="tag">JSON</span>
+                                </div>
+                            </div>
+                            
+                            <div class="skill-group">
+                                <div class="skill-category">Design</div>
+                                <div class="skill-tags">
+                                    <span class="tag">Affinity Designer</span>
+                                    <span class="tag">UI/UX</span>
+                                    <span class="tag">Branding</span>
+                                </div>
+                            </div>
+                            
+                            <div class="skill-group">
+                                <div class="skill-category">Analysis</div>
+                                <div class="skill-tags">
+                                    <span class="tag">Data Viz</span>
+                                    <span class="tag">Google Sheets</span>
+                                    <span class="tag">Strategy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quote box with terminal style -->
+                    <div class="quote-section">
+                        <blockquote class="quote-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. The best work happens at the edge of comfort.</blockquote>
+                        <cite class="quote-author">Someone Wise</cite>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // Auto-populate area badges from projects section
+        // This function will extract unique areas from your project cards
+        function populateAreaBadges() {
+            const container = document.getElementById('area-badges-container');
+            
+            // In your actual site, this will query the projects from index.html
+            // For now, showing the logic you'd use:
+            
+            // Get all project cards (when integrated into your main site)
+            // const projectCards = document.querySelectorAll('.project-card');
+            // const areas = new Set();
+            
+            // projectCards.forEach(card => {
+            //     const area = card.dataset.area;
+            //     if (area) areas.add(area);
+            // });
+            
+            // For this demo, using your current areas:
+            const areas = ['Web Design', 'Branding & Identity', 'Digital Art', 'Data Analysis', 'Poetry'];
+            
+            // Sort alphabetically
+            const sortedAreas = areas.sort();
+            
+            // Create badge elements
+            sortedAreas.forEach(area => {
+                const badge = document.createElement('span');
+                badge.className = 'area-badge';
+                badge.textContent = area;
+                container.appendChild(badge);
+            });
+        }
+        
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', populateAreaBadges);
+    </script>
+</body>
+</html>
