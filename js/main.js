@@ -331,7 +331,20 @@ const FilterSystem = {
 		// Add delay before attaching listeners
 		setTimeout(() => {
 			this.attachEventListeners();
+			this.initCollapsibleSections();
 		}, 200);
+	},
+
+	initCollapsibleSections() {
+		const headers = document.querySelectorAll('.filter-section-header');
+		headers.forEach(header => {
+			header.addEventListener('click', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				const section = header.closest('.collapsible-section');
+				section.classList.toggle('collapsed');
+			});
+		});
 	},
 	
 	generateDynamicFilters() {

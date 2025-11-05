@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Your Name</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --dark-gray: #1a1a1a;
+            --gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+            --accent: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gray);
+            border-radius: 50%;
+            color: var(--light-gray);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-2px);
+        }
+
+        .social-icons a.github:hover {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .social-icons a.linkedin:hover {
+            color: #0077b5;
+            border-color: #0077b5;
+        }
+
+        .social-icons a.twitter:hover {
+            color: #1da1f2;
+            border-color: #1da1f2;
+        }
+
+        .social-icons a.email:hover {
+            color: #ea4335;
+            border-color: #ea4335;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        #home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.5rem;
+            color: var(--light-gray);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .hero-content .description {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            color: var(--light-gray);
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--white);
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--white);
+            color: var(--black);
+            transform: translateY(-2px);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gray);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--white);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--white);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge.completed {
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+
+        .status-badge.in-progress {
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+
+        .status-badge.planned {
+            color: #60a5fa;
+            border: 1px solid #60a5fa;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .project-card p {
+            color: var(--light-gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background-color: var(--gray);
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        /* Project Detail Page */
+        .project-hero {
+            margin-bottom: 4rem;
+        }
+
+        .project-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 2rem;
+            color: var(--light-gray);
+            margin-bottom: 2rem;
+        }
+
+        .project-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+        }
+
+        .project-description {
+            line-height: 1.8;
+        }
+
+        .project-description h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .project-description p {
+            color: var(--light-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-section h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            color: var(--light-gray);
+        }
+
+        .project-gallery {
+            margin-top: 4rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 16/9;
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--white);
+            transform: scale(1.02);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-content {
+                grid-template-columns: 1fr;
+            }
+
+            .project-sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">PORTFOLIO</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('projects')">Projects</a></li>
+                <li><a href="#" onclick="showSection('about')">About</a></li>
+                <li><a href="#" onclick="showSection('contact')">Contact</a></li>
+            </ul>
+            <div class="social-icons">
+                <a href="#" class="github" title="GitHub">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="#" class="linkedin" title="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+                <a href="#" class="twitter" title="Twitter">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                </a>
+                <a href="#" class="email" title="Email">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>YOUR NAME</h1>
+                    <p class="subtitle">Creative Developer & Designer</p>
+                    <p class="description">
+                        Building digital experiences with clean code and minimalist design. 
+                        Specializing in web development, user interfaces, and creative solutions.
+                    </p>
+                    <a href="#" onclick="showSection('projects')" class="cta-button">VIEW PROJECTS</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <h2 style="font-size: 3rem; margin-bottom: 1rem; letter-spacing: -1px;">Projects</h2>
+                <p style="color: var(--light-gray); margin-bottom: 2rem;">A collection of my recent work and ongoing projects</p>
+                
+                <div class="projects-grid">
+                    <div class="project-card" onclick="showSection('project-detail')">
+                        <span class="status-badge completed">Completed</span>
+                        <h3>E-Commerce Platform</h3>
+                        <p>A full-stack e-commerce solution with modern UI, payment integration, and admin dashboard.</p>
+                        <div class="project-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">MongoDB</span>
+                            <span class="tag">Stripe</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <span class="status-badge in-progress">In Progress</span>
+                        <h3>AI Dashboard</h3>
+                        <p>Real-time analytics dashboard with AI-powered insights and predictive modeling capabilities.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">TensorFlow</span>
+                            <span class="tag">D3.js</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <span class="status-badge completed">Completed</span>
+                        <h3>Mobile Banking App</h3>
+                        <p>Secure mobile banking application with biometric authentication and real-time transactions.</p>
+                        <div class="project-tags">
+                            <span class="tag">React Native</span>
+                            <span class="tag">TypeScript</span>
+                            <span class="tag">AWS</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <span class="status-badge planned">Planned</span>
+                        <h3>Social Media Platform</h3>
+                        <p>Next-generation social platform focused on privacy and meaningful connections.</p>
+                        <div class="project-tags">
+                            <span class="tag">Vue.js</span>
+                            <span class="tag">GraphQL</span>
+                            <span class="tag">PostgreSQL</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <span class="status-badge completed">Completed</span>
+                        <h3>Portfolio Website</h3>
+                        <p>Minimalist portfolio showcasing creative work with smooth animations and interactions.</p>
+                        <div class="project-tags">
+                            <span class="tag">HTML/CSS</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">GSAP</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <span class="status-badge in-progress">In Progress</span>
+                        <h3>Game Engine</h3>
+                        <p>Lightweight 2D game engine built from scratch with physics and particle systems.</p>
+                        <div class="project-tags">
+                            <span class="tag">C++</span>
+                            <span class="tag">OpenGL</span>
+                            <span class="tag">Lua</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Detail Section -->
+        <section id="project-detail" class="section">
+            <div class="container">
+                <div class="project-hero">
+                    <span class="status-badge completed">Completed</span>
+                    <h1>E-Commerce Platform</h1>
+                    <div class="project-meta">
+                        <span>Client: Tech Startup</span>
+                        <span>Duration: 3 months</span>
+                        <span>Year: 2024</span>
+                    </div>
+                </div>
+
+                <div class="project-content">
+                    <div class="project-description">
+                        <h2>Overview</h2>
+                        <p>
+                            This comprehensive e-commerce platform was designed to handle high-volume transactions
+                            while maintaining a seamless user experience. Built with scalability in mind, the platform
+                            features a modern, responsive design that works flawlessly across all devices.
+                        </p>
+                        <p>
+                            The project involved creating a custom CMS for product management, implementing secure
+                            payment processing with Stripe, and developing an intuitive admin dashboard for
+                            real-time analytics and inventory management.
+                        </p>
+
+                        <h2>Technical Approach</h2>
+                        <p>
+                            The architecture follows a microservices pattern with separate services for authentication,
+                            product catalog, orders, and payments. This ensures high availability and allows for
+                            independent scaling of different components.
+                        </p>
+                        <p>
+                            Frontend performance was optimized using lazy loading, code splitting, and aggressive
+                            caching strategies, resulting in sub-second load times even on slower connections.
+                        </p>
+
+                        <h2>Key Features</h2>
+                        <p>
+                            • Real-time inventory tracking with automatic stock updates<br>
+                            • Advanced search with filters and AI-powered recommendations<br>
+                            • Multi-currency support with automatic exchange rate updates<br>
+                            • Comprehensive analytics dashboard with sales forecasting<br>
+                            • Mobile-first responsive design with PWA capabilities
+                        </p>
+                    </div>
+
+                    <div class="project-sidebar">
+                        <div class="sidebar-section">
+                            <h3>Technologies</h3>
+                            <div class="project-tags" style="margin-top: 1rem;">
+                                <span class="tag">React</span>
+                                <span class="tag">Node.js</span>
+                                <span class="tag">MongoDB</span>
+                                <span class="tag">Redis</span>
+                                <span class="tag">Docker</span>
+                                <span class="tag">AWS</span>
+                                <span class="tag">Stripe API</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h3>Role</h3>
+                            <p style="color: var(--light-gray);">Full-Stack Developer & UI Designer</p>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h3>Links</h3>
+                            <a href="#" class="cta-button" style="display: block; text-align: center; margin-bottom: 1rem;">LIVE DEMO</a>
+                            <a href="#" class="cta-button" style="display: block; text-align: center;">VIEW CODE</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-gallery">
+                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">Gallery</h2>
+                    <div class="gallery-grid">
+                        <div class="gallery-item">
+                            <span>Homepage Screenshot</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Product Catalog</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Shopping Cart</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Admin Dashboard</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Mobile View</span>
+                        </div>
+                        <div class="gallery-item">
+                            <span>Analytics Panel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 style="font-size: 3rem; margin-bottom: 2rem; letter-spacing: -1px;">About Me</h2>
+                <div style="max-width: 800px;">
+                    <p style="color: var(--light-gray); line-height: 1.8; margin-bottom: 2rem;">
+                        I'm a creative developer passionate about building elegant solutions to complex problems. 
+                        With a background in both design and engineering, I bring a unique perspective to every project.
+                    </p>
+                    <p style="color: var(--light-gray); line-height: 1.8; margin-bottom: 2rem;">
+                        My expertise spans full-stack development, UI/UX design, and system architecture. 
+                        I believe in clean code, minimalist design, and creating experiences that delight users.
+                    </p>
+                    <p style="color: var(--light-gray); line-height: 1.8;">
+                        When I'm not coding, you can find me exploring new technologies, contributing to open source, 
+                        or sharing knowledge through technical writing and mentorship.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 style="font-size: 3rem; margin-bottom: 2rem; letter-spacing: -1px;">Get In Touch</h2>
+                <div style="max-width: 600px;">
+                    <p style="color: var(--light-gray); line-height: 1.8; margin-bottom: 3rem;">
+                        I'm always interested in hearing about new projects and opportunities. 
+                        Whether you have a question or just want to say hello, feel free to reach out.
+                    </p>
+                    <a href="mailto:your@email.com" class="cta-button">SEND MESSAGE</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.style.color = 'var(--light-gray)';
+            });
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Add smooth hover effect for project cards
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+        });
+
+        // Initialize
+        showSection('home');
+    </script>
+</body>
+</html>

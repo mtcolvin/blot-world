@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Style Mockups</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 32px;
+            font-weight: 300;
+        }
+
+        .mockup-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .mockup-section {
+            margin-bottom: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .mockup-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .mockup-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .timeline-demo {
+            height: 140px;
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            cursor: grab;
+        }
+
+        .timeline-demo:active {
+            cursor: grabbing;
+        }
+
+        .timeline-demo::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .timeline-demo::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-demo::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .timeline-demo::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .timeline-track {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 50%;
+            position: relative;
+            min-width: max-content;
+        }
+
+        /* Thumbnail preview */
+        .tick-thumbnail {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            margin-top: 6px;
+            opacity: 0.6;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Style 1: Monthly Ticks with Stacked Previews */
+        .style-1 .timeline-track {
+            align-items: center;
+            padding: 40px 0 20px 0;
+            flex-direction: row-reverse;
+        }
+
+        .style-1 .tick {
+            position: relative;
+            margin: 0 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .style-1 .tick-previews {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+
+        .style-1 .tick-thumbnail {
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
+            border-radius: 1px;
+        }
+
+        .style-1 .tick.active .tick-thumbnail {
+            opacity: 1;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+        }
+
+        .style-1 .tick.has-photos .tick-thumbnail {
+            opacity: 0.8;
+        }
+
+        .style-1 .tick-line {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .style-1 .tick.year .tick-line {
+            height: 28px;
+            background: rgba(255, 255, 255, 0.5);
+            width: 1.5px;
+        }
+
+        .style-1 .tick-label {
+            margin-top: 4px;
+            font-size: 8px;
+            color: rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+        }
+
+        .style-1 .tick.year .tick-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .style-1 .tick.has-photos .tick-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Arrow indicator */
+        .style-1 .arrow-indicator {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Style 2: Dots with Connecting Line */
+        .style-2 {
+            position: relative;
+        }
+
+        .style-2::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2) 10%,
+                rgba(255, 255, 255, 0.2) 90%,
+                transparent);
+        }
+
+        .style-2 .tick {
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .style-2 .tick-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px solid #0a0a0a;
+        }
+
+        .style-2 .tick.year .tick-dot {
+            width: 14px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .style-2 .tick-label {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+
+        .style-2 .tick.year .tick-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .style-2 .tick-thumbnail {
+            margin-top: 30px;
+        }
+
+        /* Style 3: Colorful Gradient Bars */
+        .style-3 .tick {
+            position: relative;
+            margin: 0 8px;
+        }
+
+        .style-3 .tick-bar {
+            width: 4px;
+            height: 35px;
+            background: linear-gradient(to top,
+                rgba(100, 150, 255, 0.5),
+                rgba(150, 100, 255, 0.7));
+            border-radius: 2px;
+        }
+
+        .style-3 .tick.year .tick-bar {
+            height: 50px;
+            width: 6px;
+            background: linear-gradient(to top,
+                rgba(255, 150, 100, 0.6),
+                rgba(255, 100, 150, 0.8));
+        }
+
+        .style-3 .tick-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+        }
+
+        .style-3 .tick-thumbnail {
+            margin-top: 8px;
+        }
+
+        /* Style 4: Blocks/Cards */
+        .style-4 .tick {
+            position: relative;
+            margin: 0 6px;
+        }
+
+        .style-4 .tick-block {
+            width: 30px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .style-4 .tick.year .tick-block {
+            height: 55px;
+            width: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .style-4 .tick-thumbnail {
+            margin-top: 6px;
+        }
+
+        /* Style 5: Circular Nodes */
+        .style-5 {
+            position: relative;
+        }
+
+        .style-5::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            right: 50px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .style-5 .tick {
+            position: relative;
+            margin: 0 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .style-5 .tick-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .style-5 .tick-circle::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .style-5 .tick.year .tick-circle {
+            width: 30px;
+            height: 30px;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .style-5 .tick.year .tick-circle::after {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .style-5 .tick-label {
+            position: absolute;
+            top: 35px;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+
+        .style-5 .tick.year .tick-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            top: 40px;
+        }
+
+        .style-5 .tick-thumbnail {
+            margin-top: 35px;
+        }
+
+        /* Style 6: Waveform/Audio Style */
+        .style-6 .tick {
+            position: relative;
+            margin: 0 4px;
+        }
+
+        .style-6 .tick-wave {
+            width: 3px;
+            height: 25px;
+            background: rgba(100, 200, 255, 0.5);
+            border-radius: 2px;
+        }
+
+        .style-6 .tick.year .tick-wave {
+            height: 45px;
+            width: 5px;
+            background: rgba(255, 150, 100, 0.7);
+        }
+
+        .style-6 .tick-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+
+        .style-6 .tick-thumbnail {
+            margin-top: 8px;
+        }
+
+        /* Center indicator for reference */
+        .center-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom,
+                transparent,
+                rgba(255, 200, 0, 0.3) 30%,
+                rgba(255, 200, 0, 0.5) 50%,
+                rgba(255, 200, 0, 0.3) 70%,
+                transparent);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Timeline Style Mockups</h1>
+
+    <div class="mockup-container">
+        <!-- Style 1: Current Minimal -->
+        <div class="mockup-section">
+            <div class="mockup-title">Style 1: Minimal Ticks (Current)</div>
+            <div class="mockup-description">Clean, simple vertical lines. Year markers are slightly taller.</div>
+            <div class="timeline-demo style-1">
+                <div class="arrow-indicator"></div>
+                <div class="timeline-track">
+                    <!-- Reverse chronological: newest first, scroll right to go into past -->
+                    <div class="tick year">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">2021</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Aug</div>
+                    </div>
+                    <div class="tick active">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">May</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Feb</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">2020</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Nov</div>
+                        <div class="stack-count">2</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Sep</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Jul</div>
+                        <div class="stack-count">3</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Jun</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Apr</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Jan</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">2019</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">Mar</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-line"></div>
+                        <div class="tick-thumbnail"></div>
+                        <div class="tick-label">2017</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style 2: Dots with Line -->
+        <div class="mockup-section">
+            <div class="mockup-title">Style 2: Connected Dots</div>
+            <div class="mockup-description">Dots connected by a horizontal line. Larger dots for years.</div>
+            <div class="timeline-demo style-2">
+                <div class="timeline-track">
+                    <div class="tick year">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">2017</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Mar</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">2019</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Jan</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Apr</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Jun</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Sep</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Nov</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">2020</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Feb</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">May</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">Aug</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-dot"></div>
+                        <div class="tick-label">2021</div>
+                    </div>
+                </div>
+                <div class="center-line"></div>
+            </div>
+        </div>
+
+        <!-- Style 3: Colorful Gradient -->
+        <div class="mockup-section">
+            <div class="mockup-title">Style 3: Colorful Gradient Bars</div>
+            <div class="mockup-description">Vibrant gradient bars. Different colors for regular months vs years.</div>
+            <div class="timeline-demo style-3">
+                <div class="timeline-track">
+                    <div class="tick year">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">2017</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Mar</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">2019</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Jan</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Apr</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Jun</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Sep</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Nov</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">2020</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Feb</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">May</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">Aug</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-bar"></div>
+                        <div class="tick-label">2021</div>
+                    </div>
+                </div>
+                <div class="center-line"></div>
+            </div>
+        </div>
+
+        <!-- Style 4: Blocks -->
+        <div class="mockup-section">
+            <div class="mockup-title">Style 4: Card/Block Style</div>
+            <div class="mockup-description">Small cards for each date. Larger cards for years.</div>
+            <div class="timeline-demo style-4">
+                <div class="timeline-track">
+                    <div class="tick year">
+                        <div class="tick-block">2017</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">M</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">J</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-block">2019</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">J</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">A</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">J</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">S</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">N</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-block">2020</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">F</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">M</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">J</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-block">A</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-block">2021</div>
+                    </div>
+                </div>
+                <div class="center-line"></div>
+            </div>
+        </div>
+
+        <!-- Style 5: Circular Nodes -->
+        <div class="mockup-section">
+            <div class="mockup-title">Style 5: Circular Timeline Nodes</div>
+            <div class="mockup-description">Circular nodes with inner dots. Connected by a thin line.</div>
+            <div class="timeline-demo style-5">
+                <div class="timeline-track">
+                    <div class="tick year">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">2017</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Mar</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">2019</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Jan</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Apr</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Jun</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Sep</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Nov</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">2020</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Feb</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">May</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">Aug</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-circle"></div>
+                        <div class="tick-label">2021</div>
+                    </div>
+                </div>
+                <div class="center-line"></div>
+            </div>
+        </div>
+
+        <!-- Style 6: Waveform -->
+        <div class="mockup-section">
+            <div class="mockup-title">Style 6: Waveform/Audio Style</div>
+            <div class="mockup-description">Audio waveform aesthetic with varying heights and colors.</div>
+            <div class="timeline-demo style-6">
+                <div class="timeline-track">
+                    <div class="tick year">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">2017</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Mar</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">2019</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Jan</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Apr</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Jun</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Sep</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Nov</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">2020</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Feb</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">May</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Jul</div>
+                    </div>
+                    <div class="tick">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">Aug</div>
+                    </div>
+                    <div class="tick year">
+                        <div class="tick-wave"></div>
+                        <div class="tick-label">2021</div>
+                    </div>
+                </div>
+                <div class="center-line"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

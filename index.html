@@ -260,26 +260,101 @@
                         </div>
                         
                         <!-- Area Filters -->
-                        <div class="filter-section">
-                            <h3>Area</h3>
-                            <div class="filter-options" id="area-filter-options"></div>
+                        <div class="filter-section collapsible-section">
+                            <h3 class="filter-section-header">
+                                <span>Area</span>
+                                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 9L1 4h10L6 9z"/>
+                                </svg>
+                            </h3>
+                            <div class="filter-options collapsible-content" id="area-filter-options"></div>
                         </div>
 
                         <!-- Technology Filters -->
-                        <div class="filter-section">
-                            <h3>Technologies</h3>
-                            <div class="filter-options" id="tech-filter-options"></div>
+                        <div class="filter-section collapsible-section">
+                            <h3 class="filter-section-header">
+                                <span>Technologies</span>
+                                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 9L1 4h10L6 9z"/>
+                                </svg>
+                            </h3>
+                            <div class="filter-options collapsible-content" id="tech-filter-options"></div>
                         </div>
                     </aside>
                     
                     <!-- Projects Grid -->
                     <div class="projects-main" id="projects-main">
                         <div class="projects-grid" id="projects-grid">
+
+							<a href="projects/photography/photography.html" class="project-card-link">
+                                <div class="project-card"
+									data-area="Photography"
+									data-tech="Camera,Lightroom,Photoshop"
+									data-name="Photography Gallery"
+									data-month="Ongoing"
+									data-year="2024">
+                                    <div class="project-image">
+                                        <img src="images/previews/photography-preview.jpg" alt="Photography Gallery Preview">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Photography</h3>
+                                            </div>
+                                            <p>A visual timeline of moments captured through the lens. Click through to browse the collection.</p>
+                                            <div class="project-date-container">
+                                                <span class="project-date">Ongoing</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Camera</span>
+                                                <span class="tag">Lightroom</span>
+                                                <span class="tag">Photoshop</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Photography</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+							<a href="projects/joni/joni.html" class="project-card-link">
+                                <div class="project-card" 
+									data-area="Digital Art" 
+									data-tech="Affinity Designer" 
+									data-name="Joni" 
+									data-month="January" 
+									data-year="2025">
+                                    <div class="project-image">
+                                        <img src="images/previews/joni-preview.jpg" alt="Joni Artwork">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Joni</h3>
+                                            </div>
+                                            <div class="project-date-container">
+                                                <span class="project-date">January 2025 - October 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Affinity Designer</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Digital Art</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
 						
                             <a href="#" class="project-card-link" onclick="event.preventDefault(); showInceptionModal();">
                                 <div class="project-card" 
 									data-area="Web Design" 
-									data-tech="HTML,JavaScript,JSON,CSS,Claude,ChatGPT" 
+									data-tech="HTML,JavaScript,JSON,CSS,Claude,ChatGPT,GitHub" 
 									data-name="BLOT.WORLD Portfolio Website" 
 									data-month="September" 
 									data-year="2025">
@@ -301,6 +376,7 @@
 												<span class="tag">ChatGPT</span>
                                                 <span class="tag">Claude</span>
                                                 <span class="tag">CSS</span>
+												<span class="tag">GitHub</span>
                                                 <span class="tag">HTML</span>
                                                 <span class="tag">JavaScript</span>
 												<span class="tag">JSON</span>
@@ -538,9 +614,9 @@
 							<div class="value-card">
 								<div class="value-header">
 									<span class="value-icon">🎨</span>
-									<h3 class="value-title">Craft</h3>
+									<h3 class="value-title">Sustainability</h3>
 								</div>
-								<p class="value-description">Every pixel counts. Precision over perfection.</p>
+								<p class="value-description"></p>
 							</div>
 						</div>
 						

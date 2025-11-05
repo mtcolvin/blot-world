@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Google Fonts Roboto Flex -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+
+	<!-- External Stylesheets -->
+	<link rel="stylesheet" href="../../css/root.css">
+    <link rel="stylesheet" href="../../css/minimal-nav.css">
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/x-icon" href="../../favicon.ico">
+	<link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon/favicon-32x32.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="../../images/favicon/apple-touch-icon.png">
+	<link rel="manifest" href="../../images/favicon/site.webmanifest">
+	<meta name="theme-color" content="#0a0a0a">
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Photography by Matthew Colvin - A visual timeline of moments captured through the lens.">
+	<meta name="keywords" content="Matthew Colvin, photography, photo gallery, visual timeline">
+	<meta name="author" content="Matthew Colvin">
+
+	<!-- Open Graph Meta Tags -->
+	<meta property="og:title" content="Photography by Matthew Colvin">
+	<meta property="og:description" content="A visual timeline of moments captured through the lens">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="BLOT.WORLD">
+
+	<!-- Twitter Card Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Photography by Matthew Colvin">
+	<meta name="twitter:description" content="A visual timeline of moments captured through the lens">
+
+	<meta name="robots" content="index, follow">
+
+	<title>Photography by 18:15</title>
+
+	<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --photo-bg: #0a0a0a;
+            --photo-dark: #000000;
+            --photo-light: #f5f5f5;
+            --photo-accent: #888888;
+        }
+
+		body {
+			font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+			background: var(--photo-bg);
+			color: var(--photo-light);
+			line-height: 1.6;
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+			height: 100vh;
+		}
+
+        /* Mini Nav */
+        nav.minimal-nav {
+            position: fixed;
+            top: var(--mininav-spacing);
+            left: var(--mininav-spacing);
+            width: var(--mininav-width);
+            height: var(--mininav-height);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding-right: 0.2em;
+        }
+
+        nav.minimal-nav svg.nav-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+            preserveAspectRatio: none;
+            shape-rendering: geometricPrecision;
+        }
+
+        .nav-rect {
+            fill: rgba(0, 0, 0, 1);
+            transition: fill 0.3s ease;
+        }
+
+        .minimal-nav .backdrop-blur {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            pointer-events: none;
+        }
+
+        .minimal-nav .minimal-nav-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            color: white;
+            font-weight: 600;
+            user-select: none;
+            padding-left: 0.5rem;
+            isolation: isolate;
+        }
+
+        .back-btn-minimal {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-right: 1.75rem;
+            transition: transform 0.3s ease;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .minimal-nav:hover .back-btn-minimal {
+            transform: translateX(-4px);
+        }
+
+        .min-logo-title {
+            display: flex;
+            letter-spacing: -1px;
+            margin-left: auto;
+            padding-right: 0.25rem;
+            font-family: "Roboto Flex", sans-serif;
+        }
+
+        .min-logo-title span {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .min-logo-title span:nth-child(1) { font-weight: 900; }
+        .min-logo-title span:nth-child(2) { font-weight: 820; }
+        .min-logo-title span:nth-child(3) { font-weight: 740; }
+        .min-logo-title span:nth-child(4) { font-weight: 660; }
+        .min-logo-title span:nth-child(5) { font-weight: 580; }
+        .min-logo-title span:nth-child(6) { font-weight: 500; }
+        .min-logo-title span:nth-child(7) { font-weight: 420; }
+        .min-logo-title span:nth-child(8) { font-weight: 340; }
+        .min-logo-title span:nth-child(9) { font-weight: 260; }
+        .min-logo-title span:nth-child(10) { font-weight: 180; }
+
+        .minimal-nav:hover .min-logo-title span {
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .gallery-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            height: calc(100vh - 200px);
+            overflow: hidden;
+        }
+
+        /* Photo Viewer */
+        .photo-viewer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .main-photo-container {
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-photo {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            border-radius: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .main-photo.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Photo Metadata Panel */
+        .photo-metadata {
+            width: 300px;
+            height: calc(100vh - 80px);
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 24px;
+            overflow-y: auto;
+            color: var(--photo-light);
+        }
+
+        .photo-metadata::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .photo-metadata::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .photo-metadata::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .metadata-section {
+            margin-bottom: 28px;
+        }
+
+        .metadata-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--photo-accent);
+            margin-bottom: 12px;
+        }
+
+        .metadata-item {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .metadata-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 4px;
+        }
+
+        .metadata-value {
+            font-weight: 500;
+            color: var(--photo-light);
+        }
+
+        .photo-count-display {
+            font-size: 12px;
+            color: var(--photo-accent);
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Minimal Timeline Container */
+        .timeline-container {
+            height: 120px;
+            position: relative;
+            overflow: visible;
+            background: var(--photo-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Timeline Scroll Area */
+        .timeline-scroll {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0 50%;
+            scroll-behavior: smooth;
+        }
+
+        .timeline-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .timeline-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .timeline-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+        }
+
+        .timeline-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Timeline Track */
+        .timeline-track {
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            min-width: 100%;
+            height: 100%;
+            gap: 0;
+            padding-bottom: 40px;
+        }
+
+        /* Center Indicator - Minimal */
+        .center-indicator {
+            position: fixed;
+            left: 50%;
+            bottom: 40px;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 30%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0.3) 70%,
+                transparent 100%
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Base line (hidden) */
+        .timeline-axis {
+            display: none;
+        }
+
+        /* Minimal Tick Mark */
+        .tick-mark {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            padding: 0 8px;
+            transform-origin: bottom center;
+        }
+
+        /* Simple Tick Line */
+        .tick-line {
+            width: 1px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        /* Major Tick (Year) - slightly taller */
+        .tick-mark.major .tick-line {
+            height: 40px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Active Tick - white and tallest */
+        .tick-mark.active .tick-line {
+            height: 50px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Hide thumbnail by default */
+        .tick-thumbnail {
+            display: none;
+        }
+
+        /* Simple Date Label */
+        .tick-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .tick-mark.major .tick-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            bottom: -32px;
+        }
+
+        .tick-mark.active .tick-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        /* Minimal Stack Indicator */
+        .stack-indicator {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            font-size: 8px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tick-mark.active .stack-indicator {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+
+        /* Loading State */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: var(--photo-accent);
+        }
+
+        .no-photos {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--photo-accent);
+        }
+
+        .no-photos h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .no-photos p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .photo-metadata {
+                width: 250px;
+                padding: 20px 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                height: calc(100vh - 200px);
+            }
+
+            .photo-viewer {
+                padding: 20px;
+                height: 50vh;
+            }
+
+            .photo-metadata {
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .timeline-container {
+                height: 100px;
+            }
+
+            .timeline-scroll {
+                height: 60px;
+            }
+
+            .center-indicator {
+                height: 50px;
+            }
+
+            .tick-line {
+                height: 25px;
+            }
+
+            .tick-mark.major .tick-line {
+                height: 32px;
+            }
+
+            .tick-mark.active .tick-line {
+                height: 40px;
+            }
+
+            .tick-label {
+                font-size: 8px;
+                bottom: -18px;
+            }
+        }
+	</style>
+</head>
+<body>
+    <!-- Mini Nav -->
+    <nav class="minimal-nav" aria-label="minimal nav" onclick="window.location.href='../../index.html'">
+		<div class="backdrop-blur"></div>
+		<svg class="nav-bg" viewBox="0 0 170 40" preserveAspectRatio="none" width="170" height="40" aria-hidden="true">
+			<defs>
+				<mask id="logo-cut-photo" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
+					<rect x="0" y="0" width="170" height="40" fill="white"/>
+					<g transform="translate(46,20) scale(0.028) translate(-500,-490)">
+						<path fill="black" d="M991,460.892L991,467.417C990.891,471.541 990.574,475.688 990.043,479.868C985.994,511.733 969.382,546.346 934.452,588.386C910.036,617.773 886.483,628.622 864.884,628.983C843.104,629.347 822.351,618.772 803.15,601.339C781.514,581.694 761.573,553.12 743.353,526.84C732.706,511.483 722.691,496.992 712.824,486.256C706.296,479.154 700.646,473.227 694.144,472.875C688.497,472.57 684.012,477.895 677.96,486.659C667.609,501.651 656.963,525.889 645.189,561.882C624.028,626.57 594.224,674.799 567.479,713.734C518.847,784.532 463.748,816.88 412.069,822.169C406.628,822.726 401.22,823 395.854,823C348.855,823 305.12,801.988 271.212,766.077C230.671,723.142 204,658.105 204,583.15C204,502.498 234.88,410.363 312.59,321.927C417.276,202.792 515.293,156.353 603.237,156.003C603.77,156.001 604.303,156 604.836,156C760.712,156 874.851,246.86 934.732,332.382C968.829,381.081 989.926,420.198 991,460.892ZM429.775,332.043C368.872,386.834 339.368,425.638 310.535,510.048C288.666,574.07 296.348,629.231 331.119,679.616C353.445,711.967 375.334,727.662 397.28,730.179C418.739,732.64 439.297,722.479 458.566,706.838C503.108,670.68 540.149,605.196 561.946,562.113C591.8,503.102 616.674,424.109 619.608,360.732C621.284,324.538 616.936,293.587 597.836,278.396C575.999,261.028 548.344,265.774 510.267,279.007C482.05,288.814 466.82,298.716 429.775,332.043ZM837.246,342.426C803.429,308.395 771.489,288.698 746.968,279.148C733.294,273.823 722.532,271.555 715.878,272.522C714.92,272.661 714.747,273.573 714.588,274.515C714.347,275.942 714.254,277.489 714.247,279.137C714.228,284.039 714.981,289.584 716.186,295.564C723.559,332.177 747.03,381.749 757.783,409.859C767.355,434.879 801.075,501.32 839.443,528.626C848.906,535.361 858.483,539.775 868.084,537.94C878.041,536.037 886.981,527.525 895.925,512.194C927.84,457.492 909.454,415.088 837.246,342.426Z"/>
+					</g>
+				</mask>
+			</defs>
+			<rect class="nav-rect" x="0" y="0" width="170" height="40"/>
+			<g transform="translate(46,20) scale(0.028) translate(-500,-490)">
+				<path class="logo-fill" d="M991,460.892L991,467.417C990.891,471.541 990.574,475.688 990.043,479.868C985.994,511.733 969.382,546.346 934.452,588.386C910.036,617.773 886.483,628.622 864.884,628.983C843.104,629.347 822.351,618.772 803.15,601.339C781.514,581.694 761.573,553.12 743.353,526.84C732.706,511.483 722.691,496.992 712.824,486.256C706.296,479.154 700.646,473.227 694.144,472.875C688.497,472.57 684.012,477.895 677.96,486.659C667.609,501.651 656.963,525.889 645.189,561.882C624.028,626.57 594.224,674.799 567.479,713.734C518.847,784.532 463.748,816.88 412.069,822.169C406.628,822.726 401.22,823 395.854,823C348.855,823 305.12,801.988 271.212,766.077C230.671,723.142 204,658.105 204,583.15C204,502.498 234.88,410.363 312.59,321.927C417.276,202.792 515.293,156.353 603.237,156.003C603.77,156.001 604.303,156 604.836,156C760.712,156 874.851,246.86 934.732,332.382C968.829,381.081 989.926,420.198 991,460.892ZM429.775,332.043C368.872,386.834 339.368,425.638 310.535,510.048C288.666,574.07 296.348,629.231 331.119,679.616C353.445,711.967 375.334,727.662 397.28,730.179C418.739,732.64 439.297,722.479 458.566,706.838C503.108,670.68 540.149,605.196 561.946,562.113C591.8,503.102 616.674,424.109 619.608,360.732C621.284,324.538 616.936,293.587 597.836,278.396C575.999,261.028 548.344,265.774 510.267,279.007C482.05,288.814 466.82,298.716 429.775,332.043ZM837.246,342.426C803.429,308.395 771.489,288.698 746.968,279.148C733.294,273.823 722.532,271.555 715.878,272.522C714.92,272.661 714.747,273.573 714.588,274.515C714.347,275.942 714.254,277.489 714.247,279.137C714.228,284.039 714.981,289.584 716.186,295.564C723.559,332.177 747.03,381.749 757.783,409.859C767.355,434.879 801.075,501.32 839.443,528.626C848.906,535.361 858.483,539.775 868.084,537.94C878.041,536.037 886.981,527.525 895.925,512.194C927.84,457.492 909.454,415.088 837.246,342.426Z"/>
+			</g>
+		</svg>
+		<div class="minimal-nav-container">
+			<button class="back-btn-minimal">
+				<svg width="18" height="18" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M19 12H5M12 19l-7-7 7-7"/>
+				</svg>
+			</button>
+			<div class="min-logo-title">
+				<span>B</span><span>L</span><span>O</span><span>T</span><span>.</span><span>W</span><span>O</span><span>R</span><span>L</span><span>D&nbsp;</span>
+			</div>
+		</div>
+	</nav>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading">Loading photos...</div>
+
+    <!-- No Photos Message -->
+    <div class="no-photos" id="no-photos" style="display: none;">
+        <h2>No Photos Yet</h2>
+        <p>Add images to /projects/photography/images/</p>
+    </div>
+
+    <!-- Gallery Layout -->
+    <div class="gallery-layout" id="gallery-layout" style="display: none;">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Photo Viewer -->
+            <div class="photo-viewer">
+                <div class="main-photo-container">
+                    <img class="main-photo" id="main-photo" alt="Photography by Matthew Colvin" />
+                </div>
+            </div>
+
+            <!-- Metadata Panel -->
+            <div class="photo-metadata" id="photo-metadata">
+                <div class="photo-count-display" id="photo-count"></div>
+
+                <div class="metadata-section">
+                    <div class="metadata-title">Photo Information</div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Date Taken</div>
+                        <div class="metadata-value" id="photo-date">—</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">File Name</div>
+                        <div class="metadata-value" id="photo-filename">—</div>
+                    </div>
+                </div>
+
+                <div class="metadata-section" id="dimensions-section">
+                    <div class="metadata-title">Dimensions</div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Resolution</div>
+                        <div class="metadata-value" id="photo-dimensions">—</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Aspect Ratio</div>
+                        <div class="metadata-value" id="photo-aspect">—</div>
+                    </div>
+                </div>
+
+                <div class="metadata-section" id="exif-section" style="display: none;">
+                    <div class="metadata-title">Camera Settings</div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Camera</div>
+                        <div class="metadata-value" id="photo-camera">—</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Lens</div>
+                        <div class="metadata-value" id="photo-lens">—</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Settings</div>
+                        <div class="metadata-value" id="photo-settings">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Minimal Timeline -->
+        <div class="timeline-container">
+            <div class="timeline-scroll" id="timeline-scroll">
+                <div class="timeline-track" id="timeline-track">
+                    <!-- Tick marks will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Center Indicator -->
+            <div class="center-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../js/minimal-nav.js"></script>
+    <script src="photo-loader.js"></script>
+
+</body>
+</html>
