@@ -179,7 +179,7 @@
         .main-content {
             flex: 1;
             display: flex;
-            height: calc(100vh - 240px);
+            min-height: 0;
             overflow: hidden;
         }
 
@@ -223,7 +223,7 @@
         /* Photo Metadata Panel */
         .photo-metadata {
             width: 300px;
-            height: calc(100vh - 80px);
+            height: 100%;
             background: linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             padding: 30px 24px;
@@ -511,12 +511,12 @@
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
-                height: calc(100vh - 200px);
             }
 
             .photo-viewer {
                 padding: 20px;
-                height: calc(50vh - 60px);
+                flex: 1;
+                min-height: 0;
             }
 
             .photo-metadata {
