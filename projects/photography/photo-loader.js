@@ -291,31 +291,40 @@
         // Apply initial perspective scaling
         updatePerspective();
 
-        // Update perspective on scroll
-        elements.timelineScroll.addEventListener('scroll', updatePerspective);
+        // Update perspective on scroll - use passive for better performance
+        elements.timelineScroll.addEventListener('scroll', updatePerspective, { passive: true });
     }
 
     // Update perspective scaling based on distance from center
+    let rafId = null;
     function updatePerspective() {
-        const ticks = document.querySelectorAll('.tick-mark');
-        const scrollContainer = elements.timelineScroll;
-        const centerX = scrollContainer.offsetWidth / 2;
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
 
-        ticks.forEach(tick => {
-            const rect = tick.getBoundingClientRect();
-            const containerRect = scrollContainer.getBoundingClientRect();
-            const tickCenterX = rect.left + rect.width / 2 - containerRect.left;
+        rafId = requestAnimationFrame(() => {
+            const ticks = document.querySelectorAll('.tick-mark');
+            const scrollContainer = elements.timelineScroll;
+            const centerX = scrollContainer.offsetWidth / 2;
 
-            // Calculate distance from center (0 to 1, where 1 is at edge)
-            const distance = Math.abs(tickCenterX - centerX) / centerX;
+            ticks.forEach(tick => {
+                const rect = tick.getBoundingClientRect();
+                const containerRect = scrollContainer.getBoundingClientRect();
+                const tickCenterX = rect.left + rect.width / 2 - containerRect.left;
 
-            // Scale based on distance (0.4 to 1.0)
-            // Ticks at center are full size, ticks at edges are 40% size
-            const scale = Math.max(0.4, 1 - (distance * 0.6));
+                // Calculate distance from center (0 to 1, where 1 is at edge)
+                const distance = Math.abs(tickCenterX - centerX) / centerX;
 
-            // Apply scaling
-            tick.style.transform = `scaleY(${scale})`;
-            tick.style.opacity = Math.max(0.3, scale);
+                // Scale based on distance (0.4 to 1.0)
+                // Ticks at center are full size, ticks at edges are 40% size
+                const scale = Math.max(0.4, 1 - (distance * 0.6));
+
+                // Apply scaling - use transform for better performance
+                tick.style.transform = `scaleY(${scale})`;
+                tick.style.opacity = Math.max(0.3, scale);
+            });
+
+            rafId = null;
         });
     }
 

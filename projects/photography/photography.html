@@ -363,9 +363,10 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            transition: opacity 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             padding: 0 8px;
             transform-origin: bottom center;
+            will-change: transform, opacity;
         }
 
         /* Thumbnail Preview - appears above tick */
@@ -377,7 +378,7 @@
             overflow: hidden;
             margin-bottom: 6px;
             opacity: 0.4;
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -405,7 +406,7 @@
             width: 1px;
             height: 30px;
             background: rgba(255, 255, 255, 0.3);
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
 
         /* Major Tick (Year) - slightly taller */
@@ -428,7 +429,7 @@
             font-weight: 400;
             color: rgba(255, 255, 255, 0.4);
             white-space: nowrap;
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             pointer-events: none;
             margin-top: 8px;
         }
