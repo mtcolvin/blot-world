@@ -80,6 +80,24 @@
             --joni-dark: #0a0a0a;
             --joni-light: #f5f5f5;
             --joni-accent: #D1005D;
+
+            /* Mini Nav Color Overrides */
+            --mininav-bg: transparent;
+            --mininav-logo-fill: transparent;
+            --mininav-logo-opacity: 0;
+            --mininav-logo-opacity-active: 0;
+            --mininav-backdrop-display: block;
+        }
+
+        /* Override backdrop mask and styling for this page */
+        .minimal-nav .backdrop-blur {
+            mask: url(#logo-cut-amari);
+            -webkit-mask: url(#logo-cut-amari);
+            background: rgba(70, 20, 35, 0.95);
+        }
+
+        .nav-rect {
+            fill: transparent;
         }
         
 		body {
@@ -92,107 +110,6 @@
 			padding: 0;
 			height: 100vh;
 		}
-        
-        /* Mini Nav */
-        nav.minimal-nav {
-            position: fixed;
-            top: var(--mininav-spacing);
-            left: var(--mininav-spacing);
-            width: var(--mininav-width);
-            height: var(--mininav-height);
-            border-radius: 10px;
-            overflow: hidden;
-            z-index: 1000;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            padding-right: 0.2em;
-        }
-        
-        nav.minimal-nav svg.nav-bg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            pointer-events: none;
-            preserveAspectRatio: none;
-            shape-rendering: geometricPrecision;
-        }
-        
-        .nav-rect {
-            fill: rgba(0, 0, 0, 1);
-            transition: fill 0.3s ease;
-        }
-        
-        .minimal-nav .backdrop-blur {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            pointer-events: none;
-        }
-        
-        .minimal-nav .minimal-nav-container {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            color: white;
-            font-weight: 600;
-            user-select: none;
-            padding-left: 0.5rem;
-            isolation: isolate;
-        }
-        
-        .back-btn-minimal {
-            background: transparent;
-            border: none;
-            color: inherit;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            margin-right: 1.75rem;
-            transition: transform 0.3s ease;
-            padding: 0;
-            line-height: 1;
-        }
-        
-        .minimal-nav:hover .back-btn-minimal {
-            transform: translateX(-4px);
-        }
-        
-        .min-logo-title {
-            display: flex;
-            letter-spacing: -1px;
-            margin-left: auto;
-            padding-right: 0.25rem;
-            font-family: "Roboto Flex", sans-serif;
-        }
-        
-        .min-logo-title span {
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .min-logo-title span:nth-child(1) { font-weight: 900; }
-        .min-logo-title span:nth-child(2) { font-weight: 820; }
-        .min-logo-title span:nth-child(3) { font-weight: 740; }
-        .min-logo-title span:nth-child(4) { font-weight: 660; }
-        .min-logo-title span:nth-child(5) { font-weight: 580; }
-        .min-logo-title span:nth-child(6) { font-weight: 500; }
-        .min-logo-title span:nth-child(7) { font-weight: 420; }
-        .min-logo-title span:nth-child(8) { font-weight: 340; }
-        .min-logo-title span:nth-child(9) { font-weight: 260; }
-        .min-logo-title span:nth-child(10) { font-weight: 180; }
-        
-        .minimal-nav:hover .min-logo-title span {
-            font-weight: 600;
-        }
         
         /* Gallery Container */
         .gallery {

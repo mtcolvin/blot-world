@@ -40,6 +40,24 @@
 			--upon-accent: #8b7355;
 			--upon-accent-light: #a89080;
 			--upon-border: rgba(42, 36, 24, 0.1);
+
+			/* Mini Nav Color Overrides */
+			--mininav-bg: transparent;
+			--mininav-logo-fill: transparent;
+			--mininav-logo-opacity: 0;
+			--mininav-logo-opacity-active: 0;
+			--mininav-backdrop-display: block;
+		}
+
+		/* Override backdrop mask and styling for this page */
+		.minimal-nav .backdrop-blur {
+			mask: url(#logo-cut-poetry);
+			-webkit-mask: url(#logo-cut-poetry);
+			background: rgba(139, 115, 85, 0.95);
+		}
+
+		.nav-rect {
+			fill: transparent;
 		}
         		
 		html {

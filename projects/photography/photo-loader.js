@@ -191,58 +191,98 @@
         showPhoto(0);
     }
 
-    // Build horizontal timeline with tick marks (iPhone style)
+    // Build horizontal timeline with monthly ticks
     function buildTimeline() {
         console.log(`Building timeline with ${loadedPhotos.length} photos`);
 
-        // Group photos by date (same day = same tick)
-        const groups = [];
-        const dateMap = new Map();
+        // Group photos by month (YYYY-MM format)
+        const photosByMonth = new Map();
 
         loadedPhotos.forEach((photo, index) => {
-            const dateKey = photo.date; // YYYY-MM-DD format
-            if (!dateMap.has(dateKey)) {
-                dateMap.set(dateKey, []);
+            const photoDate = new Date(photo.date);
+            const monthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+
+            if (!photosByMonth.has(monthKey)) {
+                photosByMonth.set(monthKey, []);
             }
-            dateMap.get(dateKey).push({ ...photo, globalIndex: index });
+            photosByMonth.get(monthKey).push({ ...photo, globalIndex: index });
         });
 
-        console.log(`Created ${dateMap.size} date groups`);
+        // Find date range
+        const firstPhotoDate = new Date(loadedPhotos[0].date);
+        const lastPhotoDate = new Date(loadedPhotos[loadedPhotos.length - 1].date);
 
-        // Convert map to array of groups
-        dateMap.forEach((photos, date) => {
-            groups.push({
-                date: date,
-                photos: photos
+        // Generate all months in the range
+        const allMonths = [];
+        let currentDate = new Date(firstPhotoDate.getFullYear(), firstPhotoDate.getMonth(), 1);
+        const endDate = new Date(lastPhotoDate.getFullYear(), lastPhotoDate.getMonth(), 1);
+
+        while (currentDate <= endDate) {
+            const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+            allMonths.push({
+                key: monthKey,
+                year: currentDate.getFullYear(),
+                month: currentDate.getMonth(),
+                photos: photosByMonth.get(monthKey) || []
             });
-        });
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        }
 
-        // Sort groups by date
-        groups.sort((a, b) => new Date(a.date) - new Date(b.date));
+        console.log(`Generated ${allMonths.length} monthly ticks`);
 
         // Clear existing timeline
         elements.timelineTrack.innerHTML = '';
 
-        // Build tick marks
+        // Build tick marks for each month
         let lastYear = null;
 
-        console.log(`Building ${groups.length} tick marks`);
-
-        groups.forEach((group, groupIndex) => {
-            const firstPhoto = group.photos[0];
-            const photoDate = new Date(group.date);
-            const year = photoDate.getFullYear();
-            const month = photoDate.toLocaleDateString('en-US', { month: 'short' });
+        allMonths.forEach((monthData) => {
+            const { year, month, photos } = monthData;
+            const isNewYear = year !== lastYear;
 
             // Create tick mark container
             const tickMark = document.createElement('div');
             tickMark.className = 'tick-mark';
-            tickMark.dataset.index = firstPhoto.globalIndex; // Use first photo for navigation
 
-            // Mark as major if year changed
-            if (year !== lastYear) {
-                tickMark.classList.add('major');
+            if (isNewYear) {
+                tickMark.classList.add('year');
                 lastYear = year;
+            }
+
+            if (photos.length > 0) {
+                tickMark.classList.add('has-photos');
+                tickMark.dataset.monthKey = monthData.key;
+
+                // Create stacked previews container
+                const previewsContainer = document.createElement('div');
+                previewsContainer.className = 'tick-previews';
+
+                // Add thumbnail for each photo (up to 3)
+                photos.slice(0, 3).forEach(photo => {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'tick-thumbnail';
+                    const img = document.createElement('img');
+                    img.src = photo.src || (imagePath + photo.file);
+                    img.alt = `Photo ${photo.globalIndex + 1}`;
+                    thumbnail.appendChild(img);
+                    previewsContainer.appendChild(thumbnail);
+                });
+
+                tickMark.appendChild(previewsContainer);
+
+                // Click handler - cycle through photos in this month
+                let photoIndexInMonth = 0;
+                tickMark.addEventListener('click', () => {
+                    const photo = photos[photoIndexInMonth];
+                    showPhoto(photo.globalIndex);
+
+                    // Cycle to next photo in month on repeated clicks
+                    if (photos.length > 1) {
+                        photoIndexInMonth = (photoIndexInMonth + 1) % photos.length;
+                    }
+                });
+            } else {
+                tickMark.classList.add('empty');
             }
 
             // Create tick line
@@ -250,88 +290,23 @@
             tickLine.className = 'tick-line';
             tickMark.appendChild(tickLine);
 
-            // Create thumbnail
-            const thumbnail = document.createElement('div');
-            thumbnail.className = 'tick-thumbnail';
-            const img = document.createElement('img');
-            img.src = firstPhoto.src || (imagePath + firstPhoto.file);
-            img.alt = `Photo ${firstPhoto.globalIndex + 1}`;
-            thumbnail.appendChild(img);
-            tickMark.appendChild(thumbnail);
-
-            // Add stack indicator if multiple photos on same date
-            if (group.photos.length > 1) {
-                const stackIndicator = document.createElement('div');
-                stackIndicator.className = 'stack-indicator';
-                stackIndicator.textContent = group.photos.length;
-                tickMark.appendChild(stackIndicator);
-            }
-
             // Create date label
             const label = document.createElement('div');
             label.className = 'tick-label';
-            label.textContent = tickMark.classList.contains('major') ? year : month;
+
+            if (isNewYear) {
+                label.textContent = year;
+            } else {
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                label.textContent = monthNames[month];
+            }
+
             tickMark.appendChild(label);
-
-            // Click handler - cycle through photos on this date
-            let photoIndexInGroup = 0;
-            tickMark.addEventListener('click', () => {
-                const photo = group.photos[photoIndexInGroup];
-                showPhoto(photo.globalIndex);
-
-                // If multiple photos, cycle through them on repeated clicks
-                if (group.photos.length > 1) {
-                    photoIndexInGroup = (photoIndexInGroup + 1) % group.photos.length;
-                }
-            });
 
             elements.timelineTrack.appendChild(tickMark);
         });
 
-        // Apply initial perspective scaling
-        updatePerspective();
-
-        // Update perspective on scroll - use passive for better performance
-        elements.timelineScroll.addEventListener('scroll', updatePerspective, { passive: true });
-    }
-
-    // Update perspective scaling based on distance from center
-    let rafId = null;
-    function updatePerspective() {
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-        }
-
-        rafId = requestAnimationFrame(() => {
-            const ticks = document.querySelectorAll('.tick-mark');
-            const scrollContainer = elements.timelineScroll;
-            const centerX = scrollContainer.offsetWidth / 2;
-
-            ticks.forEach(tick => {
-                const rect = tick.getBoundingClientRect();
-                const containerRect = scrollContainer.getBoundingClientRect();
-                const tickCenterX = rect.left + rect.width / 2 - containerRect.left;
-
-                // Calculate distance from center (0 to 1, where 1 is at edge)
-                const distance = Math.abs(tickCenterX - centerX) / centerX;
-
-                // Scale based on distance (0.4 to 1.0)
-                // Ticks at center are full size, ticks at edges are 40% size
-                const scale = Math.max(0.4, 1 - (distance * 0.6));
-
-                // Apply scaling - use transform for better performance
-                tick.style.transform = `scaleY(${scale})`;
-                tick.style.opacity = Math.max(0.3, scale);
-            });
-
-            rafId = null;
-        });
-    }
-
-    // Calculate days between dates
-    function daysBetween(date1, date2) {
-        const oneDay = 24 * 60 * 60 * 1000;
-        return Math.abs((date2 - date1) / oneDay);
+        console.log(`Built ${allMonths.length} tick marks`);
     }
 
     // Show specific photo
@@ -346,6 +321,10 @@
 
         setTimeout(() => {
             elements.mainPhoto.src = photo.src || (imagePath + photo.file);
+
+            // Detect orientation and set data attribute
+            const orientation = photo.width > photo.height ? 'landscape' : 'portrait';
+            elements.mainPhoto.setAttribute('data-orientation', orientation);
 
             // Update basic info
             const date = new Date(photo.date);
@@ -369,16 +348,12 @@
             }, 50);
         }, 200);
 
-        // Update active tick mark
-        const currentPhotoDate = photo.date;
-        document.querySelectorAll('.tick-mark').forEach((tick) => {
-            const tickPhotos = Array.from(tick.querySelectorAll('img'))
-                .map(img => img.alt)
-                .join('');
+        // Update active tick mark based on photo's month
+        const photoDate = new Date(photo.date);
+        const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
 
-            // Check if this tick contains the current photo
-            const tickPhoto = loadedPhotos.find(p => p.globalIndex === parseInt(tick.dataset.index));
-            if (tickPhoto && tickPhoto.date === currentPhotoDate) {
+        document.querySelectorAll('.tick-mark').forEach((tick) => {
+            if (tick.dataset.monthKey === photoMonthKey) {
                 tick.classList.add('active');
             } else {
                 tick.classList.remove('active');
@@ -412,11 +387,13 @@
         const photo = loadedPhotos[index];
         if (!photo) return;
 
-        // Find the tick mark that matches this photo's date
+        // Find the tick mark that matches this photo's month
+        const photoDate = new Date(photo.date);
+        const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+
         const ticks = document.querySelectorAll('.tick-mark');
         for (let tick of ticks) {
-            const tickPhoto = loadedPhotos.find(p => p.globalIndex === parseInt(tick.dataset.index));
-            if (tickPhoto && tickPhoto.date === photo.date) {
+            if (tick.dataset.monthKey === photoMonthKey) {
                 const scrollContainer = elements.timelineScroll;
                 const tickLeft = tick.offsetLeft;
                 const scrollLeft = tickLeft - (scrollContainer.offsetWidth / 2) + (tick.offsetWidth / 2);
@@ -425,11 +402,6 @@
                     left: scrollLeft,
                     behavior: 'smooth'
                 });
-
-                // Update perspective after scroll
-                setTimeout(() => {
-                    updatePerspective();
-                }, 300);
                 break;
             }
         }
@@ -471,13 +443,6 @@
         getOldestPhotoInfo: getOldestPhotoInfo,
         photoCount: photos.length
     };
-
-    // Update perspective on window resize
-    window.addEventListener('resize', () => {
-        if (loadedPhotos.length > 0) {
-            updatePerspective();
-        }
-    });
 
     // Initialize on load
     init();

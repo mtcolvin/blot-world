@@ -12,6 +12,7 @@ nav.minimal-nav {
   align-items: center;
   cursor: pointer;
   padding-right: 0.2em;
+  background: var(--mininav-bg, transparent);
 }
 
 /* SVG background with masked logo cutout */
@@ -27,18 +28,22 @@ nav.minimal-nav svg.nav-bg {
 }
 
 .nav-rect {
-  fill: rgba(0, 0, 0, 1);
+  fill: var(--mininav-bg, transparent);
   transition: fill 0.3s ease;
 }
 
 .logo-fill {
-  fill: transparent;
-  opacity: 0;
+  fill: var(--mininav-logo-fill, transparent);
+  opacity: var(--mininav-logo-opacity, 0);
   transition: fill 0.3s ease, opacity 0.3s ease;
 }
 
 .logo-fill.active {
-  opacity: 0.5;
+  opacity: var(--mininav-logo-opacity-active, 0.5);
+}
+
+nav.minimal-nav:hover .logo-fill {
+  fill: var(--mininav-logo-fill, transparent);
 }
 
 
@@ -53,6 +58,7 @@ nav.minimal-nav svg.nav-bg {
   mask: url(#logo-cut-poetry);
   -webkit-mask: url(#logo-cut-poetry);
   pointer-events: none;
+  display: var(--mininav-backdrop-display, block);
 }
 
 /* Inner content */

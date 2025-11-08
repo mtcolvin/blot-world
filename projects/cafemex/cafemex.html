@@ -29,6 +29,24 @@
             --cafemex-dark: #1a1a1a;
             --cafemex-light: #F5F5F5;
             --cafemex-white: #FFFFFF;
+
+            /* Mini Nav Color Overrides */
+            --mininav-bg: transparent;
+            --mininav-logo-fill: transparent;
+            --mininav-logo-opacity: 0;
+            --mininav-logo-opacity-active: 0;
+            --mininav-backdrop-display: block;
+        }
+
+        /* Override backdrop mask and styling for this page */
+        .minimal-nav .backdrop-blur {
+            mask: url(#logo-cut-poetry);
+            -webkit-mask: url(#logo-cut-poetry);
+            background: rgba(240, 73, 35, 0.95);
+        }
+
+        .nav-rect {
+            fill: transparent;
         }
         
         body {
