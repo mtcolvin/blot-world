@@ -1,0 +1,224 @@
+photography.html:1  Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/exifr@4/dist/lite.umd.js.
+photography.html:1  Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/exifr@4/dist/lite.umd.js.
+photography.html:1  Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/exifr@4/dist/lite.umd.js.
+photography.html:1  Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/exifr@4/dist/lite.umd.js.
+IMG_1105.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1106.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1107.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1108.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1109.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1110.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1111.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1915.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1916.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1917.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1918.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1919.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1921.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1922.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1923.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1924.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1925.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1926.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1928.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1929.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1931.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1934.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1936.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1937.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1938.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1939.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1942.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1946.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1947.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1948.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1949.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1951.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1952.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1953.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+IMG_1959.jpg:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+ ✓ Loaded: IMG_1072.jpg (3024x4032)
+    No EXIF data for IMG_1072.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: 68223264_Unknown.JPG (4000x3000)
+    No EXIF data for 68223264_Unknown.JPG
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_0955.jpg (3024x4032)
+    No EXIF data for IMG_0955.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_0966.jpg (4032x3024)
+    No EXIF data for IMG_0966.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1071.jpg (4284x5712)
+    No EXIF data for IMG_1071.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1083.jpg (3024x4032)
+    No EXIF data for IMG_1083.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1073.jpg (4032x3024)
+    No EXIF data for IMG_1073.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1095.jpg (2316x3088)
+    No EXIF data for IMG_1095.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1096.jpg (2316x3088)
+    No EXIF data for IMG_1096.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1100.jpg (3024x4032)
+    No EXIF data for IMG_1100.jpg
+img.onload @ photo-loader.js:164
+ ✓ Loaded: IMG_1074.jpg (4032x3024)
+    No EXIF data for IMG_1074.jpg
+img.onload @ photo-loader.js:164
+  ✗ Failed to load: IMG_1105.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1106.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1107.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1108.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1109.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1110.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1111.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1915.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1916.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1917.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1918.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1919.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1921.jpg
+img.onerror @ photo-loader.js:179
+  ✗ Failed to load: IMG_1922.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1923.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1924.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1925.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1926.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:141 ✓ Loaded: IMG_1075.jpg (4032x3024)
+photo-loader.js:164    No EXIF data for IMG_1075.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:179  ✗ Failed to load: IMG_1928.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1929.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1931.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1934.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1936.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1937.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1938.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1939.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1942.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1946.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1947.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1948.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1949.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1951.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1952.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1953.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:179  ✗ Failed to load: IMG_1959.jpg
+img.onerror @ photo-loader.js:179
+photo-loader.js:141 ✓ Loaded: IMG_1076.jpg (4032x3024)
+photo-loader.js:164    No EXIF data for IMG_1076.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1077.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1077.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1078.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1078.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1079.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1079.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1080.jpg (2316x3088)
+photo-loader.js:164    No EXIF data for IMG_1080.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1084.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1084.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1085.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1085.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1086.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1086.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1087.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1087.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1089.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1089.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1094.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1094.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1099.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1099.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1102.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1102.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1104.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1104.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: ISIMG-1050811.jpg (4032x5040)
+photo-loader.js:164    No EXIF data for ISIMG-1050811.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1081.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1081.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1082.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1082.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1090.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1090.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1091.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1091.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1092.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1092.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1093.jpg (3024x4032)
+photo-loader.js:164    No EXIF data for IMG_1093.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:141 ✓ Loaded: IMG_1103.jpg (4284x5712)
+photo-loader.js:164    No EXIF data for IMG_1103.jpg
+img.onload @ photo-loader.js:164
+photo-loader.js:203 Loaded 34 of 69 photos
+photo-loader.js:223 Building timeline with 34 photos
+photo-loader.js:258 Generated 62 monthly ticks
+photo-loader.js:336 Built 62 tick marks
+/C:/Users/mtcol/OneDrive/Documents/PROFESSIONAL/GITHUB/BLOT-WORLD/blot-world/favicon.ico:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+/C:/Users/mtcol/OneDrive/Documents/PROFESSIONAL/GITHUB/BLOT-WORLD/blot-world/images/favicon/favicon-32x32.png:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+/C:/Users/mtcol/OneDrive/Documents/PROFESSIONAL/GITHUB/BLOT-WORLD/blot-world/images/favicon/favicon-16x16.png:1   Failed to load resource: net::ERR_FILE_NOT_FOUND
+photography.html:1  Access to internal resource at 'file:///C:/Users/mtcol/OneDrive/Documents/PROFESSIONAL/GITHUB/BLOT-WORLD/blot-world/images/favicon/site.webmanifest' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: chrome-extension, chrome-untrusted, data, edge, http, https, isolated-app.
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again

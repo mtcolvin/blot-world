@@ -44,41 +44,6 @@
         { file: 'IMG_1102.jpg', date: '2022-06-21' },
         { file: 'IMG_1103.jpg', date: '2022-08-05' },
         { file: 'IMG_1104.jpg', date: '2022-09-19' },
-        { file: 'IMG_1105.jpg', date: '2022-10-12' },
-        { file: 'IMG_1106.jpg', date: '2022-11-24' },
-        { file: 'IMG_1107.jpg', date: '2022-12-31' },
-        { file: 'IMG_1108.jpg', date: '2023-01-20' },
-        { file: 'IMG_1109.jpg', date: '2023-01-20' },
-        { file: 'IMG_1110.jpg', date: '2023-03-08' },
-        { file: 'IMG_1111.jpg', date: '2023-04-25' },
-        { file: 'IMG_1915.jpg', date: '2023-06-14' },
-        { file: 'IMG_1916.jpg', date: '2023-06-14' },
-        { file: 'IMG_1917.jpg', date: '2023-07-30' },
-        { file: 'IMG_1918.jpg', date: '2023-09-02' },
-        { file: 'IMG_1919.jpg', date: '2023-10-17' },
-        { file: 'IMG_1921.jpg', date: '2023-11-05' },
-        { file: 'IMG_1922.jpg', date: '2023-12-12' },
-        { file: 'IMG_1923.jpg', date: '2024-01-01' },
-        { file: 'IMG_1924.jpg', date: '2024-01-01' },
-        { file: 'IMG_1925.jpg', date: '2024-02-14' },
-        { file: 'IMG_1926.jpg', date: '2024-03-22' },
-        { file: 'IMG_1928.jpg', date: '2024-04-08' },
-        { file: 'IMG_1929.jpg', date: '2024-05-16' },
-        { file: 'IMG_1931.jpg', date: '2024-05-16' },
-        { file: 'IMG_1934.jpg', date: '2024-06-29' },
-        { file: 'IMG_1936.jpg', date: '2024-07-04' },
-        { file: 'IMG_1937.jpg', date: '2024-07-04' },
-        { file: 'IMG_1938.jpg', date: '2024-08-11' },
-        { file: 'IMG_1939.jpg', date: '2024-09-03' },
-        { file: 'IMG_1942.jpg', date: '2024-09-20' },
-        { file: 'IMG_1946.jpg', date: '2024-10-15' },
-        { file: 'IMG_1947.jpg', date: '2024-10-15' },
-        { file: 'IMG_1948.jpg', date: '2024-11-01' },
-        { file: 'IMG_1949.jpg', date: '2024-12-08' },
-        { file: 'IMG_1951.jpg', date: '2024-12-25' },
-        { file: 'IMG_1952.jpg', date: '2024-12-25' },
-        { file: 'IMG_1953.jpg', date: '2025-01-15' },
-        { file: 'IMG_1959.jpg', date: '2025-03-10' },
     ];
 
     // === AUTO-LOAD SYSTEM ===
@@ -134,18 +99,45 @@
                     const imageSrc = imagePath + photo.file;
 
                     // Load the image
-                    return new Promise((resolve, reject) => {
+                    return new Promise(async (resolve, reject) => {
                         const img = new Image();
 
-                        img.onload = function() {
+                        img.onload = async function() {
                             console.log(`✓ Loaded: ${photo.file} (${img.naturalWidth}x${img.naturalHeight})`);
+
+                            // Extract EXIF data
+                            let exifData = null;
+                            let exifDate = photo.date; // Use manual date as fallback
+
+                            try {
+                                exifData = await exifr.parse(imageSrc, {
+                                    tiff: true,
+                                    exif: true,
+                                    gps: false,
+                                    interop: false,
+                                    pick: ['Make', 'Model', 'LensModel', 'ISO', 'FNumber', 'ExposureTime',
+                                           'DateTimeOriginal', 'FocalLength', 'FocalLengthIn35mmFormat']
+                                });
+
+                                // Use EXIF date if available and no manual date provided
+                                if (exifData?.DateTimeOriginal && !photo.date) {
+                                    exifDate = exifData.DateTimeOriginal.toISOString().split('T')[0];
+                                }
+
+                                console.log(`  EXIF: ${exifData?.Make || 'N/A'} ${exifData?.Model || ''}`);
+                            } catch (error) {
+                                console.warn(`  No EXIF data for ${photo.file}`);
+                            }
+
                             resolve({
                                 ...photo,
                                 index: index,
                                 img: img,
                                 src: imageSrc,
                                 width: img.naturalWidth,
-                                height: img.naturalHeight
+                                height: img.naturalHeight,
+                                date: exifDate,
+                                exif: exifData
                             });
                         };
                         img.onerror = function() {
@@ -188,7 +180,33 @@
         elements.galleryLayout.style.display = 'flex';
 
         buildTimeline();
-        showPhoto(0);
+
+        // Wait for timeline to render before showing most recent photo
+        setTimeout(() => {
+            isProgrammaticScroll = true;
+            showPhoto(loadedPhotos.length - 1); // Start with most recent photo
+            setTimeout(() => {
+                isProgrammaticScroll = false;
+            }, 1000);
+        }, 100);
+
+        setupNavigationButtons();
+    }
+
+    // Setup navigation button click handlers
+    function setupNavigationButtons() {
+        const prevBtn = document.getElementById('nav-prev');
+        const nextBtn = document.getElementById('nav-next');
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => navigatePhoto('prev'));
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => navigatePhoto('next'));
+        }
+
+        updateNavigationButtons();
     }
 
     // Build horizontal timeline with monthly ticks
@@ -208,14 +226,14 @@
             photosByMonth.get(monthKey).push({ ...photo, globalIndex: index });
         });
 
-        // Find date range
+        // Find date range - from first photo to present day
         const firstPhotoDate = new Date(loadedPhotos[0].date);
-        const lastPhotoDate = new Date(loadedPhotos[loadedPhotos.length - 1].date);
+        const today = new Date();
 
-        // Generate all months in the range
+        // Generate all months from first photo to present
         const allMonths = [];
         let currentDate = new Date(firstPhotoDate.getFullYear(), firstPhotoDate.getMonth(), 1);
-        const endDate = new Date(lastPhotoDate.getFullYear(), lastPhotoDate.getMonth(), 1);
+        const endDate = new Date(today.getFullYear(), today.getMonth(), 1);
 
         while (currentDate <= endDate) {
             const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
@@ -253,19 +271,17 @@
                 tickMark.classList.add('has-photos');
                 tickMark.dataset.monthKey = monthData.key;
 
-                // Create stacked previews container
+                // Create stacked squares container
                 const previewsContainer = document.createElement('div');
                 previewsContainer.className = 'tick-previews';
 
-                // Add thumbnail for each photo (up to 3)
-                photos.slice(0, 3).forEach(photo => {
-                    const thumbnail = document.createElement('div');
-                    thumbnail.className = 'tick-thumbnail';
-                    const img = document.createElement('img');
-                    img.src = photo.src || (imagePath + photo.file);
-                    img.alt = `Photo ${photo.globalIndex + 1}`;
-                    thumbnail.appendChild(img);
-                    previewsContainer.appendChild(thumbnail);
+                // Add square for each photo (up to 3)
+                photos.slice(0, 3).forEach((photo, index) => {
+                    const square = document.createElement('div');
+                    square.className = 'tick-thumbnail';
+                    square.textContent = index + 1; // Number 1, 2, 3
+                    square.dataset.photoIndex = photo.globalIndex; // Store global photo index
+                    previewsContainer.appendChild(square);
                 });
 
                 tickMark.appendChild(previewsContainer);
@@ -310,7 +326,7 @@
     }
 
     // Show specific photo
-    function showPhoto(index) {
+    function showPhoto(index, skipScroll = false) {
         if (index < 0 || index >= loadedPhotos.length) return;
 
         currentIndex = index;
@@ -342,13 +358,52 @@
             elements.photoDimensions.textContent = `${photo.width} × ${photo.height}px`;
             elements.photoAspect.textContent = aspectRatio;
 
+            // Update EXIF camera settings if available
+            if (photo.exif && (photo.exif.Make || photo.exif.Model || photo.exif.LensModel ||
+                photo.exif.ISO || photo.exif.FNumber || photo.exif.ExposureTime)) {
+                elements.exifSection.style.display = 'block';
+
+                // Camera
+                const camera = [photo.exif.Make, photo.exif.Model].filter(Boolean).join(' ');
+                elements.photoCamera.textContent = camera || '—';
+
+                // Lens
+                elements.photoLens.textContent = photo.exif.LensModel || '—';
+
+                // Settings (ISO, Aperture, Shutter Speed, Focal Length)
+                const settings = [];
+                if (photo.exif.ISO) settings.push(`ISO ${photo.exif.ISO}`);
+                if (photo.exif.FNumber) settings.push(`f/${photo.exif.FNumber}`);
+                if (photo.exif.ExposureTime) {
+                    const shutterSpeed = photo.exif.ExposureTime < 1
+                        ? `1/${Math.round(1 / photo.exif.ExposureTime)}s`
+                        : `${photo.exif.ExposureTime}s`;
+                    settings.push(shutterSpeed);
+                }
+                if (photo.exif.FocalLength) {
+                    settings.push(`${photo.exif.FocalLength}mm`);
+                }
+                elements.photoSettings.textContent = settings.length > 0 ? settings.join(' · ') : '—';
+            } else {
+                elements.exifSection.style.display = 'none';
+            }
+
             // Fade in
             setTimeout(() => {
                 elements.mainPhoto.classList.add('visible');
             }, 50);
         }, 200);
 
-        // Update active tick mark based on photo's month
+        // Update active square based on current photo
+        document.querySelectorAll('.tick-thumbnail').forEach((square) => {
+            if (square.dataset.photoIndex === String(index)) {
+                square.classList.add('active');
+            } else {
+                square.classList.remove('active');
+            }
+        });
+
+        // Update active tick mark label based on photo's month
         const photoDate = new Date(photo.date);
         const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
 
@@ -360,8 +415,13 @@
             }
         });
 
-        // Scroll to active tick
-        scrollToActiveThumb(index);
+        // Scroll to active tick (unless we're scrolling manually)
+        if (!skipScroll) {
+            scrollToActiveThumb(index);
+        }
+
+        // Update navigation button states
+        updateNavigationButtons();
     }
 
     // Calculate aspect ratio
@@ -395,8 +455,15 @@
         for (let tick of ticks) {
             if (tick.dataset.monthKey === photoMonthKey) {
                 const scrollContainer = elements.timelineScroll;
-                const tickLeft = tick.offsetLeft;
-                const scrollLeft = tickLeft - (scrollContainer.offsetWidth / 2) + (tick.offsetWidth / 2);
+
+                // Get the tick's position relative to the timeline track
+                const tickRect = tick.getBoundingClientRect();
+                const containerRect = scrollContainer.getBoundingClientRect();
+
+                // Calculate how much to scroll to center the tick
+                const tickCenter = tick.offsetLeft + (tick.offsetWidth / 2);
+                const containerCenter = scrollContainer.offsetWidth / 2;
+                const scrollLeft = scrollContainer.scrollLeft + (tickRect.left - containerRect.left) - containerCenter + (tickRect.width / 2);
 
                 scrollContainer.scrollTo({
                     left: scrollLeft,
@@ -407,16 +474,115 @@
         }
     }
 
+    // Timeline scroll handler - update photo based on centered tick
+    let scrollTimeout;
+    let isProgrammaticScroll = false;
+
+    elements.timelineScroll.addEventListener('scroll', () => {
+        // Skip if we're programmatically scrolling from navigation
+        if (isProgrammaticScroll) return;
+
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const scrollContainer = elements.timelineScroll;
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const containerCenterX = containerRect.left + (containerRect.width / 2);
+
+            // Find the tick closest to center using getBoundingClientRect
+            const ticks = document.querySelectorAll('.tick-mark.has-photos');
+            let closestTick = null;
+            let closestDistance = Infinity;
+
+            ticks.forEach(tick => {
+                const tickRect = tick.getBoundingClientRect();
+                const tickCenterX = tickRect.left + (tickRect.width / 2);
+                const distance = Math.abs(tickCenterX - containerCenterX);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestTick = tick;
+                }
+            });
+
+            // Find the first photo in that month and show it
+            if (closestTick && closestTick.dataset.monthKey) {
+                const monthKey = closestTick.dataset.monthKey;
+                const photoIndex = loadedPhotos.findIndex(photo => {
+                    const photoDate = new Date(photo.date);
+                    const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+                    return photoMonthKey === monthKey;
+                });
+
+                if (photoIndex !== -1) {
+                    // Update photo if it's different
+                    if (photoIndex !== currentIndex) {
+                        showPhoto(photoIndex, true); // Skip scroll to avoid loop
+                    }
+
+                    // Snap to center the tick mark after scrolling stops
+                    const tickRect = closestTick.getBoundingClientRect();
+                    const tickCenterX = tickRect.left + (tickRect.width / 2);
+                    const scrollLeft = scrollContainer.scrollLeft + (tickCenterX - containerCenterX);
+
+                    scrollContainer.scrollTo({
+                        left: scrollLeft,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }, 150); // Debounce scroll events
+    });
+
+    // Navigation function with button state updates
+    function navigatePhoto(direction) {
+        if (loadedPhotos.length === 0) return;
+
+        let newIndex;
+        if (direction === 'prev') {
+            newIndex = currentIndex > 0 ? currentIndex - 1 : currentIndex;
+        } else {
+            newIndex = currentIndex < loadedPhotos.length - 1 ? currentIndex + 1 : currentIndex;
+        }
+
+        if (newIndex !== currentIndex) {
+            isProgrammaticScroll = true;
+            showPhoto(newIndex);
+            setTimeout(() => {
+                isProgrammaticScroll = false;
+            }, 600); // Wait for scroll animation to complete
+        }
+    }
+
+    // Update navigation button states
+    function updateNavigationButtons() {
+        const prevBtn = document.getElementById('nav-prev');
+        const nextBtn = document.getElementById('nav-next');
+
+        if (prevBtn && nextBtn) {
+            // Dim previous button if at start
+            if (currentIndex === 0) {
+                prevBtn.classList.add('disabled');
+            } else {
+                prevBtn.classList.remove('disabled');
+            }
+
+            // Dim next button if at end
+            if (currentIndex === loadedPhotos.length - 1) {
+                nextBtn.classList.add('disabled');
+            } else {
+                nextBtn.classList.remove('disabled');
+            }
+        }
+    }
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (loadedPhotos.length === 0) return;
 
         if (e.key === 'ArrowLeft') {
-            const newIndex = currentIndex > 0 ? currentIndex - 1 : loadedPhotos.length - 1;
-            showPhoto(newIndex);
+            navigatePhoto('prev');
         } else if (e.key === 'ArrowRight') {
-            const newIndex = currentIndex < loadedPhotos.length - 1 ? currentIndex + 1 : 0;
-            showPhoto(newIndex);
+            navigatePhoto('next');
         }
     });
 
@@ -443,6 +609,19 @@
         getOldestPhotoInfo: getOldestPhotoInfo,
         photoCount: photos.length
     };
+
+    // Check if timeline needs updating (new month started)
+    let lastCheckedMonth = new Date().getMonth();
+    setInterval(() => {
+        const currentMonth = new Date().getMonth();
+        if (currentMonth !== lastCheckedMonth) {
+            console.log('New month detected, rebuilding timeline...');
+            lastCheckedMonth = currentMonth;
+            if (loadedPhotos.length > 0) {
+                buildTimeline();
+            }
+        }
+    }, 60000); // Check every minute
 
     // Initialize on load
     init();

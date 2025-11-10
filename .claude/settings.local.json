@@ -3,7 +3,9 @@
     "allow": [
       "Bash(dir:*)",
       "Bash(powershell \"Get-ChildItem -File | Where-Object {$_Extension -match ''\\.(jpg|heic)$''} | Sort-Object LastWriteTime | Select-Object Name, LastWriteTime | Format-Table -AutoSize\")",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "WebSearch",
+      "Bash(start projects/photography/photography.html)"
     ],
     "deny": [],
     "ask": []

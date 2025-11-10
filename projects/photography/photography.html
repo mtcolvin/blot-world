@@ -111,6 +111,50 @@
             overflow: hidden;
         }
 
+        /* Navigation Buttons */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .nav-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .nav-prev {
+            left: 20px;
+        }
+
+        .nav-next {
+            right: 20px;
+        }
+
         .main-photo-container {
             width: 100%;
             height: 100%;
@@ -261,20 +305,20 @@
             min-width: max-content;
             height: 100%;
             padding: 0;
-            flex-direction: row-reverse;
+            flex-direction: row;
         }
 
         /* Arrow Indicator */
         .arrow-indicator {
             position: absolute;
             left: 50%;
-            top: 30px;
+            bottom: 8px;
             transform: translateX(-50%);
             width: 0;
             height: 0;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
-            border-top: 6px solid rgba(255, 255, 255, 0.7);
+            border-bottom: 6px solid rgba(255, 255, 255, 0.7);
             pointer-events: none;
             z-index: 100;
         }
@@ -282,7 +326,7 @@
         /* Minimal Tick Mark */
         .tick-mark {
             position: relative;
-            margin: 0 6px;
+            margin: 0 1px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -300,41 +344,43 @@
             opacity: 0.5;
         }
 
-        /* Stacked Thumbnails Container */
+        /* Stacked Squares Container */
         .tick-previews {
             position: absolute;
-            bottom: 35px;
+            bottom: 25px;
             display: flex;
             flex-direction: column-reverse;
             gap: 2px;
             align-items: center;
         }
 
-        /* Individual Thumbnail */
+        /* Individual Square */
         .tick-thumbnail {
             width: 10px;
             height: 10px;
-            border-radius: 1px;
-            overflow: hidden;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0);
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .tick-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        .tick-thumbnail:hover {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.4);
         }
 
-        .tick-mark.has-photos .tick-thumbnail {
-            opacity: 0.8;
-        }
-
-        .tick-mark.active .tick-thumbnail {
-            opacity: 1;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+        .tick-thumbnail.active {
+            color: rgba(255, 255, 255, 1) !important;
+            background: rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.8);
         }
 
         /* Tick Line */
@@ -351,28 +397,35 @@
             width: 1.5px;
         }
 
+        /* Hide tick line when there are photos */
+        .tick-mark.has-photos .tick-line {
+            display: none;
+        }
+
         /* Date Label */
         .tick-label {
             margin-top: 3px;
+            margin-bottom: 6px;
             font-size: 9px;
             color: rgba(255, 255, 255, 0.4);
             white-space: nowrap;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
         }
 
+        /* Show only year labels by default */
         .tick-mark.year .tick-label {
             font-size: 10px;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.6);
+            opacity: 1;
         }
 
-        .tick-mark.has-photos .tick-label {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
+        /* Show active month label */
         .tick-mark.active .tick-label {
             color: rgba(255, 255, 255, 0.9);
+            opacity: 1;
         }
 
 
@@ -425,6 +478,19 @@
                 min-height: 0;
             }
 
+            .nav-button {
+                width: 40px;
+                height: 40px;
+            }
+
+            .nav-prev {
+                left: 10px;
+            }
+
+            .nav-next {
+                right: 10px;
+            }
+
             .photo-metadata {
                 width: 100%;
                 height: auto;
@@ -442,16 +508,17 @@
             }
 
             .arrow-indicator {
-                top: 25px;
+                bottom: 6px;
             }
 
             .tick-thumbnail {
                 width: 8px;
                 height: 8px;
+                font-size: 5px;
             }
 
             .tick-previews {
-                bottom: 30px;
+                bottom: 22px;
             }
 
             .tick-line {
@@ -465,10 +532,16 @@
             .tick-label {
                 font-size: 8px;
                 margin-top: 2px;
+                margin-bottom: 5px;
             }
 
             .tick-mark.year .tick-label {
                 font-size: 9px;
+                opacity: 1;
+            }
+
+            .tick-mark.active .tick-label {
+                opacity: 1;
             }
         }
 	</style>
@@ -518,9 +591,19 @@
         <div class="main-content">
             <!-- Photo Viewer -->
             <div class="photo-viewer">
+                <button class="nav-button nav-prev" id="nav-prev" aria-label="Previous photo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
                 <div class="main-photo-container">
                     <img class="main-photo" id="main-photo" alt="Photography by Matthew Colvin" />
                 </div>
+                <button class="nav-button nav-next" id="nav-next" aria-label="Next photo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
             </div>
 
             <!-- Metadata Panel -->
@@ -582,6 +665,7 @@
 
     <!-- Scripts -->
     <script src="../../js/minimal-nav.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exifr@4/dist/lite.umd.js"></script>
     <script src="photo-loader.js"></script>
 
 </body>
