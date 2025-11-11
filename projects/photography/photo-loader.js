@@ -7,44 +7,8 @@
     'use strict';
 
     // === CONFIGURATION ===
-    // Add your photos here! Just add the filename and date.
-    // The system will auto-load them and sort by date (oldest first in timeline)
-    const photos = [
-        { file: '68223264_Unknown.JPG', date: '2017-08-21' },
-        { file: 'IMG_0955.jpg', date: '2018-03-14' },
-        { file: 'IMG_0966.jpg', date: '2018-03-14' },
-        { file: 'ISIMG-1050811.jpg', date: '2018-07-22' },
-        { file: 'IMG_1071.jpg', date: '2019-01-05' },
-        { file: 'IMG_1072.jpg', date: '2019-01-05' },
-        { file: 'IMG_1073.jpg', date: '2019-04-18' },
-        { file: 'IMG_1074.jpg', date: '2019-06-29' },
-        { file: 'IMG_1075.jpg', date: '2019-09-12' },
-        { file: 'IMG_1076.jpg', date: '2019-11-03' },
-        { file: 'IMG_1077.jpg', date: '2020-02-14' },
-        { file: 'IMG_1078.jpg', date: '2020-02-14' },
-        { file: 'IMG_1079.jpg', date: '2020-05-20' },
-        { file: 'IMG_1080.jpg', date: '2020-07-04' },
-        { file: 'IMG_1081.jpg', date: '2020-07-04' },
-        { file: 'IMG_1082.jpg', date: '2020-08-16' },
-        { file: 'IMG_1083.jpg', date: '2020-10-31' },
-        { file: 'IMG_1084.jpg', date: '2020-12-25' },
-        { file: 'IMG_1085.jpg', date: '2021-01-01' },
-        { file: 'IMG_1086.jpg', date: '2021-03-17' },
-        { file: 'IMG_1087.jpg', date: '2021-03-17' },
-        { file: 'IMG_1089.jpg', date: '2021-05-28' },
-        { file: 'IMG_1090.jpg', date: '2021-07-09' },
-        { file: 'IMG_1091.jpg', date: '2021-08-13' },
-        { file: 'IMG_1092.jpg', date: '2021-09-22' },
-        { file: 'IMG_1093.jpg', date: '2021-11-11' },
-        { file: 'IMG_1094.jpg', date: '2021-11-11' },
-        { file: 'IMG_1095.jpg', date: '2022-01-15' },
-        { file: 'IMG_1096.jpg', date: '2022-02-28' },
-        { file: 'IMG_1099.jpg', date: '2022-04-10' },
-        { file: 'IMG_1100.jpg', date: '2022-04-10' },
-        { file: 'IMG_1102.jpg', date: '2022-06-21' },
-        { file: 'IMG_1103.jpg', date: '2022-08-05' },
-        { file: 'IMG_1104.jpg', date: '2022-09-19' },
-    ];
+    // Photos will be auto-loaded from the API
+    let photos = [];
 
     // === AUTO-LOAD SYSTEM ===
     const imagePath = 'images/';
@@ -56,6 +20,8 @@
         noPhotos: document.getElementById('no-photos'),
         galleryLayout: document.getElementById('gallery-layout'),
         photoDate: document.getElementById('photo-date'),
+        photoLocation: document.getElementById('photo-location'),
+        locationItem: document.getElementById('location-item'),
         photoFilename: document.getElementById('photo-filename'),
         photoCount: document.getElementById('photo-count'),
         mainPhoto: document.getElementById('main-photo'),
@@ -64,16 +30,48 @@
         photoDimensions: document.getElementById('photo-dimensions'),
         photoAspect: document.getElementById('photo-aspect'),
         photoCamera: document.getElementById('photo-camera'),
-        photoLens: document.getElementById('photo-lens'),
         photoSettings: document.getElementById('photo-settings'),
-        exifSection: document.getElementById('exif-section')
+        photoFlash: document.getElementById('photo-flash'),
+        photoColorSpace: document.getElementById('photo-color-space'),
+        photoSoftware: document.getElementById('photo-software'),
+        flashItem: document.getElementById('flash-item'),
+        colorSpaceItem: document.getElementById('color-space-item'),
+        softwareItem: document.getElementById('software-item'),
+        exifSection: document.getElementById('exif-section'),
+        hoverInfo: document.getElementById('hover-info'),
+        zoomOverlay: document.getElementById('zoom-overlay'),
+        zoomIn: document.getElementById('zoom-in'),
+        zoomOut: document.getElementById('zoom-out'),
+        zoomReset: document.getElementById('zoom-reset'),
+        zoomLevel: document.getElementById('zoom-level')
     };
 
-    // Sort photos by date (oldest first for timeline)
-    photos.sort((a, b) => new Date(a.date) - new Date(b.date));
+    // Fetch photos from API
+    async function fetchPhotos() {
+        try {
+            const response = await fetch('/api/photos');
+            if (!response.ok) {
+                throw new Error('Failed to fetch photos');
+            }
+            photos = await response.json();
+            console.log(`Fetched ${photos.length} photos from API`);
+            return true;
+        } catch (error) {
+            console.error('Error fetching photos:', error);
+            // Show error message
+            elements.loading.textContent = 'Error loading photo list. Make sure the server is running.';
+            return false;
+        }
+    }
 
     // Initialize gallery
-    function init() {
+    async function init() {
+        // Fetch photos from API first
+        const success = await fetchPhotos();
+        if (!success) {
+            return;
+        }
+
         if (photos.length === 0) {
             showNoPhotos();
             return;
@@ -96,7 +94,9 @@
 
             const loadPromise = (async () => {
                 try {
-                    const imageSrc = imagePath + photo.file;
+                    // Add cache-busting timestamp to force fresh image load
+                    const cacheBuster = Date.now();
+                    const imageSrc = `${imagePath}${photo.file}?v=${cacheBuster}`;
 
                     // Load the image
                     return new Promise(async (resolve, reject) => {
@@ -110,23 +110,29 @@
                             let exifDate = photo.date; // Use manual date as fallback
 
                             try {
-                                exifData = await exifr.parse(imageSrc, {
-                                    tiff: true,
-                                    exif: true,
-                                    gps: false,
-                                    interop: false,
-                                    pick: ['Make', 'Model', 'LensModel', 'ISO', 'FNumber', 'ExposureTime',
-                                           'DateTimeOriginal', 'FocalLength', 'FocalLengthIn35mmFormat']
-                                });
+                                if (typeof exifr === 'undefined') {
+                                    console.warn('  exifr library not loaded');
+                                } else {
+                                    exifData = await exifr.parse(imageSrc, {
+                                        tiff: true,
+                                        exif: true,
+                                        gps: true,
+                                        interop: false
+                                    });
 
-                                // Use EXIF date if available and no manual date provided
-                                if (exifData?.DateTimeOriginal && !photo.date) {
-                                    exifDate = exifData.DateTimeOriginal.toISOString().split('T')[0];
+                                    // Use EXIF date if available and no manual date provided
+                                    if (exifData?.DateTimeOriginal && !photo.date) {
+                                        exifDate = exifData.DateTimeOriginal.toISOString().split('T')[0];
+                                    }
+
+                                    if (exifData) {
+                                        console.log(`  EXIF: ${exifData?.Make || 'N/A'} ${exifData?.Model || ''} | GPS: ${exifData?.latitude ? 'Yes' : 'No'}`);
+                                    } else {
+                                        console.warn(`  No EXIF data found in ${photo.file}`);
+                                    }
                                 }
-
-                                console.log(`  EXIF: ${exifData?.Make || 'N/A'} ${exifData?.Model || ''}`);
                             } catch (error) {
-                                console.warn(`  No EXIF data for ${photo.file}`);
+                                console.warn(`  EXIF parse error for ${photo.file}:`, error.message);
                             }
 
                             resolve({
@@ -181,10 +187,23 @@
 
         buildTimeline();
 
-        // Wait for timeline to render before showing most recent photo
+        // Wait for timeline to render before showing photo
         setTimeout(() => {
             isProgrammaticScroll = true;
-            showPhoto(loadedPhotos.length - 1); // Start with most recent photo
+
+            // Check URL for photo parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const photoParam = urlParams.get('photo');
+            let initialIndex = loadedPhotos.length - 1; // Default to most recent
+
+            if (photoParam) {
+                const paramIndex = parseInt(photoParam, 10) - 1; // Convert from 1-indexed to 0-indexed
+                if (paramIndex >= 0 && paramIndex < loadedPhotos.length) {
+                    initialIndex = paramIndex;
+                }
+            }
+
+            showPhoto(initialIndex);
             setTimeout(() => {
                 isProgrammaticScroll = false;
             }, 1000);
@@ -261,6 +280,7 @@
             // Create tick mark container
             const tickMark = document.createElement('div');
             tickMark.className = 'tick-mark';
+            tickMark.dataset.monthKey = monthData.key; // Set monthKey on ALL ticks
 
             if (isNewYear) {
                 tickMark.classList.add('year');
@@ -269,34 +289,42 @@
 
             if (photos.length > 0) {
                 tickMark.classList.add('has-photos');
-                tickMark.dataset.monthKey = monthData.key;
 
                 // Create stacked squares container
                 const previewsContainer = document.createElement('div');
                 previewsContainer.className = 'tick-previews';
 
-                // Add square for each photo (up to 3)
-                photos.slice(0, 3).forEach((photo, index) => {
+                // Add square for each photo (no limit)
+                photos.forEach((photo, index) => {
                     const square = document.createElement('div');
                     square.className = 'tick-thumbnail';
-                    square.textContent = index + 1; // Number 1, 2, 3
                     square.dataset.photoIndex = photo.globalIndex; // Store global photo index
+                    square.dataset.photoNumber = photo.globalIndex + 1; // 1-indexed number
+
+                    // Add hover event listeners
+                    square.addEventListener('mouseenter', () => {
+                        if (elements.hoverInfo) {
+                            elements.hoverInfo.textContent = `Photo ${square.dataset.photoNumber} of ${loadedPhotos.length}`;
+                            elements.hoverInfo.classList.add('visible');
+                        }
+                    });
+
+                    square.addEventListener('mouseleave', () => {
+                        if (elements.hoverInfo) {
+                            elements.hoverInfo.classList.remove('visible');
+                        }
+                    });
+
+                    // Click handler - navigate to specific photo
+                    square.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent tick mark click
+                        showPhoto(photo.globalIndex);
+                    });
+
                     previewsContainer.appendChild(square);
                 });
 
                 tickMark.appendChild(previewsContainer);
-
-                // Click handler - cycle through photos in this month
-                let photoIndexInMonth = 0;
-                tickMark.addEventListener('click', () => {
-                    const photo = photos[photoIndexInMonth];
-                    showPhoto(photo.globalIndex);
-
-                    // Cycle to next photo in month on repeated clicks
-                    if (photos.length > 1) {
-                        photoIndexInMonth = (photoIndexInMonth + 1) % photos.length;
-                    }
-                });
             } else {
                 tickMark.classList.add('empty');
             }
@@ -310,10 +338,13 @@
             const label = document.createElement('div');
             label.className = 'tick-label';
 
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
             if (isNewYear) {
                 label.textContent = year;
+                label.dataset.year = year;
+                label.dataset.month = monthNames[month];
             } else {
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 label.textContent = monthNames[month];
             }
 
@@ -331,6 +362,14 @@
 
         currentIndex = index;
         const photo = loadedPhotos[index];
+
+        // Update URL with photo number (1-indexed for user-friendly URLs)
+        const photoNumber = index + 1;
+        const newUrl = `${window.location.pathname}?photo=${photoNumber}`;
+        window.history.pushState({ photoIndex: index }, '', newUrl);
+
+        // Reset zoom when changing photos
+        resetZoom();
 
         // Fade out
         elements.mainPhoto.classList.remove('visible');
@@ -350,6 +389,32 @@
                 year: 'numeric'
             });
             elements.photoDate.textContent = formattedDate;
+
+            // Update location if available
+            if (photo.exif && photo.exif.latitude && photo.exif.longitude) {
+                // Show loading state
+                elements.photoLocation.textContent = 'Loading location...';
+                elements.locationItem.style.display = 'block';
+
+                // Fetch location name via reverse geocoding
+                reverseGeocode(photo.exif.latitude, photo.exif.longitude)
+                    .then(locationName => {
+                        elements.photoLocation.textContent = locationName;
+                    })
+                    .catch(error => {
+                        console.warn('Reverse geocoding failed:', error);
+                        // Fallback to coordinates
+                        const lat = photo.exif.latitude.toFixed(6);
+                        const lon = photo.exif.longitude.toFixed(6);
+                        const latDir = photo.exif.latitude >= 0 ? 'N' : 'S';
+                        const lonDir = photo.exif.longitude >= 0 ? 'E' : 'W';
+                        elements.photoLocation.textContent = `${Math.abs(lat)}° ${latDir}, ${Math.abs(lon)}° ${lonDir}`;
+                    });
+            } else {
+                elements.photoLocation.textContent = '—';
+                elements.locationItem.style.display = 'block';
+            }
+
             elements.photoFilename.textContent = photo.file;
             elements.photoCount.textContent = `Photo ${index + 1} of ${loadedPhotos.length}`;
 
@@ -358,35 +423,49 @@
             elements.photoDimensions.textContent = `${photo.width} × ${photo.height}px`;
             elements.photoAspect.textContent = aspectRatio;
 
-            // Update EXIF camera settings if available
-            if (photo.exif && (photo.exif.Make || photo.exif.Model || photo.exif.LensModel ||
-                photo.exif.ISO || photo.exif.FNumber || photo.exif.ExposureTime)) {
-                elements.exifSection.style.display = 'block';
+            // Always show EXIF section
+            elements.exifSection.style.display = 'block';
 
-                // Camera
-                const camera = [photo.exif.Make, photo.exif.Model].filter(Boolean).join(' ');
-                elements.photoCamera.textContent = camera || '—';
+            // Camera
+            const camera = photo.exif ? [photo.exif.Make, photo.exif.Model].filter(Boolean).join(' ') : '';
+            elements.photoCamera.textContent = camera || '—';
 
-                // Lens
-                elements.photoLens.textContent = photo.exif.LensModel || '—';
-
-                // Settings (ISO, Aperture, Shutter Speed, Focal Length)
-                const settings = [];
-                if (photo.exif.ISO) settings.push(`ISO ${photo.exif.ISO}`);
-                if (photo.exif.FNumber) settings.push(`f/${photo.exif.FNumber}`);
-                if (photo.exif.ExposureTime) {
-                    const shutterSpeed = photo.exif.ExposureTime < 1
-                        ? `1/${Math.round(1 / photo.exif.ExposureTime)}s`
-                        : `${photo.exif.ExposureTime}s`;
-                    settings.push(shutterSpeed);
-                }
-                if (photo.exif.FocalLength) {
-                    settings.push(`${photo.exif.FocalLength}mm`);
-                }
-                elements.photoSettings.textContent = settings.length > 0 ? settings.join(' · ') : '—';
-            } else {
-                elements.exifSection.style.display = 'none';
+            // Settings (ISO, Aperture, Shutter Speed, Focal Length)
+            const settings = [];
+            if (photo.exif?.ISO) settings.push(`ISO ${photo.exif.ISO}`);
+            if (photo.exif?.FNumber) settings.push(`f/${photo.exif.FNumber}`);
+            if (photo.exif?.ExposureTime) {
+                const shutterSpeed = photo.exif.ExposureTime < 1
+                    ? `1/${Math.round(1 / photo.exif.ExposureTime)}s`
+                    : `${photo.exif.ExposureTime}s`;
+                settings.push(shutterSpeed);
             }
+            if (photo.exif?.FocalLength) {
+                settings.push(`${photo.exif.FocalLength}mm`);
+            }
+            elements.photoSettings.textContent = settings.length > 0 ? settings.join(' · ') : '—';
+
+            // Flash
+            if (photo.exif?.Flash !== undefined) {
+                const flashFired = (photo.exif.Flash & 0x01) !== 0;
+                elements.photoFlash.textContent = flashFired ? 'Fired' : 'Not Fired';
+            } else {
+                elements.photoFlash.textContent = '—';
+            }
+            elements.flashItem.style.display = 'block';
+
+            // Color Space
+            if (photo.exif?.ColorSpace !== undefined) {
+                const colorSpaceMap = { 1: 'sRGB', 65535: 'Uncalibrated', 2: 'Adobe RGB' };
+                elements.photoColorSpace.textContent = colorSpaceMap[photo.exif.ColorSpace] || photo.exif.ColorSpace;
+            } else {
+                elements.photoColorSpace.textContent = '—';
+            }
+            elements.colorSpaceItem.style.display = 'block';
+
+            // Software
+            elements.photoSoftware.textContent = photo.exif?.Software || '—';
+            elements.softwareItem.style.display = 'block';
 
             // Fade in
             setTimeout(() => {
@@ -406,12 +485,40 @@
         // Update active tick mark label based on photo's month
         const photoDate = new Date(photo.date);
         const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+        const currentMonth = photoDate.getMonth(); // 0 = Jan, 1 = Feb, 11 = Dec
+        const currentYear = photoDate.getFullYear();
+
+        // Determine which year label to hide (if any)
+        let yearToHide = null;
+        if (currentMonth === 11) {
+            // Viewing December - hide next year's January label
+            yearToHide = `${currentYear + 1}-01`;
+        } else if (currentMonth === 1) {
+            // Viewing February - hide current year's January label
+            yearToHide = `${currentYear}-01`;
+        }
 
         document.querySelectorAll('.tick-mark').forEach((tick) => {
+            const label = tick.querySelector('.tick-label');
+
             if (tick.dataset.monthKey === photoMonthKey) {
                 tick.classList.add('active');
+                // If this is January, show month name instead of year
+                if (label.dataset.year && label.dataset.month) {
+                    label.textContent = label.dataset.month;
+                }
             } else {
                 tick.classList.remove('active');
+                // If this is a year label (January), restore or hide
+                if (label.dataset.year) {
+                    // Hide only the specific adjacent year label
+                    if (tick.dataset.monthKey === yearToHide) {
+                        label.style.opacity = '0';
+                    } else {
+                        label.style.opacity = '';
+                        label.textContent = label.dataset.year;
+                    }
+                }
             }
         });
 
@@ -477,60 +584,77 @@
     // Timeline scroll handler - update photo based on centered tick
     let scrollTimeout;
     let isProgrammaticScroll = false;
+    let lastScrollUpdate = 0;
+
+    function updatePhotoFromScroll() {
+        const scrollContainer = elements.timelineScroll;
+        const containerRect = scrollContainer.getBoundingClientRect();
+        const containerCenterX = containerRect.left + (containerRect.width / 2);
+
+        // Find the tick closest to center using getBoundingClientRect
+        const ticks = document.querySelectorAll('.tick-mark.has-photos');
+        let closestTick = null;
+        let closestDistance = Infinity;
+
+        ticks.forEach(tick => {
+            const tickRect = tick.getBoundingClientRect();
+            const tickCenterX = tickRect.left + (tickRect.width / 2);
+            const distance = Math.abs(tickCenterX - containerCenterX);
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestTick = tick;
+            }
+        });
+
+        // Find the first photo in that month and show it
+        if (closestTick && closestTick.dataset.monthKey) {
+            const monthKey = closestTick.dataset.monthKey;
+            const photoIndex = loadedPhotos.findIndex(photo => {
+                const photoDate = new Date(photo.date);
+                const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+                return photoMonthKey === monthKey;
+            });
+
+            if (photoIndex !== -1 && photoIndex !== currentIndex) {
+                showPhoto(photoIndex, true); // Skip scroll to avoid loop
+            }
+
+            return closestTick;
+        }
+        return null;
+    }
 
     elements.timelineScroll.addEventListener('scroll', () => {
         // Skip if we're programmatically scrolling from navigation
         if (isProgrammaticScroll) return;
 
+        // Throttle updates while scrolling - update immediately but not more than every 50ms
+        const now = Date.now();
+        if (now - lastScrollUpdate > 50) {
+            updatePhotoFromScroll();
+            lastScrollUpdate = now;
+        }
+
+        // Snap to center after scrolling stops
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
-            const scrollContainer = elements.timelineScroll;
-            const containerRect = scrollContainer.getBoundingClientRect();
-            const containerCenterX = containerRect.left + (containerRect.width / 2);
+            const closestTick = updatePhotoFromScroll();
 
-            // Find the tick closest to center using getBoundingClientRect
-            const ticks = document.querySelectorAll('.tick-mark.has-photos');
-            let closestTick = null;
-            let closestDistance = Infinity;
-
-            ticks.forEach(tick => {
-                const tickRect = tick.getBoundingClientRect();
+            if (closestTick) {
+                const scrollContainer = elements.timelineScroll;
+                const containerRect = scrollContainer.getBoundingClientRect();
+                const containerCenterX = containerRect.left + (containerRect.width / 2);
+                const tickRect = closestTick.getBoundingClientRect();
                 const tickCenterX = tickRect.left + (tickRect.width / 2);
-                const distance = Math.abs(tickCenterX - containerCenterX);
+                const scrollLeft = scrollContainer.scrollLeft + (tickCenterX - containerCenterX);
 
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestTick = tick;
-                }
-            });
-
-            // Find the first photo in that month and show it
-            if (closestTick && closestTick.dataset.monthKey) {
-                const monthKey = closestTick.dataset.monthKey;
-                const photoIndex = loadedPhotos.findIndex(photo => {
-                    const photoDate = new Date(photo.date);
-                    const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
-                    return photoMonthKey === monthKey;
+                scrollContainer.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth'
                 });
-
-                if (photoIndex !== -1) {
-                    // Update photo if it's different
-                    if (photoIndex !== currentIndex) {
-                        showPhoto(photoIndex, true); // Skip scroll to avoid loop
-                    }
-
-                    // Snap to center the tick mark after scrolling stops
-                    const tickRect = closestTick.getBoundingClientRect();
-                    const tickCenterX = tickRect.left + (tickRect.width / 2);
-                    const scrollLeft = scrollContainer.scrollLeft + (tickCenterX - containerCenterX);
-
-                    scrollContainer.scrollTo({
-                        left: scrollLeft,
-                        behavior: 'smooth'
-                    });
-                }
             }
-        }, 150); // Debounce scroll events
+        }, 150); // Snap to center after scrolling stops
     });
 
     // Navigation function with button state updates
@@ -575,8 +699,280 @@
         }
     }
 
+    // Reverse geocoding function
+    async function reverseGeocode(lat, lon) {
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`,
+                {
+                    headers: {
+                        'User-Agent': 'Photography Gallery/1.0'
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Geocoding request failed');
+            }
+
+            const data = await response.json();
+
+            // Extract city/town information
+            const address = data.address || {};
+            const location = address.city ||
+                           address.town ||
+                           address.village ||
+                           address.hamlet ||
+                           address.county ||
+                           address.state ||
+                           'Unknown Location';
+
+            // Add country if available
+            const country = address.country;
+            return country ? `${location}, ${country}` : location;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Dynamic zoom functionality
+    let currentZoom = 1;
+    let minZoom = 1;
+    let maxZoom = 4;
+    let zoomStep = 0.1;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let translateX = 0;
+    let translateY = 0;
+
+    function updatePhotoTransform() {
+        if (currentZoom === 1 && translateX === 0 && translateY === 0) {
+            // Reset to default state
+            elements.mainPhoto.style.transform = '';
+            elements.mainPhoto.classList.remove('zoomable');
+        } else {
+            const transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+            elements.mainPhoto.style.transform = transform;
+
+            if (currentZoom > 1) {
+                elements.mainPhoto.classList.add('zoomable');
+            } else {
+                elements.mainPhoto.classList.remove('zoomable');
+            }
+        }
+
+        // Update zoom level display
+        if (elements.zoomLevel) {
+            elements.zoomLevel.textContent = `${Math.round(currentZoom * 100)}%`;
+        }
+
+        // Update button states
+        if (elements.zoomIn && elements.zoomOut && elements.zoomReset) {
+            if (currentZoom >= maxZoom) {
+                elements.zoomIn.classList.add('disabled');
+            } else {
+                elements.zoomIn.classList.remove('disabled');
+            }
+
+            if (currentZoom <= minZoom) {
+                elements.zoomOut.classList.add('disabled');
+            } else {
+                elements.zoomOut.classList.remove('disabled');
+            }
+
+            if (currentZoom === 1) {
+                elements.zoomReset.classList.add('disabled');
+            } else {
+                elements.zoomReset.classList.remove('disabled');
+            }
+        }
+    }
+
+    function resetZoom() {
+        currentZoom = 1;
+        translateX = 0;
+        translateY = 0;
+        updatePhotoTransform();
+    }
+
+    // Mouse wheel and trackpad zoom
+    elements.mainPhoto.addEventListener('wheel', (e) => {
+        // Only zoom if it's a pinch gesture (ctrlKey) or regular scroll
+        // This handles both mouse wheel and trackpad pinch-to-zoom
+        if (e.ctrlKey || e.deltaY !== 0) {
+            e.preventDefault();
+
+            const oldZoom = currentZoom;
+
+            // Determine zoom direction and speed
+            // Trackpad pinch sends smaller deltaY values, so adjust accordingly
+            const zoomAmount = Math.abs(e.deltaY) > 50 ? zoomStep : zoomStep * 0.5;
+
+            // Zoom in or out
+            if (e.deltaY < 0) {
+                currentZoom = Math.min(currentZoom + zoomAmount, maxZoom);
+            } else {
+                currentZoom = Math.max(currentZoom - zoomAmount, minZoom);
+            }
+
+            // If zoom changed, update transform
+            if (currentZoom !== oldZoom) {
+                updatePhotoTransform();
+            }
+        }
+    }, { passive: false });
+
+    // Drag to pan when zoomed
+    elements.mainPhoto.addEventListener('mousedown', (e) => {
+        if (currentZoom > 1) {
+            e.preventDefault();
+            isDragging = true;
+            dragStartX = e.clientX - translateX;
+            dragStartY = e.clientY - translateY;
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging && currentZoom > 1) {
+            e.preventDefault();
+            const newTranslateX = e.clientX - dragStartX;
+            const newTranslateY = e.clientY - dragStartY;
+
+            // Constrain panning so image doesn't get lost behind panels
+            const rect = elements.mainPhoto.getBoundingClientRect();
+            const containerRect = elements.mainPhoto.parentElement.getBoundingClientRect();
+
+            // Calculate scaled dimensions
+            const scaledWidth = rect.width * currentZoom;
+            const scaledHeight = rect.height * currentZoom;
+
+            // Calculate maximum allowed translation
+            const maxTranslateX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+            const maxTranslateY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+
+            // Constrain translation
+            translateX = Math.max(-maxTranslateX, Math.min(maxTranslateX, newTranslateX));
+            translateY = Math.max(-maxTranslateY, Math.min(maxTranslateY, newTranslateY));
+
+            updatePhotoTransform();
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    // Touch support for tablets/touchscreen laptops
+    let touchStartDistance = 0;
+    let touchStartZoom = 1;
+
+    elements.mainPhoto.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            touchStartDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            touchStartZoom = currentZoom;
+        }
+    }, { passive: false });
+
+    elements.mainPhoto.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const touchDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+
+            if (touchStartDistance > 0) {
+                const scale = touchDistance / touchStartDistance;
+                currentZoom = Math.min(Math.max(touchStartZoom * scale, minZoom), maxZoom);
+                updatePhotoTransform();
+            }
+        }
+    }, { passive: false });
+
+    elements.mainPhoto.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+            touchStartDistance = 0;
+        }
+    });
+
+    // Zoom button controls
+    if (elements.zoomIn) {
+        elements.zoomIn.addEventListener('click', () => {
+            if (currentZoom < maxZoom) {
+                currentZoom = Math.min(currentZoom + 0.25, maxZoom);
+                updatePhotoTransform();
+            }
+        });
+    }
+
+    if (elements.zoomOut) {
+        elements.zoomOut.addEventListener('click', () => {
+            if (currentZoom > minZoom) {
+                currentZoom = Math.max(currentZoom - 0.25, minZoom);
+                if (currentZoom === 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updatePhotoTransform();
+            }
+        });
+    }
+
+    if (elements.zoomReset) {
+        elements.zoomReset.addEventListener('click', () => {
+            resetZoom();
+        });
+    }
+
+    // Double-click to reset zoom or zoom to 2x
+    elements.mainPhoto.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        if (currentZoom > 1) {
+            resetZoom();
+        } else {
+            currentZoom = 2;
+            translateX = 0;
+            translateY = 0;
+            updatePhotoTransform();
+        }
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.photoIndex !== undefined) {
+            isProgrammaticScroll = true;
+            showPhoto(e.state.photoIndex, false);
+            setTimeout(() => {
+                isProgrammaticScroll = false;
+            }, 600);
+        }
+    });
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
+        // ESC key to reset zoom
+        if (e.key === 'Escape' && currentZoom > 1) {
+            resetZoom();
+            return;
+        }
+
+        if (e.key === 'r' || e.key === 'R') {
+            // Reload the gallery
+            console.log('Reloading gallery...');
+            location.reload();
+            return;
+        }
+
         if (loadedPhotos.length === 0) return;
 
         if (e.key === 'ArrowLeft') {

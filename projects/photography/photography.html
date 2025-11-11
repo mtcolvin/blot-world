@@ -66,7 +66,8 @@
         .minimal-nav .backdrop-blur {
             mask: url(#logo-cut-photo);
             -webkit-mask: url(#logo-cut-photo);
-            background: rgba(30, 30, 30, 0.95);
+            background: rgba(40, 40, 40, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .nav-rect {
@@ -95,7 +96,7 @@
         /* Main Content Area */
         .main-content {
             display: flex;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 70px);
             min-height: 0;
             overflow: hidden;
         }
@@ -106,9 +107,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 60px;
             position: relative;
             overflow: hidden;
+        }
+
+        /* Hover Info Display */
+        .hover-info {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .hover-info.visible {
+            opacity: 1;
         }
 
         /* Navigation Buttons */
@@ -161,6 +185,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: visible;
+            position: relative;
         }
 
         .main-photo {
@@ -171,27 +197,102 @@
             object-fit: contain;
             display: block;
             opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.4s ease;
             border-radius: 4px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            cursor: zoom-in;
+            transform-origin: center center;
+        }
+
+        .main-photo.zoomable {
+            cursor: grab;
+        }
+
+        .main-photo.zoomable:active {
+            cursor: grabbing;
         }
 
         .main-photo.visible {
             opacity: 1;
-            transform: scale(1);
+        }
+
+        .zoom-overlay {
+            display: none !important;
+        }
+
+        /* Zoom Controls */
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .zoom-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .zoom-btn:active {
+            transform: scale(0.95);
+        }
+
+        .zoom-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .zoom-level {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
         }
 
         /* Portrait photo optimization */
         .main-photo[data-orientation="portrait"] {
             max-width: 90%;
             height: 100%;
+            border-radius: 4px;
         }
 
         /* Landscape photo optimization */
         .main-photo[data-orientation="landscape"] {
             width: 100%;
             max-height: 100%;
+            border-radius: 4px;
         }
 
         /* Photo Metadata Panel */
@@ -219,16 +320,19 @@
         }
 
         .metadata-section {
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
 
         .metadata-title {
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: var(--photo-accent);
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 12px;
+            border-radius: 4px;
         }
 
         .metadata-item {
@@ -257,7 +361,7 @@
 
         /* Minimal Timeline Container */
         .timeline-container {
-            height: 80px;
+            height: 70px;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -273,7 +377,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 80px;
+            height: 70px;
             overflow-x: auto;
             overflow-y: visible;
             padding: 0 50%;
@@ -326,13 +430,16 @@
         /* Minimal Tick Mark */
         .tick-mark {
             position: relative;
-            margin: 0 1px;
+            margin: 0;
+            padding: 0 3px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-end;
             cursor: pointer;
             transition: opacity 0.3s ease;
+            width: 12px;
+            flex-shrink: 0;
         }
 
         .tick-mark.has-photos {
@@ -344,57 +451,78 @@
             opacity: 0.5;
         }
 
+        /* Keep year ticks same width as others for uniform spacing */
+        .tick-mark.year {
+            width: 12px;
+            padding: 0 3px;
+        }
+
         /* Stacked Squares Container */
         .tick-previews {
             position: absolute;
-            bottom: 25px;
+            bottom: 28px;
             display: flex;
             flex-direction: column-reverse;
-            gap: 2px;
+            gap: 0;
             align-items: center;
         }
 
         /* Individual Square */
         .tick-thumbnail {
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
+            width: 6px;
+            height: 6px;
+            border-radius: 0;
             background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 6px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            border-right: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
             position: relative;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        /* First square (bottom-most in visual order) gets bottom border */
+        .tick-thumbnail:first-child {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .tick-thumbnail:hover {
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.5);
+            border-left-color: rgba(255, 255, 255, 0.6);
+            border-right-color: rgba(255, 255, 255, 0.6);
+            border-top-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .tick-thumbnail:hover:first-child {
+            border-bottom-color: rgba(255, 255, 255, 0.6);
         }
 
         .tick-thumbnail.active {
-            color: rgba(255, 255, 255, 1) !important;
-            background: rgba(255, 255, 255, 0.5) !important;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
-            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.7) !important;
+            border-left-color: rgba(255, 255, 255, 0.9);
+            border-right-color: rgba(255, 255, 255, 0.9);
+            border-top-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tick-thumbnail.active:first-child {
+            border-bottom-color: rgba(255, 255, 255, 0.9);
         }
 
         /* Tick Line */
         .tick-line {
             width: 1px;
-            height: 16px;
-            background: rgba(255, 255, 255, 0.3);
+            height: 12px;
+            background: rgba(255, 255, 255, 0.15);
             transition: background 0.3s ease, height 0.3s ease;
+            position: absolute;
+            bottom: 28px;
         }
 
         .tick-mark.year .tick-line {
-            height: 20px;
-            background: rgba(255, 255, 255, 0.5);
-            width: 1.5px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.4);
+            width: 2px;
         }
 
         /* Hide tick line when there are photos */
@@ -418,7 +546,7 @@
         .tick-mark.year .tick-label {
             font-size: 10px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             opacity: 1;
         }
 
@@ -469,11 +597,11 @@
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
-                height: calc(100vh - 70px);
+                height: calc(100vh - 60px);
             }
 
             .photo-viewer {
-                padding: 20px;
+                padding: 50px 15px 50px 15px;
                 flex: 1;
                 min-height: 0;
             }
@@ -500,33 +628,47 @@
             }
 
             .timeline-container {
-                height: 70px;
+                height: 60px;
             }
 
             .timeline-scroll {
-                height: 70px;
+                height: 60px;
             }
 
             .arrow-indicator {
                 bottom: 6px;
             }
 
+            .tick-mark {
+                width: 9px;
+                padding: 0 2px;
+            }
+
             .tick-thumbnail {
-                width: 8px;
-                height: 8px;
-                font-size: 5px;
+                width: 5px;
+                height: 5px;
+                border-radius: 0;
+                box-sizing: border-box;
+                border-left: 1px solid rgba(255, 255, 255, 0.4);
+                border-right: 1px solid rgba(255, 255, 255, 0.4);
+                border-top: 1px solid rgba(255, 255, 255, 0.4);
+            }
+
+            .tick-thumbnail:first-child {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.4);
             }
 
             .tick-previews {
                 bottom: 22px;
+                gap: 0;
             }
 
             .tick-line {
-                height: 14px;
+                height: 10px;
             }
 
             .tick-mark.year .tick-line {
-                height: 18px;
+                height: 10px;
             }
 
             .tick-label {
@@ -579,11 +721,17 @@
     <!-- Loading State -->
     <div class="loading" id="loading">Loading photos...</div>
 
+    <!-- Zoom Overlay -->
+    <div class="zoom-overlay" id="zoom-overlay"></div>
+
     <!-- No Photos Message -->
     <div class="no-photos" id="no-photos" style="display: none;">
         <h2>No Photos Yet</h2>
         <p>Add images to /projects/photography/images/</p>
     </div>
+
+    <!-- Hover Info Display -->
+    <div class="hover-info" id="hover-info"></div>
 
     <!-- Gallery Layout -->
     <div class="gallery-layout" id="gallery-layout" style="display: none;">
@@ -604,6 +752,21 @@
                         <path d="M9 18l6-6-6-6"/>
                     </svg>
                 </button>
+
+                <!-- Zoom Controls -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn" id="zoom-in" aria-label="Zoom in">+</button>
+                    <div class="zoom-level" id="zoom-level">100%</div>
+                    <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
+                    <button class="zoom-btn" id="zoom-reset" aria-label="Reset zoom" title="Reset zoom">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                            <path d="M21 3v5h-5"/>
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                            <path d="M3 21v-5h5"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Metadata Panel -->
@@ -615,6 +778,10 @@
                     <div class="metadata-item">
                         <div class="metadata-label">Date Taken</div>
                         <div class="metadata-value" id="photo-date">—</div>
+                    </div>
+                    <div class="metadata-item" id="location-item" style="display: none;">
+                        <div class="metadata-label">Location</div>
+                        <div class="metadata-value" id="photo-location">—</div>
                     </div>
                     <div class="metadata-item">
                         <div class="metadata-label">File Name</div>
@@ -641,12 +808,20 @@
                         <div class="metadata-value" id="photo-camera">—</div>
                     </div>
                     <div class="metadata-item">
-                        <div class="metadata-label">Lens</div>
-                        <div class="metadata-value" id="photo-lens">—</div>
-                    </div>
-                    <div class="metadata-item">
                         <div class="metadata-label">Settings</div>
                         <div class="metadata-value" id="photo-settings">—</div>
+                    </div>
+                    <div class="metadata-item" id="flash-item" style="display: none;">
+                        <div class="metadata-label">Flash</div>
+                        <div class="metadata-value" id="photo-flash">—</div>
+                    </div>
+                    <div class="metadata-item" id="color-space-item" style="display: none;">
+                        <div class="metadata-label">Color Space</div>
+                        <div class="metadata-value" id="photo-color-space">—</div>
+                    </div>
+                    <div class="metadata-item" id="software-item" style="display: none;">
+                        <div class="metadata-label">Software</div>
+                        <div class="metadata-value" id="photo-software">—</div>
                     </div>
                 </div>
             </div>

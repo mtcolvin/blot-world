@@ -5,7 +5,16 @@
       "Bash(powershell \"Get-ChildItem -File | Where-Object {$_Extension -match ''\\.(jpg|heic)$''} | Sort-Object LastWriteTime | Select-Object Name, LastWriteTime | Format-Table -AutoSize\")",
       "Bash(powershell:*)",
       "WebSearch",
-      "Bash(start projects/photography/photography.html)"
+      "Bash(start projects/photography/photography.html)",
+      "Bash(magick:*)",
+      "Bash(start http://localhost:8000/photography.html)",
+      "Bash(start http://localhost:8000/projects/photography/photography.html)",
+      "Bash(start http://localhost:8000/)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(taskkill:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)"
     ],
     "deny": [],
     "ask": []
