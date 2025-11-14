@@ -245,14 +245,14 @@
             photosByMonth.get(monthKey).push({ ...photo, globalIndex: index });
         });
 
-        // Find date range - from first photo to present day
+        // Find date range - from first photo to last photo
         const firstPhotoDate = new Date(loadedPhotos[0].date);
-        const today = new Date();
+        const lastPhotoDate = new Date(loadedPhotos[loadedPhotos.length - 1].date);
 
-        // Generate all months from first photo to present
+        // Generate all months from first photo to last photo
         const allMonths = [];
         let currentDate = new Date(firstPhotoDate.getFullYear(), firstPhotoDate.getMonth(), 1);
-        const endDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        const endDate = new Date(lastPhotoDate.getFullYear(), lastPhotoDate.getMonth(), 1);
 
         while (currentDate <= endDate) {
             const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
@@ -266,6 +266,10 @@
         }
 
         console.log(`Generated ${allMonths.length} monthly ticks`);
+
+        // Find the maximum number of photos in any month for height calculation
+        const maxPhotosPerMonth = Math.max(...allMonths.map(m => m.photos.length), 0);
+        console.log(`Max photos in a single month: ${maxPhotosPerMonth}`);
 
         // Clear existing timeline
         elements.timelineTrack.innerHTML = '';
@@ -354,6 +358,49 @@
         });
 
         console.log(`Built ${allMonths.length} tick marks`);
+
+        // Dynamically adjust timeline height based on max stacked boxes
+        adjustTimelineHeight(maxPhotosPerMonth);
+    }
+
+    // Adjust timeline height to accommodate stacked preview boxes
+    function adjustTimelineHeight(maxPhotosPerMonth) {
+        const timelineContainer = document.querySelector('.timeline-container');
+        const timelineScroll = document.querySelector('.timeline-scroll');
+        const timelineTrack = document.querySelector('.timeline-track');
+
+        if (!timelineContainer) return;
+
+        // Calculate needed height:
+        // - Base height for labels and ticks: 12px
+        // - Preview boxes start at bottom: 38px from tick
+        // - Each preview box: 6px height
+        // - Top padding: 0px
+        // - Bottom padding: 8px
+        const baseHeight = 12;
+        const bottomOffset = 38;
+        const boxHeight = 6;
+        const topPadding = 0;
+        const bottomPadding = 8;
+
+        const previewStackHeight = maxPhotosPerMonth * boxHeight;
+        const totalHeight = baseHeight + bottomOffset + previewStackHeight + topPadding + bottomPadding;
+
+        // Set minimum height of 70px, maximum of 300px
+        const finalHeight = Math.max(70, Math.min(300, totalHeight));
+
+        timelineContainer.style.height = `${finalHeight}px`;
+        timelineContainer.style.minHeight = `${finalHeight}px`;
+
+        if (timelineScroll) {
+            timelineScroll.style.minHeight = `${finalHeight}px`;
+        }
+
+        if (timelineTrack) {
+            timelineTrack.style.minHeight = `${finalHeight}px`;
+        }
+
+        console.log(`Timeline height adjusted to ${finalHeight}px for ${maxPhotosPerMonth} max stacked boxes`);
     }
 
     // Show specific photo
@@ -563,17 +610,15 @@
             if (tick.dataset.monthKey === photoMonthKey) {
                 const scrollContainer = elements.timelineScroll;
 
-                // Get the tick's position relative to the timeline track
-                const tickRect = tick.getBoundingClientRect();
-                const containerRect = scrollContainer.getBoundingClientRect();
+                // With padding: 0 50%, the padding naturally centers content
+                // We just need to scroll to the tick's center position
+                const tickOffsetLeft = tick.offsetLeft;
+                const tickWidth = tick.offsetWidth;
+                const tickCenter = tickOffsetLeft + (tickWidth / 2);
 
-                // Calculate how much to scroll to center the tick
-                const tickCenter = tick.offsetLeft + (tick.offsetWidth / 2);
-                const containerCenter = scrollContainer.offsetWidth / 2;
-                const scrollLeft = scrollContainer.scrollLeft + (tickRect.left - containerRect.left) - containerCenter + (tickRect.width / 2);
-
+                // Scroll so the tick center aligns with the arrow (viewport center)
                 scrollContainer.scrollTo({
-                    left: scrollLeft,
+                    left: tickCenter,
                     behavior: 'smooth'
                 });
                 break;

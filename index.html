@@ -251,7 +251,8 @@
                             <div class="sort-dropdown-container">
                                 <label for="sort-select">Sort by:</label>
                                 <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
-                                    <option value="default">Default Order</option>
+                                    <option value="date-desc" selected>Date (Newest First)</option>
+                                    <option value="date-asc">Date (Oldest First)</option>
                                     <option value="name-asc">Name (A-Z)</option>
                                     <option value="name-desc">Name (Z-A)</option>
                                 </select>
@@ -286,76 +287,12 @@
                     <div class="projects-main" id="projects-main">
                         <div class="projects-grid" id="projects-grid">
 
-							<a href="projects/photography/photography.html" class="project-card-link">
-                                <div class="project-card"
-									data-area="Photography"
-									data-tech="Camera,Lightroom"
-									data-name="Photography Gallery"
-									data-month="Ongoing"
-									data-year="2024">
-                                    <div class="project-image">
-                                        <img src="images/previews/photography-preview.jpg" alt="Photography Gallery Preview">
-                                    </div>
-                                    <div class="project-details">
-                                        <div class="project-content-top">
-                                            <div class="project-header">
-                                                <h3>Photography</h3>
-                                            </div>
-                                            <p>A visual timeline of moments captured through the lens. Click through to browse the collection.</p>
-                                            <div class="project-date-container">
-                                                <span class="project-date">Ongoing</span>
-                                            </div>
-                                        </div>
-                                        <div class="project-content-bottom">
-                                            <div class="project-tags">
-                                                <span class="tag">Camera</span>
-                                                <span class="tag">Lightroom</span>
-                                                <div class="project-area-badge">
-                                                    <span class="area-badge">Photography</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-							<a href="projects/joni/joni.html" class="project-card-link">
-                                <div class="project-card" 
-									data-area="Digital Art" 
-									data-tech="Affinity Designer" 
-									data-name="Joni" 
-									data-month="January" 
-									data-year="2025">
-                                    <div class="project-image">
-                                        <img src="images/previews/joni-preview.jpg" alt="Joni Artwork">
-                                    </div>
-                                    <div class="project-details">
-                                        <div class="project-content-top">
-                                            <div class="project-header">
-                                                <h3>Joni</h3>
-                                            </div>
-                                            <div class="project-date-container">
-                                                <span class="project-date">January 2025 - October 2025</span>
-                                            </div>
-                                        </div>
-                                        <div class="project-content-bottom">
-                                            <div class="project-tags">
-                                                <span class="tag">Affinity Designer</span>
-                                                <div class="project-area-badge">
-                                                    <span class="area-badge">Digital Art</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-						
                             <a href="#" class="project-card-link" onclick="event.preventDefault(); showInceptionModal();">
-                                <div class="project-card" 
-									data-area="Web Design" 
-									data-tech="HTML,JavaScript,JSON,CSS,Claude,ChatGPT,GitHub" 
-									data-name="BLOT.WORLD Portfolio Website" 
-									data-month="September" 
+                                <div class="project-card"
+									data-area="Web Design"
+									data-tech="HTML,JavaScript,JSON,CSS,Python,Claude,ChatGPT,GitHub"
+									data-name="BLOT.WORLD Portfolio Website"
+									data-month="September"
 									data-year="2025">
                                     <div class="project-image">
                                         <img src="images/previews/inception-protection.png" alt="Portfolio Website">
@@ -379,6 +316,7 @@
                                                 <span class="tag">HTML</span>
                                                 <span class="tag">JavaScript</span>
 												<span class="tag">JSON</span>
+												<span class="tag">Python</span>
                                                 <div class="project-area-badge">
                                                     <span class="area-badge">Web Design</span>
                                                 </div>
@@ -387,13 +325,13 @@
                                     </div>
                                 </div>
                             </a>
-                            
+
                             <a href="projects/cafemex/cafemex.html" class="project-card-link">
-                                <div class="project-card" 
-									data-area="Branding & Identity" 
-									data-tech="Affinity Designer" 
-									data-name="Cafe Mex Brand Redesign" 
-									data-month="September" 
+                                <div class="project-card"
+									data-area="Branding & Identity"
+									data-tech="Affinity Designer"
+									data-name="Cafe Mex Brand Redesign"
+									data-month="September"
 									data-year="2025">
                                     <div class="project-image">
                                         <img src="images/previews/cafemex-preview.jpg" alt="Cafe Mex Logo">
@@ -419,13 +357,44 @@
                                     </div>
                                 </div>
                             </a>
-                            
+
+							<a href="projects/joni/joni.html" class="project-card-link">
+                                <div class="project-card"
+									data-area="Digital Art"
+									data-tech="Affinity Designer"
+									data-name="Joni"
+									data-month="January"
+									data-year="2025">
+                                    <div class="project-image">
+                                        <img src="images/previews/joni-preview.jpg" alt="Joni Artwork">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Joni</h3>
+                                            </div>
+                                            <div class="project-date-container">
+                                                <span class="project-date">January 2025 - October 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Affinity Designer</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Digital Art</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
                             <a href="projects/amari/amari.html" class="project-card-link">
-                                <div class="project-card" 
-									data-area="Digital Art" 
-									data-tech="Affinity Designer" 
-									data-name="Amari" 
-									data-month="September" 
+                                <div class="project-card"
+									data-area="Digital Art"
+									data-tech="Affinity Designer"
+									data-name="Amari"
+									data-month="September"
 									data-year="2023">
                                     <div class="project-image">
                                         <img src="images/previews/amari-preview.jpg" alt="Amari Artwork">
@@ -450,13 +419,13 @@
                                     </div>
                                 </div>
                             </a>
-							
+
 							<a href="https://docs.google.com/spreadsheets/d/1EByhB3oMR2nvFlG01ttQgPK-jfNFy6HLMJiqHiELVLU/edit?usp=sharing" class="project-card-link" target="_blank" rel="noopener noreferrer">
-                                <div class="project-card" 
-									data-area="Data Analysis" 
-									data-tech="Google Sheets" 
-									data-name="Retail Scheduling Analysis" 
-									data-month="May" 
+                                <div class="project-card"
+									data-area="Data Analysis"
+									data-tech="Google Sheets"
+									data-name="Retail Scheduling Analysis"
+									data-month="May"
 									data-year="2023">
                                     <div class="project-image">
                                         <img src="images/previews/dept-scheduling-analysis-preview.png" alt="Walmart Online Pickup & Delivery Scheduling Analysis Image">
@@ -491,13 +460,45 @@
                                     </div>
                                 </div>
                             </a>
-							
+
+							<a href="projects/photography/photography.html" class="project-card-link">
+                                <div class="project-card"
+									data-area="Photography"
+									data-tech="Lightroom"
+									data-name="Photography Gallery"
+									data-month="August"
+									data-year="2017">
+                                    <div class="project-image">
+                                        <img src="images/previews/photography-preview.jpg" alt="Photography Gallery Preview">
+                                    </div>
+                                    <div class="project-details">
+                                        <div class="project-content-top">
+                                            <div class="project-header">
+                                                <h3>Photography</h3>
+                                            </div>
+                                            <p>A visual timeline of moments captured through the lens. Click through to browse the collection.</p>
+                                            <div class="project-date-container">
+                                                <span class="project-date">August 2017 - Present</span>
+                                            </div>
+                                        </div>
+                                        <div class="project-content-bottom">
+                                            <div class="project-tags">
+                                                <span class="tag">Lightroom</span>
+                                                <div class="project-area-badge">
+                                                    <span class="area-badge">Photography</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
 							<a href="projects/poetry/poetry-showcase.html" class="project-card-link" target="_blank" rel="noopener noreferrer">
-                                <div class="project-card" 
-									data-area="Poetry" 
-									data-tech="English" 
-									data-name="Upon a Dove on the Railroad Track" 
-									data-month="October" 
+                                <div class="project-card"
+									data-area="Poetry"
+									data-tech="English"
+									data-name="Upon a Dove on the Railroad Track"
+									data-month="Present"
 									data-year="2015">
                                     <div class="project-image">
                                         <img src="images/previews/poetry-preview.png" alt="Poetry Preview">
@@ -523,7 +524,7 @@
                                     </div>
                                 </div>
                             </a>
-							
+
                         </div>
                     </div>
                 </div>

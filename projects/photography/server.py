@@ -4,11 +4,53 @@ Simple HTTP server for photography gallery that auto-detects photos
 """
 import os
 import json
+import subprocess
+import re
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from datetime import datetime
-from PIL import Image
-from PIL.ExifTags import TAGS
 import mimetypes
+
+# Global variable for photo metadata
+PHOTO_METADATA = {}
+
+def get_exif_date_with_magick(filepath):
+    """Extract DateTimeOriginal from image using ImageMagick"""
+    try:
+        result = subprocess.run(
+            ['magick', 'identify', '-verbose', filepath],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        if result.returncode == 0:
+            output = result.stdout
+            # Try DateTimeOriginal first
+            match = re.search(r'exif:DateTimeOriginal:\s*(\d{4}):(\d{2}):(\d{2})', output)
+            if match:
+                return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+
+            # Fallback to DateTime
+            match = re.search(r'exif:DateTime:\s*(\d{4}):(\d{2}):(\d{2})', output)
+            if match:
+                return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+    except Exception as e:
+        print(f"Error extracting EXIF from {filepath}: {e}")
+
+    return None
+
+def load_metadata():
+    """Load photo metadata from JSON file"""
+    global PHOTO_METADATA
+    try:
+        metadata_path = 'projects/photography/photo_metadata.json'
+        if os.path.exists(metadata_path):
+            with open(metadata_path, 'r') as f:
+                PHOTO_METADATA = json.load(f)
+                print(f"Loaded metadata for {len(PHOTO_METADATA)} photos")
+        else:
+            print(f"Metadata file not found at {metadata_path}")
+    except Exception as e:
+        print(f"Could not load photo metadata: {e}")
 
 class GalleryHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -33,23 +75,12 @@ class GalleryHandler(SimpleHTTPRequestHandler):
                     if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.heic')):
                         filepath = os.path.join(images_dir, filename)
 
-                        # Try to get EXIF date
-                        date = None
-                        try:
-                            with Image.open(filepath) as img:
-                                exif = img._getexif()
-                                if exif:
-                                    for tag_id, value in exif.items():
-                                        tag = TAGS.get(tag_id, tag_id)
-                                        if tag == 'DateTimeOriginal' or tag == 'DateTime':
-                                            # Convert EXIF date format (2025:11:02 12:12:14) to ISO format
-                                            date = value.split()[0].replace(':', '-')
-                                            break
-                        except Exception as e:
-                            print(f"Could not read EXIF from {filename}: {e}")
+                        # Get date from metadata JSON cache
+                        date = PHOTO_METADATA.get(filename)
 
-                        # Fallback to file modification time if no EXIF date
+                        # Fallback to file modification time if not in cache
                         if not date:
+                            print(f"Warning: {filename} not in metadata cache, using file date")
                             mtime = os.path.getmtime(filepath)
                             date = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
 
@@ -77,4 +108,5 @@ def run(port=8000):
 if __name__ == '__main__':
     # Change to project root directory
     os.chdir('../..')
+    load_metadata()
     run()

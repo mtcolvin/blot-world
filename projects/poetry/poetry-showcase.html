@@ -32,14 +32,14 @@
         }
 		
 		:root {
-			--upon-cream: #faf8f5;
-			--upon-warm-white: #f5f3f0;
-			--upon-warm-white-dark: #d8d0c4;
-			--upon-ink: #2a2418;
-			--upon-faded-ink: #6b6b6b;
-			--upon-accent: #8b7355;
-			--upon-accent-light: #a89080;
-			--upon-border: rgba(42, 36, 24, 0.1);
+			--upon-cream: #fefefe;
+			--upon-warm-white: #f9f9f9;
+			--upon-warm-white-dark: #e8e8e8;
+			--upon-ink: #1a1a1a;
+			--upon-faded-ink: #888888;
+			--upon-accent: #4a4a4a;
+			--upon-accent-light: #666666;
+			--upon-border: rgba(26, 26, 26, 0.1);
 
 			/* Mini Nav Color Overrides */
 			--mininav-bg: transparent;
@@ -53,7 +53,7 @@
 		.minimal-nav .backdrop-blur {
 			mask: url(#logo-cut-poetry);
 			-webkit-mask: url(#logo-cut-poetry);
-			background: rgba(139, 115, 85, 0.95);
+			background: rgba(74, 74, 74, 0.95);
 		}
 
 		.nav-rect {
@@ -81,46 +81,16 @@
                 
         /* Header */
         header {
-            text-align: left;
+            text-align: center;
             margin-bottom: 2rem;
-            padding: 1.25rem 1.5rem;
-            position: fixed;
-            left: var(--mininav-spacing);
-            top: calc(var(--mininav-height) + var(--mininav-spacing));
-            background: var(--upon-ink);
-            z-index: 50;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-			line-height: 1.3;
+            padding: 1rem 2rem 0.75rem 2rem;
+            background: transparent;
+            line-height: 1.3;
         }
-        
-        /* Light text on dark background when fixed */
+
         header h1,
         header .subtitle,
         header .author {
-            color: var(--upon-cream);
-            transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        header.scrolled {
-            position: relative;
-            left: auto;
-            top: auto;
-            width: 100%;
-            background: transparent;
-            border-color: transparent;
-            box-shadow: none;
-            text-align: center;
-            padding: 1rem 2rem 0.75rem 2rem;
-        }
-        
-        /* Reset to original lighter colors when scrolled/on top */
-        header.scrolled h1,
-        header.scrolled .subtitle,
-        header.scrolled .author {
             color: var(--upon-accent-light);
         }
         
@@ -128,27 +98,11 @@
             content: '';
             position: absolute;
             bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 1px;
-            background: var(--upon-accent);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        header.scrolled::after {
             left: 50%;
             transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
             background: var(--upon-accent-light);
-        }
-        
-        /* Placeholder for header when fixed */
-        .header-placeholder {
-            height: 0;
-            transition: height 0.4s ease;
-        }
-        
-        .header-placeholder.active {
-            height: 120px;
         }
         
         h1 {
@@ -305,23 +259,34 @@
         }
         
         .poem-content::selection {
-            background: rgba(139, 115, 85, 0.2);
+            background: rgba(74, 74, 74, 0.2);
         }
-        
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 2rem 3rem 2rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            color: var(--upon-faded-ink);
+            letter-spacing: 0.05em;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        footer a {
+            color: var(--upon-accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--upon-ink);
+        }
+
         /* Responsive */
-		@media (max-width: 1024px) {
-			header {
-                position: relative;
-                left: auto;
-                top: auto;
-                width: 100%;
-                background: transparent;
-			}
-            
-            .header-placeholder {
-                display: none;
-            }
-		}
 		
         @media (max-width: 768px) {
             .container {
@@ -451,20 +416,49 @@
         <div id="poems-display">
             <!-- Poems will be generated dynamically -->
         </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Matthew Colvin. All rights reserved.</p>
+            <p>Poetry may not be reproduced without permission.</p>
+        </footer>
     </div>
-    
+
     <script>
         // EMBEDDED POEMS DATA - Edit this array to add/change poems
 const poemsRaw = [
-    {	
-        id: "a-fleeting-story",
-        title: "A Fleeting Story",
+    {
+        id: "my-fears-of-sonder",
+        title: "My Fears of Sonder",
+        date: "November 2025",
+        content: `Through the dark I ever wander
+Just to live--mirage of wonder.
+Ticking time, a time to ponder
+Plagued by thoughts and fears of sonder.
+
+Like mountains tall looming grand
+Standing humble on the land.
+Like ants, to me, march in line;
+I gaze above, a swath of pine.
+
+We cut through soft pitter-patter.
+A gale through flesh does scatter.
+We stand abreast as curtain calls
+And take a bow as wonder falls.
+
+Into soot
+--we pussyfoot.`
+    },
+
+    {
+        id: "a-story-fleeting",
+        title: "A Story Fleeting",
         date: "March 2023",
         content: `Kissed a time, a place, a when;
 Only brothers can amend.
 
 Under Thou shall stories told
-Rest forever, thought, untold.
+Rest forever; thought, untold.
 
 Thou, shalt know;
 ——thou, shalt seek:
@@ -480,33 +474,6 @@ I love you dearly,
 ——may we meet
 when times are better,
 ——bittersweet.`
-    },
-
-    {	
-        id: "misery",
-        title: "Misery",
-        date: "October 2015",
-        content: `I feel the anger boiling high,
-It flies, it flies up to the sky,
-A burning ember red with fie.
-
-Look at me you beastly brute,
-Your mind be hazed with mask of soot.
-You burn me down right to the root,
-And hunt me down and pussyfoot.
-
-For you the devil'll be'a rappin',
-And the imps'll be'a tappin',
-And the clerics'll be'a flappin',
-And the people'll be'a lappin'.
-
-Never has God ever asked for more
-Than for you to scare the devils from moor
-They shall come with hearts and souls of sore,
-Rappin' and tappin' at Heaven's golden door.
-
-The angels beg and plead and shout and pray,
-"Evermore, evermore, evermore."`
     },
 
     {
@@ -544,31 +511,6 @@ const poems = poemsRaw.slice().sort((a, b) => {
 });
         
         let currentPoemIndex = 0;
-        let resizeTimeout;
-        
-        // Handle header position based on window width only
-        function updateHeaderPosition() {
-            const header = document.getElementById('main-header');
-            const placeholder = document.getElementById('header-placeholder');
-            
-            // Only change position based on screen width
-            if (window.innerWidth <= 1024) {
-                header.classList.add('scrolled');
-                placeholder.classList.remove('active');
-            } else {
-                // On large screens, header stays fixed on the left
-                header.classList.remove('scrolled');
-                placeholder.classList.remove('active');
-            }
-        }
-        
-        // Debounced resize handler
-        function handleResize() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                updateHeaderPosition();
-            }, 150);
-        }
         
         // Generate navigation
         function generateNavigation() {
@@ -614,9 +556,9 @@ const poems = poemsRaw.slice().sort((a, b) => {
             }
             
             currentPoemIndex = index;
-            
+
             // Update URL hash without triggering scroll
-            const newHash = `#page-${index + 1}`;
+            const newHash = `#${poems[index].id}`;
             if (window.location.hash !== newHash) {
                 history.pushState(null, null, newHash);
             }
@@ -655,22 +597,21 @@ const poems = poemsRaw.slice().sort((a, b) => {
         // Handle hash changes (back/forward browser buttons or direct URL access)
         function handleHashChange() {
             const hash = window.location.hash;
-            
+
             if (hash) {
-                // Extract page number from hash (#page-1, #page-2, etc.)
-                const match = hash.match(/#page-(\d+)/);
-                if (match) {
-                    const pageNum = parseInt(match[1], 10);
-                    const index = pageNum - 1; // Convert to 0-based index
-                    
-                    if (index >= 0 && index < poems.length) {
-                        currentPoemIndex = index;
-                        showPoem(index);
-                        return;
-                    }
+                // Extract poem ID from hash (e.g., #my-fears-of-sonder)
+                const poemId = hash.substring(1); // Remove the # symbol
+
+                // Find the poem with this ID
+                const index = poems.findIndex(poem => poem.id === poemId);
+
+                if (index !== -1) {
+                    currentPoemIndex = index;
+                    showPoem(index);
+                    return;
                 }
             }
-            
+
             // Default to first poem
             navigateToPoem(0);
         }
@@ -684,17 +625,12 @@ const poems = poemsRaw.slice().sort((a, b) => {
         
         // Listen for hash changes (browser back/forward)
         window.addEventListener('hashchange', handleHashChange);
-        
-        // Listen for resize events only
-        window.addEventListener('resize', handleResize);
-        
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             generateNavigation();
             generatePoems();
             handleHashChange();
-            // Set initial header position based on window width
-            updateHeaderPosition();
         });
     </script>
 </body>

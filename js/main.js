@@ -20,17 +20,17 @@ const AppState = {
 		status: ['all'],
 		area: [],
 		tech: [],
-		sort: 'default'
+		sort: 'date-desc'
 	},
-	
+
 	currentSection: 'home',
-	
+
 	resetFilters() {
 		this.activeFilters = {
 			status: ['all'],
 			area: [],
 			tech: [],
-			sort: 'default'
+			sort: 'date-desc'
 		};
 	}
 };
@@ -539,9 +539,9 @@ const FilterSystem = {
 		document.querySelectorAll('.filter-checkbox').forEach(cb => {
 			cb.classList.remove('checked');
 		});
-		
-		document.getElementById('sort-select').value = 'default';
-		
+
+		document.getElementById('sort-select').value = 'date-desc';
+
 		AppState.resetFilters();
 		this.applyFilters();
 	},
@@ -549,12 +549,35 @@ const FilterSystem = {
 	sortProjects(sortBy) {
 		const grid = document.getElementById('projects-grid');
 		const cards = Array.from(grid.children);
-		
+
+		// Helper function to convert month name to number
+		const monthToNumber = (month) => {
+			if (month === 'Present') return 13; // Treat "Present" as later than December
+			const months = {
+				'January': 1, 'February': 2, 'March': 3, 'April': 4,
+				'May': 5, 'June': 6, 'July': 7, 'August': 8,
+				'September': 9, 'October': 10, 'November': 11, 'December': 12
+			};
+			return months[month] || 0;
+		};
+
+		// Helper function to get date value for comparison
+		const getDateValue = (card) => {
+			const year = parseInt(card.dataset.year) || 0;
+			const month = monthToNumber(card.dataset.month || '');
+			// Create a comparable number: year * 100 + month
+			return year * 100 + month;
+		};
+
 		cards.sort((a, b) => {
 			const aCard = a.querySelector('.project-card');
 			const bCard = b.querySelector('.project-card');
-			
+
 			switch(sortBy) {
+				case 'date-desc': // Newest first
+					return getDateValue(bCard) - getDateValue(aCard);
+				case 'date-asc': // Oldest first
+					return getDateValue(aCard) - getDateValue(bCard);
 				case 'name-asc':
 					return aCard.dataset.name.localeCompare(bCard.dataset.name);
 				case 'name-desc':
@@ -563,7 +586,7 @@ const FilterSystem = {
 					return 0;
 			}
 		});
-		
+
 		cards.forEach(card => grid.appendChild(card));
 	},
 	
@@ -622,44 +645,44 @@ const FilterSystem = {
 const URLManager = {
 	serialize() {
 		const params = new URLSearchParams();
-		
+
 		if (AppState.activeFilters.area.length > 0) {
 			params.set('area', AppState.activeFilters.area.join(','));
 		}
-		
+
 		if (AppState.activeFilters.tech.length > 0) {
 			params.set('tech', AppState.activeFilters.tech.join(','));
 		}
-		
-		if (AppState.activeFilters.sort !== 'default') {
+
+		if (AppState.activeFilters.sort !== 'date-desc') {
 			params.set('sort', AppState.activeFilters.sort);
 		}
-		
+
 		return params.toString();
 	},
-	
+
 	parseFilters() {
 		const urlParams = new URLSearchParams(window.location.search);
-		
+
 		const filters = {
 			status: ['all'],
 			area: [],
 			tech: [],
-			sort: 'default'
+			sort: 'date-desc'
 		};
-		
+
 		if (urlParams.has('area')) {
 			filters.area = urlParams.get('area').split(',');
 		}
-		
+
 		if (urlParams.has('tech')) {
 			filters.tech = urlParams.get('tech').split(',');
 		}
-		
+
 		if (urlParams.has('sort')) {
 			filters.sort = urlParams.get('sort');
 		}
-		
+
 		return filters;
 	}
 };
