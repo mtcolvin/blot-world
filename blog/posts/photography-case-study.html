@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../css/root.css">
+    <link rel="stylesheet" href="../../css/minimal-nav.css">
+    <link rel="stylesheet" href="../css/post.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="../../images/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../../images/favicon/favicon.svg" />
+
+    <!-- SEO -->
+    <meta name="description" content="The story behind creating an immersive photography gallery with a unique timeline interface to showcase moments captured through the years.">
+    <meta name="keywords" content="photography, web design, timeline, interactive design, portfolio">
+    <meta name="author" content="Matthew Colvin">
+
+    <title>Photography Through Time: Building an Interactive Timeline - Matthew Colvin</title>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="minimal-nav">
+        <div class="minimal-nav-container">
+            <a href="../index.html" class="minimal-nav-back">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+            <div class="minimal-nav-title">BLOT.WORLD / BLOG</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="post-main">
+        <article class="post-container">
+            <!-- Header -->
+            <header class="post-header">
+                <div class="post-meta">
+                    <span class="post-date">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        January 5, 2025
+                    </span>
+                    <span class="post-category">Case Study</span>
+                    <span class="post-read-time">6 min read</span>
+                </div>
+
+                <h1 class="post-title">Photography Through Time: Building an Interactive Timeline</h1>
+
+                <p class="post-excerpt">
+                    The story behind creating an immersive photography gallery with a unique timeline interface to showcase moments captured through the years.
+                </p>
+
+                <div class="post-tags">
+                    <span class="post-tag">Photography</span>
+                    <span class="post-tag">Web Development</span>
+                    <span class="post-tag">Interactive Design</span>
+                </div>
+            </header>
+
+            <!-- Featured Image -->
+            <div class="post-featured-image">
+                <img src="../../images/previews/photography-preview.jpg" alt="Photography Timeline Interface">
+            </div>
+
+            <!-- Content -->
+            <div class="post-content">
+                <h2>The Vision</h2>
+                <p>
+                    A photography portfolio typically follows a familiar pattern: grid of thumbnails, click to enlarge, maybe sort by category. Functional, but forgettable. I wanted something different—something that told a story not just through the images themselves, but through how they're experienced.
+                </p>
+
+                <p>
+                    The concept: a horizontal timeline that lets viewers journey through moments chronologically, experiencing photographs as markers in time rather than isolated artifacts. Each image anchored to its moment, creating a visual narrative of perspectives captured over the years.
+                </p>
+
+                <h2>Design Challenges</h2>
+
+                <h3>Making Time Visual</h3>
+                <p>
+                    The central challenge was representing time in a way that felt intuitive and explorable. Linear chronology is simple to understand but can be visually monotonous. The solution was creating a horizontal scrolling timeline with visual density that varies based on photo frequency—busy periods feel dense and active, while sparse periods create breathing room.
+                </p>
+
+                <h3>Balancing Image and Interface</h3>
+                <p>
+                    Photography galleries should let the images speak. The interface needed to be present enough to guide navigation but subtle enough to disappear when viewing photos. This led to a minimalist timeline design: a thin line with date markers and thumbnail previews that fade into the background when an image is in focus.
+                </p>
+
+                <div class="callout info">
+                    <div class="callout-title">Design Philosophy</div>
+                    <p>The best interfaces are invisible—they facilitate the experience without demanding attention. Let the content be the star.</p>
+                </div>
+
+                <h2>Technical Implementation</h2>
+
+                <h3>Timeline Mechanics</h3>
+                <p>
+                    The timeline is built with horizontal scroll mechanics, but enhanced with snap points. As users scroll through time, the view "snaps" to the nearest photograph, creating a deliberate, intentional browsing experience. This prevents the aimless scrolling that can happen with endless feeds.
+                </p>
+
+                <p>
+                    Each photo is positioned based on its capture date, with spacing calculated dynamically. JavaScript reads the EXIF data (or manually entered dates) and calculates positions along the timeline proportionally.
+                </p>
+
+                <h3>Responsive Timeline Scaling</h3>
+                <p>
+                    A timeline spanning years can't display every date label at all zoom levels. I implemented a dynamic scaling system:
+                </p>
+
+                <ul>
+                    <li><strong>Year View:</strong> Shows year markers and major months</li>
+                    <li><strong>Month View:</strong> Shows week markers and photo clusters</li>
+                    <li><strong>Day View:</strong> Shows individual days when zoomed on a specific period</li>
+                </ul>
+
+                <p>
+                    The interface adjusts label density based on zoom level, preventing visual clutter while maintaining orientation.
+                </p>
+
+                <h3>Image Lazy Loading</h3>
+                <p>
+                    High-resolution photos are heavy. Loading hundreds of images upfront would cripple performance. The solution: lazy loading with intelligent preloading. Images load as they approach the viewport, with extra preloading for adjacent images to ensure smooth browsing. Users never see loading spinners because images are ready before they get there.
+                </p>
+
+                <h2>User Experience Details</h2>
+
+                <h3>Navigation Modes</h3>
+                <p>
+                    Users can navigate the timeline three ways:
+                </p>
+
+                <ol>
+                    <li><strong>Scroll/Swipe:</strong> Natural scrolling through time</li>
+                    <li><strong>Timeline Scrubbing:</strong> Click and drag on the timeline to jump to specific dates</li>
+                    <li><strong>Keyboard Controls:</strong> Arrow keys to move between photos, spacebar to view fullscreen</li>
+                </ol>
+
+                <p>
+                    Multiple input methods ensure accessibility and cater to different user preferences.
+                </p>
+
+                <h3>Photo Detail View</h3>
+                <p>
+                    Clicking a photo opens an immersive detail view. The interface fades away, leaving only the image, capture date, and basic camera info (when available). Users can swipe between adjacent photos or close to return to the timeline.
+                </p>
+
+                <h3>Date Jumping</h3>
+                <p>
+                    A discrete date selector allows jumping to specific time periods—useful for photographers with large collections spanning years. Type a date or select from a calendar view, and the timeline smoothly scrolls to that moment.
+                </p>
+
+                <h2>Visual Design</h2>
+
+                <h3>Color & Atmosphere</h3>
+                <p>
+                    The photography gallery uses a darker theme than the main portfolio. This conscious choice serves two purposes:
+                </p>
+
+                <ul>
+                    <li><strong>Image Focus:</strong> Dark backgrounds make photographs pop, reducing visual competition</li>
+                    <li><strong>Mood Setting:</strong> A gallery-like atmosphere that feels intentional and curated</li>
+                </ul>
+
+                <h3>Typography Choices</h3>
+                <p>
+                    Date labels and metadata use a condensed, lightweight typeface. Minimal visual weight prevents the interface from competing with images, while maintaining readability.
+                </p>
+
+                <h3>Micro-Interactions</h3>
+                <p>
+                    Small animations provide feedback and delight:
+                </p>
+
+                <ul>
+                    <li>Thumbnails gently scale on hover</li>
+                    <li>Timeline position indicator smoothly tracks scroll progress</li>
+                    <li>Photo transitions use subtle cross-fades rather than harsh cuts</li>
+                    <li>Date labels fade in as they become relevant during scrolling</li>
+                </ul>
+
+                <div class="key-takeaways">
+                    <h3>Key Technical Decisions</h3>
+                    <ul>
+                        <li><strong>Horizontal Scrolling:</strong> More natural for timeline representation than vertical</li>
+                        <li><strong>Snap Points:</strong> Creates intentional browsing vs. endless scrolling</li>
+                        <li><strong>Dynamic Scaling:</strong> Timeline adapts to zoom level for clarity</li>
+                        <li><strong>Lazy Loading:</strong> Performance without compromising image quality</li>
+                    </ul>
+                </div>
+
+                <h2>Challenges Overcome</h2>
+
+                <h3>Challenge: Performance with Large Collections</h3>
+                <p>
+                    <strong>The Problem:</strong> Rendering hundreds of images on a single page causes performance issues.
+                </p>
+                <p>
+                    <strong>The Solution:</strong> Virtual scrolling combined with lazy loading. Only photos near the viewport are rendered in the DOM. As users scroll, elements are dynamically added and removed, maintaining a constant performance footprint regardless of collection size.
+                </p>
+
+                <h3>Challenge: Mobile Experience</h3>
+                <p>
+                    <strong>The Problem:</strong> Horizontal scrolling on mobile can conflict with native browser gestures.
+                </p>
+                <p>
+                    <strong>The Solution:</strong> On mobile, the timeline shifts to a vertical layout with dates on the left and photos on the right. Same chronological experience, but adapted to mobile browsing patterns. Touch gestures feel natural and don't fight with browser navigation.
+                </p>
+
+                <h3>Challenge: Preserving Context</h3>
+                <p>
+                    <strong>The Problem:</strong> When viewing a photo in detail, users lose sight of where they are in the timeline.
+                </p>
+                <p>
+                    <strong>The Solution:</strong> A miniature timeline indicator remains visible even in detail view, showing the current position. Users maintain temporal orientation while focusing on individual images.
+                </p>
+
+                <h2>Photography as Archive</h2>
+
+                <p>
+                    This project reinforced an important truth: photography is about capturing moments, but also about preserving context. A photograph taken in 2018 carries different weight and meaning than one from 2024. The timeline interface honors that temporal context.
+                </p>
+
+                <p>
+                    By organizing photos chronologically rather than thematically, the gallery becomes an archive—a way to revisit not just images, but periods of time. You can see evolution in style, recurring subjects, and visual interests shifting over years.
+                </p>
+
+                <h2>Future Enhancements</h2>
+
+                <p>
+                    As the photography collection grows, I'm considering additional features:
+                </p>
+
+                <ul>
+                    <li><strong>Location Integration:</strong> Map view showing where photos were captured</li>
+                    <li><strong>Filtering by Tags:</strong> Toggle between timeline view and thematic collections</li>
+                    <li><strong>Comparison Mode:</strong> Select two photos to compare side-by-side</li>
+                    <li><strong>Story Mode:</strong> Curated sequences that guide viewers through specific narratives</li>
+                    <li><strong>EXIF Data Display:</strong> Camera settings, lens info, and technical details for photography enthusiasts</li>
+                </ul>
+
+                <hr>
+
+                <p>
+                    Building this timeline gallery taught me that how you present work is as important as the work itself. A novel interface doesn't just show photographs differently—it changes how viewers engage with them, transforming passive scrolling into active exploration.
+                </p>
+
+                <p>
+                    The best portfolios don't just display—they invite experience.
+                </p>
+
+                <p>
+                    <em>Explore the photography timeline at <a href="../../projects/photography/photography.html">blot.world/projects/photography</a></em>
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <footer class="post-footer">
+                <div class="post-footer-share">
+                    <h3>Found this helpful? Share it:</h3>
+                    <div class="share-buttons">
+                        <a href="https://twitter.com/intent/tweet?text=Photography%20Through%20Time%3A%20Building%20an%20Interactive%20Timeline&url=" class="share-btn" target="_blank" rel="noopener">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                            </svg>
+                            Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=" class="share-btn" target="_blank" rel="noopener">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </footer>
+        </article>
+    </main>
+</body>
+</html>

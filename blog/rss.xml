@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>BLOT.WORLD Blog</title>
+        <description>Insights on design, development, and creative processes by Matthew Colvin</description>
+        <link>https://blot.world/blog/</link>
+        <atom:link href="https://blot.world/blog/rss.xml" rel="self" type="application/rss+xml" />
+        <language>en-us</language>
+        <lastBuildDate>Wed, 15 Jan 2025 00:00:00 GMT</lastBuildDate>
+        <image>
+            <url>https://blot.world/images/favicon/android-chrome-512x512.png</url>
+            <title>BLOT.WORLD</title>
+            <link>https://blot.world/blog/</link>
+        </image>
+
+        <item>
+            <title>Building BLOT.WORLD: A Modern Portfolio Experience</title>
+            <description>A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website from scratch.</description>
+            <link>https://blot.world/blog/posts/blot-world-case-study.html</link>
+            <guid>https://blot.world/blog/posts/blot-world-case-study.html</guid>
+            <pubDate>Wed, 15 Jan 2025 00:00:00 GMT</pubDate>
+            <category>Case Study</category>
+            <category>Web Design</category>
+            <category>HTML</category>
+            <category>CSS</category>
+            <category>JavaScript</category>
+        </item>
+
+        <item>
+            <title>Café Mexicali: Crafting a Vibrant Restaurant Identity</title>
+            <description>How I designed a complete brand identity system for a Californian-Mexican fusion restaurant, from concept to final deliverables.</description>
+            <link>https://blot.world/blog/posts/cafemex-case-study.html</link>
+            <guid>https://blot.world/blog/posts/cafemex-case-study.html</guid>
+            <pubDate>Fri, 10 Jan 2025 00:00:00 GMT</pubDate>
+            <category>Case Study</category>
+            <category>Branding</category>
+            <category>Identity Design</category>
+            <category>Affinity Designer</category>
+        </item>
+
+        <item>
+            <title>Photography Through Time: Building an Interactive Timeline</title>
+            <description>The story behind creating an immersive photography gallery with a unique timeline interface to showcase moments captured through the years.</description>
+            <link>https://blot.world/blog/posts/photography-case-study.html</link>
+            <guid>https://blot.world/blog/posts/photography-case-study.html</guid>
+            <pubDate>Sun, 05 Jan 2025 00:00:00 GMT</pubDate>
+            <category>Case Study</category>
+            <category>Photography</category>
+            <category>Web Development</category>
+            <category>Interactive Design</category>
+        </item>
+    </channel>
+</rss>
