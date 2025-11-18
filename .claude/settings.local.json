@@ -32,7 +32,11 @@
       "Bash(ping:*)",
       "Bash(findstr:*)",
       "Bash(ffprobe:*)",
-      "Bash(del projectsphotographyimagesIMG_0364.MOV)"
+      "Bash(del projectsphotographyimagesIMG_0364.MOV)",
+      "Bash(start blog/posts/blot-world-case-study.html)",
+      "WebFetch(domain:loading.io)",
+      "WebFetch(domain:www.deviantart.com)",
+      "WebFetch(domain:www.thepoxbox.com)"
     ],
     "deny": [],
     "ask": []

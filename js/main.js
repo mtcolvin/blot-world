@@ -55,12 +55,22 @@ const Navigation = {
 				this.showSection(sectionId);
 			});
 		});
-		
+
+		// Event delegation for dynamically created blog cards
+		document.addEventListener('click', (e) => {
+			const blogCard = e.target.closest('[data-section]');
+			if (blogCard && blogCard.classList.contains('blog-card')) {
+				e.preventDefault();
+				const sectionId = blogCard.dataset.section;
+				this.showSection(sectionId);
+			}
+		});
+
 		// Logo click
 		document.querySelector('.logo')?.addEventListener('click', () => {
 			this.showSection('home');
 		});
-		
+
 		// Mobile menu
 		document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
 			this.toggleMobileMenu();
@@ -710,12 +720,14 @@ function showSection(sectionId) {
 
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('loading');
-    
+
     Navigation.init();
     HeroAnimations.initRotatingTagline();
     FilterSystem.init();
     ProjectsPreview.populate();
     populateAreaBadges();
+    initializeBlog();
+    QuoteRotator.init();
 
     // Initialize project counter
     const totalProjects = document.querySelectorAll('#projects-grid .project-card').length;
@@ -978,21 +990,21 @@ const NightSky = {
 function populateAreaBadges() {
     const container = document.getElementById('area-badges-container');
     if (!container) return;
-    
+
     // Get all unique areas from project cards
     const projectCards = document.querySelectorAll('#projects-grid .project-card');
     const areas = new Set();
-    
+
     projectCards.forEach(card => {
         const area = card.dataset.area;
         if (area) {
             areas.add(area);
         }
     });
-    
+
     // Convert to array and sort alphabetically
     const sortedAreas = Array.from(areas).sort();
-    
+
     // Clear container and create badge elements
     container.innerHTML = '';
     sortedAreas.forEach(area => {
@@ -1001,6 +1013,341 @@ function populateAreaBadges() {
         badge.textContent = area;
         container.appendChild(badge);
     });
+
+    // Calculate optimal items per row to avoid orphans
+    const totalBadges = sortedAreas.length;
+    if (totalBadges > 0) {
+        // Find the best number of items per row (between 3-5)
+        let optimalPerRow = 4; // default
+
+        for (let perRow = 3; perRow <= 5; perRow++) {
+            const rows = Math.ceil(totalBadges / perRow);
+            const lastRowCount = totalBadges % perRow || perRow;
+
+            // Prefer layouts where the last row has at least half the items
+            if (lastRowCount >= Math.ceil(perRow / 2)) {
+                optimalPerRow = perRow;
+                break;
+            }
+        }
+
+        // Set CSS custom property to control grid layout
+        container.style.setProperty('--items-per-row', optimalPerRow);
+    }
+}
+
+// ==========================================================================
+// ABOUT SECTION - ROTATING QUOTES
+// ==========================================================================
+
+const QuoteRotator = {
+    quotes: [
+        {
+            text: "So remember to look up at the stars and not down at your feet. Try to make sense of what you see and hold on to that childlike wonder about what makes the universe exist.",
+            author: "Stephen Hawking"
+        },
+        {
+            text: "He ought to find it more profitable to play by the rules than to undermine the system.",
+            author: "Satoshi Nakamoto"
+        },
+        {
+            text: "If I have seen further, it is by standing on the shoulders of giants.",
+            author: "Isaac Newton"
+        },
+        {
+            text: "If you want the rainbow, you got to put up with the rain.",
+            author: "Dolly Parton"
+        },
+        {
+            text: "We do not inherit the earth from our ancestors; we borrow it from our children.",
+            author: "Proverb"
+        }
+    ],
+    currentIndex: 0,
+    autoRotateInterval: null,
+
+    init() {
+        if (!document.getElementById('rotating-quote')) return;
+
+        this.createIndicators();
+        this.showQuote(0);
+        this.setupEventListeners();
+        this.startAutoRotate();
+    },
+
+    createIndicators() {
+        const container = document.getElementById('quote-indicators');
+        if (!container) return;
+
+        container.innerHTML = '';
+        this.quotes.forEach((_, index) => {
+            const indicator = document.createElement('div');
+            indicator.className = 'quote-indicator';
+            if (index === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => this.goToQuote(index));
+            container.appendChild(indicator);
+        });
+    },
+
+    setupEventListeners() {
+        document.getElementById('quote-prev')?.addEventListener('click', () => this.prevQuote());
+        document.getElementById('quote-next')?.addEventListener('click', () => this.nextQuote());
+    },
+
+    showQuote(index) {
+        const quoteText = document.querySelector('.rotating-quote-text');
+        const quoteAuthor = document.querySelector('.rotating-quote-author');
+
+        if (!quoteText || !quoteAuthor) return;
+
+        // Fade out
+        quoteText.classList.remove('active');
+        quoteAuthor.classList.remove('active');
+
+        setTimeout(() => {
+            // Update content
+            quoteText.textContent = this.quotes[index].text;
+            quoteAuthor.textContent = this.quotes[index].author;
+
+            // Fade in
+            quoteText.classList.add('active');
+            quoteAuthor.classList.add('active');
+
+            // Update indicators
+            document.querySelectorAll('.quote-indicator').forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+
+            this.currentIndex = index;
+        }, 300);
+    },
+
+    nextQuote() {
+        const nextIndex = (this.currentIndex + 1) % this.quotes.length;
+        this.showQuote(nextIndex);
+        this.resetAutoRotate();
+    },
+
+    prevQuote() {
+        const prevIndex = (this.currentIndex - 1 + this.quotes.length) % this.quotes.length;
+        this.showQuote(prevIndex);
+        this.resetAutoRotate();
+    },
+
+    goToQuote(index) {
+        this.showQuote(index);
+        this.resetAutoRotate();
+    },
+
+    startAutoRotate() {
+        this.autoRotateInterval = setInterval(() => {
+            this.nextQuote();
+        }, 8000); // Change quote every 8 seconds
+    },
+
+    resetAutoRotate() {
+        clearInterval(this.autoRotateInterval);
+        this.startAutoRotate();
+    }
+};
+
+// ==========================================================================
+// BLOG SECTION FUNCTIONALITY
+// ==========================================================================
+
+// Blog Posts Data
+const blogPosts = [
+    {
+        id: 'blot-world-portfolio',
+        title: 'Building BLOT.WORLD: A Modern Portfolio Experience',
+        excerpt: 'A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website from scratch.',
+        date: '2025-01-15',
+        category: 'case-study',
+        tags: ['Web Design', 'HTML', 'CSS', 'JavaScript', 'UX/UI'],
+        image: 'images/previews/inception-protection.png',
+        section: 'post-blot-world'
+    },
+    {
+        id: 'cafemex-branding',
+        title: 'Café Mexicali: Crafting a Vibrant Restaurant Identity',
+        excerpt: 'How I designed a complete brand identity system for a Californian-Mexican fusion restaurant, from concept to final deliverables.',
+        date: '2025-01-10',
+        category: 'case-study',
+        tags: ['Branding', 'Identity Design', 'Affinity Designer', 'Visual Design'],
+        image: 'images/previews/cafemex-preview.jpg',
+        section: 'post-cafemex'
+    },
+    {
+        id: 'photography-timeline',
+        title: 'Photography Through Time: Building an Interactive Timeline',
+        excerpt: 'The story behind creating an immersive photography gallery with a unique timeline interface to showcase moments captured through the years.',
+        date: '2025-01-05',
+        category: 'case-study',
+        tags: ['Photography', 'Web Development', 'Interactive Design'],
+        image: 'images/previews/photography-preview.jpg',
+        section: 'post-photography'
+    }
+];
+
+// Blog State Management
+const BlogState = {
+    currentFilter: 'all',
+    searchQuery: '',
+    filteredPosts: [...blogPosts]
+};
+
+// Initialize Blog
+function initializeBlog() {
+    BlogState.filteredPosts = [...blogPosts];
+    setupBlogEventListeners();
+    renderBlogPosts();
+    updatePostCounter();
+}
+
+// Setup Blog Event Listeners
+function setupBlogEventListeners() {
+    // Filter buttons
+    const filterButtons = document.querySelectorAll('.blog-filters .filter-btn');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => handleBlogFilterClick(btn));
+    });
+
+    // Search input
+    const searchInput = document.getElementById('blog-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => handleBlogSearch(e.target.value));
+    }
+}
+
+// Handle Blog Filter Click
+function handleBlogFilterClick(button) {
+    // Update active state
+    document.querySelectorAll('.blog-filters .filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    button.classList.add('active');
+
+    // Update filter state
+    BlogState.currentFilter = button.dataset.filter;
+
+    // Re-filter and render
+    applyBlogFilters();
+}
+
+// Handle Blog Search
+function handleBlogSearch(query) {
+    BlogState.searchQuery = query.toLowerCase();
+    applyBlogFilters();
+}
+
+// Apply Blog Filters
+function applyBlogFilters() {
+    BlogState.filteredPosts = blogPosts.filter(post => {
+        // Filter by category
+        const categoryMatch = BlogState.currentFilter === 'all' || post.category === BlogState.currentFilter;
+
+        // Filter by search query
+        const searchMatch = BlogState.searchQuery === '' ||
+            post.title.toLowerCase().includes(BlogState.searchQuery) ||
+            post.excerpt.toLowerCase().includes(BlogState.searchQuery) ||
+            post.tags.some(tag => tag.toLowerCase().includes(BlogState.searchQuery));
+
+        return categoryMatch && searchMatch;
+    });
+
+    renderBlogPosts();
+    updatePostCounter();
+}
+
+// Render Blog Posts
+function renderBlogPosts() {
+    const blogGrid = document.getElementById('blog-grid');
+    const noResults = document.getElementById('no-results');
+
+    if (!blogGrid || !noResults) return;
+
+    if (BlogState.filteredPosts.length === 0) {
+        blogGrid.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+    }
+
+    noResults.style.display = 'none';
+
+    // Sort by date (newest first)
+    const sortedPosts = [...BlogState.filteredPosts].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+    });
+
+    blogGrid.innerHTML = sortedPosts.map(post => createBlogCard(post)).join('');
+}
+
+// Create Blog Card HTML
+function createBlogCard(post) {
+    const formattedDate = formatBlogDate(post.date);
+    const categoryLabel = getBlogCategoryLabel(post.category);
+
+    return `
+        <a href="#" data-section="${post.section}" class="blog-card" data-post-id="${post.id}">
+            <div class="blog-card-image">
+                <img src="${post.image}" alt="${post.title}" loading="lazy">
+            </div>
+            <div class="blog-card-content">
+                <div class="blog-card-meta">
+                    <span class="blog-card-date">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        ${formattedDate}
+                    </span>
+                    <span class="blog-card-category">${categoryLabel}</span>
+                </div>
+                <h2 class="blog-card-title">${post.title}</h2>
+                <p class="blog-card-excerpt">${post.excerpt}</p>
+                <div class="blog-card-tags">
+                    ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
+                </div>
+                <span class="blog-card-read-more">
+                    Read more
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </span>
+            </div>
+        </a>
+    `;
+}
+
+// Update Post Counter
+function updatePostCounter() {
+    const visibleCount = document.getElementById('visible-posts');
+    const totalCount = document.getElementById('total-posts');
+
+    if (visibleCount && totalCount) {
+        visibleCount.textContent = BlogState.filteredPosts.length;
+        totalCount.textContent = blogPosts.length;
+    }
+}
+
+// Format Blog Date
+function formatBlogDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+// Get Blog Category Label
+function getBlogCategoryLabel(category) {
+    const labels = {
+        'case-study': 'Case Study',
+        'tutorial': 'Tutorial',
+        'thoughts': 'Thoughts'
+    };
+    return labels[category] || category;
 }
 
 // ==========================================================================

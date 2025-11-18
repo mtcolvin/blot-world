@@ -70,7 +70,9 @@
 <body>
     <!-- ==================== LOADER ==================== -->
 	<div class="loader" id="loader">
-		<img src="images/comet_loading_16bit.gif" alt="Loading..." class="loader-spinner">
+		<div class="pixel-comet-container">
+			<div class="pixel-comet-sprite"></div>
+		</div>
 	</div>
 
     <!-- ==================== NAVIGATION ==================== -->
@@ -90,8 +92,8 @@
             <!-- Desktop Navigation -->
             <ul class="nav-links" id="desktop-nav">
                 <li><a data-section="projects">Projects</a></li>
+                <li><a data-section="blog">Thoughts</a></li>
                 <li><a data-section="about">About</a></li>
-                <li><a href="blog/index.html">Blog</a></li>
             </ul>
             
             <!-- Mobile Menu Button -->
@@ -132,8 +134,8 @@
         <ul class="mobile-nav-links">
             <li><a data-section="home">Home</a></li>
             <li><a data-section="projects">Projects</a></li>
+            <li><a data-section="blog">Thoughts</a></li>
             <li><a data-section="about">About</a></li>
-            <li><a href="blog/index.html">Blog</a></li>
         </ul>
         <div class="mobile-nav-social">
             <div class="mobile-social-label">Connect</div>
@@ -540,145 +542,224 @@
 				<div class="section-header">
 					<h2>About</h2>
 				</div>
-				
-				<!-- Container matching your projects layout -->
-				<div class="about-container">
-					<!-- Sidebar matching filter sidebar style -->
-					<aside class="about-sidebar">
-						<div class="sidebar-section">
-							<h3 class="sidebar-title">Matthew Colvin</h3>	
-							<div class="sidebar-section">
-							<div class="sidebar-areas" id="area-badges-container">
-								<!-- Area badges will auto-populate from projects -->
-							</div>
-						</div>	
-						</div>		
-						
-						<div class="sidebar-actions">
-							<button class="btn-gradient-3d" onclick="window.open('documents/matthew-colvin-resume.pdf')" target="_blank" rel="noopener noreferrer">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-									<path d="M12 3v13m0 0l-4-4m4 4l4-4"/>
-									<path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
-								</svg>
-								Résumé
-							</button>
-                            <button class="btn-gradient-3d" onclick="window.location.href='mailto:mtcolvin99@gmail.com'">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-									<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
-									<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
-								</svg>
-								Get in touch
-							</button>
+
+				<div class="about-content">
+				<!-- Hero Statement -->
+				<div class="about-hero">
+					<h2 class="about-name">Hi! I'm Matthew Colvin >:D</h2>
+					<p class="about-statement">
+						I do a whole bunch of things, so feel free to take a look around to get a better idea of who I am! I like doing what I can to be a benefit to the lives of the people I meet and the environments I walk through. If you ever have a question or something you would like to tell me, my line's always open!
+					</p>
+				</div>
+
+				<!-- Rotating Quote Display -->
+				<div class="rotating-quote-container">
+					<div class="rotating-quote" id="rotating-quote">
+						<blockquote class="rotating-quote-text"></blockquote>
+						<cite class="rotating-quote-author"></cite>
+					</div>
+					<div class="quote-controls">
+						<button class="quote-nav-btn" id="quote-prev" aria-label="Previous quote">
+							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M15 18l-6-6 6-6"/>
+							</svg>
+						</button>
+						<div class="quote-indicators" id="quote-indicators"></div>
+						<button class="quote-nav-btn" id="quote-next" aria-label="Next quote">
+							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M9 18l6-6-6-6"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+
+				<!-- Core Principles -->
+				<div class="about-principles">
+					<h3 class="principles-title">Core Principles</h3>
+					<div class="principles-grid">
+						<div class="principle-card principle-1">
+							<h4>Intentional Design</h4>
+							<p>Every element serves a purpose. No bloat, no waste, just purposeful decisions.</p>
 						</div>
-					</aside>
-					
-					<!-- Main content area -->
-					<div class="about-main">
-						<!-- Brief intro -->
-						<div class="about-intro">
-							<p>Hello! I'm Matthew. BLOT.WORLD is my archive—a collection of projects, ideas, and experiments that matter to me.</p>
+						<div class="principle-card principle-2">
+							<h4>Craft & Detail</h4>
+							<p>Precision matters. The difference between good and great is in the details.</p>
 						</div>
-						
-						<!-- Value cards -->
-						<div class="values-grid">
-							<div class="value-card">
-								<div class="value-header">
-									<span class="value-icon">🔒</span>
-									<h3 class="value-title">Privacy</h3>
-								</div>
-								<p class="value-description">Your data is yours. Digital autonomy matters.</p>
-							</div>
-							
-							<div class="value-card">
-								<div class="value-header">
-									<span class="value-icon">🎨</span>
-									<h3 class="value-title">Sovereignty</h3>
-								</div>
-								<p class="value-description">Every pixel counts. Precision over perfection.</p>
-							</div>
-							
-							<div class="value-card">
-								<div class="value-header">
-									<span class="value-icon">🌈</span>
-									<h3 class="value-title">Diversity</h3>
-								</div>
-								<p class="value-description">Different views create better solutions.</p>
-							</div>
-							
-							<div class="value-card">
-								<div class="value-header">
-									<span class="value-icon">⚡</span>
-									<h3 class="value-title">Authenticity</h3>
-								</div>
-								<p class="value-description">Clean code. Minimal bloat. Maximum impact.</p>
-							</div>
-							
-							<div class="value-card">
-								<div class="value-header">
-									<span class="value-icon">🎨</span>
-									<h3 class="value-title">Sustainability</h3>
-								</div>
-								<p class="value-description">Building for tomorrow, not just today.</p>
-							</div>
+						<div class="principle-card principle-3">
+							<h4>Open & Honest</h4>
+							<p>Transparency builds trust. Clear communication, clean code, authentic work.</p>
 						</div>
-						
-						<!-- Skills section -->
-						<div class="skills-section">
-							<div class="skills-grid">
-								<div class="skill-group">
-									<div class="skill-category">Development</div>
-									<div class="skill-tags">
-										<span class="tag">HTML</span>
-										<span class="tag">CSS</span>
-										<span class="tag">JavaScript</span>
-										<span class="tag">React</span>
-										<span class="tag">JSON</span>
-									</div>
-								</div>
-								
-								<div class="skill-group">
-									<div class="skill-category">Design</div>
-									<div class="skill-tags">
-										<span class="tag">Affinity Designer</span>
-										<span class="tag">UI/UX</span>
-										<span class="tag">Branding</span>
-									</div>
-								</div>
-								
-								<div class="skill-group">
-									<div class="skill-category">Analysis</div>
-									<div class="skill-tags">
-										<span class="tag">Data Viz</span>
-										<span class="tag">Google Sheets</span>
-										<span class="tag">Strategy</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						<!-- Quote box -->
-						<div class="quote-section">
-							<blockquote class="quote-text">So remember to look up at the stars and not down at your feet. Try to make sense of what you see and hold on to that childlike wonder about what makes the universe exist.</blockquote>
-							<cite class="quote-author">Stephen Hawking</cite>
-						</div>
-						<div class="quote-section">
-							<blockquote class="quote-text">The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.</blockquote>
-							<cite class="quote-author">Satoshi Nakamoto</cite>
-						</div>
-						<div class="quote-section">
-							<blockquote class="quote-text">If I have seen further, it is by standing on the shoulders of giants.</blockquote>
-							<cite class="quote-author">Isaac Newton</cite>
-						</div>
-						<div class="quote-section">
-							<blockquote class="quote-text">If you want the rainbow, you got to put up with the rain.</blockquote>
-							<cite class="quote-author">Dolly Parton</cite>
-						</div>
-						<div class="quote-section">
-							<blockquote class="quote-text">We do not inherit the earth from our ancestors; we borrow it from our children.</blockquote>
-							<cite class="quote-author">Proverb</cite>
+						<div class="principle-card principle-4">
+							<h4>Always Learning</h4>
+							<p>Technology evolves. Stay curious, embrace change, never stop growing.</p>
 						</div>
 					</div>
 				</div>
+
+				<!-- Areas of Work -->
+				<div class="about-areas">
+					<h3 class="areas-title">Areas of Work</h3>
+					<div class="about-areas-grid" id="area-badges-container">
+						<!-- Area badges will auto-populate from projects -->
+					</div>
+				</div>
+
+				<!-- Call to Action -->
+				<div class="about-cta">
+					<button class="btn-gradient-3d" onclick="window.open('documents/matthew-colvin-resume.pdf')" target="_blank" rel="noopener noreferrer">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M12 3v13m0 0l-4-4m4 4l4-4"/>
+							<path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+						</svg>
+						Résumé
+					</button>
+					<button class="btn-gradient-3d" onclick="window.location.href='mailto:mtcolvin99@gmail.com'">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+							<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
+							<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
+						</svg>
+						Get in touch
+					</button>
+				</div>
+			</div>
+			</div>
+		</section>
+
+		<!-- Blog Section -->
+		<section id="blog" class="section">
+			<div class="container">
+				<!-- Section Header -->
+				<div class="section-header blog-header-layout">
+					<h2>Thoughts</h2>
+					<div class="blog-header-controls">
+						<div class="blog-filters">
+							<button class="filter-btn active" data-filter="all">All</button>
+							<button class="filter-btn" data-filter="case-study">Case Studies</button>
+							<button class="filter-btn" data-filter="tutorial">Tutorials</button>
+							<button class="filter-btn" data-filter="thoughts">Thoughts</button>
+						</div>
+						<div class="blog-counter">
+							Showing <span id="visible-posts">0</span> of <span id="total-posts">0</span> posts
+						</div>
+						<div class="blog-search">
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="11" cy="11" r="8"></circle>
+								<path d="m21 21-4.35-4.35"></path>
+							</svg>
+							<input type="text" id="blog-search" placeholder="Search posts...">
+						</div>
+					</div>
+				</div>
+
+				<!-- Blog Grid -->
+				<div class="blog-grid" id="blog-grid">
+					<!-- Blog posts will be dynamically loaded here -->
+				</div>
+
+				<!-- No Results Message -->
+				<div class="no-results" id="no-results" style="display: none;">
+					<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="11" cy="11" r="8"></circle>
+						<path d="m21 21-4.35-4.35"></path>
+					</svg>
+					<h3>No posts found</h3>
+					<p>Try adjusting your search or filter</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Blog Post: BLOT.WORLD Case Study -->
+		<section id="post-blot-world" class="section post-section">
+			<div class="post-container">
+				<a href="#" data-section="blog" class="back-to-blog">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M19 12H5M12 19l-7-7 7-7"/>
+					</svg>
+					Back to Thoughts
+				</a>
+
+				<article>
+					<header class="post-header">
+						<div class="post-meta">
+							<span class="post-date">
+								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+									<line x1="16" y1="2" x2="16" y2="6"></line>
+									<line x1="8" y1="2" x2="8" y2="6"></line>
+									<line x1="3" y1="10" x2="21" y2="10"></line>
+								</svg>
+								January 15, 2025
+							</span>
+							<span class="post-category">Case Study</span>
+							<span class="post-read-time">8 min read</span>
+						</div>
+
+						<h1 class="post-title">Building BLOT.WORLD: A Modern Portfolio Experience</h1>
+
+						<p class="post-excerpt">
+							A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website from scratch.
+						</p>
+
+						<div class="post-tags">
+							<span class="post-tag">Web Design</span>
+							<span class="post-tag">HTML</span>
+							<span class="post-tag">CSS</span>
+							<span class="post-tag">JavaScript</span>
+							<span class="post-tag">UX/UI</span>
+						</div>
+					</header>
+
+					<div class="post-featured-image">
+						<img src="images/previews/inception-protection.png" alt="BLOT.WORLD Portfolio Screenshot">
+					</div>
+
+					<div class="post-content">
+						<h2>The Challenge</h2>
+						<p>
+							Every creative professional faces the same dilemma: how do you showcase your diverse skills and projects in a way that's both engaging and authentic? After exploring countless portfolio templates and platforms, I realized none captured what I wanted to communicate. I needed something unique, something that felt like <em>me</em>.
+						</p>
+
+						<p>
+							The goal was clear: create a digital space that serves as both a professional portfolio and a personal archive—a place where web design, branding projects, digital art, photography, and even poetry could coexist harmoniously.
+						</p>
+
+						<h2>Design Philosophy</h2>
+
+						<h3>Dark Mode by Default</h3>
+						<p>
+							I opted for a dark theme as the foundation. Not just because it's trendy, but because it allows colors, images, and interactive elements to truly pop. The deep black background creates a gallery-like atmosphere where each project becomes a illuminated exhibit.
+						</p>
+
+						<h3>Typography as Expression</h3>
+						<p>
+							I chose Roboto Flex for its variable font capabilities. This single typeface can shift from condensed and sharp to wide and expressive, matching the tone of each section.
+						</p>
+
+						<h2>Technical Implementation</h2>
+
+						<h3>Vanilla JavaScript Philosophy</h3>
+						<p>
+							No frameworks. No build tools. Just clean, purposeful vanilla JavaScript. This decision was intentional for performance, control, learning value, and longevity.
+						</p>
+
+						<h2>Unique Features</h2>
+
+						<h3>Inception Protection Modal</h3>
+						<p>
+							One of my favorite touches is the "Inception Protection" feature. When users try to click on the portfolio project card while viewing the portfolio, they get a playful Windows XP-style error message with a nostalgic error sound.
+						</p>
+
+						<h2>Lessons Learned</h2>
+
+						<p>
+							Building BLOT.WORLD reinforced several important principles: start with content, progressive enhancement, test early and often, and iterate ruthlessly.
+						</p>
+
+						<p>
+							Your portfolio is more than a resume—it's a statement about who you are as a creator. The best portfolio is one that reflects not just what you can do, but how you think.
+						</p>
+					</div>
+				</article>
 			</div>
 		</section>
 
@@ -704,8 +785,8 @@
                     <div class="footer-links">
                         <a href="#" data-section="home">Home</a>
                         <a href="#" data-section="projects">Projects</a>
+                        <a href="#" data-section="blog">Thoughts</a>
                         <a href="#" data-section="about">About</a>
-                        <a href="blog/index.html">Blog</a>
                     </div>
                     <div class="footer-social">
 						<a href="https://github.com/YOUR_USERNAME" target="_blank" class="github" title="GitHub" aria-label="GitHub Profile">
