@@ -15,6 +15,12 @@
     let currentIndex = 0;
     let loadedPhotos = [];
 
+    // Helper function to parse date strings as local dates (not UTC)
+    function parseLocalDate(dateString) {
+        const [year, month, day] = dateString.split('-').map(Number);
+        return new Date(year, month - 1, day);
+    }
+
     const elements = {
         loading: document.getElementById('loading'),
         noPhotos: document.getElementById('no-photos'),
@@ -236,7 +242,7 @@
         const photosByMonth = new Map();
 
         loadedPhotos.forEach((photo, index) => {
-            const photoDate = new Date(photo.date);
+            const photoDate = parseLocalDate(photo.date);
             const monthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
 
             if (!photosByMonth.has(monthKey)) {
@@ -246,8 +252,8 @@
         });
 
         // Find date range - from first photo to last photo
-        const firstPhotoDate = new Date(loadedPhotos[0].date);
-        const lastPhotoDate = new Date(loadedPhotos[loadedPhotos.length - 1].date);
+        const firstPhotoDate = parseLocalDate(loadedPhotos[0].date);
+        const lastPhotoDate = parseLocalDate(loadedPhotos[loadedPhotos.length - 1].date);
 
         // Generate all months from first photo to last photo
         const allMonths = [];
@@ -429,7 +435,7 @@
             elements.mainPhoto.setAttribute('data-orientation', orientation);
 
             // Update basic info
-            const date = new Date(photo.date);
+            const date = parseLocalDate(photo.date);
             const formattedDate = date.toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
@@ -530,7 +536,7 @@
         });
 
         // Update active tick mark label based on photo's month
-        const photoDate = new Date(photo.date);
+        const photoDate = parseLocalDate(photo.date);
         const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
         const currentMonth = photoDate.getMonth(); // 0 = Jan, 1 = Feb, 11 = Dec
         const currentYear = photoDate.getFullYear();
@@ -602,7 +608,7 @@
         if (!photo) return;
 
         // Find the tick mark that matches this photo's month
-        const photoDate = new Date(photo.date);
+        const photoDate = parseLocalDate(photo.date);
         const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
 
         const ticks = document.querySelectorAll('.tick-mark');
@@ -656,7 +662,7 @@
         if (closestTick && closestTick.dataset.monthKey) {
             const monthKey = closestTick.dataset.monthKey;
             const photoIndex = loadedPhotos.findIndex(photo => {
-                const photoDate = new Date(photo.date);
+                const photoDate = parseLocalDate(photo.date);
                 const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
                 return photoMonthKey === monthKey;
             });
