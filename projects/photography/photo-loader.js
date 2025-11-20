@@ -79,13 +79,7 @@
         { file: 'IMG_1952.jpg', date: '2024-12-25' },
         { file: 'IMG_1953.jpg', date: '2025-01-15' },
         { file: 'IMG_1959.jpg', date: '2025-03-10' },
-        {
-            file: 'vlcsnap-2025-11-12-02h05m05s496.jpg',
-            date: '2025-11-12',
-            location: 'Loveland, Colorado',
-            camera: 'Apple iPhone 15',
-            flash: 'Not fired'
-        },
+        { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-11-12' },
     ];
 
     // === AUTO-LOAD SYSTEM ===
@@ -384,36 +378,6 @@
             const aspectRatio = calculateAspectRatio(photo.width, photo.height);
             elements.photoDimensions.textContent = `${photo.width} × ${photo.height}px`;
             elements.photoAspect.textContent = aspectRatio;
-
-            // Update metadata (camera, location, flash if available)
-            if (photo.camera || photo.location || photo.flash) {
-                elements.exifSection.style.display = 'block';
-
-                if (photo.camera) {
-                    elements.photoCamera.textContent = photo.camera;
-                } else {
-                    elements.photoCamera.textContent = 'N/A';
-                }
-
-                if (photo.location) {
-                    // Show location in lens field (or create a new field)
-                    elements.photoLens.parentElement.querySelector('.metadata-label').textContent = 'Location';
-                    elements.photoLens.textContent = photo.location;
-                } else {
-                    elements.photoLens.parentElement.querySelector('.metadata-label').textContent = 'Lens';
-                    elements.photoLens.textContent = 'N/A';
-                }
-
-                if (photo.flash) {
-                    elements.photoSettings.parentElement.querySelector('.metadata-label').textContent = 'Flash';
-                    elements.photoSettings.textContent = photo.flash;
-                } else {
-                    elements.photoSettings.parentElement.querySelector('.metadata-label').textContent = 'Settings';
-                    elements.photoSettings.textContent = 'N/A';
-                }
-            } else {
-                elements.exifSection.style.display = 'none';
-            }
 
             // Fade in
             setTimeout(() => {
