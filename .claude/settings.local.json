@@ -36,7 +36,8 @@
       "Bash(start blog/posts/blot-world-case-study.html)",
       "WebFetch(domain:loading.io)",
       "WebFetch(domain:www.deviantart.com)",
-      "WebFetch(domain:www.thepoxbox.com)"
+      "WebFetch(domain:www.thepoxbox.com)",
+      "Bash(do echo \"$file\")"
     ],
     "deny": [],
     "ask": []

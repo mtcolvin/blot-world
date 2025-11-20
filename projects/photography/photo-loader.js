@@ -406,6 +406,9 @@
             timelineTrack.style.minHeight = `${finalHeight}px`;
         }
 
+        // Update CSS variable for main content padding
+        document.documentElement.style.setProperty('--timeline-height', `${finalHeight}px`);
+
         console.log(`Timeline height adjusted to ${finalHeight}px for ${maxPhotosPerMonth} max stacked boxes`);
     }
 
