@@ -28,8 +28,18 @@ async function syncPhotoArray() {
             const filePath = path.join(imagesDir, file);
             let date = null;
 
+            // First, check if there's a corresponding HEIC file with the same base name
+            const baseName = file.replace(/\.(jpg|JPG|jpeg|JPEG)$/, '');
+            const heicPath = path.join(imagesDir, baseName + '.HEIC');
+
+            let sourceFile = filePath;
+            if (fs.existsSync(heicPath)) {
+                sourceFile = heicPath;
+                console.log(`  Using HEIC file for date: ${baseName}.HEIC`);
+            }
+
             try {
-                const metadata = await exiftool.read(filePath);
+                const metadata = await exiftool.read(sourceFile);
 
                 // Try different date fields
                 if (metadata.DateTimeOriginal) {
