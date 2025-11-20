@@ -25,6 +25,68 @@
 
 ---
 
+## About This Guide
+
+### AI Assistance & Transparency Disclaimer
+
+This eBook was created with the assistance of Claude (Anthropic's AI assistant) as part of my web development process. I believe in being transparent about my workflow and the tools I use.
+
+**How This Content Was Created:**
+
+1. **Foundation:** The core concepts, optimization techniques, and real-world results (62% fewer HTTP requests, 26% faster load times) come from my actual portfolio optimization project at [blot.world](https://blot.world).
+
+2. **AI-Assisted Writing:** I used Claude to help:
+   - Structure and organize my optimization experience into a comprehensive guide
+   - Expand technical concepts with clear explanations
+   - Generate code examples following best practices
+   - Research industry standards and performance benchmarks
+   - Format and polish the content for readability
+
+3. **Human Oversight:** As the author, I:
+   - Provided the real-world optimization experience and results
+   - Reviewed all technical content for accuracy
+   - Validated all code examples
+   - Ensured the advice matches real-world best practices
+   - Made final editorial decisions on content and structure
+
+**Why I Use AI in My Development Workflow:**
+
+As a modern web developer, I leverage AI tools alongside traditional development tools to work more efficiently. Just as I use:
+- **VS Code** for writing code
+- **Git** for version control
+- **Chrome DevTools** for debugging
+- **Stack Overflow** for problem-solving
+
+I use **AI assistants** for:
+- Rapid prototyping and ideation
+- Documentation and content creation
+- Code review and optimization suggestions
+- Research and learning new techniques
+
+**Quality Assurance:**
+
+All technical content in this guide has been:
+- ✅ Based on real optimization work and measurable results
+- ✅ Verified against industry best practices
+- ✅ Tested with actual code examples
+- ✅ Cross-referenced with authoritative sources (MDN, Web.dev, W3C)
+
+**Continuous Improvement:**
+
+This is Version 1.0. Future versions will include:
+- Additional case studies from real-world projects
+- Expanded research from performance experts
+- Community feedback and contributions
+- Updated examples for new web standards
+
+I believe transparency builds trust. By being open about my development process, including the use of AI tools, I hope to demonstrate that modern web development is about leveraging all available tools effectively while maintaining technical accuracy and quality.
+
+If you have questions about any content in this guide or want to discuss web development workflows, feel free to reach out: mtcolvin99@gmail.com
+
+**- Matthew Colvin**
+
+---
+
 <a name="introduction"></a>
 ## Chapter 1: Introduction
 

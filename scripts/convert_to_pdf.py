@@ -90,6 +90,7 @@ def create_styled_html(markdown_content):
             margin-top: 0;
             margin-bottom: 24pt;
             page-break-after: avoid;
+            page-break-inside: avoid;
             line-height: 1.2;
         }}
 
@@ -99,9 +100,29 @@ def create_styled_html(markdown_content):
             color: #0D28F2;
             margin-top: 36pt;
             margin-bottom: 16pt;
+            page-break-before: always;  /* Each chapter starts on new page */
             page-break-after: avoid;
+            page-break-inside: avoid;
             border-bottom: 2px solid #0D28F2;
             padding-bottom: 8pt;
+        }}
+
+        /* Don't page break before "About This Guide" section */
+        .content > h2:first-of-type {{
+            page-break-before: auto;
+        }}
+
+        /* Special handling for "About This Guide" - keep it together */
+        h2:contains("About This Guide") {{
+            page-break-before: auto;
+        }}
+
+        /* Anchor links (markdown) */
+        a[name] {{
+            display: block;
+            position: relative;
+            top: -10pt;
+            visibility: hidden;
         }}
 
         h3 {{
@@ -111,6 +132,7 @@ def create_styled_html(markdown_content):
             margin-top: 24pt;
             margin-bottom: 12pt;
             page-break-after: avoid;
+            page-break-inside: avoid;
         }}
 
         h4 {{
@@ -120,14 +142,22 @@ def create_styled_html(markdown_content):
             margin-top: 18pt;
             margin-bottom: 10pt;
             page-break-after: avoid;
+            page-break-inside: avoid;
         }}
 
         /* Paragraphs */
         p {{
             margin-bottom: 12pt;
             text-align: justify;
-            orphans: 3;
-            widows: 3;
+            orphans: 4;          /* Minimum 4 lines at bottom of page */
+            widows: 4;           /* Minimum 4 lines at top of page */
+        }}
+
+        /* Keep heading + next paragraph together */
+        h2 + p,
+        h3 + p,
+        h4 + p {{
+            page-break-before: avoid;
         }}
 
         /* Links */
@@ -144,10 +174,24 @@ def create_styled_html(markdown_content):
         ul, ol {{
             margin-bottom: 12pt;
             margin-left: 24pt;
+            page-break-inside: avoid;  /* Try to keep entire list together */
         }}
 
         li {{
             margin-bottom: 6pt;
+            page-break-inside: avoid;  /* Don't split individual list items */
+            orphans: 2;
+            widows: 2;
+        }}
+
+        /* Keep heading + list together */
+        h2 + ul,
+        h2 + ol,
+        h3 + ul,
+        h3 + ol,
+        h4 + ul,
+        h4 + ol {{
+            page-break-before: avoid;
         }}
 
         /* Code blocks */
@@ -157,10 +201,20 @@ def create_styled_html(markdown_content):
             padding: 12pt;
             margin: 12pt 0;
             overflow-x: auto;
-            page-break-inside: avoid;
+            page-break-inside: avoid;  /* Never split code blocks */
+            page-break-before: auto;
+            page-break-after: auto;
             font-family: "Courier New", Courier, monospace;
             font-size: 9pt;
             line-height: 1.4;
+        }}
+
+        /* Keep heading + code block together */
+        h2 + pre,
+        h3 + pre,
+        h4 + pre,
+        p + pre {{
+            page-break-before: avoid;
         }}
 
         code {{
@@ -189,8 +243,17 @@ def create_styled_html(markdown_content):
             padding-left: 16pt;
             margin-left: 0;
             margin-right: 0;
+            margin-bottom: 12pt;
             font-style: italic;
             color: #555;
+            page-break-inside: avoid;
+        }}
+
+        /* Keep heading + blockquote together */
+        h2 + blockquote,
+        h3 + blockquote,
+        h4 + blockquote {{
+            page-break-before: avoid;
         }}
 
         /* Tables */
@@ -198,7 +261,15 @@ def create_styled_html(markdown_content):
             border-collapse: collapse;
             width: 100%;
             margin: 12pt 0;
-            page-break-inside: avoid;
+            page-break-inside: avoid;  /* Never split tables */
+        }}
+
+        /* Keep heading + table together */
+        h2 + table,
+        h3 + table,
+        h4 + table,
+        p + table {{
+            page-break-before: avoid;
         }}
 
         th {{
