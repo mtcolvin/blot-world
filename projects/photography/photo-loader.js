@@ -79,7 +79,7 @@
         { file: 'IMG_1952.jpg', date: '2024-12-25' },
         { file: 'IMG_1953.jpg', date: '2025-01-15' },
         { file: 'IMG_1959.jpg', date: '2025-03-10' },
-        { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-11-12' },
+        // { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-11-12' }, // Add this back after adding the image file
     ];
 
     // === AUTO-LOAD SYSTEM ===
