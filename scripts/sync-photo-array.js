@@ -106,13 +106,21 @@ async function syncPhotoArray() {
 function formatDate(dateValue) {
     if (!dateValue) return null;
 
-    // Handle different date formats
+    // Handle ExifDateTime objects (from exiftool-vendored)
+    if (dateValue.year && dateValue.month && dateValue.day) {
+        const year = dateValue.year;
+        const month = String(dateValue.month).padStart(2, '0');
+        const day = String(dateValue.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Handle Date objects
     if (dateValue instanceof Date) {
         return dateValue.toISOString().split('T')[0];
     }
 
+    // Handle string dates in format "YYYY:MM:DD HH:MM:SS"
     if (typeof dateValue === 'string') {
-        // EXIF dates are often in format "YYYY:MM:DD HH:MM:SS"
         const match = dateValue.match(/(\d{4}):(\d{2}):(\d{2})/);
         if (match) {
             return `${match[1]}-${match[2]}-${match[3]}`;
