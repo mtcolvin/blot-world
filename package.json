@@ -1,0 +1,22 @@
+{
+  "name": "blot-world",
+  "version": "1.0.0",
+  "description": "Portfolio site for Matthew Colvin",
+  "private": true,
+  "scripts": {
+    "optimize:images": "node scripts/optimize-images.js",
+    "minify:css": "node scripts/minify-css.js",
+    "minify:js": "node scripts/minify-js.js",
+    "build": "npm run optimize:images && npm run minify:css && npm run minify:js",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5",
+    "terser": "^5.36.0",
+    "csso": "^5.0.5",
+    "glob": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
