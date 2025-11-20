@@ -4,7 +4,8 @@
   "description": "Portfolio site for Matthew Colvin",
   "private": true,
   "scripts": {
-    "optimize:images": "node scripts/optimize-images.js",
+    "sync:photo-array": "node scripts/sync-photo-array.js",
+	"optimize:images": "node scripts/optimize-images.js",
     "minify:css": "node scripts/minify-css.js",
     "minify:js": "node scripts/minify-js.js",
     "update:photo-metadata": "node scripts/add-vlcsnap-metadata.js",
