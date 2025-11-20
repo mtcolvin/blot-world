@@ -55,11 +55,13 @@
     // Fetch photos from API
     async function fetchPhotos() {
         try {
-            const response = await fetch('/api/photos');
+            const response = await fetch('photo_metadata.json');
             if (!response.ok) {
                 throw new Error('Failed to fetch photos');
             }
-            photos = await response.json();
+            const photoData = await response.json();
+            // Convert object format to array format
+            photos = Object.entries(photoData).map(([file, date]) => ({ file, date }));
             console.log(`Fetched ${photos.length} photos from API`);
             return true;
         } catch (error) {
@@ -1077,3 +1079,4 @@
     init();
 
 })();
+
