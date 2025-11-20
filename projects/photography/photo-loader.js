@@ -10,7 +10,6 @@
 <<<<<<< HEAD
     // Photos will be auto-loaded from the API
     let photos = [];
-=======
     // Add your photos here! Just add the filename and date.
     // The system will auto-load them and sort by date (oldest first in timeline)
     const photos = [
@@ -85,7 +84,6 @@
         { file: 'IMG_1959.jpg', date: '2025-03-10' },
         { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-11-12' },
     ];
->>>>>>> eab66d4 (Add EXIF metadata writing tool for vlcsnap photo)
 
     // === AUTO-LOAD SYSTEM ===
     const imagePath = 'images/';
@@ -603,8 +601,6 @@
             elements.photoSoftware.textContent = photo.exif?.Software || '—';
             elements.softwareItem.style.display = 'block';
 
-=======
->>>>>>> eab66d4 (Add EXIF metadata writing tool for vlcsnap photo)
             // Fade in
             setTimeout(() => {
                 elements.mainPhoto.classList.add('visible');
