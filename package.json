@@ -8,6 +8,7 @@
     "minify:css": "node scripts/minify-css.js",
     "minify:js": "node scripts/minify-js.js",
     "update:photo-metadata": "node scripts/add-vlcsnap-metadata.js",
+    "sync:photo-array": "node scripts/sync-photo-array.js",
     "build": "npm run optimize:images && npm run minify:css && npm run minify:js",
     "serve": "python3 -m http.server 8080"
   },
