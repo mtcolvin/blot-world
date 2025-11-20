@@ -104,6 +104,40 @@
         exifSection: document.getElementById('exif-section')
     };
 
+    // Helper function to get WebP version if available, otherwise original
+    function getImageSrc(filename) {
+        const webpFilename = filename.replace(/\.(jpe?g|png)$/i, '.webp');
+        return {
+            webp: imagePath + webpFilename,
+            original: imagePath + filename
+        };
+    }
+
+    // Try to load WebP, fallback to original
+    async function loadImageWithFallback(filename) {
+        const sources = getImageSrc(filename);
+
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+
+            img.onload = function() {
+                resolve({ img, src: img.src, width: img.naturalWidth, height: img.naturalHeight });
+            };
+
+            img.onerror = function() {
+                // Try fallback to original if WebP fails
+                if (img.src === sources.webp) {
+                    img.src = sources.original;
+                } else {
+                    reject(new Error(`Failed to load: ${filename}`));
+                }
+            };
+
+            // Try WebP first
+            img.src = sources.webp;
+        });
+    }
+
     // Sort photos by date (oldest first for timeline)
     photos.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -131,31 +165,21 @@
 
             const loadPromise = (async () => {
                 try {
-                    const imageSrc = imagePath + photo.file;
+                    // Try WebP first, fallback to original
+                    const imageData = await loadImageWithFallback(photo.file);
 
-                    // Load the image
-                    return new Promise((resolve, reject) => {
-                        const img = new Image();
+                    console.log(`✓ Loaded: ${photo.file} (${imageData.width}x${imageData.height})`);
 
-                        img.onload = function() {
-                            console.log(`✓ Loaded: ${photo.file} (${img.naturalWidth}x${img.naturalHeight})`);
-                            resolve({
-                                ...photo,
-                                index: index,
-                                img: img,
-                                src: imageSrc,
-                                width: img.naturalWidth,
-                                height: img.naturalHeight
-                            });
-                        };
-                        img.onerror = function() {
-                            console.error(`✗ Failed to load: ${photo.file}`);
-                            reject(new Error(`Failed to load: ${photo.file}`));
-                        };
-                        img.src = imageSrc;
-                    });
+                    return {
+                        ...photo,
+                        index: index,
+                        img: imageData.img,
+                        src: imageData.src,
+                        width: imageData.width,
+                        height: imageData.height
+                    };
                 } catch (error) {
-                    console.error(`✗ Error processing ${photo.file}:`, error);
+                    console.error(`✗ Failed to load: ${photo.file}`);
                     return null;
                 }
             })();

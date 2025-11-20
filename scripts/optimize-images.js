@@ -6,6 +6,7 @@ const sharp = require('sharp');
 const { glob } = require('glob');
 
 const IMAGES_DIR = path.join(__dirname, '..', 'images');
+const PHOTOGRAPHY_DIR = path.join(__dirname, '..', 'projects', 'photography', 'images');
 const MIN_SIZE_FOR_WEBP = 10 * 1024; // 10KB - skip small images
 const JPEG_QUALITY = 85;
 const WEBP_QUALITY = 82;
@@ -24,7 +25,7 @@ function formatBytes(bytes) {
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
-async function optimizeImage(filePath) {
+async function optimizeImage(filePath, baseDir) {
   const ext = path.extname(filePath).toLowerCase();
   const originalSize = await getFileSize(filePath);
 
@@ -46,7 +47,9 @@ async function optimizeImage(filePath) {
         .webp({ quality: WEBP_QUALITY, effort: 6 })
         .toFile(webpPath);
       stats.webp = await getFileSize(webpPath);
-      console.log(`✓ Created WebP: ${path.relative(IMAGES_DIR, webpPath)} (${formatBytes(originalSize)} → ${formatBytes(stats.webp)})`);
+      console.log(`✓ Created WebP: ${path.relative(baseDir, webpPath)} (${formatBytes(originalSize)} → ${formatBytes(stats.webp)})`);
+    } else {
+      stats.webp = await getFileSize(webpPath);
     }
 
     // Optimize the original file
@@ -68,7 +71,7 @@ async function optimizeImage(filePath) {
     if (optimizedSize < originalSize * 0.95) {
       await fs.promises.rename(tempPath, filePath);
       stats.optimized = optimizedSize;
-      console.log(`✓ Optimized: ${path.relative(IMAGES_DIR, filePath)} (${formatBytes(originalSize)} → ${formatBytes(optimizedSize)})`);
+      console.log(`✓ Optimized: ${path.relative(baseDir, filePath)} (${formatBytes(originalSize)} → ${formatBytes(optimizedSize)})`);
     } else {
       await fs.promises.unlink(tempPath);
       stats.optimized = originalSize;
@@ -84,30 +87,46 @@ async function optimizeImage(filePath) {
 async function main() {
   console.log('🖼️  Starting image optimization...\n');
 
-  // Find all images
-  const imagePatterns = ['**/*.jpg', '**/*.jpeg', '**/*.png'];
-  const allImages = [];
-
-  for (const pattern of imagePatterns) {
-    const files = await glob(pattern, { cwd: IMAGES_DIR, absolute: true });
-    allImages.push(...files);
-  }
-
-  console.log(`Found ${allImages.length} images to process\n`);
+  // Process both main images and photography images
+  const directories = [
+    { path: IMAGES_DIR, name: 'Main images' },
+    { path: PHOTOGRAPHY_DIR, name: 'Photography images' }
+  ];
 
   let totalOriginalSize = 0;
   let totalOptimizedSize = 0;
   let totalWebpSize = 0;
   let processedCount = 0;
 
-  for (const imagePath of allImages) {
-    const result = await optimizeImage(imagePath);
-    if (result) {
-      totalOriginalSize += result.original;
-      totalOptimizedSize += result.optimized;
-      totalWebpSize += result.webp;
-      processedCount++;
+  for (const dir of directories) {
+    if (!fs.existsSync(dir.path)) {
+      console.log(`⚠️  Skipping ${dir.name} - directory not found\n`);
+      continue;
     }
+
+    console.log(`📁 Processing ${dir.name}...`);
+
+    const imagePatterns = ['**/*.jpg', '**/*.jpeg', '**/*.png'];
+    const allImages = [];
+
+    for (const pattern of imagePatterns) {
+      const files = await glob(pattern, { cwd: dir.path, absolute: true });
+      allImages.push(...files);
+    }
+
+    console.log(`   Found ${allImages.length} images\n`);
+
+    for (const imagePath of allImages) {
+      const result = await optimizeImage(imagePath, dir.path);
+      if (result) {
+        totalOriginalSize += result.original;
+        totalOptimizedSize += result.optimized;
+        totalWebpSize += result.webp;
+        processedCount++;
+      }
+    }
+
+    console.log('');
   }
 
   const originalSavings = totalOriginalSize - totalOptimizedSize;
