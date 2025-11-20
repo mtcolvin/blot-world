@@ -7,8 +7,85 @@
     'use strict';
 
     // === CONFIGURATION ===
+<<<<<<< HEAD
     // Photos will be auto-loaded from the API
     let photos = [];
+=======
+    // Add your photos here! Just add the filename and date.
+    // The system will auto-load them and sort by date (oldest first in timeline)
+    const photos = [
+        { file: '68223264_Unknown.JPG', date: '2017-08-21' },
+        { file: 'IMG_0955.jpg', date: '2018-03-14' },
+        { file: 'IMG_0966.jpg', date: '2018-03-14' },
+        { file: 'ISIMG-1050811.jpg', date: '2018-07-22' },
+        { file: 'IMG_1071.jpg', date: '2019-01-05' },
+        { file: 'IMG_1072.jpg', date: '2019-01-05' },
+        { file: 'IMG_1073.jpg', date: '2019-04-18' },
+        { file: 'IMG_1074.jpg', date: '2019-06-29' },
+        { file: 'IMG_1075.jpg', date: '2019-09-12' },
+        { file: 'IMG_1076.jpg', date: '2019-11-03' },
+        { file: 'IMG_1077.jpg', date: '2020-02-14' },
+        { file: 'IMG_1078.jpg', date: '2020-02-14' },
+        { file: 'IMG_1079.jpg', date: '2020-05-20' },
+        { file: 'IMG_1080.jpg', date: '2020-07-04' },
+        { file: 'IMG_1081.jpg', date: '2020-07-04' },
+        { file: 'IMG_1082.jpg', date: '2020-08-16' },
+        { file: 'IMG_1083.jpg', date: '2020-10-31' },
+        { file: 'IMG_1084.jpg', date: '2020-12-25' },
+        { file: 'IMG_1085.jpg', date: '2021-01-01' },
+        { file: 'IMG_1086.jpg', date: '2021-03-17' },
+        { file: 'IMG_1087.jpg', date: '2021-03-17' },
+        { file: 'IMG_1089.jpg', date: '2021-05-28' },
+        { file: 'IMG_1090.jpg', date: '2021-07-09' },
+        { file: 'IMG_1091.jpg', date: '2021-08-13' },
+        { file: 'IMG_1092.jpg', date: '2021-09-22' },
+        { file: 'IMG_1093.jpg', date: '2021-11-11' },
+        { file: 'IMG_1094.jpg', date: '2021-11-11' },
+        { file: 'IMG_1095.jpg', date: '2022-01-15' },
+        { file: 'IMG_1096.jpg', date: '2022-02-28' },
+        { file: 'IMG_1099.jpg', date: '2022-04-10' },
+        { file: 'IMG_1100.jpg', date: '2022-04-10' },
+        { file: 'IMG_1102.jpg', date: '2022-06-21' },
+        { file: 'IMG_1103.jpg', date: '2022-08-05' },
+        { file: 'IMG_1104.jpg', date: '2022-09-19' },
+        { file: 'IMG_1105.jpg', date: '2022-10-12' },
+        { file: 'IMG_1106.jpg', date: '2022-11-24' },
+        { file: 'IMG_1107.jpg', date: '2022-12-31' },
+        { file: 'IMG_1108.jpg', date: '2023-01-20' },
+        { file: 'IMG_1109.jpg', date: '2023-01-20' },
+        { file: 'IMG_1110.jpg', date: '2023-03-08' },
+        { file: 'IMG_1111.jpg', date: '2023-04-25' },
+        { file: 'IMG_1915.jpg', date: '2023-06-14' },
+        { file: 'IMG_1916.jpg', date: '2023-06-14' },
+        { file: 'IMG_1917.jpg', date: '2023-07-30' },
+        { file: 'IMG_1918.jpg', date: '2023-09-02' },
+        { file: 'IMG_1919.jpg', date: '2023-10-17' },
+        { file: 'IMG_1921.jpg', date: '2023-11-05' },
+        { file: 'IMG_1922.jpg', date: '2023-12-12' },
+        { file: 'IMG_1923.jpg', date: '2024-01-01' },
+        { file: 'IMG_1924.jpg', date: '2024-01-01' },
+        { file: 'IMG_1925.jpg', date: '2024-02-14' },
+        { file: 'IMG_1926.jpg', date: '2024-03-22' },
+        { file: 'IMG_1928.jpg', date: '2024-04-08' },
+        { file: 'IMG_1929.jpg', date: '2024-05-16' },
+        { file: 'IMG_1931.jpg', date: '2024-05-16' },
+        { file: 'IMG_1934.jpg', date: '2024-06-29' },
+        { file: 'IMG_1936.jpg', date: '2024-07-04' },
+        { file: 'IMG_1937.jpg', date: '2024-07-04' },
+        { file: 'IMG_1938.jpg', date: '2024-08-11' },
+        { file: 'IMG_1939.jpg', date: '2024-09-03' },
+        { file: 'IMG_1942.jpg', date: '2024-09-20' },
+        { file: 'IMG_1946.jpg', date: '2024-10-15' },
+        { file: 'IMG_1947.jpg', date: '2024-10-15' },
+        { file: 'IMG_1948.jpg', date: '2024-11-01' },
+        { file: 'IMG_1949.jpg', date: '2024-12-08' },
+        { file: 'IMG_1951.jpg', date: '2024-12-25' },
+        { file: 'IMG_1952.jpg', date: '2024-12-25' },
+        { file: 'IMG_1953.jpg', date: '2025-01-15' },
+        { file: 'IMG_1959.jpg', date: '2025-03-10' },
+        { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-11-12' },
+    ];
+>>>>>>> eab66d4 (Add EXIF metadata writing tool for vlcsnap photo)
 
     // === AUTO-LOAD SYSTEM ===
     const imagePath = 'images/';
@@ -481,6 +558,7 @@
             elements.photoDimensions.textContent = `${photo.width} × ${photo.height}px`;
             elements.photoAspect.textContent = aspectRatio;
 
+<<<<<<< HEAD
             // Always show EXIF section
             elements.exifSection.style.display = 'block';
 
@@ -525,6 +603,8 @@
             elements.photoSoftware.textContent = photo.exif?.Software || '—';
             elements.softwareItem.style.display = 'block';
 
+=======
+>>>>>>> eab66d4 (Add EXIF metadata writing tool for vlcsnap photo)
             // Fade in
             setTimeout(() => {
                 elements.mainPhoto.classList.add('visible');
