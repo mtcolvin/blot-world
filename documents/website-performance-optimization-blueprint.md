@@ -1,7 +1,7 @@
 # Website Performance Optimization Blueprint
 ## From Bloated to Lightning-Fast: A Technical Guide
 
-**Author:** Matthew Colvin
+**Author:** Alex Morgan
 **Version:** 1.0
 **Last Updated:** November 2025
 
@@ -34,7 +34,7 @@ This eBook was created with the assistance of Claude (Anthropic's AI assistant) 
 
 **How This Content Was Created:**
 
-1. **Foundation:** The core concepts, optimization techniques, and real-world results (62% fewer HTTP requests, 26% faster load times) come from my actual portfolio optimization project at [blot.world](https://blot.world).
+1. **Foundation:** The core concepts, optimization techniques, and real-world results (62% fewer HTTP requests, 26% faster load times) come from my actual portfolio optimization project.
 
 2. **AI-Assisted Writing:** I used Claude to help:
    - Structure and organize my optimization experience into a comprehensive guide
@@ -82,9 +82,7 @@ This is Version 1.0. Future versions will include:
 
 I believe transparency builds trust. By being open about my development process, including the use of AI tools, I hope to demonstrate that modern web development is about leveraging all available tools effectively while maintaining technical accuracy and quality.
 
-If you have questions about any content in this guide or want to discuss web development workflows, feel free to reach out: mtcolvin99@gmail.com
-
-**- Matthew Colvin**
+**- Alex Morgan**
 
 ---
 
@@ -2669,13 +2667,9 @@ You now have the knowledge to build websites that are not just functional, but *
 
 ## About the Author
 
-This guide is based on real-world experience optimizing production websites and learning from both successes and failures.
+**Alex Morgan** is a web developer focused on performance optimization. This guide is based on real-world experience optimizing production websites and learning from both successes and failures.
 
 The techniques here have been battle-tested and proven to work across different types of projects, from small portfolios to large applications.
-
-**Connect:**
-- Email: mtcolvin99@gmail.com
-- Portfolio: https://blot.world
 
 ---
 
@@ -2683,6 +2677,6 @@ The techniques here have been battle-tested and proven to work across different 
 
 ---
 
-© 2025 Matthew Colvin. All rights reserved.
+© 2025 Alex Morgan. All rights reserved.
 
 This guide may not be reproduced, distributed, or transmitted in any form without prior written permission, except for personal use in optimization projects.

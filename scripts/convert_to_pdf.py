@@ -391,7 +391,7 @@ def create_styled_html(markdown_content):
     <div class="cover">
         <h1>Website Performance<br>Optimization Blueprint</h1>
         <div class="subtitle">From Bloated to Lightning-Fast: A Technical Guide</div>
-        <div class="author">Matthew Colvin</div>
+        <div class="author">Alex Morgan</div>
         <div class="version">Version 1.0 • November 2025</div>
     </div>
     """
