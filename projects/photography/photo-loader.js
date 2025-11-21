@@ -12,6 +12,7 @@
     // The system will auto-load them and sort by date (oldest first in timeline)
     const photos = [
         { file: '68223264_Unknown.JPG', date: '2017-08-21' },
+        { file: 'IMG_5567_result.jpg', date: '2025-03-10' },
         { file: 'IMG_6346_result (1).jpg', date: '2025-04-04' },
         { file: 'IMG_6582_result.jpg', date: '2025-04-09' },
         { file: 'IMG_7624_result (1).jpg', date: '2025-05-29' },
