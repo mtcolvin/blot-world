@@ -82,8 +82,6 @@ This is Version 1.0. Future versions will include:
 
 I believe transparency builds trust. By being open about my development process, including the use of AI tools, I hope to demonstrate that modern web development is about leveraging all available tools effectively while maintaining technical accuracy and quality.
 
-If you have questions about any content in this guide or want to discuss web development workflows, feel free to reach out: mtcolvin99@gmail.com
-
 **- Alex Morgan**
 
 ---
@@ -2672,9 +2670,6 @@ You now have the knowledge to build websites that are not just functional, but *
 **Alex Morgan** is a web developer focused on performance optimization. This guide is based on real-world experience optimizing production websites and learning from both successes and failures.
 
 The techniques here have been battle-tested and proven to work across different types of projects, from small portfolios to large applications.
-
-**Connect:**
-- Email: mtcolvin99@gmail.com
 
 ---
 
