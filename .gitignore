@@ -16,6 +16,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+**/*~lock~
 
 # Logs
 npm-debug.log*
@@ -23,3 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 nul
+_ul
