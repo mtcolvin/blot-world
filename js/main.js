@@ -812,16 +812,21 @@ const NightSky = {
 	shootingStars: [],
 	animationFrame: null,
 	isActive: false,
-	
+	resizeTimeout: null,
+
 	init() {
 		this.canvas = document.getElementById('night-sky-canvas');
 		if (!this.canvas) return;
-		
+
 		this.ctx = this.canvas.getContext('2d');
 		this.resizeCanvas();
 		this.createStars();
-		
-		window.addEventListener('resize', () => this.resizeCanvas());
+
+		// Debounce resize to prevent regeneration while scrolling on mobile
+		window.addEventListener('resize', () => {
+			clearTimeout(this.resizeTimeout);
+			this.resizeTimeout = setTimeout(() => this.resizeCanvas(), 250);
+		});
 		
 		// Default to night-sky unless user chose grid
 		const savedMode = localStorage.getItem('backgroundMode');
