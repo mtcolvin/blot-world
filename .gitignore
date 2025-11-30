@@ -2,10 +2,6 @@
 node_modules/
 package-lock.json
 
-# Build outputs (can be regenerated)
-**/*.min.css
-**/*.min.js
-
 # OS files
 .DS_Store
 Thumbs.db
