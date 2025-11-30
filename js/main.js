@@ -757,7 +757,23 @@ document.addEventListener('DOMContentLoaded', function() {
     NightSky.init();
     document.getElementById('bg-toggle-btn')?.addEventListener('click', () => {
         NightSky.toggle();
+
+        // Toggle poetry card visibility
+        const poetryCard = document.getElementById('poetry-card');
+        if (poetryCard) {
+            poetryCard.classList.toggle('visible');
+
+            // Save state to localStorage
+            const isVisible = poetryCard.classList.contains('visible');
+            localStorage.setItem('poetryCardVisible', isVisible);
+        }
     });
+
+    // Restore poetry card visibility on page load
+    const savedPoetryState = localStorage.getItem('poetryCardVisible');
+    if (savedPoetryState === 'true') {
+        document.getElementById('poetry-card')?.classList.add('visible');
+    }
 });
 
 
