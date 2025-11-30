@@ -396,11 +396,11 @@ main {
 }
 
 .hero-brand:first-of-type {
-	transform: translateX(-90px);
+	transform: translateX(-150px);
 }
 
 .hero-brand:last-of-type {
-	transform: translateX(60px);
+	transform: translateX(30px);
 }
 
 .hero-tagline {
