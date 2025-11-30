@@ -822,12 +822,16 @@ const NightSky = {
 		this.resizeCanvas();
 		this.createStars();
 
-		// Debounce resize to prevent regeneration while scrolling on mobile
-		window.addEventListener('resize', () => {
-			clearTimeout(this.resizeTimeout);
-			this.resizeTimeout = setTimeout(() => this.resizeCanvas(), 250);
-		});
-		
+		// Only resize stars on desktop (not on mobile to prevent regeneration while scrolling)
+		const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+		if (!isMobile) {
+			window.addEventListener('resize', () => {
+				clearTimeout(this.resizeTimeout);
+				this.resizeTimeout = setTimeout(() => this.resizeCanvas(), 250);
+			});
+		}
+
 		// Default to night-sky unless user chose grid
 		const savedMode = localStorage.getItem('backgroundMode');
 

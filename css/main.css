@@ -1974,26 +1974,56 @@ main {
 	}
 
 	/* Projects */
-	.project-image {
-		height: 140px;
+	.projects-preview-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
 	}
 
-	.project-details {
-		padding: 1rem;
+	.projects-preview-header h3 {
+		font-size: 1.5rem;
 	}
 
-	.project-card h3 {
+	.projects-preview-header .btn-gradient-3d {
+		align-self: flex-start;
+		padding: 0.75rem 1.5rem;
 		font-size: 1.1rem;
 	}
 
+	.project-card {
+		border-radius: 12px;
+		overflow: hidden;
+	}
+
+	.project-image {
+		height: 200px;
+	}
+
+	.project-details {
+		padding: 1.25rem;
+	}
+
+	.project-card h3 {
+		font-size: 1.25rem;
+		margin-bottom: 0.75rem;
+	}
+
 	.project-card p {
-		font-size: 0.9rem;
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin-bottom: 1rem;
 	}
 
 	.project-meta {
-		font-size: 0.75rem;
+		font-size: 0.8rem;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.project-area-badge {
+		padding: 0.4rem 0.8rem;
+		font-size: 0.75rem;
 	}
 
 	/* Blog Cards */
@@ -2058,28 +2088,104 @@ main {
 		right: 15px;
 	}
 
+	/* Mobile Menu Button */
+	.mobile-menu-btn {
+		padding: 0.75rem;
+		z-index: 1001;
+	}
+
+	.mobile-menu-btn span {
+		width: 28px;
+		height: 3px;
+	}
+
+	/* Mobile Navigation */
+	.mobile-nav {
+		max-height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
+	}
+
+	.mobile-nav-links {
+		padding: 1.5rem 1rem;
+	}
+
+	.mobile-nav-links li {
+		margin-bottom: 1.25rem;
+	}
+
+	.mobile-nav-links a {
+		font-size: 1.25rem;
+	}
+
+	.mobile-nav-social {
+		padding: 1.5rem 1rem;
+	}
+
 	/* Footer */
 	.footer-container {
-		padding: 2rem 1rem;
+		padding: 2.5rem 1rem;
 	}
 
 	.footer-content {
 		flex-direction: column;
-		gap: 2rem;
+		gap: 2.5rem;
 		text-align: center;
+		align-items: center;
 	}
 
 	.footer-left,
 	.footer-right {
 		width: 100%;
+		align-items: center;
+	}
+
+	.footer-logo {
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
+
+	.footer-tagline {
+		font-size: 0.95rem;
+		max-width: 280px;
+		margin: 0 auto;
 	}
 
 	.footer-links {
 		justify-content: center;
 		flex-wrap: wrap;
+		gap: 1.25rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.footer-links a {
+		font-size: 0.95rem;
+		padding: 0.5rem 0;
+	}
+
+	.footer-social {
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	.footer-social a {
+		width: 44px;
+		height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.footer-social svg {
+		width: 22px;
+		height: 22px;
+	}
+
+	.footer-bottom {
+		padding-top: 2rem;
+		gap: 0.75rem;
+	}
+
+	.footer-copyright {
 		font-size: 0.85rem;
 	}
 
