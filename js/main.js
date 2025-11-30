@@ -474,21 +474,29 @@ const FilterSystem = {
 	applyFilters() {
 		const projectCards = document.querySelectorAll('#projects-grid .project-card-link');
 		let visibleCount = 0;
-		
+
 		this.sortProjects(AppState.activeFilters.sort);
-		
+
+		const poetryCard = document.getElementById('poetry-card');
+		const isPoetrVisible = poetryCard?.classList.contains('visible');
+
 		projectCards.forEach(card => {
 			const area = card.querySelector('.project-card')?.dataset.area;
 			const tech = card.querySelector('.project-card')?.dataset.tech;
-			
-			const areaMatch = AppState.activeFilters.area.length === 0 || 
+
+			// Skip poetry card if it's not visible
+			if (card.id === 'poetry-card' && !isPoetrVisible) {
+				return;
+			}
+
+			const areaMatch = AppState.activeFilters.area.length === 0 ||
 							AppState.activeFilters.area.includes(area);
-			
-			const techMatch = AppState.activeFilters.tech.length === 0 || 
-							AppState.activeFilters.tech.some(filterTech => 
+
+			const techMatch = AppState.activeFilters.tech.length === 0 ||
+							AppState.activeFilters.tech.some(filterTech =>
 								tech && tech.toLowerCase().includes(filterTech.toLowerCase())
 							);
-			
+
 			if (areaMatch && techMatch) {
 				card.classList.remove('hidden', 'fade-out');
 				visibleCount++;
@@ -497,8 +505,10 @@ const FilterSystem = {
 				setTimeout(() => card.classList.add('hidden'), 300);
 			}
 		});
-		
-		this.updateCounter(visibleCount, projectCards.length);
+
+		// Calculate total excluding hidden poetry card
+		const totalProjects = isPoetrVisible ? projectCards.length : projectCards.length - 1;
+		this.updateCounter(visibleCount, totalProjects);
 		
 		setTimeout(() => {
 			this.regenerateWithSelections();
@@ -743,9 +753,24 @@ document.addEventListener('DOMContentLoaded', function() {
     QuoteRotator.init();
     markAIProjects();
 
-    // Initialize project counter
-    const totalProjects = document.querySelectorAll('#projects-grid .project-card').length;
-    FilterSystem.updateCounter(totalProjects, totalProjects);
+    // Initialize project counter (excluding hidden poetry card)
+    const updateProjectCounter = () => {
+        const allProjects = document.querySelectorAll('#projects-grid .project-card');
+        const poetryCard = document.getElementById('poetry-card');
+        const isPoetrVisible = poetryCard?.classList.contains('visible');
+        const totalProjects = isPoetrVisible ? allProjects.length : allProjects.length - 1;
+
+        // Count visible projects (not filtered out)
+        const visibleProjects = Array.from(allProjects).filter(card => {
+            const link = card.closest('.project-card-link');
+            return !card.classList.contains('hidden') &&
+                   (link?.id !== 'poetry-card' || isPoetrVisible);
+        }).length;
+
+        FilterSystem.updateCounter(visibleProjects, totalProjects);
+    };
+
+    updateProjectCounter();
 
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
@@ -766,6 +791,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Save state to localStorage
             const isVisible = poetryCard.classList.contains('visible');
             localStorage.setItem('poetryCardVisible', isVisible);
+
+            // Update project counter
+            updateProjectCounter();
         }
     });
 
@@ -773,6 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedPoetryState = localStorage.getItem('poetryCardVisible');
     if (savedPoetryState === 'true') {
         document.getElementById('poetry-card')?.classList.add('visible');
+        updateProjectCounter();
     }
 });
 
