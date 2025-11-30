@@ -396,7 +396,7 @@ main {
 }
 
 .hero-brand:first-of-type {
-	transform: translateX(-150px);
+	transform: translateX(-30px);
 }
 
 .hero-brand:last-of-type {
