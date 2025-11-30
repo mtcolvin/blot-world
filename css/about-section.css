@@ -4,8 +4,53 @@
 
 /* About Grid Layout */
 .about-content {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
+}
+
+/* About the Name Section */
+.about-name-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: rgba(13, 40, 242, 0.05);
+    border-left: 3px solid var(--primary-blue);
+    border-radius: 4px;
+}
+
+.name-section-title {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-red) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.name-section-text {
+    color: var(--light-gray);
+    line-height: 1.8;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.name-section-text:last-child {
+    margin-bottom: 0;
+}
+
+/* About Headshot */
+.about-headshot-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.about-headshot {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .about-grid {

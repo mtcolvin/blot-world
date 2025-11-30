@@ -26,7 +26,10 @@ async function addMetadata() {
             Country: 'United States',
             LocationCreatedCity: 'Loveland',
             LocationCreatedProvinceState: 'Colorado',
-            LocationCreatedCountryName: 'United States'
+            LocationCreatedCountryName: 'United States',
+            DateTimeOriginal: '2025:09:20 13:31:10',
+            CreateDate: '2025:09:20 13:31:10',
+            ModifyDate: '2025:09:20 13:31:10'
         });
 
         console.log('✅ Metadata successfully added!');

@@ -8,8 +8,9 @@
 	"optimize:images": "node scripts/optimize-images.js",
     "minify:css": "node scripts/minify-css.js",
     "minify:js": "node scripts/minify-js.js",
+    "build:blog": "node scripts/build-blog.js",
     "update:photo-metadata": "node scripts/add-vlcsnap-metadata.js",
-    "build": "npm run optimize:images && npm run minify:css && npm run minify:js",
+    "build": "npm run build:blog && npm run optimize:images && npm run minify:css && npm run minify:js",
     "serve": "python3 -m http.server 8080"
   },
   "devDependencies": {

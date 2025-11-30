@@ -7,11 +7,13 @@
     <!-- ==================== FONTS ==================== -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- ==================== STYLESHEETS ==================== -->
     <link rel="stylesheet" href="css/root.min.css">
 	<link rel="stylesheet" href="css/main.min.css">
+	<link rel="stylesheet" href="css/about-section.min.css">
+	<link rel="stylesheet" href="blog/css/post.min.css">
     
     <!-- ==================== PRELOAD RESOURCES ==================== -->
     <link rel="preload" as="image" href="images/headshot.jpeg">
@@ -70,9 +72,7 @@
 <body>
     <!-- ==================== LOADER ==================== -->
 	<div class="loader" id="loader">
-		<div class="pixel-comet-container">
-			<div class="pixel-comet-sprite"></div>
-		</div>
+		<div class="spinner-ring"></div>
 	</div>
 
     <!-- ==================== NAVIGATION ==================== -->
@@ -180,37 +180,10 @@
             <div class="container">
                 <!-- Hero Content -->
                 <div class="hero-content">
-                    <!-- Left Column -->
-                    <div class="hero-left">
-                        <div class="hero-headshot" onclick="showSection('about')">
-                            <div class="headshot-placeholder">
-                                <img class="headshot-img" src="images/headshot.jpeg" alt="Matthew Colvin headshot" loading="lazy" />
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Vertical Divider -->
-                    <div class="hero-divider"></div>
-                    
-                    <!-- Right Column -->
-                    <div class="hero-right">
-                        <div class="hero-tagline">
-                            <span class="tagline-prefix">an archive by</span>
-                            <div class="tagline-rotator">
-                                <span class="active">Matthew Colvin</span>
-                            </div>
-                        </div>
-                        
-                        <div class="hero-actions">
-                            <button class="btn-gradient-3d" onclick="showSection('projects')">View Projects</button>
-                            <button class="btn-gradient-3d" onclick="window.location.href='mailto:mtcolvin99@gmail.com'">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-									<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
-									<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
-								</svg>
-								Get in touch
-							</button>
-                        </div>
+                    <div class="hero-statement">
+                        <div class="hero-brand">BLOT OUT</div>
+                        <div class="hero-divider"></div>
+                        <div class="hero-brand">THE SUN</div>
                     </div>
                 </div>
 
@@ -362,13 +335,14 @@
                                 </div>
                             </a>
 
-							<a href="projects/joni/joni.html" class="project-card-link">
+							<a href="projects/faces/faces.html#joni" class="project-card-link">
                                 <div class="project-card"
 									data-area="Digital Art"
 									data-tech="Affinity Designer"
 									data-name="Joni"
 									data-month="January"
-									data-year="2025">
+									data-year="2025"
+									data-series="Faces">
                                     <div class="project-image">
                                         <img src="images/previews/joni-preview.jpg" alt="Joni Artwork">
                                     </div>
@@ -376,6 +350,7 @@
                                         <div class="project-content-top">
                                             <div class="project-header">
                                                 <h3>Joni</h3>
+                                                <span class="series-tag">Faces</span>
                                             </div>
                                             <div class="project-date-container">
                                                 <span class="project-date">January 2025 - October 2025</span>
@@ -393,13 +368,14 @@
                                 </div>
                             </a>
 
-                            <a href="projects/amari/amari.html" class="project-card-link">
+                            <a href="projects/faces/faces.html#amari" class="project-card-link">
                                 <div class="project-card"
 									data-area="Digital Art"
 									data-tech="Affinity Designer"
 									data-name="Amari"
 									data-month="September"
-									data-year="2023">
+									data-year="2023"
+									data-series="Faces">
                                     <div class="project-image">
                                         <img src="images/previews/amari-preview.jpg" alt="Amari Artwork">
                                     </div>
@@ -407,6 +383,7 @@
                                         <div class="project-content-top">
                                             <div class="project-header">
                                                 <h3>Amari</h3>
+                                                <span class="series-tag">Faces</span>
                                             </div>
                                             <div class="project-date-container">
                                                 <span class="project-date">August 2023 - October 2025</span>
@@ -480,7 +457,7 @@
                                             <div class="project-header">
                                                 <h3>Photography</h3>
                                             </div>
-                                            <p>A visual timeline of moments captured through the lens. Click through to browse the collection.</p>
+                                            <p>A collection of photos I've taken over the years.</p>
                                             <div class="project-date-container">
                                                 <span class="project-date">August 2017 - Present</span>
                                             </div>
@@ -544,11 +521,31 @@
 				</div>
 
 				<div class="about-content">
+				<!-- Headshot -->
+				<div class="about-headshot-container">
+					<div class="about-headshot">
+						<div class="headshot-placeholder">
+							<img class="headshot-img" src="images/headshot.jpeg" alt="Matthew Colvin headshot" loading="lazy" />
+						</div>
+					</div>
+				</div>
+
 				<!-- Hero Statement -->
 				<div class="about-hero">
-					<h2 class="about-name">Hi! I'm Matthew Colvin >:D</h2>
+					<h2 class="about-name">I'm Matthew Colvin >:D</h2>
 					<p class="about-statement">
 						I do a whole bunch of things, so feel free to take a look around to get a better idea of who I am! I like doing what I can to be a benefit to the lives of the people I meet and the environments I walk through. If you ever have a question or something you would like to tell me, my line's always open!
+					</p>
+				</div>
+
+				<!-- About the Name -->
+				<div class="about-name-section">
+					<h3 class="name-section-title">About the Name</h3>
+					<p class="name-section-text">
+						"Blot Out The Sun" comes from my fascination with astronomy, specifically solar eclipses. An eclipse is this remarkable moment where something relatively small—the Moon—can completely obscure something immensely larger—the Sun. It's a reminder that scale isn't everything. Small things can have substantial impact when positioned right.
+					</p>
+					<p class="name-section-text">
+						The logo itself represents eclipse viewing glasses combined with a stylized letter B. It's a dual meaning that captures both the astronomical inspiration and my personal identity. Just as the Moon blocks out the Sun during an eclipse, I believe individual actions and choices can create meaningful change, even when they seem small compared to the larger systems around us.
 					</p>
 				</div>
 
@@ -577,22 +574,30 @@
 				<div class="about-principles">
 					<h3 class="principles-title">Core Principles</h3>
 					<div class="principles-grid">
-						<div class="principle-card principle-1">
-							<h4>Intentional Design</h4>
-							<p>Every element serves a purpose. No bloat, no waste, just purposeful decisions.</p>
-						</div>
-						<div class="principle-card principle-2">
-							<h4>Craft & Detail</h4>
-							<p>Precision matters. The difference between good and great is in the details.</p>
-						</div>
-						<div class="principle-card principle-3">
-							<h4>Open & Honest</h4>
-							<p>Transparency builds trust. Clear communication, clean code, authentic work.</p>
-						</div>
 						<div class="principle-card principle-4">
-							<h4>Always Learning</h4>
+							<h4>Adaptability & Learnability</h4>
 							<p>Technology evolves. Stay curious, embrace change, never stop growing.</p>
 						</div>
+						<div class="principle-card principle-5">
+							<h4>Equality</h4>
+							<p>Everyone deserves a seat at the table. Building inclusive spaces where all voices matter.</p>
+						</div>
+						<div class="principle-card principle-3">
+							<h4>Openness & Honesty</h4>
+							<p>Transparency builds trust. Clear communication, clean code, authentic work.</p>
+						</div>
+						<div class="principle-card principle-1">
+							<h4>Privacy</h4>
+							<p>Your data is yours. Respect for privacy is non-negotiable in everything I build.</p>
+						</div>
+						<div class="principle-card principle-2">
+							<h4>Sovereignty</h4>
+							<p>True ownership means control. Building tools that empower, not restrict.</p>
+						</div>
+						<div class="principle-card principle-3">
+							<h4>Sustainability</h4>
+							<p></p>
+						</div>						
 					</div>
 				</div>
 
@@ -635,7 +640,6 @@
 						<div class="blog-filters">
 							<button class="filter-btn active" data-filter="all">All</button>
 							<button class="filter-btn" data-filter="case-study">Case Studies</button>
-							<button class="filter-btn" data-filter="tutorial">Tutorials</button>
 							<button class="filter-btn" data-filter="thoughts">Thoughts</button>
 						</div>
 						<div class="blog-counter">
@@ -668,8 +672,9 @@
 			</div>
 		</section>
 
-		<!-- Blog Post: BLOT.WORLD Case Study -->
-		<section id="post-blot-world" class="section post-section">
+		<!-- BLOG POSTS START -->
+		<!-- Blog Post: Why I Made Blot.World -->
+		<section id="post-blot-world-case-study" class="section post-section">
 			<div class="post-container">
 				<a href="#" data-section="blog" class="back-to-blog">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -679,6 +684,10 @@
 				</a>
 
 				<article>
+					<div class="post-featured-image">
+						<img src="blog/images/blot-world-case-study.png" alt="Why I Made Blot.World">
+					</div>
+
 					<header class="post-header">
 						<div class="post-meta">
 							<span class="post-date">
@@ -688,80 +697,111 @@
 									<line x1="8" y1="2" x2="8" y2="6"></line>
 									<line x1="3" y1="10" x2="21" y2="10"></line>
 								</svg>
-								January 15, 2025
+								November 27, 2025
 							</span>
 							<span class="post-category">Case Study</span>
-							<span class="post-read-time">8 min read</span>
+							<span class="post-read-time"></span>
 						</div>
 
-						<h1 class="post-title">Building BLOT.WORLD: A Modern Portfolio Experience</h1>
+						<h1 class="post-title">Why I Made Blot.World</h1>
 
 						<p class="post-excerpt">
-							A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website from scratch.
+							I wanted a place to keep track of my work and think through why I make certain decisions. Writing it down helps me understand my own process better.
 						</p>
 
 						<div class="post-tags">
-							<span class="post-tag">Web Design</span>
-							<span class="post-tag">HTML</span>
-							<span class="post-tag">CSS</span>
-							<span class="post-tag">JavaScript</span>
-							<span class="post-tag">UX/UI</span>
+					<span class="post-tag">Web Design</span>
+					<span class="post-tag">HTML</span>
+					<span class="post-tag">CSS</span>
+					<span class="post-tag">JavaScript</span>
+					<span class="post-tag">Portfolio</span>
+					<span class="post-tag">Responsive Design</span>
+					<span class="post-tag">Dark Mode</span>
+					<span class="post-tag">Variable Fonts</span>
+					<span class="post-tag">Single Page App</span>
+					<span class="post-tag">Vanilla JavaScript</span>
+					<span class="post-tag">Mobile-First</span>
+					<span class="post-tag">Typography</span>
+					<span class="post-tag">Accessibility</span>
+					<span class="post-tag">Canvas API</span>
+					<span class="post-tag">CSS Gradients</span>
+					<span class="post-tag">Lazy Loading</span>
+					<span class="post-tag">State Management</span>
+					<span class="post-tag">CSS Minification</span>
 						</div>
 					</header>
 
-					<div class="post-featured-image">
-						<img src="images/previews/inception-protection.png" alt="BLOT.WORLD Portfolio Screenshot">
-					</div>
-
 					<div class="post-content">
-						<h2>The Challenge</h2>
-						<p>
-							Every creative professional faces the same dilemma: how do you showcase your diverse skills and projects in a way that's both engaging and authentic? After exploring countless portfolio templates and platforms, I realized none captured what I wanted to communicate. I needed something unique, something that felt like <em>me</em>.
-						</p>
 
-						<p>
-							The goal was clear: create a digital space that serves as both a professional portfolio and a personal archive—a place where web design, branding projects, digital art, photography, and even poetry could coexist harmoniously.
-						</p>
+						<h2>Why this exists</h2>
 
-						<h2>Design Philosophy</h2>
+						<p>I have always wanted a place where I could see everything I've worked on, everything that's made me the person I am today and the person I continue to grow into, together and in one place. Somewhere I could showcase who I am and how what I stand for is incorporated in what I do. I'm not trying to impress anyone; I'm not expecting any visitors anytime soon. It's a way for me to look back and reflect.</p>
 
-						<h3>Dark Mode by Default</h3>
-						<p>
-							I opted for a dark theme as the foundation. Not just because it's trendy, but because it allows colors, images, and interactive elements to truly pop. The deep black background creates a gallery-like atmosphere where each project becomes a illuminated exhibit.
-						</p>
+						<p>For years I had iterated trying to build a website to combine all these different aspects of my life. Everything without outside input because I was (and, for better or for worse, still am in many ways) a private person. I had learned the basics of web design back in high school and had continued to experiment in the years following, but could never find satisfaction with what I had created. I wanted something bigger than what one person could feasibly make.</p>
 
-						<h3>Typography as Expression</h3>
-						<p>
-							I chose Roboto Flex for its variable font capabilities. This single typeface can shift from condensed and sharp to wide and expressive, matching the tone of each section.
-						</p>
+						<p>I am very transparent about my AI/LLM use. Here on BLOT.WORLD, projects for example, are a transparent blue to emphasize their AI-assistedness. Just like any other tool, I use it to accomplish the barrage of ideas I have in my head. It's not a walker for me; it's more of a crotch rocket (something I also dream of having one day). It doesn't replace my creativity; it just allows me to bring the thoughts I have in my head into the real world.</p>
 
-						<h2>Technical Implementation</h2>
+						<p>It turned a project that would have probably taken multiple years, if I ever finished it all, into something that was feasible in a few months. Using Claude, I could focus on the creative decisions and design while getting help with the implementation. When I wanted a specific animation or layout, I could describe what I was after and work through the technical details together. It's like having a collaborator who never gets tired of iterating.</p>
 
-						<h3>Vanilla JavaScript Philosophy</h3>
-						<p>
-							No frameworks. No build tools. Just clean, purposeful vanilla JavaScript. This decision was intentional for performance, control, learning value, and longevity.
-						</p>
+						<p>This doesn't diminish the work - I still made every design decision, wrote most of the code, and understood what was happening. But AI opened the door to building something at a scale I wouldn't have attempted otherwise. It removed the barrier between having an idea and being able to execute it.</p>
 
-						<h2>Unique Features</h2>
+						<p>For anyone hesitant about building something because the technical side feels overwhelming: this is what AI is good for. Not replacing your creativity or decision-making, but helping you realize your vision without getting stuck on implementation details.</p>
 
-						<h3>Inception Protection Modal</h3>
-						<p>
-							One of my favorite touches is the "Inception Protection" feature. When users try to click on the portfolio project card while viewing the portfolio, they get a playful Windows XP-style error message with a nostalgic error sound.
-						</p>
+						<p>Having such a powerful tool at my disposal allowed me to take this dream I have had for forever and transform it into actual code. It allowed me to accomplish my goal. I would finally be able to compile all these different aspects of my life into one place and be able to to see how they looked together. I like to joke to myself that, before I die, I want to write my own Wikipedia page. Whether anyone wants to read it is another question! I guess that's why I try to be the best person I can be and try and improve the lives of the people I meet and the environment I walk through: pass it on and be the good you want to see they say. At the very least, I hope to be able to my part, however small.</p>
 
-						<h2>Lessons Learned</h2>
+						<p>The primary purpose of this website is not to showcase my work to others, although if it ends up being an influence to others or something that other creators can distill value from I would be especially happy. The primary purpose is to:</p>
 
-						<p>
-							Building BLOT.WORLD reinforced several important principles: start with content, progressive enhancement, test early and often, and iterate ruthlessly.
-						</p>
+						<ol>
+							<li>Have a central place to compile my work on a platform where I have creative control. Everything I do is driven by what I value and what I enjoy doing. It's difficult to express yourself through someone else's template. Building something from scratch meant I could make it feel like mine. I hope in the future (although I find similar problems seem to persist lol) that it's easier to have more control over how your work is presented. I like seeing everything together, and how they all connect to each other.</li>
+							<li>Centralize my work so that I have a record for myself—to look back and see what I was thinking at different points, what problems I was trying to solve, and how my approach has evolved. I want to see how I've grown.</li>
+							<li>Communicate who I am, through every perspective, as an individual and how the values I have are instilled in everything I work on. I have a distant hope that maybe someone in the future finds some value in what I've done.</li>
+						</ol>
 
-						<p>
-							Your portfolio is more than a resume—it's a statement about who you are as a creator. The best portfolio is one that reflects not just what you can do, but how you think.
-						</p>
+						<h2>About the name</h2>
+
+						<p>"Blot Out The Sun" comes from my fascination with astronomy, specifically total solar eclipses. A total solar eclipse—notably different from a partial solar eclipse—is this spectacular moment where the Moon (an object about 2% the volume of the Earth) can block out something so large it's hard for our brains to comprehend—the Sun (an object around 1.3 million times the size of the earth). I'll combine that concisely, but you still will not be able to comprehend it: the sun is 64,000,000x larger than the moon and still, somehow, they are perfectly distanced in our solar system to appear the same size.</p>
+
+						<p>I use this phrase to remind myself that scale isn't everything. Small things can have a massive impact when positioned right.</p>
+
+						<h2>Design decisions</h2>
+						
+						<h3>Dark theme</h3>
+
+						<p>I like black. It's my favorite color if you consider it as such (purple if we're only talking about the visible light spectrum). It saves batter on OLED. It's easier on the eyes. Enough said imho.</p>
+
+						<h3>Typography</h3>
+
+						<p>I used Robot Flex because I wanted a variable font for flexibility. I used Space Grotesk for its distinctiveness from Robot Flex and its serif-like impact, while remaining sans-serif and modern.</p>
+
+						<h3>Visual consistency</h3>
+
+						<p>The blue-to-red gradient runs throughout the site – in buttons, headings, and interactive elements. It ties everything together visually and gives the site a consistent identity. They are a color pair I have always liked together, mix to form my favorite color, and are a subtle nod to 3D-glasses: something I loved in the movies as a child and represent the full-dimensional aspect of my portfolio.</p>
+						
+						<h2>What I learned</h2>
+
+						<p>Building this website reinforced a few things:</p>
+						<ul>
+							<li>Create content that communicates who you are</li>
+							<li>Iterate relentlessly</li>
+							<li>Nothing is ever finished</li>
+						</ul>
+
+						<h2>What's next</h2>
+
+						<p>Who knows what the future may hold. I certainly don't try and predict the unpredictable. I'm here for a good time, not a long time. Let's see what we can do together.</p>
+
+						<hr>
+
+						<p>This site is primarily a place for me to gather my work and reflect on my process. If you're reading this and found something useful, that's great.</p>
+
+						<p>If you're thinking about building your own portfolio, make it feel authentic to you. Use it as a tool to understand your own work better, not just to present it to others. And don't be afraid to use AI tools to help bring your vision to life - there's no shame in collaboration.</p>
+						
 					</div>
 				</article>
 			</div>
 		</section>
+
+		<!-- BLOG POSTS END -->
 
     </main>
     

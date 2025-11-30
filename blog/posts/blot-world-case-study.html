@@ -3,252 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building BLOT.WORLD - Case Study</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../css/root.min.css">
+    <link rel="stylesheet" href="../../css/main.min.css">
+    <link rel="stylesheet" href="../css/post.min.css">
+    <link rel="stylesheet" href="../../css/minimal-nav.min.css">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="../../css/root.css">
-    <link rel="stylesheet" href="../../css/minimal-nav.css">
-    <link rel="stylesheet" href="../css/post.css">
-
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" href="../../images/favicon/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="../../images/favicon/favicon.svg" />
-
-    <!-- SEO -->
-    <meta name="description" content="A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website BLOT.WORLD from scratch.">
-    <meta name="keywords" content="web design, portfolio, case study, HTML, CSS, JavaScript">
-    <meta name="author" content="Matthew Colvin">
-
-    <title>Building BLOT.WORLD: A Modern Portfolio Experience - Matthew Colvin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <!-- Navigation -->
+    <!-- Minimal Navigation -->
     <nav class="minimal-nav">
+        <svg class="nav-bg" viewBox="0 0 170 40" preserveAspectRatio="none">
+            <defs>
+                <mask id="logo-cut-post">
+                    <rect width="170" height="40" fill="white"/>
+                    <path d="M 18 8 L 18 32 L 22 32 L 22 22 L 28 22 C 32 22 34 19 34 15 C 34 11 32 8 28 8 Z M 22 12 L 27 12 C 28.5 12 30 13 30 15 C 30 17 28.5 18 27 18 L 22 18 Z" fill="black"/>
+                </mask>
+            </defs>
+            <rect class="nav-rect" width="170" height="40" fill="rgba(0, 0, 0, 0.85)" mask="url(#logo-cut-post)"/>
+            <path class="logo-fill" d="M 18 8 L 18 32 L 22 32 L 22 22 L 28 22 C 32 22 34 19 34 15 C 34 11 32 8 28 8 Z M 22 12 L 27 12 C 28.5 12 30 13 30 15 C 30 17 28.5 18 27 18 L 22 18 Z" fill="rgba(13, 40, 242, 0.3)"/>
+        </svg>
+        <div class="backdrop-blur"></div>
         <div class="minimal-nav-container">
             <a href="../../index.html#blog" class="minimal-nav-back">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
-                Back to Blog
             </a>
-            <div class="minimal-nav-title">BLOT.WORLD / BLOG</div>
+            <div class="min-logo-title">
+                <span>b</span><span>l</span><span>o</span><span>t</span><span>.</span><span>w</span><span>o</span><span>r</span><span>l</span><span>d</span>
+            </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="post-main">
-        <article class="post-container">
-            <!-- Header -->
-            <header class="post-header">
-                <div class="post-meta">
-                    <span class="post-date">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        January 15, 2025
-                    </span>
-                    <span class="post-category">Case Study</span>
-                    <span class="post-read-time">8 min read</span>
-                </div>
-
-                <h1 class="post-title">Building BLOT.WORLD: A Modern Portfolio Experience</h1>
-
-                <p class="post-excerpt">
-                    A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website from scratch.
-                </p>
-
-                <div class="post-tags">
-                    <span class="post-tag">Web Design</span>
-                    <span class="post-tag">HTML</span>
-                    <span class="post-tag">CSS</span>
-                    <span class="post-tag">JavaScript</span>
-                    <span class="post-tag">UX/UI</span>
-                </div>
-            </header>
-
-            <!-- Featured Image -->
-            <div class="post-featured-image">
-                <img src="../../images/previews/inception-protection.png" alt="BLOT.WORLD Portfolio Screenshot">
-            </div>
-
-            <!-- Content -->
-            <div class="post-content">
-                <h2>The Challenge</h2>
-                <p>
-                    Every creative professional faces the same dilemma: how do you showcase your diverse skills and projects in a way that's both engaging and authentic? After exploring countless portfolio templates and platforms, I realized none captured what I wanted to communicate. I needed something unique, something that felt like <em>me</em>.
-                </p>
-
-                <p>
-                    The goal was clear: create a digital space that serves as both a professional portfolio and a personal archive—a place where web design, branding projects, digital art, photography, and even poetry could coexist harmoniously.
-                </p>
-
-                <h2>Design Philosophy</h2>
-
-                <h3>Dark Mode by Default</h3>
-                <p>
-                    I opted for a dark theme as the foundation. Not just because it's trendy, but because it allows colors, images, and interactive elements to truly pop. The deep black background (#0a0a0a) creates a gallery-like atmosphere where each project becomes a illuminated exhibit.
-                </p>
-
-                <h3>Typography as Expression</h3>
-                <p>
-                    I chose Roboto Flex for its variable font capabilities. This single typeface can shift from condensed and sharp to wide and expressive, matching the tone of each section. The variable font axes give incredible flexibility without multiple font files weighing down the site.
-                </p>
-
-                <div class="callout info">
-                    <div class="callout-title">Design Insight</div>
-                    <p>Variable fonts aren't just about file size—they're about expression. A single typeface that can shift personality gives your design breathing room to adapt contextually.</p>
-                </div>
-
-                <h3>Gradients & Depth</h3>
-                <p>
-                    The purple-to-blue gradient became the visual signature throughout the site. It appears in buttons, headings, and interactive elements, creating visual continuity while adding a layer of sophistication. The gradient represents creativity flowing from concept to execution.
-                </p>
-
-                <h2>Technical Implementation</h2>
-
-                <h3>Vanilla JavaScript Philosophy</h3>
-                <p>
-                    No frameworks. No build tools. Just clean, purposeful vanilla JavaScript. This decision was intentional:
-                </p>
-
-                <ul>
-                    <li><strong>Performance First:</strong> Zero framework overhead means faster load times and better performance</li>
-                    <li><strong>Full Control:</strong> Every animation, every interaction is hand-crafted</li>
-                    <li><strong>Learning Value:</strong> Understanding the fundamentals deeply before abstracting them away</li>
-                    <li><strong>Longevity:</strong> No dependency updates, no breaking changes</li>
-                </ul>
-
-                <h3>Project Filtering System</h3>
-                <p>
-                    The filtering system was one of the more interesting challenges. I wanted users to filter by both area (Web Design, Branding, Photography, etc.) and technology (HTML, CSS, Affinity Designer, etc.) simultaneously, with real-time search functionality.
-                </p>
-
-                <p>
-                    The solution uses a state management pattern that tracks active filters and applies them dynamically. Each project card contains data attributes that the JavaScript uses to determine visibility:
-                </p>
-
-                <pre><code>&lt;div class="project-card"
-     data-area="Web Design"
-     data-tech="HTML,CSS,JavaScript"
-     data-name="Project Name"&gt;
-&lt;/div&gt;</code></pre>
-
-                <h3>Smooth Section Transitions</h3>
-                <p>
-                    Rather than using traditional page navigation, I implemented a single-page application feel with smooth transitions between sections (Home, Projects, About). A brief loader animation creates anticipation and masks the content swap, making transitions feel intentional rather than jarring.
-                </p>
-
-                <h2>Unique Features</h2>
-
-                <h3>Inception Protection Modal</h3>
-                <p>
-                    One of my favorite touches is the "Inception Protection" feature. When users try to click on the portfolio project card <em>while viewing the portfolio</em>, they get a playful Windows XP-style error message with a nostalgic error sound. It's a small Easter egg that adds personality and prevents the meta-confusion of viewing the portfolio within itself.
-                </p>
-
-                <h3>Animated Background Elements</h3>
-                <p>
-                    The homepage features floating orbs, a grid pattern, and an interactive night sky canvas with twinkling stars. These elements create depth and movement without being distracting. They're subtle enough to enhance the experience rather than dominate it.
-                </p>
-
-                <h3>Responsive Design Considerations</h3>
-                <p>
-                    Every element was designed to adapt gracefully across devices. The project grid adjusts from multi-column layouts on desktop to single-column on mobile, maintaining visual hierarchy and usability at every breakpoint.
-                </p>
-
-                <div class="key-takeaways">
-                    <h3>Key Takeaways</h3>
-                    <ul>
-                        <li><strong>Personality Matters:</strong> Small touches like the Inception Protection modal make your portfolio memorable</li>
-                        <li><strong>Performance is UX:</strong> Fast-loading sites keep visitors engaged and reflect your attention to detail</li>
-                        <li><strong>Constraint Breeds Creativity:</strong> Working without frameworks forced me to solve problems creatively</li>
-                        <li><strong>Your Portfolio is a Project:</strong> It should showcase not just what you've done, but how you think and solve problems</li>
-                    </ul>
-                </div>
-
-                <h2>Challenges & Solutions</h2>
-
-                <h3>Challenge: Filter State Management</h3>
-                <p>
-                    Managing multiple simultaneous filters (area + tech + search) while maintaining URL state proved tricky. The solution was creating a centralized AppState object that tracks all filter states and provides methods to reset, update, and apply filters consistently.
-                </p>
-
-                <h3>Challenge: Image Optimization</h3>
-                <p>
-                    High-quality project previews can slow down the site. I implemented lazy loading for images, preloaded critical images (like the headshot and logo), and optimized all images before upload. The result: fast initial load with progressive enhancement.
-                </p>
-
-                <h3>Challenge: SEO for Single-Page App</h3>
-                <p>
-                    Single-page applications can struggle with SEO since content loads dynamically. I ensured all content exists in the initial HTML, used semantic markup, and implemented proper meta tags. The JavaScript simply shows/hides existing content rather than creating it dynamically.
-                </p>
-
-                <h2>Lessons Learned</h2>
-
-                <p>
-                    Building BLOT.WORLD reinforced several important principles:
-                </p>
-
-                <ol>
-                    <li><strong>Start with Content:</strong> Design around your content, not the other way around. I cataloged all my projects first, then designed a system to showcase them.</li>
-                    <li><strong>Progressive Enhancement:</strong> The site works with JavaScript disabled, but enhances with it enabled.</li>
-                    <li><strong>Test Early, Test Often:</strong> Regular testing across devices and browsers caught issues before they became problems.</li>
-                    <li><strong>Iterate Ruthlessly:</strong> The first version is never the final version. Be willing to tear down and rebuild.</li>
-                </ol>
-
-                <h2>What's Next</h2>
-
-                <p>
-                    Like any good project, BLOT.WORLD is never truly "finished." Future enhancements include:
-                </p>
-
-                <ul>
-                    <li>Adding this blog system for deeper dives into projects</li>
-                    <li>Implementing analytics to understand how visitors engage with the site</li>
-                    <li>Creating more interactive project showcases with embedded demos</li>
-                    <li>Expanding the photography timeline with more interactive features</li>
-                </ul>
-
-                <hr>
-
-                <p>
-                    Your portfolio is more than a resume—it's a statement about who you are as a creator. BLOT.WORLD represents my belief that design should be intentional, technical execution should be clean, and personality should shine through in the details.
-                </p>
-
-                <p>
-                    The best portfolio is one that reflects not just <em>what</em> you can do, but <em>how</em> you think. Make yours count.
-                </p>
-            </div>
-
-            <!-- Footer -->
-            <footer class="post-footer">
-                <div class="post-footer-share">
-                    <h3>Found this helpful? Share it:</h3>
-                    <div class="share-buttons">
-                        <a href="https://twitter.com/intent/tweet?text=Building%20BLOT.WORLD%3A%20A%20Modern%20Portfolio%20Experience&url=" class="share-btn" target="_blank" rel="noopener">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
-                            </svg>
-                            Twitter
-                        </a>
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=" class="share-btn" target="_blank" rel="noopener">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
-                                <circle cx="4" cy="4" r="2"/>
-                            </svg>
-                            LinkedIn
-                        </a>
-                    </div>
-                </div>
-            </footer>
-        </article>
+    <!-- Main Content (will be loaded from Markdown) -->
+    <main id="blot-world-standalone">
+        <!-- Content will be loaded from blot-world-case-study.md -->
     </main>
+
+    <!-- Blog Loader Script -->
+    <script src="../../js/blog-loader.js"></script>
+    <script>
+        // Load blog post from Markdown
+        (async function() {
+            const blogLoader = new BlogLoader();
+            blogLoader.postsConfig = [
+                { id: 'blot-world-standalone', file: 'blot-world-case-study.md' }
+            ];
+
+            const posts = await blogLoader.loadAllPosts();
+            if (posts.length > 0) {
+                const mainElement = document.querySelector('main');
+                mainElement.innerHTML = '';
+                blogLoader.renderPost(posts[0], 'blot-world-standalone');
+
+                // Move the article to main
+                const article = document.getElementById('blot-world-standalone').querySelector('article');
+                if (article) {
+                    mainElement.appendChild(article);
+                }
+            }
+        })();
+    </script>
 </body>
 </html>

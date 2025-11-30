@@ -12,10 +12,14 @@
     // The system will auto-load them and sort by date (oldest first in timeline)
     const photos = [
         { file: '68223264_Unknown.JPG', date: '2017-08-21' },
+        { file: 'IMG_1992_result (1).jpg', date: '2024-08-12' },
+        { file: 'IMG_2010_result (1).jpg', date: '2024-08-13' },
+        { file: 'image0.jpeg', date: '2024-12-10' },
+        { file: 'IMG_4037_result (1).jpg', date: '2025-01-14' },
         { file: 'IMG_5567_result.jpg', date: '2025-03-10' },
-        { file: 'IMG_6346_result (1).jpg', date: '2025-04-04' },
+        { file: 'IMG_6346_result_1.jpg', date: '2025-04-04' },
         { file: 'IMG_6582_result.jpg', date: '2025-04-09' },
-        { file: 'IMG_7624_result (1).jpg', date: '2025-05-29' },
+        { file: 'IMG_7624_result_1.jpg', date: '2025-05-29' },
         { file: 'IMG_8446_result.jpg', date: '2025-06-17' },
         { file: 'IMG_8419_result.jpg', date: '2025-06-17' },
         { file: 'IMG_8332_result.jpg', date: '2025-06-17' },
@@ -29,13 +33,13 @@
         { file: 'IMG_8727_result.jpg', date: '2025-06-19' },
         { file: 'IMG_9017_result.jpg', date: '2025-06-20' },
         { file: 'IMG_9007_result.jpg', date: '2025-06-20' },
-        { file: 'IMG_9810_result (1).jpg', date: '2025-08-03' },
+        { file: 'IMG_9810_result_1.jpg', date: '2025-08-03' },
         { file: 'IMG_0236_result.jpg', date: '2025-09-08' },
+        { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-09-20' },
         { file: 'IMG_0772_result.jpg', date: '2025-10-21' },
         { file: 'IMG_0969_result.jpg', date: '2025-11-02' },
         { file: 'IMG_0966_result.jpg', date: '2025-11-02' },
-        { file: 'IMG_0955_result.jpg', date: '2025-11-02' },
-        { file: 'vlcsnap-2025-11-12-02h05m05s496.jpg', date: '2025-11-12' }
+        { file: 'IMG_0955_result.jpg', date: '2025-11-02' }
     ];
 
     // === AUTO-LOAD SYSTEM ===
@@ -201,6 +205,7 @@
         // Wait for timeline to render before showing photo
         setTimeout(() => {
             isProgrammaticScroll = true;
+            lastProgrammaticScrollTime = Date.now();
 
             // Check URL for photo parameter
             const urlParams = new URLSearchParams(window.location.search);
@@ -333,7 +338,13 @@
                     // Click handler - navigate to specific photo
                     square.addEventListener('click', (e) => {
                         e.stopPropagation(); // Prevent tick mark click
+                        clearTimeout(isProgrammaticScrollTimeout);
+                        isProgrammaticScroll = true;
+                        lastProgrammaticScrollTime = Date.now();
                         showPhoto(photo.globalIndex);
+                        isProgrammaticScrollTimeout = setTimeout(() => {
+                            isProgrammaticScroll = false;
+                        }, 1000); // Wait for smooth scroll to complete
                     });
 
                     previewsContainer.appendChild(square);
@@ -418,7 +429,7 @@
     }
 
     // Show specific photo
-    function showPhoto(index, skipScroll = false) {
+    function showPhoto(index, skipScroll = false, smoothScroll = true) {
         if (index < 0 || index >= loadedPhotos.length) return;
 
         currentIndex = index;
@@ -585,7 +596,7 @@
 
         // Scroll to active tick (unless we're scrolling manually)
         if (!skipScroll) {
-            scrollToActiveThumb(index);
+            scrollToActiveThumb(index, smoothScroll);
         }
 
         // Update navigation button states
@@ -611,7 +622,7 @@
     }
 
     // Scroll timeline to active tick mark (horizontal)
-    function scrollToActiveThumb(index) {
+    function scrollToActiveThumb(index, smooth = true) {
         const photo = loadedPhotos[index];
         if (!photo) return;
 
@@ -633,7 +644,7 @@
                 // Scroll so the tick center aligns with the arrow (viewport center)
                 scrollContainer.scrollTo({
                     left: tickCenter,
-                    behavior: 'smooth'
+                    behavior: smooth ? 'smooth' : 'auto'
                 });
                 break;
             }
@@ -643,7 +654,9 @@
     // Timeline scroll handler - update photo based on centered tick
     let scrollTimeout;
     let isProgrammaticScroll = false;
+    let isProgrammaticScrollTimeout = null;
     let lastScrollUpdate = 0;
+    let lastProgrammaticScrollTime = 0;
 
     function updatePhotoFromScroll() {
         const scrollContainer = elements.timelineScroll;
@@ -666,17 +679,28 @@
             }
         });
 
-        // Find the first photo in that month and show it
         if (closestTick && closestTick.dataset.monthKey) {
-            const monthKey = closestTick.dataset.monthKey;
-            const photoIndex = loadedPhotos.findIndex(photo => {
-                const photoDate = parseLocalDate(photo.date);
-                const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
-                return photoMonthKey === monthKey;
-            });
+            const centeredMonthKey = closestTick.dataset.monthKey;
 
-            if (photoIndex !== -1 && photoIndex !== currentIndex) {
-                showPhoto(photoIndex, true); // Skip scroll to avoid loop
+            // Get current photo's month
+            const currentPhoto = loadedPhotos[currentIndex];
+            if (currentPhoto) {
+                const currentPhotoDate = parseLocalDate(currentPhoto.date);
+                const currentMonthKey = `${currentPhotoDate.getFullYear()}-${String(currentPhotoDate.getMonth() + 1).padStart(2, '0')}`;
+
+                // Only change photo if we've scrolled to a DIFFERENT month
+                if (centeredMonthKey !== currentMonthKey) {
+                    // Find the first photo in the centered month
+                    const photoIndex = loadedPhotos.findIndex(photo => {
+                        const photoDate = parseLocalDate(photo.date);
+                        const photoMonthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+                        return photoMonthKey === centeredMonthKey;
+                    });
+
+                    if (photoIndex !== -1) {
+                        showPhoto(photoIndex, true); // Skip scroll to avoid loop
+                    }
+                }
             }
 
             return closestTick;
@@ -688,8 +712,12 @@
         // Skip if we're programmatically scrolling from navigation
         if (isProgrammaticScroll) return;
 
-        // Throttle updates while scrolling - update immediately but not more than every 50ms
+        // Skip if a programmatic scroll happened recently (within 2 seconds)
         const now = Date.now();
+        const timeSinceLastProgrammaticScroll = now - lastProgrammaticScrollTime;
+        if (timeSinceLastProgrammaticScroll < 2000) return;
+
+        // Throttle updates while scrolling - update immediately but not more than every 50ms
         if (now - lastScrollUpdate > 50) {
             updatePhotoFromScroll();
             lastScrollUpdate = now;
@@ -728,11 +756,13 @@
         }
 
         if (newIndex !== currentIndex) {
+            clearTimeout(isProgrammaticScrollTimeout);
             isProgrammaticScroll = true;
-            showPhoto(newIndex);
-            setTimeout(() => {
+            lastProgrammaticScrollTime = Date.now();
+            showPhoto(newIndex, false, false); // Use instant scroll for arrow navigation
+            isProgrammaticScrollTimeout = setTimeout(() => {
                 isProgrammaticScroll = false;
-            }, 600); // Wait for scroll animation to complete
+            }, 300); // Longer delay to ensure scroll events settle
         }
     }
 
@@ -1009,11 +1039,13 @@
     // Handle browser back/forward buttons
     window.addEventListener('popstate', (e) => {
         if (e.state && e.state.photoIndex !== undefined) {
+            clearTimeout(isProgrammaticScrollTimeout);
             isProgrammaticScroll = true;
-            showPhoto(e.state.photoIndex, false);
-            setTimeout(() => {
+            lastProgrammaticScrollTime = Date.now();
+            showPhoto(e.state.photoIndex, false, false); // Use instant scroll
+            isProgrammaticScrollTimeout = setTimeout(() => {
                 isProgrammaticScroll = false;
-            }, 600);
+            }, 300);
         }
     });
 

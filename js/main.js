@@ -260,26 +260,11 @@ const Navigation = {
 
 const HeroAnimations = {
 	trigger() {
-		const wrapper = document.querySelector('.hero-title-wrapper');
-		if (wrapper) {
-			wrapper.classList.remove('animate');
-			void wrapper.offsetWidth; // Force reflow
-			setTimeout(() => wrapper.classList.add('animate'), 50);
-		}
+		// No animations needed for minimal hero
 	},
-	
+
 	initRotatingTagline() {
-		const rotator = document.querySelector('.tagline-rotator');
-		if (!rotator) return;
-		
-		const phrases = rotator.querySelectorAll('span');
-		let currentIndex = 0;
-		
-		setInterval(() => {
-			phrases[currentIndex].classList.remove('active');
-			currentIndex = (currentIndex + 1) % phrases.length;
-			phrases[currentIndex].classList.add('active');
-		}, 3000);
+		// No animations needed for minimal hero
 	}
 };
 
@@ -291,18 +276,21 @@ const ProjectsPreview = {
 	populate() {
 		const previewGrid = document.getElementById('projects-preview-grid');
 		const mainGrid = document.getElementById('projects-grid');
-		
+
 		if (!previewGrid || !mainGrid) return;
-		
+
 		previewGrid.innerHTML = '';
-		
+
 		const projectCardLinks = mainGrid.querySelectorAll('.project-card-link');
-		const previewCount = Math.min(6, projectCardLinks.length); 
-		
+		const previewCount = Math.min(6, projectCardLinks.length);
+
 		for (let i = 0; i < previewCount; i++) {
-			const clonedLink = projectCardLinks[i].cloneNode(true);						
-			previewGrid.appendChild(clonedLink); 
+			const clonedLink = projectCardLinks[i].cloneNode(true);
+			previewGrid.appendChild(clonedLink);
 		}
+
+		// Re-apply AI project styling after cloning
+		markAIProjects();
 	},
 	
 	show() {
@@ -715,7 +703,32 @@ function showSection(sectionId) {
 }
 
 // ==========================================================================
-// 8. INITIALIZATION
+// 8. AI PROJECT DETECTION
+// ==========================================================================
+
+function markAIProjects() {
+    const aiNames = ['claude', 'chatgpt', 'grok', 'gemini'];
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach(card => {
+        const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+        const description = card.querySelector('p')?.textContent.toLowerCase() || '';
+        const tech = card.dataset.tech?.toLowerCase() || '';
+        const name = card.dataset.name?.toLowerCase() || '';
+        const combinedText = title + ' ' + description + ' ' + tech + ' ' + name;
+
+        // Check if any AI name is present
+        const hasAIName = aiNames.some(aiName => combinedText.includes(aiName));
+
+        if (hasAIName) {
+            card.classList.add('ai-project');
+            console.log('AI project detected:', card.dataset.name);
+        }
+    });
+}
+
+// ==========================================================================
+// 9. INITIALIZATION
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -728,6 +741,7 @@ document.addEventListener('DOMContentLoaded', function() {
     populateAreaBadges();
     initializeBlog();
     QuoteRotator.init();
+    markAIProjects();
 
     // Initialize project counter
     const totalProjects = document.querySelectorAll('#projects-grid .project-card').length;
@@ -748,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // ==========================================================================
-// 9. INCEPTION PROTECTION
+// 10. INCEPTION PROTECTION
 // ==========================================================================
 
 function showInceptionModal() {
@@ -788,7 +802,7 @@ document.getElementById('inception-modal')?.addEventListener('click', (e) => {
 });
 
 // ==========================================================================
-// 10. NIGHT SKY BACKGROUND
+// 11. NIGHT SKY BACKGROUND
 // ==========================================================================
 
 const NightSky = {
@@ -1055,6 +1069,10 @@ const QuoteRotator = {
             author: "Isaac Newton"
         },
         {
+            text: "Not knowing when the dawn will come I open every door.",
+            author: "Emily Dickinson"
+        },
+        {
             text: "If you want the rainbow, you got to put up with the rain.",
             author: "Dolly Parton"
         },
@@ -1155,49 +1173,92 @@ const QuoteRotator = {
 // BLOG SECTION FUNCTIONALITY
 // ==========================================================================
 
-// Blog Posts Data
-const blogPosts = [
-    {
-        id: 'blot-world-portfolio',
-        title: 'Building BLOT.WORLD: A Modern Portfolio Experience',
-        excerpt: 'A deep dive into the design decisions, technical challenges, and creative process behind building my personal portfolio website from scratch.',
-        date: '2025-01-15',
-        category: 'case-study',
-        tags: ['Web Design', 'HTML', 'CSS', 'JavaScript', 'UX/UI'],
-        image: 'images/previews/inception-protection.png',
-        section: 'post-blot-world'
-    },
-    {
-        id: 'cafemex-branding',
-        title: 'Café Mexicali: Crafting a Vibrant Restaurant Identity',
-        excerpt: 'How I designed a complete brand identity system for a Californian-Mexican fusion restaurant, from concept to final deliverables.',
-        date: '2025-01-10',
-        category: 'case-study',
-        tags: ['Branding', 'Identity Design', 'Affinity Designer', 'Visual Design'],
-        image: 'images/previews/cafemex-preview.jpg',
-        section: 'post-cafemex'
-    },
-    {
-        id: 'photography-timeline',
-        title: 'Photography Through Time: Building an Interactive Timeline',
-        excerpt: 'The story behind creating an immersive photography gallery with a unique timeline interface to showcase moments captured through the years.',
-        date: '2025-01-05',
-        category: 'case-study',
-        tags: ['Photography', 'Web Development', 'Interactive Design'],
-        image: 'images/previews/photography-preview.jpg',
-        section: 'post-photography'
-    }
-];
+// Auto-generate Blog Posts from HTML sections
+function generateBlogPostsFromHTML() {
+    const postSections = document.querySelectorAll('.post-section');
+    const posts = [];
+
+    postSections.forEach(section => {
+        const sectionId = section.id;
+
+        // Extract metadata from the post section
+        const titleElement = section.querySelector('.post-title');
+        const excerptElement = section.querySelector('.post-excerpt');
+        const dateElement = section.querySelector('.post-date');
+        const categoryElement = section.querySelector('.post-category');
+        const imageElement = section.querySelector('.post-featured-image img');
+        const tagElements = section.querySelectorAll('.post-tag');
+        const contentElement = section.querySelector('.post-content');
+        const readTimeElement = section.querySelector('.post-read-time');
+
+        // Calculate read time (average reading speed: 200 words per minute)
+        let readTime = 0;
+        if (contentElement) {
+            const text = contentElement.textContent || contentElement.innerText;
+            const wordCount = text.trim().split(/\s+/).length;
+            readTime = Math.ceil(wordCount / 200);
+        }
+
+        // Populate the read time in the HTML if element exists
+        if (readTimeElement && readTime > 0) {
+            readTimeElement.textContent = `${readTime} min read`;
+        }
+
+        // Extract category key from category text
+        const categoryText = categoryElement ? categoryElement.textContent.trim().toLowerCase() : '';
+        let categoryKey = 'thoughts';
+        if (categoryText.includes('case study')) categoryKey = 'case-study';
+        else if (categoryText.includes('tutorial')) categoryKey = 'tutorial';
+
+        // Extract image path (get the src attribute directly)
+        let imagePath = '';
+        if (imageElement) {
+            imagePath = imageElement.getAttribute('src') || imageElement.src;
+        }
+
+        // Build post object
+        posts.push({
+            id: sectionId,
+            title: titleElement ? titleElement.textContent.trim() : '',
+            excerpt: excerptElement ? excerptElement.textContent.trim() : '',
+            date: parseDateFromText(dateElement ? dateElement.textContent.trim() : ''),
+            category: categoryKey,
+            tags: Array.from(tagElements).map(tag => tag.textContent.trim()),
+            image: imagePath,
+            section: sectionId,
+            readTime: readTime
+        });
+    });
+
+    return posts;
+}
+
+// Parse date from text like "January 15, 2025" to "2025-01-15"
+function parseDateFromText(dateText) {
+    const date = new Date(dateText);
+    if (isNaN(date.getTime())) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Blog Posts Data (will be auto-generated from HTML)
+let blogPosts = [];
 
 // Blog State Management
 const BlogState = {
     currentFilter: 'all',
     searchQuery: '',
-    filteredPosts: [...blogPosts]
+    filteredPosts: []
 };
 
 // Initialize Blog
 function initializeBlog() {
+    // Generate blog posts from HTML sections
+    blogPosts = generateBlogPostsFromHTML();
+    console.log('Generated blog posts:', blogPosts);
     BlogState.filteredPosts = [...blogPosts];
     setupBlogEventListeners();
     renderBlogPosts();
@@ -1280,12 +1341,53 @@ function renderBlogPosts() {
     });
 
     blogGrid.innerHTML = sortedPosts.map(post => createBlogCard(post)).join('');
+
+    // Adjust tags to fit one line after rendering
+    adjustBlogCardTags();
+}
+
+// Adjust blog card tags to show fixed number
+function adjustBlogCardTags() {
+    const MAX_VISIBLE_TAGS = 5;
+    const tagContainers = document.querySelectorAll('.blog-card-tags');
+
+    tagContainers.forEach(container => {
+        const tags = Array.from(container.querySelectorAll('.blog-tag:not(.blog-tag-more)'));
+        const totalTags = parseInt(container.dataset.totalTags);
+
+        if (tags.length === 0) return;
+
+        // Remove any existing "+more" tags first
+        const existingMoreTag = container.querySelector('.blog-tag-more');
+        if (existingMoreTag) {
+            existingMoreTag.remove();
+        }
+
+        // Show only first MAX_VISIBLE_TAGS
+        tags.forEach((tag, index) => {
+            if (index < MAX_VISIBLE_TAGS) {
+                tag.style.display = '';
+            } else {
+                tag.style.display = 'none';
+            }
+        });
+
+        // Add "+X more" tag if there are hidden tags
+        if (totalTags > MAX_VISIBLE_TAGS) {
+            const remainingCount = totalTags - MAX_VISIBLE_TAGS;
+            const moreTag = document.createElement('span');
+            moreTag.className = 'blog-tag blog-tag-more';
+            moreTag.textContent = `+${remainingCount} more`;
+            container.appendChild(moreTag);
+        }
+    });
 }
 
 // Create Blog Card HTML
 function createBlogCard(post) {
     const formattedDate = formatBlogDate(post.date);
     const categoryLabel = getBlogCategoryLabel(post.category);
+    const readTime = post.readTime ? `${post.readTime} min read` : '';
 
     return `
         <a href="#" data-section="${post.section}" class="blog-card" data-post-id="${post.id}">
@@ -1304,10 +1406,11 @@ function createBlogCard(post) {
                         ${formattedDate}
                     </span>
                     <span class="blog-card-category">${categoryLabel}</span>
+                    ${readTime ? `<span class="blog-card-read-time">${readTime}</span>` : ''}
                 </div>
                 <h2 class="blog-card-title">${post.title}</h2>
                 <p class="blog-card-excerpt">${post.excerpt}</p>
-                <div class="blog-card-tags">
+                <div class="blog-card-tags" data-total-tags="${post.tags.length}">
                     ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
                 </div>
                 <span class="blog-card-read-more">
@@ -1335,8 +1438,9 @@ function updatePostCounter() {
 
 // Format Blog Date
 function formatBlogDate(dateString) {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    // Force UTC to avoid timezone shifts
+    const date = new Date(dateString + 'T00:00:00Z');
+    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
     return date.toLocaleDateString('en-US', options);
 }
 
