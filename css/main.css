@@ -1934,6 +1934,10 @@ main {
 		line-height: 1.2;
 	}
 
+	.hero-brand {
+		white-space: nowrap;
+	}
+
 	.hero-subtitle {
 		font-size: 1rem;
 	}
