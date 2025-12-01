@@ -2056,6 +2056,7 @@ main {
 		gap: 1.5rem;
 		min-height: 70vh;
 		transform: translateY(-5vh);
+		margin-bottom: 30vh;
 	}
 
 	.hero-title {
@@ -2144,6 +2145,11 @@ main {
 	/* Projects */
 	.projects-preview-section {
 		padding: 1.5rem 0.5rem;
+	}
+
+	.projects-preview-section .container {
+		padding-left: 0;
+		padding-right: 0;
 	}
 
 	.projects-preview-header {
