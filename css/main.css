@@ -2389,6 +2389,33 @@ main {
 		padding-right: 0;
 	}
 
+	/* Projects Preview Section */
+	.projects-preview-section {
+		padding: 1.5rem 0;
+	}
+
+	.projects-preview-section .container {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.projects-preview-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.projects-preview-header h3 {
+		font-size: 1.5rem;
+	}
+
+	.projects-preview-header .btn-gradient-3d {
+		align-self: stretch;
+		width: 100%;
+		padding: 0.75rem 1.5rem;
+		font-size: 1.1rem;
+	}
+
 	/* Touch Targets - ensure minimum 44px for tap areas */
 	button,
 	.btn,
