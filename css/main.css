@@ -2071,6 +2071,14 @@ main {
 		hyphens: none;
 	}
 
+	.hero-brand:first-of-type {
+		transform: translateX(-10px);
+	}
+
+	.hero-brand:last-of-type {
+		transform: translateX(10px);
+	}
+
 	.hero-subtitle {
 		font-size: 1rem;
 	}
