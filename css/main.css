@@ -33,7 +33,7 @@ body {
 	background-color: var(--blot-black);
 	color: var(--blot-white);
 	line-height: 1.6;
-	overflow-x: visible;
+	overflow-x: hidden;
 }
 
 /* All headers use Space Grotesk like hero BLOT.WORLD */
@@ -378,7 +378,7 @@ nav {
 main {
 	margin-top: 40px;
 	max-width: 100vw;
-	overflow-x: visible;
+	overflow-x: hidden;
 }
 
 .section {
