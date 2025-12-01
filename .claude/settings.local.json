@@ -28,7 +28,12 @@
       "Bash(node -e:*)",
       "Bash(copy \"C:\\Users\\mtcol\\OneDrive\\Documents\\PROFESSIONAL\\GITHUB\\BLOT-WORLD\\blot-world\\projects\\amari\\images\\amari.jpg\" \"C:\\Users\\mtcol\\OneDrive\\Documents\\PROFESSIONAL\\GITHUB\\BLOT-WORLD\\blot-world\\projects\\faces\\images\\amari.jpg\")",
       "Bash(copy:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []
