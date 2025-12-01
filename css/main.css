@@ -420,12 +420,17 @@ main {
 	min-height: calc(100vh - 80px);
 	padding: 2rem;
 	position: relative;
-	overflow: hidden;
+	overflow-x: visible;
+	overflow-y: hidden;
 	width: 80%;
 }
 
 #home.active {
 	display: flex;
+}
+
+#home .container {
+	overflow-x: visible;
 }
 
 .hero-content {
