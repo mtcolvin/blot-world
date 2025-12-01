@@ -2071,14 +2071,6 @@ main {
 		hyphens: none;
 	}
 
-	.hero-brand:first-of-type {
-		transform: translateX(-10px);
-	}
-
-	.hero-brand:last-of-type {
-		transform: translateX(10px);
-	}
-
 	.hero-subtitle {
 		font-size: 1rem;
 	}
@@ -2415,11 +2407,11 @@ main {
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 1rem;
-		padding: 0 1rem;
+		padding: 0 2rem;
 	}
 
 	.projects-preview-grid {
-		padding: 0 1rem;
+		padding: 0 2rem;
 	}
 
 	.projects-preview-header h3 {

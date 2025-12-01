@@ -110,7 +110,6 @@ const Navigation = {
 				// Section-specific initialization
 				if (sectionId === 'home') {
 					setTimeout(() => HeroAnimations.trigger(), 100);
-					setTimeout(() => ProjectsPreview.show(), 300);
 					window.addEventListener('scroll', ProjectsPreview.handleScroll);
 				} else if (sectionId === 'projects') {
 					const urlFilters = URLManager.parseFilters();
