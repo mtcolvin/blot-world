@@ -403,14 +403,14 @@ main {
 	transform: translateX(30px);
 }
 
-/* Desktop: revert to original positioning */
+/* Desktop: increased spacing for visual impact */
 @media (min-width: 769px) {
 	.hero-brand:first-of-type {
-		transform: translateX(-90px);
+		transform: translateX(-120px);
 	}
 
 	.hero-brand:last-of-type {
-		transform: translateX(60px);
+		transform: translateX(90px);
 	}
 }
 
