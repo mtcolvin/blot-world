@@ -2144,12 +2144,12 @@ main {
 
 	/* Projects */
 	.projects-preview-section {
-		padding: 1.5rem 0.5rem;
+		padding: 1.5rem 0;
 	}
 
 	.projects-preview-section .container {
-		padding-left: 0;
-		padding-right: 0;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 	}
 
 	.projects-preview-header {
