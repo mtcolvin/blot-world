@@ -2383,7 +2383,12 @@ main {
 		padding: 1.5rem 1rem 2rem 1rem;
 	}
 
-	/* Remove horizontal padding from home section container for full-width preview */
+	/* Remove horizontal padding from home section and its container for full-width preview */
+	#home {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
 	#home > .container {
 		padding-left: 0;
 		padding-right: 0;
@@ -2395,14 +2400,18 @@ main {
 	}
 
 	.projects-preview-section .container {
-		padding-left: 0 !important;
-		padding-right: 0 !important;
+		padding: 0 !important;
 	}
 
 	.projects-preview-header {
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 1rem;
+		padding: 0 1rem;
+	}
+
+	.projects-preview-grid {
+		padding: 0 1rem;
 	}
 
 	.projects-preview-header h3 {
