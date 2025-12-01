@@ -360,7 +360,7 @@ nav {
 }
 
 .mobile-social-icons a.email {
-	color: var(--accent-purple);
+	color: var(--accent-red);
 }
 
 .mobile-social-icons a svg {
@@ -2054,8 +2054,8 @@ main {
 	.hero-content {
 		padding: 0.75rem 1rem;
 		gap: 1.5rem;
-		min-height: 50vh;
-		transform: translateY(-20vh);
+		min-height: 70vh;
+		transform: translateY(-5vh);
 	}
 
 	.hero-title {
@@ -2143,7 +2143,7 @@ main {
 
 	/* Projects */
 	.projects-preview-section {
-		padding: 1.5rem 1rem;
+		padding: 1.5rem 0.5rem;
 	}
 
 	.projects-preview-header {
@@ -2157,7 +2157,8 @@ main {
 	}
 
 	.projects-preview-header .btn-gradient-3d {
-		align-self: flex-start;
+		align-self: stretch;
+		width: 100%;
 		padding: 0.75rem 1.5rem;
 		font-size: 1.1rem;
 	}
