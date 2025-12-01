@@ -288,7 +288,8 @@ nav {
 .mobile-nav-links a:hover,
 .mobile-nav-links a.active {
 	cursor: pointer;
-	color: var(--primary-blue);
+	color: var(--accent-purple);
+	text-shadow: 0 0 8px var(--accent-purple-glow);
 }
 
 .mobile-nav-social {
@@ -1989,7 +1990,7 @@ main {
 @media (max-width: 480px) {
 	/* Hero Section */
 	.hero-content {
-		padding: 1.5rem 1rem;
+		padding: 0.75rem 1rem;
 		gap: 1.5rem;
 	}
 
@@ -2007,6 +2008,64 @@ main {
 
 	.hero-subtitle {
 		font-size: 1rem;
+	}
+
+	/* Orbital hamburger animation - smartphone only */
+	.mobile-menu-btn {
+		justify-content: center;
+		align-items: center;
+	}
+
+	.mobile-menu-btn span {
+		transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+		transform-origin: center;
+	}
+
+	.mobile-menu-btn.active span:nth-child(1) {
+		transform: rotate(225deg) translateY(0px);
+		opacity: 0.8;
+		animation: orbit-top 0.6s ease-out;
+	}
+
+	.mobile-menu-btn.active span:nth-child(2) {
+		opacity: 0;
+		transform: scale(0);
+	}
+
+	.mobile-menu-btn.active span:nth-child(3) {
+		transform: rotate(-225deg) translateY(0px);
+		opacity: 0.8;
+		animation: orbit-bottom 0.6s ease-out;
+	}
+
+	@keyframes orbit-top {
+		0% {
+			transform: rotate(0deg) translateX(0);
+			opacity: 1;
+		}
+		50% {
+			transform: rotate(180deg) translateX(15px);
+			opacity: 0.3;
+		}
+		100% {
+			transform: rotate(225deg) translateY(0);
+			opacity: 0.8;
+		}
+	}
+
+	@keyframes orbit-bottom {
+		0% {
+			transform: rotate(0deg) translateX(0);
+			opacity: 1;
+		}
+		50% {
+			transform: rotate(-180deg) translateX(-15px);
+			opacity: 0.3;
+		}
+		100% {
+			transform: rotate(-225deg) translateY(0);
+			opacity: 0.8;
+		}
 	}
 
 	.hero-description {
@@ -2029,6 +2088,16 @@ main {
 		width: 100%;
 		padding: 0.85rem 1.5rem;
 		font-size: 0.95rem;
+	}
+
+	/* Mobile menu enhancements */
+	.mobile-nav-links li {
+		margin-bottom: 0.5rem;
+	}
+
+	.mobile-social-icons a svg {
+		width: 32px;
+		height: 32px;
 	}
 
 	/* Section Headers */
