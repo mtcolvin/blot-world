@@ -403,6 +403,17 @@ main {
 	transform: translateX(30px);
 }
 
+/* Desktop: revert to original positioning */
+@media (min-width: 769px) {
+	.hero-brand:first-of-type {
+		transform: translateX(-90px);
+	}
+
+	.hero-brand:last-of-type {
+		transform: translateX(60px);
+	}
+}
+
 .hero-tagline {
 	font-family: 'Space Grotesk', 'Roboto Flex', sans-serif;
 	font-size: clamp(1.2rem, 2.5vw, 2rem);
