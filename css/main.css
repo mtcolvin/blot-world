@@ -186,7 +186,7 @@ nav {
 }
 
 .nav-links a {
-	color: var(--white);
+	color: var(--blot-white);
 	text-decoration: none;
 	transition: color var(--transition-base);
 	font-size: 0.9rem;
@@ -237,7 +237,7 @@ nav {
 .mobile-menu-btn span {
 	width: 24px;
 	height: 2px;
-	background-color: var(--white);
+	background-color: var(--blot-white);
 	transition: all var(--transition-base);
 }
 
@@ -522,7 +522,7 @@ main {
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	cursor: pointer;
-	color: var(--white);
+	color: var(--blot-white);
 	border: none;
 	background: linear-gradient(45deg, var(--primary-blue), var(--accent-red), var(--primary-blue));
 	background-size: 300% 300%;
@@ -596,7 +596,7 @@ main {
 	padding: 0.75rem 1.5rem;
 	background: rgba(255, 255, 255, 0.05);
 	backdrop-filter: blur(10px);
-	color: var(--white);
+	color: var(--blot-white);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 4px;
 	cursor: pointer;
@@ -1061,7 +1061,7 @@ main {
 	letter-spacing: 0.5px;
 	text-transform: uppercase;
 	background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
-	color: var(--white);
+	color: var(--blot-white);
 	border-radius: 12px;
 	position: relative;
 	overflow: hidden;
@@ -1359,7 +1359,7 @@ main {
 	background-color: var(--blot-gray);
 	border: 1px solid var(--blot-gray);
 	border-radius: 4px;
-	color: var(--white);
+	color: var(--blot-white);
 	font-size: 0.7rem;
 	cursor: pointer;
 	transition: all var(--transition-base);
@@ -1377,7 +1377,7 @@ main {
 
 .sort-dropdown option {
 	background-color: var(--blot-dark-gray);
-	color: var(--white);
+	color: var(--blot-white);
 	padding: 0.5rem;
 }
 
@@ -1701,7 +1701,7 @@ main {
 	font-size: 1.1rem;
 	font-weight: 600;
 	letter-spacing: 1px;
-	color: var(--white);
+	color: var(--blot-white);
 }
 
 .footer-tagline {
@@ -1732,7 +1732,7 @@ main {
 }
 
 .footer-links a:hover {
-	color: var(--white);
+	color: var(--blot-white);
 }
 
 .footer-social {
@@ -1908,7 +1908,7 @@ main {
 	}
 
 	.projects-preview-section {
-		padding: 2rem 0;
+		padding: 2rem 1rem;
 	}
 
 	.projects-container {
@@ -1999,7 +1999,7 @@ main {
 	}
 
 	.hero-brand {
-		white-space: normal;
+		white-space: nowrap;
 		word-break: keep-all;
 		overflow-wrap: normal;
 		hyphens: none;
@@ -2042,7 +2042,7 @@ main {
 
 	/* Projects */
 	.projects-preview-section {
-		padding: 1.5rem 0;
+		padding: 1.5rem 1rem;
 	}
 
 	.projects-preview-header {
@@ -2346,8 +2346,8 @@ main {
 }
 
 .minimal-nav:hover .back-btn-minimal {
-    border-color: var(--white);
-    color: var(--white);
+    border-color: var(--blot-white);
+    color: var(--blot-white);
 }
 
 .logo-minimal {
