@@ -964,7 +964,7 @@ main {
 		grid-row: 2 !important;
 		grid-column: 1 !important;
 		justify-self: start !important;
-		margin-top: 0 !important;
+		margin-top: -0.25rem !important;
 		margin-left: 0 !important;
 		margin-right: 0 !important;
 		padding: 0 !important;
@@ -1231,6 +1231,7 @@ main {
 	color: var(--blot-light-gray);
 	font-size: 0.8rem;
 	white-space: nowrap;
+	text-transform: uppercase;
 }
 
 .project-tags {
