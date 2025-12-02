@@ -501,13 +501,16 @@ const FilterSystem = {
 		const isPoetrVisible = poetryCard?.classList.contains('visible');
 
 		projectCards.forEach(card => {
-			const area = card.querySelector('.project-card')?.dataset.area;
-			const tech = card.querySelector('.project-card')?.dataset.tech;
-
-			// Skip poetry card if it's not visible
-			if (card.id === 'poetry-card' && !isPoetrVisible) {
+			// Skip poetry card entirely - its visibility is controlled by background toggle only
+			if (card.id === 'poetry-card') {
+				if (isPoetrVisible) {
+					visibleCount++;
+				}
 				return;
 			}
+
+			const area = card.querySelector('.project-card')?.dataset.area;
+			const tech = card.querySelector('.project-card')?.dataset.tech;
 
 			const areaMatch = AppState.activeFilters.area.length === 0 ||
 							AppState.activeFilters.area.includes(area);
