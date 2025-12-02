@@ -804,7 +804,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to sync background and poetry card
     const syncBackgroundAndPoetry = (showGrid) => {
         const poetryCard = document.getElementById('poetry-card');
+        console.log('syncBackgroundAndPoetry called with showGrid:', showGrid);
+        console.log('Poetry card element:', poetryCard);
+
         if (poetryCard) {
+            console.log('Poetry card classes before:', poetryCard.className);
             if (showGrid) {
                 // Grid mode = show poetry card
                 poetryCard.classList.add('visible');
@@ -814,23 +818,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 poetryCard.classList.remove('visible');
                 console.log('Poetry card hidden (night sky mode)');
             }
+            console.log('Poetry card classes after:', poetryCard.className);
+            console.log('Poetry card computed display:', window.getComputedStyle(poetryCard).display);
             updateProjectCounter();
+        } else {
+            console.error('Poetry card element not found!');
         }
     };
 
     const bgToggleBtn = document.getElementById('bg-toggle-btn');
+    console.log('Toggle button element:', bgToggleBtn);
+
     if (bgToggleBtn) {
         console.log('Poetry toggle button found and event listener attached');
         bgToggleBtn.addEventListener('click', (e) => {
-            console.log('Poetry toggle clicked!');
+            console.log('========== TOGGLE CLICKED ==========');
+            console.log('Event:', e);
+            console.log('NightSky.isActive BEFORE toggle:', NightSky.isActive);
             e.preventDefault();
             e.stopPropagation();
 
             NightSky.toggle();
+            console.log('NightSky.isActive AFTER toggle:', NightSky.isActive);
 
             // Sync poetry card with background mode
             // If night sky is active, hide poetry. If grid is active, show poetry.
-            syncBackgroundAndPoetry(!NightSky.isActive);
+            const shouldShowPoetry = !NightSky.isActive;
+            console.log('Should show poetry:', shouldShowPoetry);
+            syncBackgroundAndPoetry(shouldShowPoetry);
+            console.log('========== TOGGLE COMPLETE ==========');
         });
     } else {
         console.error('bg-toggle-btn not found!');
@@ -839,8 +855,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Restore both background and poetry card state on page load
     const savedMode = localStorage.getItem('backgroundMode');
     const showGrid = savedMode === 'grid';
+    console.log('========== PAGE LOAD STATE ==========');
+    console.log('Saved background mode:', savedMode);
+    console.log('Show grid:', showGrid);
     syncBackgroundAndPoetry(showGrid);
-    console.log('Initial state - Background:', savedMode || 'night-sky', 'Poetry:', showGrid ? 'visible' : 'hidden');
+    console.log('========== PAGE LOAD COMPLETE ==========');
 });
 
 
