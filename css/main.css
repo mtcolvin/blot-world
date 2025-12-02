@@ -419,7 +419,6 @@ main {
 	text-align: center;
 	margin: 0 auto;
 	min-height: calc(100vh - 80px);
-	padding: 2rem;
 	position: relative;
 	overflow-x: visible;
 	width: 80%;
