@@ -1534,17 +1534,47 @@ function limitTagsOnMobile() {
         const existingMore = tagsContainer.querySelector('.more-tag');
         if (existingMore) existingMore.remove();
 
-        // Count hidden tags (CSS hides tags after 3rd one)
-        const hiddenTags = tags.filter(tag => {
-            return window.getComputedStyle(tag).display === 'none';
-        });
+        // Show all tags initially
+        tags.forEach(tag => tag.style.display = '');
 
-        // Add "+N more" tag if there are hidden tags
-        if (hiddenTags.length > 0) {
-            const moreTag = document.createElement('span');
-            moreTag.className = 'tag more-tag';
-            moreTag.textContent = `+${hiddenTags.length} more`;
-            tagsContainer.appendChild(moreTag);
+        // Calculate max height for 3 lines
+        // Line height is 1.2, font size is 0.6rem, padding is 0.08rem top+bottom
+        // Gap between items is 0.3rem
+        const tagStyle = window.getComputedStyle(tags[0] || tagsContainer);
+        const lineHeight = parseFloat(tagStyle.lineHeight) || (0.6 * 1.2 * 16); // 1.2 * font-size in px
+        const maxHeight = lineHeight * 3 + (0.3 * 16 * 2); // 3 lines + 2 gaps
+
+        // Check if container exceeds max height
+        if (tagsContainer.scrollHeight > maxHeight) {
+            let hiddenCount = 0;
+
+            // Hide tags from the end until height is acceptable
+            for (let i = tags.length - 1; i >= 0; i--) {
+                if (tagsContainer.scrollHeight <= maxHeight) break;
+
+                tags[i].style.display = 'none';
+                hiddenCount++;
+
+                // Safety check: keep at least 1 tag visible
+                if (hiddenCount >= tags.length - 1) break;
+            }
+
+            // Add "+N more" tag if we hid any
+            if (hiddenCount > 0) {
+                const moreTag = document.createElement('span');
+                moreTag.className = 'tag more-tag';
+                moreTag.textContent = `+${hiddenCount} more`;
+                tagsContainer.appendChild(moreTag);
+
+                // If adding the more tag causes overflow, hide one more tag
+                if (tagsContainer.scrollHeight > maxHeight && hiddenCount < tags.length) {
+                    const lastVisibleIndex = tags.findIndex(tag => tag.style.display !== 'none' && !tag.classList.contains('more-tag'));
+                    if (lastVisibleIndex >= 0 && tags.length - hiddenCount - 1 >= 0) {
+                        tags[tags.length - hiddenCount - 1].style.display = 'none';
+                        moreTag.textContent = `+${hiddenCount + 1} more`;
+                    }
+                }
+            }
         }
     });
 }

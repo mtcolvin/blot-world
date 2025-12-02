@@ -956,6 +956,7 @@ main {
 	.project-area-badge {
 		grid-row: 2 !important;
 		grid-column: 1 !important;
+		margin-top: 0 !important;
 		margin-left: 0;
 		align-items: flex-start;
 		margin-bottom: 0;
@@ -988,27 +989,22 @@ main {
 	}
 
 	.project-tags {
-		display: contents !important;
+		grid-row: 5;
+		grid-column: 1;
+		display: flex !important;
+		flex-wrap: wrap;
+		gap: 0.3rem;
+		align-items: flex-start;
 	}
 
 	.tag {
-		grid-row: 5;
-		grid-column: 1;
 		font-size: 0.6rem;
 		padding: 0.08rem 0.3rem;
 		line-height: 1.2;
 		white-space: nowrap;
-		margin-right: 0.3rem;
-		margin-bottom: 0.3rem;
-	}
-
-	.tag:nth-of-type(n+4) {
-		display: none;
 	}
 
 	.more-tag {
-		grid-row: 5;
-		grid-column: 1;
 		font-size: 0.6rem;
 		padding: 0.08rem 0.3rem;
 	}
