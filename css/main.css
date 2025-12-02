@@ -2340,6 +2340,26 @@ main {
 		width: 100%;
 		padding: 0.75rem 1.5rem;
 		font-size: 1.1rem;
+		/* Simplify 3D effects for tablet */
+		clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+	}
+
+	.projects-preview-header .btn-gradient-3d::before {
+		clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+	}
+
+	.projects-preview-header .btn-gradient-3d::after {
+		right: -6px;
+		width: 6px;
+		clip-path: polygon(0 6px, 100% 0, 100% calc(100% - 6px), 0 100%);
+	}
+
+	.projects-preview-header .btn-gradient-3d:hover {
+		transform: translate(-3px, -3px);
+	}
+
+	.projects-preview-header .btn-gradient-3d:hover::after {
+		transform: translateX(2px) translateY(2px);
 	}
 
 	.project-card {
@@ -2577,8 +2597,9 @@ main {
 	}
 
 	.projects-preview-header {
-		flex-direction: column;
-		align-items: flex-start;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
 		gap: 1rem;
 		padding: 0 2rem;
 	}
@@ -2592,10 +2613,32 @@ main {
 	}
 
 	.projects-preview-header .btn-gradient-3d {
-		align-self: stretch;
-		width: 100%;
-		padding: 0.75rem 1.5rem;
-		font-size: 1.1rem;
+		align-self: auto;
+		width: auto;
+		min-width: 44px;
+		padding: 0.6rem 1rem;
+		font-size: 1.2rem;
+		letter-spacing: 0;
+		/* Further simplify 3D for smartphone */
+		clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+	}
+
+	.projects-preview-header .btn-gradient-3d::before {
+		clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 3px 100%, 0 calc(100% - 3px));
+	}
+
+	.projects-preview-header .btn-gradient-3d::after {
+		right: -4px;
+		width: 4px;
+		clip-path: polygon(0 4px, 100% 0, 100% calc(100% - 4px), 0 100%);
+	}
+
+	.projects-preview-header .btn-gradient-3d:hover {
+		transform: translate(-2px, -2px);
+	}
+
+	.projects-preview-header .btn-gradient-3d:hover::after {
+		transform: translateX(1px) translateY(1px);
 	}
 
 	/* Touch Targets - ensure minimum 44px for tap areas */
