@@ -916,6 +916,70 @@ main {
 	.projects-preview-header {
 		padding: 0 1rem;
 	}
+
+	/* Project card mobile layout */
+	.project-details {
+		display: grid;
+		grid-template-areas:
+			"header"
+			"badge"
+			"date"
+			"description"
+			"tags";
+		gap: 0.5rem;
+	}
+
+	.project-header {
+		grid-area: header;
+		max-width: 100%;
+		margin-bottom: 0;
+	}
+
+	.project-area-badge {
+		grid-area: badge;
+		margin-left: 0;
+		align-items: flex-start;
+		margin-bottom: 0;
+	}
+
+	.project-date-container {
+		grid-area: date;
+		position: static;
+		margin: 0;
+	}
+
+	.project-card p {
+		grid-area: description;
+		max-width: 100%;
+		padding-right: 0;
+		margin-top: 0;
+	}
+
+	.project-content-top {
+		display: contents;
+	}
+
+	.project-content-bottom {
+		display: contents;
+	}
+
+	.project-tags {
+		grid-area: tags;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.3rem;
+		margin-top: 0.3rem;
+	}
+
+	.tag {
+		font-size: 0.7rem;
+		padding: 0.15rem 0.5rem;
+	}
+
+	.area-badge {
+		font-size: 0.65rem;
+		padding: 0.25rem 0.6rem;
+	}
 }
 
 .section-header {
