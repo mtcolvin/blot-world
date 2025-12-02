@@ -1249,6 +1249,11 @@ main {
 	transition: all 0.2s ease;
 }
 
+/* Hide series tags - series info is now in project titles */
+.series-tag {
+	display: none !important;
+}
+
 .project-card:hover .tag {
 	background-color: rgba(255, 255, 255, 0.1);
 }

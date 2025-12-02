@@ -299,6 +299,11 @@ const ProjectsPreview = {
 		// Re-apply AI project styling after cloning
 		markAIProjects();
 
+		// Append series to titles
+		if (typeof appendSeriesToTitles === 'function') {
+			appendSeriesToTitles();
+		}
+
 		// Wrap and limit tags on mobile after populating
 		if (typeof wrapTechTagsOnMobile === 'function') {
 			setTimeout(() => {
@@ -1603,7 +1608,24 @@ window.addEventListener('resize', () => {
 window.addEventListener('load', () => {
     wrapTechTagsOnMobile();
     limitTagsOnMobile();
+    appendSeriesToTitles();
 });
+
+// ==========================================================================
+// SERIES IN TITLES
+// ==========================================================================
+
+function appendSeriesToTitles() {
+    document.querySelectorAll('.project-card').forEach(card => {
+        const series = card.getAttribute('data-series');
+        if (series) {
+            const titleElement = card.querySelector('.project-header h3');
+            if (titleElement && !titleElement.textContent.includes(`(${series})`)) {
+                titleElement.textContent = `${titleElement.textContent} (${series})`;
+            }
+        }
+    });
+}
 
 // ==========================================================================
 // END OF SCRIPT
