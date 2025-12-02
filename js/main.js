@@ -1522,45 +1522,22 @@ function limitTagsOnMobile() {
 
     document.querySelectorAll('.project-tags').forEach(tagsContainer => {
         const tags = Array.from(tagsContainer.querySelectorAll('.tag:not(.more-tag)'));
-        const maxHeight = parseFloat(getComputedStyle(tagsContainer).maxHeight);
-
-        // Show all tags initially
-        tags.forEach(tag => tag.style.display = '');
 
         // Remove existing "+N more" tag if present
         const existingMore = tagsContainer.querySelector('.more-tag');
         if (existingMore) existingMore.remove();
 
-        // Check if overflow
-        if (tagsContainer.scrollHeight > maxHeight) {
-            let hiddenCount = 0;
+        // Count hidden tags (CSS hides tags after 3rd one)
+        const hiddenTags = tags.filter(tag => {
+            return window.getComputedStyle(tag).display === 'none';
+        });
 
-            // Hide tags from end until container height is acceptable
-            for (let i = tags.length - 1; i >= 0; i--) {
-                const currentHeight = tagsContainer.scrollHeight;
-                if (currentHeight <= maxHeight) break;
-
-                tags[i].style.display = 'none';
-                hiddenCount++;
-            }
-
-            // Add "+N more" tag
-            if (hiddenCount > 0) {
-                const moreTag = document.createElement('span');
-                moreTag.className = 'tag more-tag';
-                moreTag.textContent = `+${hiddenCount} more`;
-                moreTag.style.display = 'inline-block';
-                tagsContainer.appendChild(moreTag);
-
-                // Recheck height and hide one more tag if needed
-                if (tagsContainer.scrollHeight > maxHeight && hiddenCount < tags.length) {
-                    const lastVisibleIndex = tags.length - hiddenCount - 1;
-                    if (lastVisibleIndex >= 0) {
-                        tags[lastVisibleIndex].style.display = 'none';
-                        moreTag.textContent = `+${hiddenCount + 1} more`;
-                    }
-                }
-            }
+        // Add "+N more" tag if there are hidden tags
+        if (hiddenTags.length > 0) {
+            const moreTag = document.createElement('span');
+            moreTag.className = 'tag more-tag';
+            moreTag.textContent = `+${hiddenTags.length} more`;
+            tagsContainer.appendChild(moreTag);
         }
     });
 }

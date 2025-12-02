@@ -953,23 +953,27 @@ main {
 	}
 
 	.project-area-badge {
-		grid-row: 2;
+		grid-row: 2 !important;
 		margin-left: 0;
 		align-items: flex-start;
 		margin-bottom: 0;
-		display: flex;
+		display: flex !important;
 		flex-direction: row;
 	}
 
 	.project-date-container {
 		grid-row: 3;
-		position: static;
+		position: static !important;
+		right: auto !important;
+		left: 0;
 		margin: 0;
-		text-align: left;
+		text-align: left !important;
+		width: 100%;
 	}
 
 	.project-date {
-		text-align: left;
+		text-align: left !important;
+		display: block;
 	}
 
 	.project-card p {
@@ -980,19 +984,27 @@ main {
 	}
 
 	.project-tags {
-		grid-row: 5;
-		display: flex !important;
-		flex-wrap: wrap;
-		gap: 0.3rem;
-		max-height: calc(0.6rem * 1.2 * 3 + 0.3rem * 2);
-		overflow: hidden;
+		display: contents !important;
 	}
 
 	.tag {
+		grid-row: 5;
 		font-size: 0.6rem;
 		padding: 0.08rem 0.3rem;
 		line-height: 1.2;
 		white-space: nowrap;
+		margin-right: 0.3rem;
+		margin-bottom: 0.3rem;
+	}
+
+	.tag:nth-of-type(n+4) {
+		display: none;
+	}
+
+	.more-tag {
+		grid-row: 5;
+		font-size: 0.6rem;
+		padding: 0.08rem 0.3rem;
 	}
 
 	.area-badge {
