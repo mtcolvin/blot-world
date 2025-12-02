@@ -957,6 +957,7 @@ main {
 	.project-area-badge {
 		grid-row: 2 !important;
 		grid-column: 1 !important;
+		justify-self: start !important;
 		margin-top: 0 !important;
 		margin-left: 0 !important;
 		margin-right: 0 !important;
@@ -1004,7 +1005,7 @@ main {
 		flex-wrap: wrap;
 		gap: 0.3rem;
 		align-items: flex-start;
-		max-height: calc(0.6rem * 1.2 * 3 + 0.3rem * 2);
+		max-height: calc((0.6rem * 1.2 + 0.16rem) * 3 + 0.6rem);
 		overflow: hidden;
 		position: relative;
 	}
