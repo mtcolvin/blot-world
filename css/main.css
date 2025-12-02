@@ -958,10 +958,11 @@ main {
 		grid-row: 2 !important;
 		grid-column: 1 !important;
 		margin-top: 0 !important;
-		margin-left: 0;
-		margin-right: 0;
-		padding: 0;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding: 0 !important;
 		align-items: flex-start;
+		justify-content: flex-start;
 		margin-bottom: 0;
 		display: flex !important;
 		flex-direction: row;
@@ -1003,8 +1004,8 @@ main {
 		flex-wrap: wrap;
 		gap: 0.3rem;
 		align-items: flex-start;
-		max-height: calc(1.2em * 3 + 0.6rem);
-		overflow: visible;
+		max-height: calc(0.6rem * 1.2 * 3 + 0.3rem * 2);
+		overflow: hidden;
 		position: relative;
 	}
 
