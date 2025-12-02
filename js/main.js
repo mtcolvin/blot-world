@@ -285,7 +285,14 @@ const ProjectsPreview = {
 		const previewCount = Math.min(6, projectCardLinks.length);
 
 		for (let i = 0; i < previewCount; i++) {
-			const clonedLink = projectCardLinks[i].cloneNode(true);
+			const originalLink = projectCardLinks[i];
+			const clonedLink = originalLink.cloneNode(true);
+
+			// If this is the poetry card, remove ID from original to avoid duplicates
+			if (originalLink.id === 'poetry-card') {
+				originalLink.removeAttribute('id');
+			}
+
 			previewGrid.appendChild(clonedLink);
 		}
 
