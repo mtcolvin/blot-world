@@ -911,11 +911,11 @@ main {
 	.projects-preview-grid {
 		max-width: 100%;
 		margin: 0;
-		padding: 0 0.5rem;
+		padding: 0;
 	}
 
 	.projects-preview-header {
-		padding: 0 0.5rem;
+		padding: 0;
 	}
 
 	/* Project card mobile layout */
@@ -980,7 +980,7 @@ main {
 		position: static !important;
 		right: auto !important;
 		left: 0;
-		margin: 1rem 0 0 0;
+		margin: 1.5rem 0 0 0;
 		text-align: left !important;
 		width: 100%;
 	}
