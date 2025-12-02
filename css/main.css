@@ -898,6 +898,14 @@ main {
 	width: 100%;
 }
 
+/* Mobile: Remove horizontal padding on projects preview */
+@media (max-width: 768px) {
+	.projects-preview-section {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
 .section-header {
 	margin-bottom: 1rem;
 }
