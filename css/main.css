@@ -1998,11 +1998,6 @@ main {
 	z-index: 10;
 	user-select: none;
 	pointer-events: auto;
-	transition: color 0.2s ease;
-}
-
-.footer-meta:hover {
-	color: var(--blot-white);
 }
 
 .footer-meta:active {
