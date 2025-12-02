@@ -959,6 +959,8 @@ main {
 		grid-column: 1 !important;
 		margin-top: 0 !important;
 		margin-left: 0;
+		margin-right: 0;
+		padding: 0;
 		align-items: flex-start;
 		margin-bottom: 0;
 		display: flex !important;
@@ -990,14 +992,19 @@ main {
 	}
 
 	.project-tags {
+		display: contents !important;
+	}
+
+	/* Wrapper for tech tags created by JavaScript */
+	.tech-tags-wrapper {
 		grid-row: 5;
 		grid-column: 1;
-		display: flex !important;
+		display: flex;
 		flex-wrap: wrap;
 		gap: 0.3rem;
 		align-items: flex-start;
 		max-height: calc(1.2em * 3 + 0.6rem);
-		overflow: hidden;
+		overflow: visible;
 		position: relative;
 	}
 
@@ -1006,7 +1013,6 @@ main {
 		padding: 0.08rem 0.3rem;
 		line-height: 1.2;
 		white-space: nowrap;
-		display: inline-block !important;
 	}
 
 	.more-tag {

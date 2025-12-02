@@ -299,9 +299,12 @@ const ProjectsPreview = {
 		// Re-apply AI project styling after cloning
 		markAIProjects();
 
-		// Limit tags on mobile after populating
-		if (typeof limitTagsOnMobile === 'function') {
-			setTimeout(limitTagsOnMobile, 100);
+		// Wrap and limit tags on mobile after populating
+		if (typeof wrapTechTagsOnMobile === 'function') {
+			setTimeout(() => {
+				wrapTechTagsOnMobile();
+				limitTagsOnMobile();
+			}, 100);
 		}
 	},
 	
@@ -1521,31 +1524,62 @@ function getBlogCategoryLabel(category) {
 }
 
 // ==========================================================================
+// MOBILE TAG WRAPPING
+// ==========================================================================
+
+function wrapTechTagsOnMobile() {
+    if (window.innerWidth > 768) return;  // Only on mobile
+
+    document.querySelectorAll('.project-tags').forEach(tagsContainer => {
+        // Check if already wrapped
+        if (tagsContainer.querySelector('.tech-tags-wrapper')) return;
+
+        // Find area badge and tech tags
+        const areaBadge = tagsContainer.querySelector('.project-area-badge');
+        const techTags = Array.from(tagsContainer.querySelectorAll('.tag:not(.more-tag)'));
+
+        if (techTags.length === 0) return;
+
+        // Create wrapper for tech tags
+        const wrapper = document.createElement('div');
+        wrapper.className = 'tech-tags-wrapper';
+
+        // Move tech tags into wrapper
+        techTags.forEach(tag => {
+            wrapper.appendChild(tag);
+        });
+
+        // Append wrapper to container (after area badge)
+        tagsContainer.appendChild(wrapper);
+    });
+}
+
+// ==========================================================================
 // MOBILE TAG LIMITING
 // ==========================================================================
 
 function limitTagsOnMobile() {
     if (window.innerWidth > 768) return;  // Only on mobile
 
-    document.querySelectorAll('.project-tags').forEach(tagsContainer => {
-        const tags = Array.from(tagsContainer.querySelectorAll('.tag:not(.more-tag)'));
+    document.querySelectorAll('.tech-tags-wrapper').forEach(wrapper => {
+        const tags = Array.from(wrapper.querySelectorAll('.tag:not(.more-tag)'));
         if (tags.length === 0) return;
 
         // Remove existing "+N more" tag if present
-        const existingMore = tagsContainer.querySelector('.more-tag');
+        const existingMore = wrapper.querySelector('.more-tag');
         if (existingMore) existingMore.remove();
 
         // Check if container is overflowing (has more content than visible)
-        const isOverflowing = tagsContainer.scrollHeight > tagsContainer.clientHeight;
+        const isOverflowing = wrapper.scrollHeight > wrapper.clientHeight;
 
         if (isOverflowing) {
             // Count tags that are cut off
-            const containerBottom = tagsContainer.getBoundingClientRect().bottom;
+            const wrapperBottom = wrapper.getBoundingClientRect().bottom;
             let hiddenCount = 0;
 
             tags.forEach(tag => {
                 const tagBottom = tag.getBoundingClientRect().bottom;
-                if (tagBottom > containerBottom + 2) { // +2px tolerance
+                if (tagBottom > wrapperBottom + 2) { // +2px tolerance
                     hiddenCount++;
                 }
             });
@@ -1555,15 +1589,21 @@ function limitTagsOnMobile() {
                 const moreTag = document.createElement('span');
                 moreTag.className = 'tag more-tag';
                 moreTag.textContent = `+${hiddenCount} more`;
-                tagsContainer.appendChild(moreTag);
+                wrapper.appendChild(moreTag);
             }
         }
     });
 }
 
 // Call on page load and resize
-window.addEventListener('resize', limitTagsOnMobile);
-window.addEventListener('load', limitTagsOnMobile);
+window.addEventListener('resize', () => {
+    wrapTechTagsOnMobile();
+    limitTagsOnMobile();
+});
+window.addEventListener('load', () => {
+    wrapTechTagsOnMobile();
+    limitTagsOnMobile();
+});
 
 // ==========================================================================
 // END OF SCRIPT
