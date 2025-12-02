@@ -1097,6 +1097,8 @@ main {
 
 #poetry-card.visible {
 	display: block !important;
+	opacity: 1 !important;
+	transform: scale(1) !important;
 	animation: fadeInScale 0.4s ease forwards;
 }
 
