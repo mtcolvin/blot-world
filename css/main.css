@@ -1990,8 +1990,21 @@ main {
 	justify-content: space-between;
 	color: var(--blot-gray);
 	font-size: 0.8rem;
-	gap: 1rem; 
+	gap: 1rem;
 	cursor: pointer;
+	position: relative;
+	z-index: 10;
+	user-select: none;
+	pointer-events: auto;
+	transition: color 0.2s ease;
+}
+
+.footer-meta:hover {
+	color: var(--blot-white);
+}
+
+.footer-meta:active {
+	transform: scale(0.98);
 }
 
 /* ==========================================================================

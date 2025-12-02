@@ -800,22 +800,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     NightSky.init();
-    document.getElementById('bg-toggle-btn')?.addEventListener('click', () => {
-        NightSky.toggle();
+    const bgToggleBtn = document.getElementById('bg-toggle-btn');
+    if (bgToggleBtn) {
+        console.log('Poetry toggle button found and event listener attached');
+        bgToggleBtn.addEventListener('click', (e) => {
+            console.log('Poetry toggle clicked!');
+            e.preventDefault();
+            e.stopPropagation();
 
-        // Toggle poetry card visibility
-        const poetryCard = document.getElementById('poetry-card');
-        if (poetryCard) {
-            poetryCard.classList.toggle('visible');
+            NightSky.toggle();
 
-            // Save state to localStorage
-            const isVisible = poetryCard.classList.contains('visible');
-            localStorage.setItem('poetryCardVisible', isVisible);
+            // Toggle poetry card visibility
+            const poetryCard = document.getElementById('poetry-card');
+            if (poetryCard) {
+                poetryCard.classList.toggle('visible');
+                const isVisible = poetryCard.classList.contains('visible');
+                console.log('Poetry card is now:', isVisible ? 'visible' : 'hidden');
 
-            // Update project counter
-            updateProjectCounter();
-        }
-    });
+                // Save state to localStorage
+                localStorage.setItem('poetryCardVisible', isVisible);
+
+                // Update project counter
+                updateProjectCounter();
+            } else {
+                console.error('Poetry card not found!');
+            }
+        });
+    } else {
+        console.error('bg-toggle-btn not found!');
+    }
 
     // Restore poetry card visibility on page load
     const savedPoetryState = localStorage.getItem('poetryCardVisible');
