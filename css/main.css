@@ -919,7 +919,7 @@ main {
 
 	/* Project card mobile layout */
 	.project-details {
-		display: grid;
+		display: grid !important;
 		grid-template-areas:
 			"header"
 			"badge"
@@ -956,11 +956,11 @@ main {
 	}
 
 	.project-content-top {
-		display: contents;
+		display: contents !important;
 	}
 
 	.project-content-bottom {
-		display: contents;
+		display: contents !important;
 	}
 
 	.project-tags {
