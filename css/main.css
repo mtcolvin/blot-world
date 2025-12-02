@@ -1251,8 +1251,12 @@ main {
 	transition: all 0.2s ease;
 }
 
-/* Reduce tag size on desktop */
+/* Reduce tag size and constrain width on desktop */
 @media (min-width: 769px) {
+	.project-tags {
+		max-width: 65%;
+	}
+
 	.tag {
 		padding: 0.15rem 0.5rem;
 		font-size: 0.7rem;
