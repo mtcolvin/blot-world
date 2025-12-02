@@ -800,6 +800,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     NightSky.init();
+
+    // Helper function to sync background and poetry card
+    const syncBackgroundAndPoetry = (showGrid) => {
+        const poetryCard = document.getElementById('poetry-card');
+        if (poetryCard) {
+            if (showGrid) {
+                // Grid mode = show poetry card
+                poetryCard.classList.add('visible');
+                console.log('Poetry card shown (grid mode)');
+            } else {
+                // Night sky mode = hide poetry card
+                poetryCard.classList.remove('visible');
+                console.log('Poetry card hidden (night sky mode)');
+            }
+            updateProjectCounter();
+        }
+    };
+
     const bgToggleBtn = document.getElementById('bg-toggle-btn');
     if (bgToggleBtn) {
         console.log('Poetry toggle button found and event listener attached');
@@ -810,32 +828,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
             NightSky.toggle();
 
-            // Toggle poetry card visibility
-            const poetryCard = document.getElementById('poetry-card');
-            if (poetryCard) {
-                poetryCard.classList.toggle('visible');
-                const isVisible = poetryCard.classList.contains('visible');
-                console.log('Poetry card is now:', isVisible ? 'visible' : 'hidden');
-
-                // Save state to localStorage
-                localStorage.setItem('poetryCardVisible', isVisible);
-
-                // Update project counter
-                updateProjectCounter();
-            } else {
-                console.error('Poetry card not found!');
-            }
+            // Sync poetry card with background mode
+            // If night sky is active, hide poetry. If grid is active, show poetry.
+            syncBackgroundAndPoetry(!NightSky.isActive);
         });
     } else {
         console.error('bg-toggle-btn not found!');
     }
 
-    // Restore poetry card visibility on page load
-    const savedPoetryState = localStorage.getItem('poetryCardVisible');
-    if (savedPoetryState === 'true') {
-        document.getElementById('poetry-card')?.classList.add('visible');
-        updateProjectCounter();
-    }
+    // Restore both background and poetry card state on page load
+    const savedMode = localStorage.getItem('backgroundMode');
+    const showGrid = savedMode === 'grid';
+    syncBackgroundAndPoetry(showGrid);
+    console.log('Initial state - Background:', savedMode || 'night-sky', 'Poetry:', showGrid ? 'visible' : 'hidden');
 });
 
 
