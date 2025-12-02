@@ -421,7 +421,7 @@ main {
 	min-height: calc(100vh - 80px);
 	position: relative;
 	overflow-x: visible;
-	width: 80%;
+	width: 90%;
 }
 
 #home.active {
