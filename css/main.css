@@ -946,6 +946,11 @@ main {
 		grid-area: date;
 		position: static;
 		margin: 0;
+		text-align: left;
+	}
+
+	.project-date {
+		text-align: left;
 	}
 
 	.project-card p {
@@ -964,16 +969,19 @@ main {
 	}
 
 	.project-tags {
-		grid-area: tags;
+		display: contents !important;
+	}
+
+	.project-area-badge {
+		grid-area: badge;
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.3rem;
-		margin-top: 0.3rem;
+		flex-direction: row;
 	}
 
 	.tag {
-		font-size: 0.7rem;
-		padding: 0.15rem 0.5rem;
+		font-size: 0.65rem;
+		padding: 0.1rem 0.4rem;
+		grid-area: tags;
 	}
 
 	.area-badge {
