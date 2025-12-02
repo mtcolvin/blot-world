@@ -904,6 +904,15 @@ main {
 		padding-left: 0;
 		padding-right: 0;
 	}
+
+	.projects-preview-grid {
+		max-width: 100%;
+		margin: 0;
+	}
+
+	.projects-preview-header {
+		padding: 0 1rem;
+	}
 }
 
 .section-header {
