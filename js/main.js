@@ -291,6 +291,11 @@ const ProjectsPreview = {
 
 		// Re-apply AI project styling after cloning
 		markAIProjects();
+
+		// Limit tags on mobile after populating
+		if (typeof limitTagsOnMobile === 'function') {
+			setTimeout(limitTagsOnMobile, 100);
+		}
 	},
 	
 	show() {
@@ -1507,6 +1512,62 @@ function getBlogCategoryLabel(category) {
     };
     return labels[category] || category;
 }
+
+// ==========================================================================
+// MOBILE TAG LIMITING
+// ==========================================================================
+
+function limitTagsOnMobile() {
+    if (window.innerWidth > 768) return;  // Only on mobile
+
+    document.querySelectorAll('.project-tags').forEach(tagsContainer => {
+        const tags = Array.from(tagsContainer.querySelectorAll('.tag:not(.more-tag)'));
+        const maxHeight = parseFloat(getComputedStyle(tagsContainer).maxHeight);
+
+        // Show all tags initially
+        tags.forEach(tag => tag.style.display = '');
+
+        // Remove existing "+N more" tag if present
+        const existingMore = tagsContainer.querySelector('.more-tag');
+        if (existingMore) existingMore.remove();
+
+        // Check if overflow
+        if (tagsContainer.scrollHeight > maxHeight) {
+            let hiddenCount = 0;
+
+            // Hide tags from end until container height is acceptable
+            for (let i = tags.length - 1; i >= 0; i--) {
+                const currentHeight = tagsContainer.scrollHeight;
+                if (currentHeight <= maxHeight) break;
+
+                tags[i].style.display = 'none';
+                hiddenCount++;
+            }
+
+            // Add "+N more" tag
+            if (hiddenCount > 0) {
+                const moreTag = document.createElement('span');
+                moreTag.className = 'tag more-tag';
+                moreTag.textContent = `+${hiddenCount} more`;
+                moreTag.style.display = 'inline-block';
+                tagsContainer.appendChild(moreTag);
+
+                // Recheck height and hide one more tag if needed
+                if (tagsContainer.scrollHeight > maxHeight && hiddenCount < tags.length) {
+                    const lastVisibleIndex = tags.length - hiddenCount - 1;
+                    if (lastVisibleIndex >= 0) {
+                        tags[lastVisibleIndex].style.display = 'none';
+                        moreTag.textContent = `+${hiddenCount + 1} more`;
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Call on page load and resize
+window.addEventListener('resize', limitTagsOnMobile);
+window.addEventListener('load', limitTagsOnMobile);
 
 // ==========================================================================
 // END OF SCRIPT
