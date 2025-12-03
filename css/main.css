@@ -1270,6 +1270,10 @@ main {
 		font-size: 0.7rem;
 	}
 
+	.project-tags {
+		padding-right: 140px;
+	}
+
 	.project-area-badge {
 		position: absolute;
 		bottom: 1rem;
