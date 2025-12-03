@@ -1068,18 +1068,16 @@ main {
 
 .filter-toggle-btn {
 	display: none;
-	background: var(--blot-dark-gray);
-	border: 1px solid var(--blot-gray);
-	color: var(--blot-light-gray);
-	padding: 0.5rem;
-	border-radius: 5px;
+	background: transparent;
+	border: none;
+	color: var(--blot-white);
+	padding: 0.25rem;
 	cursor: pointer;
-	transition: all var(--transition-base);
+	transition: opacity var(--transition-base);
 }
 
 .filter-toggle-btn:hover {
-	background: var(--blot-gray);
-	color: var(--blot-white);
+	opacity: 0.7;
 }
 
 .projects-counter {
