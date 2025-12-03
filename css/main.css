@@ -2563,11 +2563,11 @@ main {
 	.filter-sidebar {
 		display: none;
 		position: fixed;
-		top: var(--nav-height);
+		top: 0;
 		left: 0;
 		width: 85%;
 		max-width: 340px;
-		height: calc(100vh - var(--nav-height));
+		height: 100vh;
 		z-index: 1001;
 		overflow-y: auto;
 		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
@@ -2597,11 +2597,28 @@ main {
 		letter-spacing: 0px !important;
 	}
 
+	/* Close button for filter sidebar */
+	.filter-close-btn {
+		background: none;
+		border: none;
+		color: var(--blot-light-gray);
+		cursor: pointer;
+		padding: 0.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: color var(--transition-base);
+	}
+
+	.filter-close-btn:hover {
+		color: var(--blot-white);
+	}
+
 	/* Overlay backdrop */
 	.filter-overlay {
 		display: none;
 		position: fixed;
-		top: var(--nav-height);
+		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;

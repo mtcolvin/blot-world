@@ -811,6 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Filter toggle functionality for mobile
     const filterToggleBtn = document.getElementById('filter-toggle-btn');
+    const filterCloseBtn = document.getElementById('filter-close-btn');
     const filterSidebar = document.getElementById('filter-sidebar');
     const filterOverlay = document.getElementById('filter-overlay');
 
@@ -820,6 +821,14 @@ document.addEventListener('DOMContentLoaded', function() {
             filterSidebar.classList.toggle('active');
             filterOverlay.classList.toggle('active');
         });
+
+        // Close filter sidebar when clicking close button
+        if (filterCloseBtn) {
+            filterCloseBtn.addEventListener('click', () => {
+                filterSidebar.classList.remove('active');
+                filterOverlay.classList.remove('active');
+            });
+        }
 
         // Close filter sidebar when clicking overlay
         filterOverlay.addEventListener('click', () => {
