@@ -1110,7 +1110,9 @@ main {
 }
 
 .projects-main .projects-counter {
-	display: none;
+	display: block;
+	text-align: right;
+	margin-bottom: 1rem;
 }
 
 .projects-grid {
@@ -1654,7 +1656,7 @@ main {
 }
 
 .filter-section {
-	margin-bottom: 0.4rem;
+	margin: 0;
 	padding-bottom: 0.5rem;
 	border-bottom: 1px solid var(--blot-gray);
 }
@@ -1672,7 +1674,7 @@ main {
 }
 
 .filter-section h3 {
-	font-size: 0.75rem;
+	font-size: 0.85rem;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	color: var(--blot-light-gray);
@@ -1687,21 +1689,9 @@ main {
 	padding: 0.5rem 0;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
+	font-size: 0.85rem;
 }
 
-/* Areas section - expanded state */
-.filter-section.collapsible-section:has(#area-filter-options) {
-	padding-bottom: 1rem;
-}
-
-.filter-section.collapsible-section:has(#area-filter-options) .filter-section-header {
-	padding-bottom: 0.5rem;
-}
-
-/* Areas section - collapsed state */
-.filter-section.collapsible-section.collapsed:has(#area-filter-options) .filter-section-header {
-	padding-bottom: 0.8rem !important;
-}
 
 .filter-section-header:hover {
 	color: var(--blot-white);
