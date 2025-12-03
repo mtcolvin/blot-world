@@ -639,20 +639,23 @@ main {
 	animation: gradientShift 3s ease infinite alternate;
 }
 
-.btn-gradient-3d:hover {
-	transform: translate(-6px, -6px);
-	box-shadow: 0 5px 20px rgba(13, 40, 242, 0.3);
-	animation-duration: 1s;
-}
+/* Hover effects only on devices with hover capability (not touch screens) */
+@media (hover: hover) {
+	.btn-gradient-3d:hover {
+		transform: translate(-6px, -6px);
+		box-shadow: 0 5px 20px rgba(13, 40, 242, 0.3);
+		animation-duration: 1s;
+	}
 
-.btn-gradient-3d:hover::before {
-	opacity: 0;
-	transform: scale(0.9);
-}
+	.btn-gradient-3d:hover::before {
+		opacity: 0;
+		transform: scale(0.9);
+	}
 
-.btn-gradient-3d:hover::after {
-	transform: translateX(3px) translateY(3px);
-	animation-duration: 1s;
+	.btn-gradient-3d:hover::after {
+		transform: translateX(3px) translateY(3px);
+		animation-duration: 1s;
+	}
 }
 
 .view-all-btn-glass {
@@ -2354,13 +2357,7 @@ main {
 		clip-path: polygon(0 6px, 100% 0, 100% calc(100% - 6px), 0 100%);
 	}
 
-	.projects-preview-header .btn-gradient-3d:hover {
-		transform: translate(-3px, -3px);
-	}
-
-	.projects-preview-header .btn-gradient-3d:hover::after {
-		transform: translateX(2px) translateY(2px);
-	}
+	/* No hover effects on touch devices */
 
 	.project-card {
 		border-radius: 12px;
@@ -2616,7 +2613,7 @@ main {
 		align-self: auto;
 		width: auto;
 		min-width: 44px;
-		padding: 0.6rem 1rem;
+		padding: 0.6rem 1.75rem;
 		font-size: 1.2rem;
 		letter-spacing: 0;
 		/* Further simplify 3D for smartphone */
@@ -2633,13 +2630,7 @@ main {
 		clip-path: polygon(0 4px, 100% 0, 100% calc(100% - 4px), 0 100%);
 	}
 
-	.projects-preview-header .btn-gradient-3d:hover {
-		transform: translate(-2px, -2px);
-	}
-
-	.projects-preview-header .btn-gradient-3d:hover::after {
-		transform: translateX(1px) translateY(1px);
-	}
+	/* No hover effects on touch devices */
 
 	/* Touch Targets - ensure minimum 44px for tap areas */
 	button,
