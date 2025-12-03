@@ -2534,6 +2534,10 @@ main {
 		align-items: center;
 	}
 
+	.footer-right {
+		gap: 0.5rem;
+	}
+
 	.footer-logo {
 		justify-content: center;
 		margin-bottom: 0.75rem;
