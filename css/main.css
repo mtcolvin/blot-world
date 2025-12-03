@@ -1666,6 +1666,7 @@ main {
 
 .filter-section.collapsible-section {
 	transition: height 0.3s ease;
+	padding-bottom: 0;
 }
 
 .filter-section.collapsible-section.collapsed {
