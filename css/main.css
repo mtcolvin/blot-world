@@ -1110,8 +1110,7 @@ main {
 }
 
 .projects-main .projects-counter {
-	display: block;
-	margin-bottom: 1.5rem;
+	display: none;
 }
 
 .projects-grid {
@@ -1587,8 +1586,7 @@ main {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 0.5rem;
-	padding-bottom: 0.5rem;
+	padding: 0.5rem 0;
 	border-bottom: 1px solid var(--blot-gray);
 	text-transform: uppercase;
 }
@@ -1661,10 +1659,6 @@ main {
 	border-bottom: 1px solid var(--blot-gray);
 }
 
-.filter-section.sort-section {
-	padding-bottom: 0.75rem;
-}
-
 .filter-section.collapsible-section {
 	transition: height 0.3s ease;
 }
@@ -1682,7 +1676,7 @@ main {
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	color: var(--blot-light-gray);
-	margin-bottom: 0.2rem;
+	padding: 0.5rem 0;
 }
 
 .filter-section-header {
@@ -1690,7 +1684,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 0.3rem 0;
+	padding: 0.5rem 0;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
 }
