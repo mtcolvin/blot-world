@@ -2633,6 +2633,98 @@ main {
 		opacity: 1;
 	}
 
+	/* Mobile-friendly filter sidebar content */
+	.filter-sidebar .filter-controls {
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+		padding-bottom: 1.25rem;
+	}
+
+	.filter-sidebar .sort-dropdown-container label {
+		font-size: 0.875rem;
+		margin-bottom: 0.25rem;
+	}
+
+	.filter-sidebar .sort-dropdown {
+		padding: 0.75rem 0.5rem;
+		font-size: 0.875rem;
+		min-height: 44px;
+	}
+
+	.filter-sidebar .clear-filters-compact {
+		padding: 0.75rem 1rem;
+		font-size: 0.875rem;
+		min-height: 44px;
+	}
+
+	.filter-sidebar .filter-section {
+		margin-bottom: 1rem;
+	}
+
+	.filter-sidebar .filter-section-header {
+		padding: 0.75rem 0;
+		font-size: 0.875rem;
+	}
+
+	.filter-sidebar .filter-section h3 {
+		font-size: 0.875rem;
+	}
+
+	.filter-sidebar .collapsible-content {
+		height: 180px;
+		max-height: 180px;
+		padding-right: 12px;
+	}
+
+	.filter-sidebar .collapsible-section:not(.collapsed) #area-filter-options {
+		height: 170px !important;
+		max-height: 170px !important;
+		min-height: 170px !important;
+	}
+
+	.filter-sidebar .filter-option {
+		padding: 0.75rem 0;
+		font-size: 0.9rem;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+
+	.filter-sidebar .filter-option input[type="checkbox"] {
+		width: 20px;
+		height: 20px;
+		margin-right: 0.75rem;
+		cursor: pointer;
+	}
+
+	.filter-sidebar .filter-option label {
+		cursor: pointer;
+		flex: 1;
+	}
+
+	/* Improve scrollbar visibility on mobile */
+	.filter-sidebar::-webkit-scrollbar,
+	.filter-sidebar .collapsible-content::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.filter-sidebar::-webkit-scrollbar-track,
+	.filter-sidebar .collapsible-content::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 4px;
+	}
+
+	.filter-sidebar::-webkit-scrollbar-thumb,
+	.filter-sidebar .collapsible-content::-webkit-scrollbar-thumb {
+		background: var(--blot-gray);
+		border-radius: 4px;
+	}
+
+	.filter-sidebar::-webkit-scrollbar-thumb:hover,
+	.filter-sidebar .collapsible-content::-webkit-scrollbar-thumb:hover {
+		background: var(--blot-light-gray);
+	}
+
 	/* Footer */
 	.footer-container {
 		padding: 2.5rem 1rem;
