@@ -624,9 +624,13 @@ const FilterSystem = {
 	updateCounter(visible, total) {
 		const visibleEl = document.getElementById('visible-count');
 		const totalEl = document.getElementById('total-count');
-		
+		const visibleHeaderEl = document.getElementById('visible-count-header');
+		const totalHeaderEl = document.getElementById('total-count-header');
+
 		if (visibleEl) visibleEl.textContent = visible;
 		if (totalEl) totalEl.textContent = total;
+		if (visibleHeaderEl) visibleHeaderEl.textContent = visible;
+		if (totalHeaderEl) totalHeaderEl.textContent = total;
 	},
 	
 	regenerateWithSelections() {

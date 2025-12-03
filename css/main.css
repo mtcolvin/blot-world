@@ -1080,8 +1080,14 @@ main {
 	color: var(--blot-white);
 }
 
+.projects-title-row {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
 .projects-title-row .projects-counter {
-	display: none;
+	display: block;
 }
 
 .projects-counter {
@@ -1105,8 +1111,7 @@ main {
 }
 
 .projects-main .projects-counter {
-	display: block;
-	margin-bottom: 1.5rem;
+	display: none;
 }
 
 .projects-grid {
@@ -1569,22 +1574,13 @@ main {
 }
 
 .filter-sidebar::-webkit-scrollbar {
-	width: 6px;
+	width: 0;
+	display: none;
 }
 
-.filter-sidebar::-webkit-scrollbar-track {
-	background: var(--blot-gray);
-	border-radius: 3px;
-}
-
-.filter-sidebar::-webkit-scrollbar-thumb {
-	background: var(--little-light-gray);
-	border-radius: 3px;
-	transition: background var(--transition-base);
-}
-
-.filter-sidebar::-webkit-scrollbar-thumb:hover {
-	background: var(--blot-light-gray);
+.filter-sidebar {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 .filter-sidebar-header {
@@ -1696,6 +1692,10 @@ main {
 }
 
 /* Areas section - expanded state */
+.filter-section.collapsible-section:has(#area-filter-options) {
+	padding-bottom: 1rem;
+}
+
 .filter-section.collapsible-section:has(#area-filter-options) .filter-section-header {
 	padding-bottom: 0.5rem;
 }
@@ -2439,11 +2439,11 @@ main {
 	.filter-sidebar {
 		display: none;
 		position: fixed;
-		top: 0;
+		top: var(--nav-height);
 		left: 0;
-		width: 85%;
-		max-width: 340px;
-		height: 100dvh;
+		width: 75%;
+		max-width: 300px;
+		height: calc(100dvh - var(--nav-height));
 		z-index: 10001;
 		overflow-y: auto;
 		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
@@ -2468,7 +2468,7 @@ main {
 	}
 
 	.filter-sidebar-header h3 {
-		font-size: 1.4rem !important;
+		font-size: 1.5rem !important;
 		text-transform: uppercase;
 		letter-spacing: 0px !important;
 	}
@@ -2517,18 +2517,18 @@ main {
 	}
 
 	.filter-sidebar .filter-section h3 {
-		font-size: 1.15rem;
+		font-size: 1.2rem;
 	}
 
 	.filter-sidebar .sort-dropdown {
 		padding: 0.75rem 0.5rem;
-		font-size: 1.1rem;
+		font-size: 1.15rem;
 		min-height: 44px;
 	}
 
 	.filter-sidebar .clear-filters-compact {
 		padding: 0.75rem 1rem;
-		font-size: 1.1rem;
+		font-size: 1.15rem;
 		min-height: 44px;
 	}
 
@@ -2538,7 +2538,7 @@ main {
 
 	.filter-sidebar .filter-section-header {
 		padding: 0.5rem 0;
-		font-size: 1.15rem;
+		font-size: 1.2rem;
 	}
 
 	.filter-sidebar .collapsible-content {
@@ -2548,8 +2548,8 @@ main {
 	}
 
 	.filter-sidebar .filter-option {
-		padding: 0.25rem 0;
-		font-size: 1.1rem;
+		padding: 0.2rem 0;
+		font-size: 1.15rem;
 		min-height: 44px;
 		display: flex;
 		align-items: center;
