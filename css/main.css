@@ -2619,6 +2619,12 @@ main {
 		padding-right: 0;
 	}
 
+	/* Remove horizontal padding from projects section container */
+	#projects .container {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
 	#home > .container {
 		padding-left: 0;
 		padding-right: 0;
