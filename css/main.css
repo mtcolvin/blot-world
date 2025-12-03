@@ -1682,6 +1682,7 @@ main {
 	letter-spacing: 0.5px;
 	color: var(--blot-light-gray);
 	padding: 0.5rem 0;
+	line-height: 1;
 }
 
 .filter-section-header {
@@ -1695,6 +1696,7 @@ main {
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
 	font-size: 0.85rem;
+	line-height: 1;
 }
 
 
