@@ -2565,16 +2565,16 @@ main {
 		position: fixed;
 		top: var(--nav-height);
 		left: 0;
-		width: 90%;
-		max-width: 360px;
+		width: 85%;
+		max-width: 340px;
 		height: calc(100vh - var(--nav-height));
 		z-index: 1001;
 		overflow-y: auto;
-		box-shadow: 8px 0 24px rgba(0, 0, 0, 0.6);
+		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
 		transform: translateX(-100%);
 		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		padding: 1.5rem 1rem;
-		border-right: 1px solid var(--blot-gray);
+		padding: 1.5rem 1.25rem;
+		border-right: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
 	.filter-sidebar.active {
@@ -2592,7 +2592,7 @@ main {
 	}
 
 	.filter-sidebar-header h3 {
-		font-size: 1.25rem !important;
+		font-size: 1.1rem !important;
 		text-transform: uppercase;
 		letter-spacing: 0px !important;
 	}
