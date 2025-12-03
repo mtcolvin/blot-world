@@ -1063,6 +1063,27 @@ main {
 	justify-content: space-between;
 	align-items: baseline;
 	width: 100%;
+	position: relative;
+}
+
+.filter-toggle-btn {
+	display: none;
+	background: var(--blot-dark-gray);
+	border: 1px solid var(--blot-gray);
+	color: var(--blot-light-gray);
+	padding: 0.5rem;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: all var(--transition-base);
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.filter-toggle-btn:hover {
+	background: var(--blot-gray);
+	color: var(--blot-white);
 }
 
 .projects-counter {
@@ -2514,6 +2535,53 @@ main {
 
 	.mobile-nav-social {
 		padding: 1.5rem 1rem;
+	}
+
+	/* Filter Toggle Button */
+	.filter-toggle-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Filter Sidebar as Overlay */
+	.filter-sidebar {
+		display: none;
+		position: fixed;
+		top: var(--nav-height);
+		left: 0;
+		width: 85%;
+		max-width: 320px;
+		height: calc(100vh - var(--nav-height));
+		z-index: 1001;
+		overflow-y: auto;
+		box-shadow: 4px 0 12px rgba(0, 0, 0, 0.5);
+		transform: translateX(-100%);
+		transition: transform 0.3s ease;
+	}
+
+	.filter-sidebar.active {
+		display: block;
+		transform: translateX(0);
+	}
+
+	/* Overlay backdrop */
+	.filter-overlay {
+		display: none;
+		position: fixed;
+		top: var(--nav-height);
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.7);
+		z-index: 1000;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.filter-overlay.active {
+		display: block;
+		opacity: 1;
 	}
 
 	/* Footer */

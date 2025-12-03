@@ -230,6 +230,16 @@
                 <div class="section-header">
                     <div class="projects-title-row">
                         <h2>Projects</h2>
+                        <button class="filter-toggle-btn" id="filter-toggle-btn" aria-label="Toggle filters">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="4" y1="6" x2="20" y2="6"></line>
+                                <line x1="4" y1="12" x2="20" y2="12"></line>
+                                <line x1="4" y1="18" x2="20" y2="18"></line>
+                                <circle cx="7" cy="6" r="2" fill="currentColor"></circle>
+                                <circle cx="17" cy="12" r="2" fill="currentColor"></circle>
+                                <circle cx="10" cy="18" r="2" fill="currentColor"></circle>
+                            </svg>
+                        </button>
                         <div class="projects-counter" id="projects-counter">
                             Showing <span id="visible-count"></span> of <span id="total-count"></span> projects
                         </div>
@@ -238,6 +248,9 @@
                 
                 <!-- Projects Container -->
                 <div class="projects-container">
+                    <!-- Filter Overlay Backdrop -->
+                    <div class="filter-overlay" id="filter-overlay"></div>
+
                     <!-- Filter Sidebar -->
                     <aside class="filter-sidebar" id="filter-sidebar">
                         <div class="filter-sidebar-header">

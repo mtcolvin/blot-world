@@ -799,8 +799,34 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             Navigation.closeMobileMenu();
+            // Also close filter sidebar on Escape
+            const filterSidebar = document.getElementById('filter-sidebar');
+            const filterOverlay = document.getElementById('filter-overlay');
+            if (filterSidebar && filterOverlay) {
+                filterSidebar.classList.remove('active');
+                filterOverlay.classList.remove('active');
+            }
         }
     });
+
+    // Filter toggle functionality for mobile
+    const filterToggleBtn = document.getElementById('filter-toggle-btn');
+    const filterSidebar = document.getElementById('filter-sidebar');
+    const filterOverlay = document.getElementById('filter-overlay');
+
+    if (filterToggleBtn && filterSidebar && filterOverlay) {
+        // Toggle filter sidebar
+        filterToggleBtn.addEventListener('click', () => {
+            filterSidebar.classList.toggle('active');
+            filterOverlay.classList.toggle('active');
+        });
+
+        // Close filter sidebar when clicking overlay
+        filterOverlay.addEventListener('click', () => {
+            filterSidebar.classList.remove('active');
+            filterOverlay.classList.remove('active');
+        });
+    }
 
     NightSky.init();
 
