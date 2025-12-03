@@ -245,57 +245,6 @@
                 
                 <!-- Projects Container -->
                 <div class="projects-container">
-                    <!-- Filter Overlay Backdrop -->
-                    <div class="filter-overlay" id="filter-overlay"></div>
-
-                    <!-- Filter Sidebar -->
-                    <aside class="filter-sidebar" id="filter-sidebar">
-                        <div class="filter-sidebar-header">
-                            <h3 style="font-size: 1rem; letter-spacing: -0.5px; margin: 0;">Filters</h3>
-                            <button class="filter-close-btn" id="filter-close-btn" aria-label="Close filters">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                    <path d="M15 18l-6-6 6-6"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        
-                        <!-- Filter Controls -->
-                        <div class="filter-controls">
-                            <div class="sort-dropdown-container">
-                                <label for="sort-select">Sort by:</label>
-                                <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
-                                    <option value="date-desc" selected>Date (Newest First)</option>
-                                    <option value="date-asc">Date (Oldest First)</option>
-                                    <option value="name-asc">Name (A-Z)</option>
-                                    <option value="name-desc">Name (Z-A)</option>
-                                </select>
-                            </div>
-                            <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
-                        </div>
-                        
-                        <!-- Area Filters -->
-                        <div class="filter-section collapsible-section">
-                            <h3 class="filter-section-header">
-                                <span>Area</span>
-                                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 9L1 4h10L6 9z"/>
-                                </svg>
-                            </h3>
-                            <div class="filter-options collapsible-content" id="area-filter-options"></div>
-                        </div>
-
-                        <!-- Technology Filters -->
-                        <div class="filter-section collapsible-section">
-                            <h3 class="filter-section-header">
-                                <span>Technologies</span>
-                                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 9L1 4h10L6 9z"/>
-                                </svg>
-                            </h3>
-                            <div class="filter-options collapsible-content" id="tech-filter-options"></div>
-                        </div>
-                    </aside>
-                    
                     <!-- Projects Grid -->
                     <div class="projects-main" id="projects-main">
                         <div class="projects-grid" id="projects-grid">
@@ -927,6 +876,57 @@
             </div>
         </div>
     </div>
+
+    <!-- Filter Overlay Backdrop -->
+    <div class="filter-overlay" id="filter-overlay"></div>
+
+    <!-- Filter Sidebar -->
+    <aside class="filter-sidebar" id="filter-sidebar">
+        <div class="filter-sidebar-header">
+            <h3 style="font-size: 1rem; letter-spacing: -0.5px; margin: 0;">Filters</h3>
+            <button class="filter-close-btn" id="filter-close-btn" aria-label="Close filters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <div class="sort-dropdown-container">
+                <label for="sort-select">Sort by:</label>
+                <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
+                    <option value="date-desc" selected>Date (Newest First)</option>
+                    <option value="date-asc">Date (Oldest First)</option>
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                </select>
+            </div>
+            <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
+        </div>
+
+        <!-- Area Filters -->
+        <div class="filter-section collapsible-section">
+            <h3 class="filter-section-header">
+                <span>Area</span>
+                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                    <path d="M6 9L1 4h10L6 9z"/>
+                </svg>
+            </h3>
+            <div class="filter-options collapsible-content" id="area-filter-options"></div>
+        </div>
+
+        <!-- Technology Filters -->
+        <div class="filter-section collapsible-section">
+            <h3 class="filter-section-header">
+                <span>Technologies</span>
+                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                    <path d="M6 9L1 4h10L6 9z"/>
+                </svg>
+            </h3>
+            <div class="filter-options collapsible-content" id="tech-filter-options"></div>
+        </div>
+    </aside>
 
     <!-- ==================== SCRIPTS ==================== -->
     <script src="js/main.min.js" defer></script>
