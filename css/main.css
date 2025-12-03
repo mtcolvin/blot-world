@@ -1744,7 +1744,8 @@ main {
 	flex-direction: column;
 	gap: 0;
 	font-weight: 300;
-	padding-bottom: 1rem;
+	padding-top: 1rem;
+	padding-bottom: 0;
 }
 
 .filter-option {
