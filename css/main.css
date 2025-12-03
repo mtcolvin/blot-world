@@ -2550,14 +2550,14 @@ main {
 		width: 100%;
 		border: none;
 		border-top: 1px solid var(--blot-gray);
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 0.25rem 0;
 	}
 
 	.footer-links {
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 1.25rem;
-		margin-bottom: 0.25rem;
+		margin-bottom: 0;
 	}
 
 	.footer-links a {
