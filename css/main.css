@@ -1061,7 +1061,7 @@ main {
 .projects-title-row {
 	display: flex;
 	justify-content: space-between;
-	align-items: baseline;
+	align-items: center;
 	width: 100%;
 	position: relative;
 }
@@ -1075,10 +1075,6 @@ main {
 	border-radius: 5px;
 	cursor: pointer;
 	transition: all var(--transition-base);
-	position: absolute;
-	right: 0;
-	top: 50%;
-	transform: translateY(-50%);
 }
 
 .filter-toggle-btn:hover {
