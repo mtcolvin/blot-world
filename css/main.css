@@ -2610,7 +2610,7 @@ main {
 
 	.container,
 	.section {
-		padding: 1.5rem 1rem 2rem 1rem;
+		padding: 0 1rem 2rem 1rem;
 	}
 
 	/* Remove horizontal padding from home section and its container for full-width preview */
