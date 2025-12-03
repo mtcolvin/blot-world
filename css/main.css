@@ -204,6 +204,13 @@ nav {
 	gap: 1rem;
 }
 
+/* Reduce social spacing on desktop */
+@media (min-width: 769px) {
+	.social-icons {
+		gap: 0.5rem;
+	}
+}
+
 .social-icons a {
 	display: flex;
 	align-items: center;
@@ -1047,6 +1054,7 @@ main {
 	font-size: 3rem;
 	margin-bottom: 0.5rem;
 	letter-spacing: -1px;
+	text-transform: uppercase;
 }
 
 .projects-title-row {
@@ -2348,6 +2356,8 @@ main {
 	}
 
 	.projects-preview-header .btn-gradient-3d::before {
+		/* Show gradient background on touch devices */
+		opacity: 0;
 		clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
 	}
 
@@ -2502,7 +2512,7 @@ main {
 
 	.footer-content {
 		flex-direction: column;
-		gap: 2.5rem;
+		gap: 1.5rem;
 		text-align: center;
 		align-items: center;
 	}
@@ -2515,7 +2525,7 @@ main {
 
 	.footer-logo {
 		justify-content: center;
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.footer-tagline {
@@ -2528,7 +2538,7 @@ main {
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 1.25rem;
-		margin-bottom: 1.5rem;
+		margin-bottom: 1rem;
 	}
 
 	.footer-links a {
@@ -2555,7 +2565,7 @@ main {
 	}
 
 	.footer-bottom {
-		padding-top: 2rem;
+		padding-top: 1.5rem;
 		gap: 0.75rem;
 	}
 
@@ -2616,18 +2626,20 @@ main {
 		padding: 0.6rem 1.75rem;
 		font-size: 1.2rem;
 		letter-spacing: 0;
-		/* Further simplify 3D for smartphone */
-		clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+		/* Larger corner cut for smartphone */
+		clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
 	}
 
 	.projects-preview-header .btn-gradient-3d::before {
-		clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 3px 100%, 0 calc(100% - 3px));
+		/* Show gradient background on touch devices */
+		opacity: 0;
+		clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
 	}
 
 	.projects-preview-header .btn-gradient-3d::after {
-		right: -4px;
-		width: 4px;
-		clip-path: polygon(0 4px, 100% 0, 100% calc(100% - 4px), 0 100%);
+		right: -8px;
+		width: 8px;
+		clip-path: polygon(0 8px, 100% 0, 100% calc(100% - 8px), 0 100%);
 	}
 
 	/* No hover effects on touch devices */
