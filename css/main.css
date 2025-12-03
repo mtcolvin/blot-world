@@ -1063,6 +1063,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
+	max-width: calc(100% - 250px);
 	position: relative;
 }
 
@@ -1095,6 +1096,10 @@ main {
 	display: none;
 }
 
+.projects-counter-desktop {
+	display: block;
+}
+
 .projects-container {
 	display: flex;
 	align-items: flex-start;
@@ -1110,9 +1115,7 @@ main {
 }
 
 .projects-main .projects-counter {
-	display: block;
-	text-align: right;
-	margin-bottom: 1rem;
+	display: none;
 }
 
 .projects-grid {
@@ -1686,7 +1689,9 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 0.5rem 0;
+	padding-top: 0.5rem;
+	padding-bottom: 0;
+	margin-top: 0.5rem;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
 	font-size: 0.85rem;

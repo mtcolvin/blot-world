@@ -626,11 +626,15 @@ const FilterSystem = {
 		const totalEl = document.getElementById('total-count');
 		const visibleMobileEl = document.getElementById('visible-count-mobile');
 		const totalMobileEl = document.getElementById('total-count-mobile');
+		const visibleDesktopEl = document.getElementById('visible-count-desktop');
+		const totalDesktopEl = document.getElementById('total-count-desktop');
 
 		if (visibleEl) visibleEl.textContent = visible;
 		if (totalEl) totalEl.textContent = total;
 		if (visibleMobileEl) visibleMobileEl.textContent = visible;
 		if (totalMobileEl) totalMobileEl.textContent = total;
+		if (visibleDesktopEl) visibleDesktopEl.textContent = visible;
+		if (totalDesktopEl) totalDesktopEl.textContent = total;
 	},
 	
 	regenerateWithSelections() {
