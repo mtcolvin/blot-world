@@ -2568,7 +2568,7 @@ main {
 		width: 85%;
 		max-width: 340px;
 		height: 100vh;
-		z-index: 2000;
+		z-index: 10001;
 		overflow-y: auto;
 		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
 		transform: translateX(-100%);
@@ -2623,7 +2623,7 @@ main {
 		right: 0;
 		bottom: 0;
 		background: rgba(0, 0, 0, 0.7);
-		z-index: 1999;
+		z-index: 10000;
 		opacity: 0;
 		transition: opacity 0.3s ease;
 	}
