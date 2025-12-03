@@ -1681,7 +1681,7 @@ main {
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	color: var(--blot-light-gray);
-	padding: 0.5rem 0;
+	padding: 0.5rem 0 0.5rem 0;
 	line-height: 1;
 }
 
