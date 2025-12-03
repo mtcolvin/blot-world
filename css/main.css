@@ -2533,11 +2533,26 @@ main {
 		padding: 1.5rem 1rem;
 	}
 
+	/* Projects Header Layout for Mobile */
+	.projects-title-row {
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+
+	.projects-title-row h2 {
+		margin: 0;
+	}
+
+	.projects-counter {
+		display: none;
+	}
+
 	/* Filter Toggle Button */
 	.filter-toggle-btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex-shrink: 0;
 	}
 
 	/* Filter Sidebar as Overlay */
