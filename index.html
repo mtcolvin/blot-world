@@ -268,17 +268,17 @@
                         </div>
 
                         <!-- Filter Controls -->
-                        <div class="filter-controls">
-                            <div class="sort-dropdown-container">
-                                <label for="sort-select">Sort by</label>
+                        <div class="filter-section">
+                            <h3>Sort by</h3>
+                            <div class="filter-controls">
                                 <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
                                     <option value="date-desc" selected>Date (Newest First)</option>
                                     <option value="date-asc">Date (Oldest First)</option>
                                     <option value="name-asc">Name (A-Z)</option>
                                     <option value="name-desc">Name (Z-A)</option>
                                 </select>
+                                <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
                             </div>
-                            <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
                         </div>
 
                         <!-- Area Filters -->
@@ -306,6 +306,9 @@
 
                     <!-- Projects Grid -->
                     <div class="projects-main" id="projects-main">
+                        <div class="projects-counter" id="projects-counter">
+                            Showing <span id="visible-count"></span> of <span id="total-count"></span> projects
+                        </div>
                         <div class="projects-grid" id="projects-grid">
 
                             <a href="#" class="project-card-link" onclick="event.preventDefault(); showInceptionModal();">

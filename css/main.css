@@ -1080,10 +1080,13 @@ main {
 	color: var(--blot-white);
 }
 
+.projects-title-row .projects-counter {
+	display: none;
+}
+
 .projects-counter {
 	color: var(--blot-light-gray);
 	font-size: 0.9rem;
-	margin-bottom: 0.2rem;
 }
 
 .projects-container {
@@ -1098,6 +1101,12 @@ main {
 	flex: 1;
 	min-width: 0;
 	min-height: 100vh;
+	order: 1;
+}
+
+.projects-main .projects-counter {
+	display: block;
+	margin-bottom: 1.5rem;
 }
 
 .projects-grid {
@@ -1546,19 +1555,18 @@ main {
 
 .filter-sidebar {
 	position: sticky;
-	top: calc(var(--nav-height) + 20px);
-	left: 0;
+	top: var(--nav-height);
+	right: 0;
 	width: 250px;
-	height: fit-content;
-	max-height: calc(100vh - var(--nav-height) - 40px);
+	height: calc(100vh - var(--nav-height));
 	background-color: var(--blot-dark-gray);
-	border: 1px solid var(--blot-gray);
-	border-radius: 5px;
+	border-left: 1px solid var(--blot-gray);
+	border-radius: 0;
 	z-index: 10;
 	overflow-y: auto;
-	padding: 0.875rem 0.875rem 0 0.875rem;
-	align-self: flex-start;
+	padding: 1.25rem 0.875rem;
 	flex-shrink: 0;
+	order: 2;
 }
 
 .filter-sidebar::-webkit-scrollbar {
@@ -1590,32 +1598,19 @@ main {
 	text-transform: uppercase;
 }
 
+.filter-close-btn {
+	display: none;
+}
+
 .filter-controls {
 	display: flex;
 	flex-direction: row;
 	gap: 0.5rem;
-	margin-bottom: 0.5rem;
-	padding-bottom: 0.75rem;
-	border-bottom: 1px solid var(--blot-gray);
-	align-items: flex-end;
-}
-
-.sort-dropdown-container {
-	display: flex;
-	flex-direction: column;
-	gap: 0.3rem;
-	flex: 1;
-}
-
-.sort-dropdown-container label {
-	font-size: 0.75rem;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	color: var(--blot-light-gray);
+	align-items: center;
 }
 
 .sort-dropdown {
-	width: 100%;
+	flex: 1;
 	padding: 0.4rem 0.3rem;
 	background-color: var(--blot-gray);
 	border: 1px solid var(--blot-gray);
@@ -2470,7 +2465,7 @@ main {
 	}
 
 	.filter-sidebar-header h3 {
-		font-size: 1.25rem !important;
+		font-size: 1.4rem !important;
 		text-transform: uppercase;
 		letter-spacing: 0px !important;
 	}
@@ -2482,7 +2477,7 @@ main {
 		color: var(--blot-light-gray);
 		cursor: pointer;
 		padding: 0.25rem;
-		display: flex;
+		display: flex !important;
 		align-items: center;
 		justify-content: center;
 		transition: color var(--transition-base);
@@ -2518,53 +2513,49 @@ main {
 		padding-bottom: 1rem;
 	}
 
-	.filter-sidebar .sort-dropdown-container label {
-		font-size: 1rem;
-		margin-bottom: 0.25rem;
+	.filter-sidebar .filter-section h3 {
+		font-size: 1.1rem;
 	}
 
 	.filter-sidebar .sort-dropdown {
 		padding: 0.75rem 0.5rem;
-		font-size: 1rem;
+		font-size: 1.05rem;
 		min-height: 44px;
 	}
 
 	.filter-sidebar .clear-filters-compact {
 		padding: 0.75rem 1rem;
-		font-size: 1rem;
+		font-size: 1.05rem;
 		min-height: 44px;
 	}
 
 	.filter-sidebar .filter-section {
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.filter-sidebar .filter-section-header {
-		padding: 0.75rem 0;
-		font-size: 1rem;
-	}
-
-	.filter-sidebar .filter-section h3 {
-		font-size: 1rem;
+		padding: 0.5rem 0;
+		font-size: 1.1rem;
 	}
 
 	.filter-sidebar .collapsible-content {
-		max-height: 60vh;
-		padding-right: 12px;
+		max-height: none;
+		overflow-y: visible;
+		padding-right: 0;
 	}
 
 	.filter-sidebar .filter-option {
-		padding: 0.5rem 0;
-		font-size: 1rem;
+		padding: 0.35rem 0;
+		font-size: 1.05rem;
 		min-height: 44px;
 		display: flex;
 		align-items: center;
 	}
 
 	.filter-sidebar .filter-option input[type="checkbox"] {
-		width: 18px;
-		height: 18px;
-		margin-right: 0.5rem;
+		width: 20px;
+		height: 20px;
+		margin-right: 0.65rem;
 		cursor: pointer;
 	}
 
