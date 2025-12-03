@@ -1097,7 +1097,6 @@ main {
 
 .projects-container {
 	display: flex;
-	gap: 2rem;
 	align-items: flex-start;
 	position: relative;
 	min-height: calc(100vh - 150px);
