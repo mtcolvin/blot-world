@@ -1691,8 +1691,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding-top: 0.5rem;
-	padding-bottom: 0;
+	padding: 0.5rem 0 0 0 !important;
 	margin-top: 0.5rem;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
