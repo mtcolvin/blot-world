@@ -624,13 +624,13 @@ const FilterSystem = {
 	updateCounter(visible, total) {
 		const visibleEl = document.getElementById('visible-count');
 		const totalEl = document.getElementById('total-count');
-		const visibleHeaderEl = document.getElementById('visible-count-header');
-		const totalHeaderEl = document.getElementById('total-count-header');
+		const visibleMobileEl = document.getElementById('visible-count-mobile');
+		const totalMobileEl = document.getElementById('total-count-mobile');
 
 		if (visibleEl) visibleEl.textContent = visible;
 		if (totalEl) totalEl.textContent = total;
-		if (visibleHeaderEl) visibleHeaderEl.textContent = visible;
-		if (totalHeaderEl) totalHeaderEl.textContent = total;
+		if (visibleMobileEl) visibleMobileEl.textContent = visible;
+		if (totalMobileEl) totalMobileEl.textContent = total;
 	},
 	
 	regenerateWithSelections() {

@@ -230,8 +230,8 @@
                 <div class="section-header">
                     <div class="projects-title-row">
                         <h2>Projects</h2>
-                        <div class="projects-counter" id="projects-counter-header">
-                            Showing <span id="visible-count-header"></span> of <span id="total-count-header"></span> projects
+                        <div class="projects-counter projects-counter-mobile" id="projects-counter-mobile">
+                            Showing <span id="visible-count-mobile"></span> of <span id="total-count-mobile"></span> projects
                         </div>
                         <button class="filter-toggle-btn" id="filter-toggle-btn" aria-label="Toggle filters">
                             <svg width="24" height="24" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -268,7 +268,7 @@
                         </div>
 
                         <!-- Filter Controls -->
-                        <div class="filter-section">
+                        <div class="filter-section sort-section">
                             <h3>Sort by</h3>
                             <div class="filter-controls">
                                 <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
@@ -282,23 +282,19 @@
                         </div>
 
                         <!-- Area Filters -->
-                        <div class="filter-section collapsible-section">
+                        <div class="filter-section collapsible-section collapsed">
                             <h3 class="filter-section-header">
                                 <span>Area</span>
-                                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 9L1 4h10L6 9z"/>
-                                </svg>
+                                <span class="collapse-icon">˅</span>
                             </h3>
                             <div class="filter-options collapsible-content" id="area-filter-options"></div>
                         </div>
 
                         <!-- Technology Filters -->
-                        <div class="filter-section collapsible-section">
+                        <div class="filter-section collapsible-section collapsed">
                             <h3 class="filter-section-header">
                                 <span>Technologies</span>
-                                <svg class="collapse-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 9L1 4h10L6 9z"/>
-                                </svg>
+                                <span class="collapse-icon">˅</span>
                             </h3>
                             <div class="filter-options collapsible-content" id="tech-filter-options"></div>
                         </div>
