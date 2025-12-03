@@ -111,7 +111,7 @@ nav {
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.95);
 	backdrop-filter: blur(10px);
-	z-index: 1000;
+	z-index: 10002;
 	padding: 0.9rem 0 1rem;
 	border-bottom: 1px solid var(--blot-gray);
 }
@@ -1101,7 +1101,7 @@ main {
 	flex: 1;
 	min-width: 0;
 	min-height: 100vh;
-	order: 1;
+	margin-right: 250px;
 }
 
 .projects-main .projects-counter {
@@ -1554,7 +1554,7 @@ main {
    ========================================================================== */
 
 .filter-sidebar {
-	position: sticky;
+	position: fixed;
 	top: var(--nav-height);
 	right: 0;
 	width: 250px;
@@ -1566,7 +1566,6 @@ main {
 	overflow-y: auto;
 	padding: 1.25rem 0.875rem;
 	flex-shrink: 0;
-	order: 2;
 }
 
 .filter-sidebar::-webkit-scrollbar {
@@ -2063,6 +2062,10 @@ main {
 		flex-direction: column;
 	}
 
+	.projects-main {
+		margin-right: 0;
+	}
+
 	.projects-title-row {
 		flex-direction: column;
 		align-items: flex-start;
@@ -2514,18 +2517,18 @@ main {
 	}
 
 	.filter-sidebar .filter-section h3 {
-		font-size: 1.1rem;
+		font-size: 1.15rem;
 	}
 
 	.filter-sidebar .sort-dropdown {
 		padding: 0.75rem 0.5rem;
-		font-size: 1.05rem;
+		font-size: 1.1rem;
 		min-height: 44px;
 	}
 
 	.filter-sidebar .clear-filters-compact {
 		padding: 0.75rem 1rem;
-		font-size: 1.05rem;
+		font-size: 1.1rem;
 		min-height: 44px;
 	}
 
@@ -2535,7 +2538,7 @@ main {
 
 	.filter-sidebar .filter-section-header {
 		padding: 0.5rem 0;
-		font-size: 1.1rem;
+		font-size: 1.15rem;
 	}
 
 	.filter-sidebar .collapsible-content {
@@ -2545,8 +2548,8 @@ main {
 	}
 
 	.filter-sidebar .filter-option {
-		padding: 0.35rem 0;
-		font-size: 1.05rem;
+		padding: 0.25rem 0;
+		font-size: 1.1rem;
 		min-height: 44px;
 		display: flex;
 		align-items: center;
