@@ -2034,6 +2034,22 @@ main {
 }
 
 @media (max-width: 768px) {
+	/* Mobile navbar: hamburger on left, logo centered */
+	.mobile-menu-btn {
+		order: 0;
+	}
+
+	.logo {
+		order: 1;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.nav-container {
+		position: relative;
+	}
+
 	.hero-content {
 		grid-template-columns: 1fr;
 		grid-template-rows: auto auto auto;
