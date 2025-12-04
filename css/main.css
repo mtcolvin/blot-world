@@ -2050,7 +2050,7 @@ main {
 	}
 
 	.mobile-filter-nav-btn {
-		display: none;
+		display: none !important;
 		align-items: center;
 		justify-content: center;
 		position: absolute !important;
@@ -2066,7 +2066,7 @@ main {
 	}
 
 	.mobile-filter-nav-btn.show-on-projects {
-		display: flex;
+		display: flex !important;
 	}
 
 	.mobile-filter-nav-btn:hover {

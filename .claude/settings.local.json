@@ -34,7 +34,13 @@
       "Bash(git push:*)",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "Bash(start index.html)"
+      "Bash(start index.html)",
+      "Bash(start filter-options-preview.html)",
+      "Bash(del filter-options-preview.html filter-design-options.md)",
+      "WebFetch(domain:dribbble.com)",
+      "WebFetch(domain:blot.world)",
+      "Bash(ls:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []
