@@ -2054,6 +2054,7 @@ main {
 		position: relative;
 		align-items: center;
 		height: 100%;
+		justify-content: flex-start;
 	}
 
 	nav {
