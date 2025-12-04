@@ -1761,6 +1761,10 @@ main {
 	color: var(--blot-light-gray);
 }
 
+.filter-option:last-child {
+	padding-bottom: 0.5rem;
+}
+
 .filter-checkbox {
 	width: 14px;
 	height: 14px;
