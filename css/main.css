@@ -2038,7 +2038,6 @@ main {
 	.mobile-menu-btn {
 		order: 0;
 		align-items: center;
-		justify-content: center;
 		margin: 0;
 		padding: 0.5rem;
 	}
