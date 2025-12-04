@@ -825,17 +825,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Filter toggle functionality for mobile
     const filterToggleBtn = document.getElementById('filter-toggle-btn');
+    const mobileFilterNavBtn = document.getElementById('mobile-filter-nav-btn');
     const filterCloseBtn = document.getElementById('filter-close-btn');
     const filterSidebar = document.getElementById('filter-sidebar');
     const filterOverlay = document.getElementById('filter-overlay');
 
-    if (filterToggleBtn && filterSidebar && filterOverlay) {
-        // Toggle filter sidebar
-        filterToggleBtn.addEventListener('click', () => {
-            filterSidebar.classList.toggle('active');
-            filterOverlay.classList.toggle('active');
-        });
+    const toggleFilterSidebar = () => {
+        filterSidebar.classList.toggle('active');
+        filterOverlay.classList.toggle('active');
+    };
 
+    if (filterToggleBtn && filterSidebar && filterOverlay) {
+        // Toggle filter sidebar from projects page button
+        filterToggleBtn.addEventListener('click', toggleFilterSidebar);
+    }
+
+    if (mobileFilterNavBtn && filterSidebar && filterOverlay) {
+        // Toggle filter sidebar from mobile navbar button
+        mobileFilterNavBtn.addEventListener('click', toggleFilterSidebar);
+    }
+
+    if (filterSidebar && filterOverlay) {
         // Close filter sidebar when clicking close button
         if (filterCloseBtn) {
             filterCloseBtn.addEventListener('click', () => {
