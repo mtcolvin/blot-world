@@ -2037,15 +2037,16 @@ main {
 	/* Mobile navbar: hamburger on left, logo centered */
 	.mobile-menu-btn {
 		align-items: center;
+		justify-content: center;
 		margin: 0;
 		padding: 0.5rem;
+		position: absolute;
+		left: 2rem;
 	}
 
 	.logo {
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		margin: 0;
+		position: static;
+		margin: 0 auto;
 	}
 
 	.nav-container {
@@ -2053,7 +2054,8 @@ main {
 		align-items: center;
 		height: 100%;
 		display: flex;
-		justify-content: flex-start;
+		justify-content: center;
+		padding: 0 2rem;
 	}
 
 	nav {
