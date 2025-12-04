@@ -103,10 +103,20 @@ const Navigation = {
 					targetSection.classList.add('active');
 					AppState.currentSection = sectionId;
 				}
-				
+
 				// Update URL
 				this.updateURL(sectionId);
-				
+
+				// Toggle mobile filter button visibility
+				const mobileFilterBtn = document.getElementById('mobile-filter-nav-btn');
+				if (mobileFilterBtn) {
+					if (sectionId === 'projects') {
+						mobileFilterBtn.classList.add('show-on-projects');
+					} else {
+						mobileFilterBtn.classList.remove('show-on-projects');
+					}
+				}
+
 				// Section-specific initialization
 				if (sectionId === 'home') {
 					setTimeout(() => HeroAnimations.trigger(), 100);

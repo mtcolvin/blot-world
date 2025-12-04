@@ -2050,7 +2050,7 @@ main {
 	}
 
 	.mobile-filter-nav-btn {
-		display: flex;
+		display: none;
 		align-items: center;
 		justify-content: center;
 		position: absolute !important;
@@ -2063,6 +2063,10 @@ main {
 		min-width: 48px;
 		min-height: 48px;
 		transition: opacity var(--transition-base);
+	}
+
+	.mobile-filter-nav-btn.show-on-projects {
+		display: flex;
 	}
 
 	.mobile-filter-nav-btn:hover {
