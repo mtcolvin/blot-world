@@ -1726,7 +1726,7 @@ main {
 	overflow-x: hidden;
 	transition: max-height 0.3s ease, opacity 0.3s ease;
 	opacity: 1;
-	background: var(--blot-dark-gray);
+	background: var(--darker-gray);
 	padding-right: 0;
 	margin-right: 0;
 	scrollbar-width: none;
