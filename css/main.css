@@ -2040,13 +2040,15 @@ main {
 		justify-content: center;
 		margin: 0;
 		padding: 0.5rem;
-		position: absolute;
+		position: absolute !important;
 		left: 2rem;
+		order: 0;
 	}
 
 	.logo {
 		position: static;
 		margin: 0 auto;
+		order: 1;
 	}
 
 	.nav-container {
