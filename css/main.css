@@ -2037,13 +2037,17 @@ main {
 	/* Mobile navbar: hamburger on left, logo centered */
 	.mobile-menu-btn {
 		order: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.logo {
 		order: 1;
 		position: absolute;
 		left: 50%;
-		transform: translateX(-50%);
+		top: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	.nav-container {
