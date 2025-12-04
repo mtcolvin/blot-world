@@ -1568,7 +1568,7 @@ main {
 	right: 0;
 	width: 250px;
 	height: calc(100vh - var(--nav-height));
-	background-color: var(--blot-dark-gray);
+	background-color: var(--darker-gray);
 	border-left: 1px solid var(--blot-gray);
 	border-radius: 0;
 	z-index: 10;
