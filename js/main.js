@@ -501,14 +501,6 @@ const FilterSystem = {
 		const isPoetrVisible = poetryCard?.classList.contains('visible');
 
 		projectCards.forEach(card => {
-			// Skip poetry card entirely - its visibility is controlled by background toggle only
-			if (card.id === 'poetry-card') {
-				if (isPoetrVisible) {
-					visibleCount++;
-				}
-				return;
-			}
-
 			const area = card.querySelector('.project-card')?.dataset.area;
 			const tech = card.querySelector('.project-card')?.dataset.tech;
 
@@ -519,6 +511,20 @@ const FilterSystem = {
 							AppState.activeFilters.tech.some(filterTech =>
 								tech && tech.toLowerCase().includes(filterTech.toLowerCase())
 							);
+
+			// Poetry card visibility is controlled by background toggle AND filters
+			if (card.id === 'poetry-card') {
+				if (isPoetrVisible && areaMatch && techMatch) {
+					card.classList.remove('hidden', 'fade-out');
+					visibleCount++;
+				} else if (isPoetrVisible) {
+					// Poetry is enabled but doesn't match filters
+					card.classList.add('fade-out');
+					setTimeout(() => card.classList.add('hidden'), 300);
+				}
+				// If poetry is not visible, it stays hidden
+				return;
+			}
 
 			if (areaMatch && techMatch) {
 				card.classList.remove('hidden', 'fade-out');
