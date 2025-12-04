@@ -3068,6 +3068,8 @@ main {
     justify-content: center;
     gap: 12px;
     width: 100%;
+    overflow: hidden;
+    position: relative;
 }
 
 .rotating-quote-text {
@@ -3076,25 +3078,35 @@ main {
     color: var(--blot-white);
     font-style: italic;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
     text-wrap: balance;
     orphans: 3;
     widows: 3;
+    transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    will-change: opacity, transform;
 }
 
 .rotating-quote-text.active {
     opacity: 1;
+    transform: translateY(0);
+    -webkit-transform: translateY(0);
 }
 
 .rotating-quote-author {
     font-size: 13px;
     color: var(--blot-light-gray);
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    will-change: opacity, transform;
 }
 
 .rotating-quote-author.active {
     opacity: 0.8;
+    transform: translateY(0);
+    -webkit-transform: translateY(0);
 }
 
 .rotating-quote-author::before {
