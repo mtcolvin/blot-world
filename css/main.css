@@ -1677,6 +1677,10 @@ main {
 	border-bottom: none;
 }
 
+.sort-section {
+	padding-bottom: 0.5rem;
+}
+
 .filter-section h3 {
 	font-size: 0.85rem;
 	text-transform: uppercase;
