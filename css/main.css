@@ -1610,8 +1610,8 @@ main {
 .sort-dropdown {
 	flex: 1;
 	padding: 0.4rem 0.3rem;
-	background-color: var(--blot-gray);
-	border: 1px solid var(--blot-gray);
+	background-color: var(--blot-little-light-gray);
+	border: 1px solid var(--blot-little-light-gray);
 	border-radius: 4px;
 	color: var(--blot-white);
 	font-size: 0.8rem;
