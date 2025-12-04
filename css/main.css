@@ -2052,7 +2052,6 @@ main {
 	}
 
 	.nav-container {
-		position: relative;
 		align-items: center;
 		height: 100%;
 		display: flex;
@@ -2061,6 +2060,7 @@ main {
 	}
 
 	nav {
+		position: relative;
 		display: flex;
 		align-items: center;
 	}
