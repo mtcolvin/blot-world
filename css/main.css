@@ -2037,6 +2037,10 @@ main {
 	/* Mobile navbar: hamburger on left, logo centered */
 	.mobile-menu-btn {
 		order: 0;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		padding: 0.5rem;
 	}
 
 	.logo {
@@ -2044,10 +2048,17 @@ main {
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
+		margin: 0;
 	}
 
 	.nav-container {
 		position: relative;
+		align-items: center;
+		height: 100%;
+	}
+
+	nav {
+		display: flex;
 		align-items: center;
 	}
 
