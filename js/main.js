@@ -194,20 +194,30 @@ const Navigation = {
 		setTimeout(() => {
 			document.getElementById('loader')?.classList.add('hidden');
 			document.body.classList.remove('loading');
-			
+
 			document.querySelectorAll('.section').forEach(section => {
 				section.classList.remove('active');
 			});
-			
+
 			const targetSection = document.getElementById(initialSection);
 			if (targetSection) {
 				targetSection.classList.add('active');
 				this.updateNavState(initialSection);
-				
+
+				// Toggle mobile filter button visibility on initial load
+				const mobileFilterBtn = document.getElementById('mobile-filter-nav-btn');
+				if (mobileFilterBtn) {
+					if (initialSection === 'projects') {
+						mobileFilterBtn.classList.add('show-on-projects');
+					} else {
+						mobileFilterBtn.classList.remove('show-on-projects');
+					}
+				}
+
 				if (initialSection === 'projects') {
 					setTimeout(() => FilterSystem.applyFromState(), 200);
 				}
-				
+
 				if (initialSection === 'home') {
 					setTimeout(() => HeroAnimations.trigger(), 200);
 					window.addEventListener('scroll', ProjectsPreview.handleScroll);
