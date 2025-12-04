@@ -1679,7 +1679,7 @@ main {
 }
 
 .sort-section {
-	padding-bottom: 1rem;
+	padding-bottom: 0.5rem;
 }
 
 .filter-section h3 {
@@ -1748,7 +1748,7 @@ main {
 	flex-direction: column;
 	gap: 0;
 	font-weight: 300;
-	padding-top: 0.5rem;
+	padding-top: 1rem;
 	padding-bottom: 0;
 }
 
@@ -1767,7 +1767,7 @@ main {
 }
 
 .filter-option:last-child {
-	padding-bottom: 1rem;
+	padding-bottom: 0.5rem;
 }
 
 .filter-checkbox {
