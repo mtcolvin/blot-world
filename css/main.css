@@ -2039,24 +2039,21 @@ main {
 		align-items: center;
 		margin: 0;
 		padding: 0.5rem;
-		position: absolute;
-		left: 0;
-		z-index: 2;
 	}
 
 	.logo {
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
-		margin: 0 auto;
-		z-index: 1;
+		margin: 0;
 	}
 
 	.nav-container {
 		position: relative;
 		align-items: center;
 		height: 100%;
-		justify-content: center;
+		display: flex;
+		justify-content: flex-start;
 	}
 
 	nav {
