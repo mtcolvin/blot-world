@@ -839,6 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (filterSidebar && filterOverlay) {
                 filterSidebar.classList.remove('active');
                 filterOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
     });
@@ -853,6 +854,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleFilterSidebar = () => {
         filterSidebar.classList.toggle('active');
         filterOverlay.classList.toggle('active');
+
+        // Lock/unlock scrolling
+        if (filterSidebar.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     };
 
     if (filterToggleBtn && filterSidebar && filterOverlay) {
@@ -871,6 +879,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filterCloseBtn.addEventListener('click', () => {
                 filterSidebar.classList.remove('active');
                 filterOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             });
         }
 
@@ -878,6 +887,7 @@ document.addEventListener('DOMContentLoaded', function() {
         filterOverlay.addEventListener('click', () => {
             filterSidebar.classList.remove('active');
             filterOverlay.classList.remove('active');
+            document.body.style.overflow = '';
         });
     }
 
