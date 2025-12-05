@@ -1757,5 +1757,50 @@ function appendSeriesToTitles() {
 }
 
 // ==========================================================================
+// FILTER SIDEBAR FOOTER ADJUSTMENT
+// ==========================================================================
+
+function adjustFilterSidebarForFooter() {
+    const filterSidebar = document.getElementById('filter-sidebar');
+    const footer = document.querySelector('.global-footer');
+
+    if (!filterSidebar || !footer) return;
+
+    // Only apply on desktop (above 1024px)
+    if (window.innerWidth <= 1024) {
+        filterSidebar.style.bottom = '0';
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Footer is visible, adjust sidebar bottom
+                const footerHeight = footer.offsetHeight;
+                const footerRect = footer.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+
+                if (footerRect.top < viewportHeight) {
+                    const overlap = viewportHeight - footerRect.top;
+                    filterSidebar.style.bottom = `${overlap}px`;
+                }
+            } else {
+                // Footer not visible, reset
+                filterSidebar.style.bottom = '0';
+            }
+        });
+    }, {
+        threshold: [0, 0.1, 0.5, 1],
+        rootMargin: '0px'
+    });
+
+    observer.observe(footer);
+}
+
+// Initialize on load and resize
+window.addEventListener('load', adjustFilterSidebarForFooter);
+window.addEventListener('resize', adjustFilterSidebarForFooter);
+
+// ==========================================================================
 // END OF SCRIPT
 // ==========================================================================

@@ -1577,11 +1577,12 @@ main {
 
 .filter-sidebar {
 	display: none;
-	position: sticky;
+	position: fixed;
 	top: var(--nav-height);
 	right: 0;
+	bottom: 0;
 	width: 250px;
-	height: calc(100vh - var(--nav-height));
+	max-height: calc(100vh - var(--nav-height));
 	background-color: var(--blot-black);
 	border-left: 1px solid var(--blot-gray);
 	border-radius: 0;
@@ -1589,7 +1590,6 @@ main {
 	overflow-y: auto;
 	padding: 1.25rem 0.875rem;
 	flex-shrink: 0;
-	align-self: flex-start;
 }
 
 .filter-sidebar::-webkit-scrollbar {
