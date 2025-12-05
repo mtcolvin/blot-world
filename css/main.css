@@ -2569,7 +2569,7 @@ main {
 		min-height: -webkit-fill-available;
 		background-color: var(--blot-black);
 		z-index: 10010;
-		padding: var(--nav-height) 1rem 0 1rem;
+		padding: var(--nav-height) 1rem 5rem 1rem;
 		overflow-y: auto;
 		transform: translateX(-100%);
 		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
@@ -2648,6 +2648,7 @@ main {
 		font-size: 1.15rem;
 		min-height: 44px;
 		width: 100%;
+		border-radius: 4px;
 	}
 
 	.filter-sidebar .filter-section {
@@ -2655,8 +2656,13 @@ main {
 	}
 
 	.filter-sidebar .filter-section-header {
-		padding: 0.5rem 0;
+		padding: 0.5rem 0 1.5rem 0;
 		font-size: 1.2rem;
+	}
+
+	.filter-sidebar .sort-section {
+		padding-top: 1.5rem;
+		padding-bottom: 1.5rem;
 	}
 
 	/* Add margin to Technologies header on mobile */
