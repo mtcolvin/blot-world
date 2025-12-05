@@ -1622,8 +1622,12 @@ main {
 
 .sort-dropdown {
 	flex: 1;
-	padding: 0.5rem 0.75rem;
+	padding: 0.5rem 2rem 0.5rem 0.75rem;
 	background-color: transparent;
+	background-image: url('data:image/svg+xml;utf8,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L6 6L11 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+	background-repeat: no-repeat;
+	background-position: right 0.75rem center;
+	background-size: 12px 8px;
 	border: 1px solid var(--blot-gray);
 	border-radius: 0;
 	color: var(--blot-white);
@@ -1658,9 +1662,9 @@ main {
 	width: auto;
 	padding: 0.5rem 0.75rem;
 	background: transparent;
-	border: 1px solid var(--blot-gray);
+	border: 1px solid var(--accent-red);
 	border-radius: 0;
-	color: var(--blot-white);
+	color: var(--accent-red);
 	cursor: pointer;
 	transition: all var(--transition-base);
 	text-transform: uppercase;
@@ -1673,9 +1677,9 @@ main {
 }
 
 .clear-filters-compact:hover {
-	background-color: var(--blot-white);
+	background-color: var(--accent-red);
 	color: var(--blot-black);
-	border-color: var(--blot-white);
+	border-color: var(--accent-red);
 	font-variation-settings: "wght" 600, "GRAD" -200;
 }
 
@@ -1718,7 +1722,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 0.5rem 0 0.75rem 0 !important;
+	padding: 0.5rem 0 0.5rem 0 !important;
 	margin: 0;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
