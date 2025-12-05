@@ -1757,39 +1757,5 @@ function appendSeriesToTitles() {
 }
 
 // ==========================================================================
-// FILTER SIDEBAR FOOTER ADJUSTMENT
-// ==========================================================================
-
-function adjustFilterSidebarForFooter() {
-    const filterSidebar = document.getElementById('filter-sidebar');
-    const footer = document.querySelector('.global-footer');
-
-    if (!filterSidebar || !footer) return;
-
-    // Only apply on desktop (above 1024px)
-    if (window.innerWidth <= 1024) {
-        filterSidebar.style.bottom = '0';
-        return;
-    }
-
-    const footerRect = footer.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-
-    // If footer is visible in viewport
-    if (footerRect.top < viewportHeight) {
-        const overlap = viewportHeight - footerRect.top;
-        filterSidebar.style.bottom = `${overlap}px`;
-    } else {
-        // Footer not visible, reset
-        filterSidebar.style.bottom = '0';
-    }
-}
-
-// Initialize on load, scroll, and resize
-window.addEventListener('load', adjustFilterSidebarForFooter);
-window.addEventListener('scroll', adjustFilterSidebarForFooter);
-window.addEventListener('resize', adjustFilterSidebarForFooter);
-
-// ==========================================================================
 // END OF SCRIPT
 // ==========================================================================

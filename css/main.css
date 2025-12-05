@@ -1843,7 +1843,7 @@ body:has(#projects.active) .filter-sidebar {
 	border-top: 1px solid var(--blot-gray);
 	margin-top: 4rem;
 	position: relative;
-	z-index: 100;
+	z-index: 10004;
 }
 
 .footer-container {
