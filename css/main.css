@@ -1576,6 +1576,7 @@ main {
    ========================================================================== */
 
 .filter-sidebar {
+	display: none;
 	position: fixed;
 	top: var(--nav-height);
 	right: 0;
@@ -1598,6 +1599,10 @@ main {
 .filter-sidebar {
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+}
+
+#projects.active ~ .filter-sidebar {
+	display: block;
 }
 
 .filter-sidebar-header {
