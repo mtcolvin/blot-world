@@ -2204,20 +2204,25 @@ main {
 	.filter-sidebar {
 		position: fixed;
 		top: 0;
-		left: -300px;
-		width: 300px;
+		left: 0;
+		width: 100%;
 		height: 150vh;
 		min-height: -webkit-fill-available;
 		background-color: var(--blot-black);
 		margin-right: 0;
 		border-radius: 0;
-		transition: left var(--transition-base);
+		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
 		z-index: 10010;
 		padding: var(--nav-height) 0.875rem 0 0.875rem;
+		transform: translateX(-100%);
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	.filter-sidebar.active {
-		left: 0;
+		transform: translateX(0);
+		opacity: 1;
+		pointer-events: auto;
 	}
 	
 	.footer-content {
@@ -2543,27 +2548,26 @@ main {
 
 	/* Filter Sidebar as Overlay */
 	.filter-sidebar {
-		display: none;
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: 75%;
-		max-width: 300px;
+		width: 100%;
 		height: 150vh;
 		min-height: -webkit-fill-available;
 		background-color: var(--blot-black);
 		z-index: 10010;
 		padding: var(--nav-height) 1rem 0 1rem;
 		overflow-y: auto;
-		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
 		transform: translateX(-100%);
-		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	.filter-sidebar.active {
-		display: block;
 		transform: translateX(0);
+		opacity: 1;
+		pointer-events: auto;
 	}
 
 	.filter-sidebar-header {
@@ -2598,25 +2602,13 @@ main {
 		color: var(--blot-white);
 	}
 
-	/* Overlay backdrop */
+	/* Overlay backdrop - DISABLED */
 	.filter-overlay {
-		display: none;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		width: 100%;
-		height: 150vh;
-		min-height: -webkit-fill-available;
-		background: rgba(0, 0, 0, 0.7);
-		z-index: 10009;
-		opacity: 0;
-		transition: opacity 0.3s ease;
+		display: none !important;
 	}
 
 	.filter-overlay.active {
-		display: block;
-		opacity: 1;
+		display: none !important;
 	}
 
 	/* Mobile-friendly filter sidebar content */
