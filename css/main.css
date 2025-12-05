@@ -1752,7 +1752,7 @@ main {
 	flex-direction: column;
 	gap: 0;
 	font-weight: 300;
-	padding-top: 2rem;
+	padding-top: 0;
 	padding-bottom: 0;
 }
 
@@ -1771,7 +1771,7 @@ main {
 }
 
 .filter-option:last-child {
-	padding-bottom: 1rem;
+	padding-bottom: 0;
 }
 
 .filter-checkbox {
@@ -2194,10 +2194,10 @@ main {
 
 	.filter-sidebar {
 		position: fixed;
-		top: 80px;
+		top: var(--nav-height);
 		left: -300px;
 		width: 300px;
-		height: calc(100vh - 80px);
+		height: calc(100vh - var(--nav-height));
 		margin-right: 0;
 		border-radius: 0;
 		transition: left var(--transition-base);
