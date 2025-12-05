@@ -2534,12 +2534,13 @@ main {
 	.filter-sidebar {
 		display: none;
 		position: fixed;
-		top: var(--nav-height);
+		top: 0;
 		left: 0;
 		width: 75%;
 		max-width: 300px;
-		height: calc(100dvh - var(--nav-height));
-		z-index: 10001;
+		height: 100vh;
+		z-index: 10010;
+		padding-top: var(--nav-height);
 		overflow-y: auto;
 		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
 		transform: translateX(-100%);
