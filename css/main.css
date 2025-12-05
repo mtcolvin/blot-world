@@ -1709,7 +1709,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 0.5rem 0 0 0 !important;
+	padding: 0.5rem 0 0.75rem 0 !important;
 	margin: 0;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
@@ -1739,7 +1739,7 @@ main {
 	overflow-x: hidden;
 	transition: max-height 0.3s ease, opacity 0.3s ease;
 	opacity: 1;
-	background: var(--darker-gray);
+	background: var(--blot-black);
 	padding-right: 0;
 	margin-right: 0;
 	scrollbar-width: none;
