@@ -1692,6 +1692,7 @@ main {
 }
 
 .sort-section {
+	padding-top: 0.9375rem;
 	padding-bottom: 1rem;
 }
 
@@ -2573,7 +2574,7 @@ main {
 	.filter-sidebar-header {
 		padding-bottom: 1rem;
 		border-bottom: 1px solid var(--blot-gray);
-		margin-bottom: 1.25rem;
+		margin-bottom: 0;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
