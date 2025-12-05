@@ -1601,7 +1601,7 @@ main {
 	-ms-overflow-style: none;
 }
 
-#projects.active ~ .filter-sidebar {
+body:has(#projects.active) .filter-sidebar {
 	display: block;
 }
 
