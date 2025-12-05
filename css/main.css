@@ -1722,7 +1722,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 0.5rem 0 0.5rem 0 !important;
+	padding: 0.5rem 0 1rem 0 !important;
 	margin: 0;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
