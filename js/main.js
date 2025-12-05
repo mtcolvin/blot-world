@@ -1772,33 +1772,22 @@ function adjustFilterSidebarForFooter() {
         return;
     }
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Footer is visible, adjust sidebar bottom
-                const footerHeight = footer.offsetHeight;
-                const footerRect = footer.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
+    const footerRect = footer.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
 
-                if (footerRect.top < viewportHeight) {
-                    const overlap = viewportHeight - footerRect.top;
-                    filterSidebar.style.bottom = `${overlap}px`;
-                }
-            } else {
-                // Footer not visible, reset
-                filterSidebar.style.bottom = '0';
-            }
-        });
-    }, {
-        threshold: [0, 0.1, 0.5, 1],
-        rootMargin: '0px'
-    });
-
-    observer.observe(footer);
+    // If footer is visible in viewport
+    if (footerRect.top < viewportHeight) {
+        const overlap = viewportHeight - footerRect.top;
+        filterSidebar.style.bottom = `${overlap}px`;
+    } else {
+        // Footer not visible, reset
+        filterSidebar.style.bottom = '0';
+    }
 }
 
-// Initialize on load and resize
+// Initialize on load, scroll, and resize
 window.addEventListener('load', adjustFilterSidebarForFooter);
+window.addEventListener('scroll', adjustFilterSidebarForFooter);
 window.addEventListener('resize', adjustFilterSidebarForFooter);
 
 // ==========================================================================
