@@ -2564,9 +2564,9 @@ main {
 		position: fixed;
 		top: 0;
 		left: 0;
+		bottom: 0;
 		width: 100%;
-		min-height: 100vh;
-		min-height: 100dvh;
+		height: 100%;
 		background-color: var(--blot-black);
 		z-index: 10010;
 		padding: var(--nav-height) 1rem 5rem 1rem;
