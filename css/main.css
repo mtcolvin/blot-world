@@ -2195,10 +2195,10 @@ main {
 	.filter-sidebar {
 		position: fixed;
 		top: 0;
+		bottom: 0;
 		left: -300px;
 		width: 300px;
-		height: 100vh;
-		min-height: 100vh;
+		height: 100%;
 		background-color: var(--blot-black);
 		margin-right: 0;
 		border-radius: 0;
@@ -2537,11 +2537,11 @@ main {
 		display: none;
 		position: fixed;
 		top: 0;
+		bottom: 0;
 		left: 0;
 		width: 75%;
 		max-width: 300px;
-		height: 100vh;
-		min-height: 100vh;
+		height: 100%;
 		background-color: var(--blot-black);
 		z-index: 10010;
 		padding: var(--nav-height) 1rem 1.25rem 1rem;
