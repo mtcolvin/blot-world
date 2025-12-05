@@ -2194,17 +2194,17 @@ main {
 
 	.filter-sidebar {
 		position: fixed;
-		top: 0;
+		top: var(--nav-height);
 		bottom: 0;
 		left: -300px;
 		width: 300px;
-		height: 100%;
+		height: auto;
 		background-color: var(--blot-black);
 		margin-right: 0;
 		border-radius: 0;
 		transition: left var(--transition-base);
 		z-index: 10010;
-		padding: var(--nav-height) 0.875rem 1.25rem 0.875rem;
+		padding: 1.25rem 0.875rem;
 	}
 
 	.filter-sidebar.active {
@@ -2536,15 +2536,15 @@ main {
 	.filter-sidebar {
 		display: none;
 		position: fixed;
-		top: 0;
+		top: var(--nav-height);
 		bottom: 0;
 		left: 0;
 		width: 75%;
 		max-width: 300px;
-		height: 100%;
+		height: auto;
 		background-color: var(--blot-black);
 		z-index: 10010;
-		padding: var(--nav-height) 1rem 1.25rem 1rem;
+		padding: 1.25rem 1rem;
 		overflow-y: auto;
 		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
 		transform: translateX(-100%);
