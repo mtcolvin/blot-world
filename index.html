@@ -15,12 +15,16 @@
     <!-- Project card click tracking -->
     <script>
     document.addEventListener('click', function(e) {
-        const card = e.target.closest('[data-project="true"]');
+        const link = e.target.closest('[data-project="true"]');
+        if (!link) return;
+
+        // find the inner .project-card div
+        const card = link.querySelector('.project-card');
         if (!card) return;
 
         const projectName = card.getAttribute('data-name') || null;
         const projectArea = card.getAttribute('data-area') || null;
-        const projectUrl = card.getAttribute('href') || null;
+        const projectUrl = link.getAttribute('href') || null;
 
         dataLayer.push({
             event: 'project_card_click',
