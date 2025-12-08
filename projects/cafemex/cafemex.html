@@ -529,13 +529,14 @@
         </div>
     </nav>
 
-    <!-- Sticky Download Button -->
+    <!-- Sticky Download Button (hidden for now - uncomment to enable)
     <a href="../../images/projects/cafemex/cafemex-brand-package.zip" class="sticky-download" download>
         <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
         </svg>
         Download Brand Package
     </a>
+    -->
 
     <!-- Hero Split -->
     <section class="hero">
@@ -685,6 +686,15 @@
         <p>&copy; 2025 Matthew Colvin. All rights reserved. <a href="../../index.html">BLOT.WORLD</a></p>
         <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">Independent design exercise. Not affiliated with or endorsed by Cafe Mexicali, who retain all rights to their name and branding.</p>
     </footer>
+
+    <!-- Disable right-click on images -->
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
+        });
+    </script>
 
 </body>
 </html>

@@ -51,3 +51,30 @@ The gallery will automatically:
 - Photos are sorted chronologically by date
 - The oldest photo's date will appear on the project card on the homepage
 - Recommended image sizes: 2000px+ on longest side for main viewer
+
+## IP Protection
+
+Before committing new photos, resize them to 1200px wide for IP protection:
+
+```python
+python -c "
+from PIL import Image
+import os
+
+target_width = 1200
+base_path = r'projects/photography/images'
+
+for img_name in os.listdir(base_path):
+    if img_name.lower().endswith(('.jpg', '.jpeg', '.png')):
+        img_path = os.path.join(base_path, img_name)
+        img = Image.open(img_path)
+        if img.width > target_width:
+            ratio = target_width / img.width
+            new_height = int(img.height * ratio)
+            img = img.resize((target_width, new_height), Image.LANCZOS)
+            img.save(img_path, quality=85)
+            print(f'Resized: {img_name}')
+"
+```
+
+This reduces resolution to prevent high-quality reproduction while maintaining good web display quality. Right-click is also disabled on the photography page.
