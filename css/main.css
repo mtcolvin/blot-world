@@ -1341,7 +1341,7 @@ main {
 }
 
 .project-date {
-	color: var(--blot-light-gray);
+	color: var(--blot-little-light-gray);
 	font-size: 0.8rem;
 	white-space: nowrap;
 	text-transform: uppercase;
@@ -1791,9 +1791,11 @@ body:has(#projects.active) .filter-sidebar {
 	/* Button reset styles */
 	background: none;
 	border: none;
-	color: inherit;
-	font-family: inherit;
 	text-align: left;
+	/* Custom styling */
+	color: var(--blot-gray);
+	font-family: 'Roboto Flex', sans-serif;
+	font-weight: 700;
 }
 
 
@@ -2762,7 +2764,7 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar .filter-option:last-child {
-		padding-bottom: 0;
+		padding-bottom: 1.5rem;
 	}
 
 	.filter-sidebar .filter-option input[type="checkbox"] {
