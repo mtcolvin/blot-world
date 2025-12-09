@@ -111,6 +111,9 @@
 </head>
 
 <body>
+    <!-- Skip link for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBBHS254"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -251,23 +254,23 @@
 
         <!-- Area Filters -->
         <div class="filter-section collapsible-section collapsed">
-            <h3 class="filter-section-header">
+            <button class="filter-section-header" aria-expanded="false" aria-controls="area-filter-options">
                 <span>Area</span>
-                <svg class="collapse-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="collapse-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M5 8 L10 13 L15 8"/>
                 </svg>
-            </h3>
+            </button>
             <div class="filter-options collapsible-content" id="area-filter-options"></div>
         </div>
 
         <!-- Technology Filters -->
         <div class="filter-section collapsible-section collapsed">
-            <h3 class="filter-section-header">
+            <button class="filter-section-header" aria-expanded="false" aria-controls="tech-filter-options">
                 <span>Technologies</span>
-                <svg class="collapse-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="collapse-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M5 8 L10 13 L15 8"/>
                 </svg>
-            </h3>
+            </button>
             <div class="filter-options collapsible-content" id="tech-filter-options"></div>
         </div>
     </aside>
@@ -282,7 +285,7 @@
     </div>    
 
     <!-- ==================== MAIN CONTENT ==================== -->
-    <main>
+    <main id="main-content">
         <!-- HOME SECTION -->
         <section id="home" class="section active">
             <div class="container">

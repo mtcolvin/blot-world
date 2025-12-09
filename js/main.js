@@ -380,7 +380,9 @@ const FilterSystem = {
 				e.preventDefault();
 				e.stopPropagation();
 				const section = header.closest('.collapsible-section');
-				section.classList.toggle('collapsed');
+				const isCollapsed = section.classList.toggle('collapsed');
+				// Update aria-expanded for accessibility
+				header.setAttribute('aria-expanded', !isCollapsed);
 			});
 		});
 	},
