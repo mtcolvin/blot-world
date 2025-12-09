@@ -1282,6 +1282,10 @@ const QuoteRotator = {
         {
             text: "We do not inherit the earth from our ancestors; we borrow it from our children.",
             author: "Proverb"
+        },
+        {
+            text: "Understanding is love's other name.",
+            author: "Thích Nhất Hạnh"
         }
     ],
     currentIndex: 0,
