@@ -976,7 +976,7 @@ main {
 		grid-row: 1 !important;
 		grid-column: 1 !important;
 		justify-self: start !important;
-		margin: 0 !important;
+		margin: 0 0 0.5rem 0 !important;
 		padding: 0 !important;
 		align-items: flex-start;
 		justify-content: flex-start;
@@ -997,8 +997,18 @@ main {
 		font-size: 1rem;
 	}
 
-	.project-date-container {
+	.project-card p {
 		grid-row: 3;
+		grid-column: 1;
+		max-width: 100%;
+		padding-right: 0;
+		margin-top: 0;
+		font-size: 0.85rem;
+		line-height: 1.2;
+	}
+
+	.project-date-container {
+		grid-row: 4;
 		grid-column: 1;
 		position: static !important;
 		right: auto !important;
@@ -1011,16 +1021,6 @@ main {
 	.project-date {
 		text-align: left !important;
 		display: block;
-	}
-
-	.project-card p {
-		grid-row: 4;
-		grid-column: 1;
-		max-width: 100%;
-		padding-right: 0;
-		margin-top: 0;
-		font-size: 0.85rem;
-		line-height: 1.4;
 	}
 
 	.project-tags {
@@ -2220,10 +2220,10 @@ body:has(#projects.active) .filter-sidebar {
 		border-left: none;
 		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
 		z-index: 10010;
-		padding: var(--nav-height) 0.875rem 5rem 0.875rem;
+		padding: 0.5rem 0.875rem 5rem 0.875rem;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
-		transform: translateX(-100%);
+		transform: translateX(100%);
 		opacity: 0;
 		pointer-events: none;
 	}
@@ -2569,10 +2569,10 @@ body:has(#projects.active) .filter-sidebar {
 		min-height: 100dvh;
 		background-color: var(--blot-black);
 		z-index: 10010;
-		padding: var(--nav-height) 1rem 5rem 1rem;
+		padding: 0.5rem 1rem 5rem 1rem;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
-		transform: translateX(-100%);
+		transform: translateX(100%);
 		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
 		opacity: 0;
 		pointer-events: none;
@@ -2662,8 +2662,8 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar .sort-section {
-		padding-top: 1.5rem;
-		padding-bottom: 0.5rem;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
 	}
 
 	/* Add margin to Technologies header on mobile */
@@ -2675,19 +2675,19 @@ body:has(#projects.active) .filter-sidebar {
 		max-height: none;
 		overflow-y: visible;
 		padding-right: 0;
-		padding-top: 1rem;
+		padding-top: 0.5rem;
 	}
 
 	.filter-sidebar .filter-option {
-		padding: 0.15rem 0;
+		padding: 0;
 		font-size: 1.15rem;
-		min-height: 44px;
+		min-height: 40px;
 		display: flex;
 		align-items: center;
 	}
 
 	.filter-sidebar .filter-option:last-child {
-		padding-bottom: 1.5rem;
+		padding-bottom: 1rem;
 	}
 
 	.filter-sidebar .filter-option input[type="checkbox"] {
