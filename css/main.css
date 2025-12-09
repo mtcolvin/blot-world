@@ -971,21 +971,9 @@ main {
 		display: contents !important;
 	}
 
-	/* Explicit grid row positioning - area badge above title */
-	.project-area-badge {
-		grid-row: 1 !important;
-		grid-column: 1 !important;
-		justify-self: start !important;
-		margin: 0 0 0.5rem 0 !important;
-		padding: 0 !important;
-		align-items: flex-start;
-		justify-content: flex-start;
-		display: flex !important;
-		flex-direction: row;
-	}
-
+	/* Explicit grid row positioning - title first, then area badge */
 	.project-header {
-		grid-row: 2;
+		grid-row: 1;
 		grid-column: 1;
 		max-width: 100% !important;
 		width: 100%;
@@ -997,14 +985,26 @@ main {
 		font-size: 1rem;
 	}
 
+	.project-area-badge {
+		grid-row: 2 !important;
+		grid-column: 1 !important;
+		justify-self: start !important;
+		margin: 0.25rem 0 0 0 !important;
+		padding: 0 !important;
+		align-items: flex-start;
+		justify-content: flex-start;
+		display: flex !important;
+		flex-direction: row;
+	}
+
 	.project-card p {
 		grid-row: 3;
 		grid-column: 1;
 		max-width: 100%;
 		padding-right: 0;
-		margin-top: 0;
+		margin-top: 0.25rem;
 		font-size: 0.85rem;
-		line-height: 1.2;
+		line-height: 1.1;
 	}
 
 	.project-date-container {
@@ -1013,7 +1013,7 @@ main {
 		position: static !important;
 		right: auto !important;
 		left: 0;
-		margin: 0.25rem 0 0 0 !important;
+		margin: 0.1rem 0 0 0 !important;
 		text-align: left !important;
 		width: 100%;
 	}
@@ -2081,7 +2081,7 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.mobile-filter-nav-btn:hover {
-		opacity: 0.7;
+		opacity: 1;
 	}
 
 	/* Hide the old filter toggle button in projects section on mobile */
@@ -2603,17 +2603,11 @@ body:has(#projects.active) .filter-sidebar {
 	.filter-close-btn {
 		background: none;
 		border: none;
-		color: var(--blot-light-gray);
 		cursor: pointer;
 		padding: 0.25rem;
 		display: flex !important;
 		align-items: center;
 		justify-content: center;
-		transition: color var(--transition-base);
-	}
-
-	.filter-close-btn:hover {
-		color: var(--blot-white);
 	}
 
 	/* Overlay backdrop - DISABLED */
@@ -2687,7 +2681,7 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar .filter-option:last-child {
-		padding-bottom: 1rem;
+		padding-bottom: 2rem;
 	}
 
 	.filter-sidebar .filter-option input[type="checkbox"] {
