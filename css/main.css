@@ -1040,7 +1040,7 @@ main {
 	.area-badge {
 		font-size: 0.65rem;
 		padding: 0.25rem 0.5rem;
-		border-radius: 0;
+		border-radius: 0 !important;
 	}
 }
 
