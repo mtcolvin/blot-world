@@ -989,7 +989,7 @@ main {
 		grid-row: 2 !important;
 		grid-column: 1 !important;
 		justify-self: start !important;
-		margin: 0 0 0.32rem 0 !important;
+		margin: -0.1rem 0 0.75rem 0 !important;
 		padding: 0 !important;
 		align-items: flex-start;
 		justify-content: flex-start;
@@ -2190,7 +2190,8 @@ body:has(#projects.active) .filter-sidebar {
 	.project-image {
 		width: 100%;
 		min-width: unset;
-		height: 140px;
+		height: 63px;
+		min-height: 63px;
 		border-right: none;
 		border-bottom: 1px solid var(--blot-gray);
 	}
@@ -2400,7 +2401,8 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.project-image {
-		height: 200px;
+		height: 63px;
+		min-height: 63px;
 	}
 
 	.project-details {
@@ -2629,20 +2631,20 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar .filter-section h3 {
-		font-size: 1.2rem;
-		margin-bottom: 0.75rem;
+		font-size: 1rem;
+		margin-bottom: 0;
 	}
 
 	.filter-sidebar .sort-dropdown {
 		padding: 0.75rem 0.5rem;
-		font-size: 1.15rem;
+		font-size: 0.85rem;
 		min-height: 44px;
 		flex: 1;
 	}
 
 	.filter-sidebar .clear-filters-compact {
 		padding: 0.75rem 1rem;
-		font-size: 1.15rem;
+		font-size: 0.85rem;
 		min-height: 44px;
 		border-radius: 4px;
 		white-space: nowrap;
@@ -2653,8 +2655,9 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar .filter-section-header {
-		padding: 0.5rem 0 1.5rem 0;
-		font-size: 1.2rem;
+		padding: 0.5rem 0 0 0;
+		font-size: 1rem;
+		margin-bottom: 0;
 	}
 
 	.filter-sidebar .sort-section {
@@ -2676,7 +2679,7 @@ body:has(#projects.active) .filter-sidebar {
 
 	.filter-sidebar .filter-option {
 		padding: 0;
-		font-size: 1.15rem;
+		font-size: 0.95rem;
 		min-height: 40px;
 		display: flex;
 		align-items: center;
