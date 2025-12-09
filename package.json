@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "sync:photo-array": "node scripts/sync-photo-array.js",
-	"optimize:images": "node scripts/optimize-images.js",
+    "optimize:images": "node scripts/optimize-images.js",
     "minify:css": "node scripts/minify-css.js",
     "minify:js": "node scripts/minify-js.js",
     "build:blog": "node scripts/build-blog.js",
@@ -17,10 +17,75 @@
     "csso": "^5.0.5",
     "exiftool-vendored": "^33.2.0",
     "glob": "^11.0.0",
+    "prettier": "^3.7.4",
     "sharp": "^0.33.5",
     "terser": "^5.36.0"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "acorn": "^8.15.0",
+    "ansi-regex": "^6.2.2",
+    "ansi-styles": "^6.2.3",
+    "batch-cluster": "^15.0.1",
+    "buffer-from": "^1.1.2",
+    "color": "^4.2.3",
+    "color-convert": "^2.0.1",
+    "color-name": "^1.1.4",
+    "color-string": "^1.9.1",
+    "commander": "^2.20.3",
+    "cross-spawn": "^7.0.6",
+    "css-tree": "^2.2.1",
+    "detect-libc": "^2.1.2",
+    "eastasianwidth": "^0.2.0",
+    "emoji-regex": "^9.2.2",
+    "exiftool-vendored.exe": "^13.42.0",
+    "foreground-child": "^3.3.1",
+    "he": "^1.2.0",
+    "is-arrayish": "^0.3.4",
+    "is-fullwidth-code-point": "^3.0.0",
+    "isexe": "^2.0.0",
+    "jackspeak": "^4.1.1",
+    "lru-cache": "^11.2.2",
+    "luxon": "^3.7.2",
+    "mdn-data": "^2.0.28",
+    "minimatch": "^10.1.1",
+    "minipass": "^7.1.2",
+    "package-json-from-dist": "^1.0.1",
+    "path-key": "^3.1.1",
+    "path-scurry": "^2.0.1",
+    "semver": "^7.7.3",
+    "shebang-command": "^2.0.0",
+    "shebang-regex": "^3.0.0",
+    "signal-exit": "^4.1.0",
+    "simple-swizzle": "^0.2.4",
+    "source-map": "^0.6.1",
+    "source-map-js": "^1.2.1",
+    "source-map-support": "^0.5.21",
+    "string-width": "^5.1.2",
+    "string-width-cjs": "^4.2.3",
+    "strip-ansi": "^7.1.2",
+    "strip-ansi-cjs": "^6.0.1",
+    "vnu-jar": "^25.12.9",
+    "which": "^2.0.2",
+    "wrap-ansi": "^8.1.0",
+    "wrap-ansi-cjs": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtcolvin/blot-world.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mtcolvin/blot-world/issues"
+  },
+  "homepage": "https://github.com/mtcolvin/blot-world#readme"
 }
