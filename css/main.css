@@ -2627,10 +2627,10 @@ body:has(#projects.active) .filter-sidebar {
 
 	/* Mobile-friendly filter sidebar content */
 	.filter-sidebar .filter-controls {
-		flex-direction: column;
+		flex-direction: row;
 		gap: 0.5rem;
-		margin-bottom: 0.75rem;
-		padding-bottom: 1rem;
+		margin-bottom: 0.5rem;
+		padding-bottom: 0.5rem;
 	}
 
 	.filter-sidebar .filter-section h3 {
@@ -2641,15 +2641,15 @@ body:has(#projects.active) .filter-sidebar {
 		padding: 0.75rem 0.5rem;
 		font-size: 1.15rem;
 		min-height: 44px;
-		width: 100%;
+		flex: 1;
 	}
 
 	.filter-sidebar .clear-filters-compact {
 		padding: 0.75rem 1rem;
 		font-size: 1.15rem;
 		min-height: 44px;
-		width: 100%;
 		border-radius: 4px;
+		white-space: nowrap;
 	}
 
 	.filter-sidebar .filter-section {
@@ -2663,7 +2663,7 @@ body:has(#projects.active) .filter-sidebar {
 
 	.filter-sidebar .sort-section {
 		padding-top: 1.5rem;
-		padding-bottom: 1.5rem;
+		padding-bottom: 0.5rem;
 	}
 
 	/* Add margin to Technologies header on mobile */
