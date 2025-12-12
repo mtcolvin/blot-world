@@ -12,7 +12,83 @@ inceptionAudio.volume = 0.5;
 inceptionAudio.preload = 'auto';
 
 // ==========================================================================
-// 1. STATE MANAGEMENT
+// 1. PAGE TRANSITION LOADER
+// ==========================================================================
+
+const PageLoader = {
+	gifs: [
+		'images/loaders/akuakua_a_far_away_total_solar_eclipse_in_a_sea_of_pure_black_cb4c7c01-ef1d-4139-b7a5-dc49cacefea2_1.gif',
+		'images/loaders/akuakua_space-related_nes_aesthetic_8_bit_pixel_images_for_we_023141ec-734b-4726-b355-caa6f1f96e0f_1.gif',
+		'images/loaders/akuakua_space-related_nes_aesthetic_8_bit_pixel_images_for_we_b62fe4d4-a1c4-440c-9f7b-252cb1c4d887_0.gif',
+		'images/loaders/akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_6cda2543-228f-4ea4-842c-353a2b18a985_1.gif',
+		'images/loaders/akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_95f256d7-d9da-4db1-b60e-6c7d95b316f8_1.gif',
+		'images/loaders/akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_c0b67235-2101-4274-b854-9fa0f8f85d25_0.gif',
+		'images/loaders/akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_ed5c0816-dfd1-47aa-b5eb-1e7805171470_2.gif'
+	],
+
+	getRandomGif() {
+		return this.gifs[Math.floor(Math.random() * this.gifs.length)];
+	},
+
+	show() {
+		const loader = document.getElementById('page-loader');
+		const gif = document.getElementById('page-loader-gif');
+		const loadingBar = document.getElementById('page-loader-bar');
+		if (loader && gif) {
+			gif.src = this.getRandomGif();
+			loader.classList.add('active');
+			// Animate loading bar with ▮ characters
+			if (loadingBar) {
+				const totalBlocks = 11;
+				let currentBlock = 0;
+				const intervalTime = 127;
+				const interval = setInterval(() => {
+					currentBlock++;
+					loadingBar.textContent = '▮'.repeat(currentBlock);
+					if (currentBlock >= totalBlocks) {
+						clearInterval(interval);
+					}
+				}, intervalTime);
+			}
+		}
+	},
+
+	hide() {
+		const loader = document.getElementById('page-loader');
+		if (loader) {
+			loader.classList.remove('active');
+		}
+	},
+
+	init() {
+		// Show loader when clicking links that navigate away from index.html
+		document.addEventListener('click', (e) => {
+			const link = e.target.closest('a[href]');
+			if (!link) return;
+
+			const href = link.getAttribute('href');
+			if (!href) return;
+
+			// Skip hash-only links (like blot.world card that opens modal)
+			if (href === '#' || href.startsWith('#')) return;
+
+			// Check if it's a navigation to another page (not internal hash or section)
+			const isExternalPage = href.endsWith('.html') && !href.includes('index.html');
+			const isProjectLink = link.hasAttribute('data-project') || link.closest('[data-project]');
+
+			if (isExternalPage || isProjectLink) {
+				e.preventDefault();
+				this.show();
+				setTimeout(() => {
+					window.location.href = href;
+				}, 2000);
+			}
+		});
+	}
+};
+
+// ==========================================================================
+// 2. STATE MANAGEMENT
 // ==========================================================================
 
 const AppState = {
@@ -102,6 +178,15 @@ const Navigation = {
 				if (targetSection) {
 					targetSection.classList.add('active');
 					AppState.currentSection = sectionId;
+					// Save to localStorage for mininav redirect
+					try {
+						localStorage.setItem('blot-last-section', sectionId);
+						// Save current filter params if on projects section
+						if (sectionId === 'projects') {
+							const filterParams = URLManager.serialize();
+							localStorage.setItem('blot-last-filters', filterParams);
+						}
+					} catch (e) {}
 				}
 
 				// Update URL
@@ -144,18 +229,22 @@ const Navigation = {
 	
 	updateURL(sectionId) {
 		let newURL = window.location.pathname;
-		
+
 		if (sectionId === 'projects') {
 			const filterParams = URLManager.serialize();
 			if (filterParams) {
 				newURL += `?${filterParams}`;
 			}
+			// Save filters to localStorage for mininav redirect
+			try {
+				localStorage.setItem('blot-last-filters', filterParams);
+			} catch (e) {}
 		}
-		
+
 		if (sectionId !== 'home') {
 			newURL += `#${sectionId}`;
 		}
-		
+
 		window.history.pushState(null, null, newURL);
 	},
 	
@@ -803,6 +892,7 @@ function markAIProjects() {
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('loading');
 
+    PageLoader.init();
     Navigation.init();
     HeroAnimations.initRotatingTagline();
     FilterSystem.init();
@@ -1549,7 +1639,7 @@ function renderBlogPosts() {
         return new Date(b.date) - new Date(a.date);
     });
 
-    blogGrid.innerHTML = sortedPosts.map(post => createBlogCard(post)).join('');
+    blogGrid.innerHTML = sortedPosts.map((post, index) => createBlogCard(post, sortedPosts.length - index)).join('');
 
     // Adjust tags to fit one line after rendering
     adjustBlogCardTags();
@@ -1593,7 +1683,7 @@ function adjustBlogCardTags() {
 }
 
 // Create Blog Card HTML
-function createBlogCard(post) {
+function createBlogCard(post, postNumber) {
     const formattedDate = formatBlogDate(post.date);
     const categoryLabel = getBlogCategoryLabel(post.category);
     const readTime = post.readTime ? `${post.readTime} min read` : '';
@@ -1604,20 +1694,12 @@ function createBlogCard(post) {
                 <img src="${post.image}" alt="${post.title}" loading="lazy">
             </div>
             <div class="blog-card-content">
-                <div class="blog-card-meta">
-                    <span class="blog-card-date">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        ${formattedDate}
-                    </span>
-                    <span class="blog-card-category">${categoryLabel}</span>
-                    ${readTime ? `<span class="blog-card-read-time">${readTime}</span>` : ''}
-                </div>
+                <span class="blog-card-number">#${postNumber}</span>
                 <h2 class="blog-card-title">${post.title}</h2>
+                <div class="blog-card-meta">
+                    <span class="blog-card-date">${formattedDate}</span>
+                    ${readTime ? `<span class="blog-card-separator">·</span><span class="blog-card-read-time">${readTime}</span>` : ''}
+                </div>
                 <p class="blog-card-excerpt">${post.excerpt}</p>
                 <div class="blog-card-tags" data-total-tags="${post.tags.length}">
                     ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}

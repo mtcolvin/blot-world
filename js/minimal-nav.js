@@ -9,6 +9,92 @@
     const nav = document.querySelector('nav.minimal-nav');
     const logoFill = document.querySelector('.logo-fill');
 
+    // Override click to redirect to last viewed section
+    if (nav) {
+        // Get the base path from inline onclick before removing it
+        // Format: onclick="window.location.href='../../index.html'"
+        const onclickAttr = nav.getAttribute('onclick') || '';
+        const hrefMatch = onclickAttr.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
+        const basePath = hrefMatch ? hrefMatch[1] : 'index.html';
+
+        // Remove the inline onclick since we're handling it via JS
+        nav.removeAttribute('onclick');
+
+        nav.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let lastSection = 'home';
+            let lastFilters = '';
+            try {
+                lastSection = localStorage.getItem('blot-last-section') || 'home';
+                lastFilters = localStorage.getItem('blot-last-filters') || '';
+            } catch (err) {}
+
+            // Build the URL with filters and hash
+            let targetUrl = basePath;
+            if (lastSection === 'projects' && lastFilters) {
+                targetUrl += '?' + lastFilters;
+            }
+            if (lastSection !== 'home') {
+                targetUrl += '#' + lastSection;
+            }
+
+            // Create and show page transition loader
+            const loaderGifs = [
+                'akuakua_a_far_away_total_solar_eclipse_in_a_sea_of_pure_black_cb4c7c01-ef1d-4139-b7a5-dc49cacefea2_1.gif',
+                'akuakua_space-related_nes_aesthetic_8_bit_pixel_images_for_we_023141ec-734b-4726-b355-caa6f1f96e0f_1.gif',
+                'akuakua_space-related_nes_aesthetic_8_bit_pixel_images_for_we_b62fe4d4-a1c4-440c-9f7b-252cb1c4d887_0.gif',
+                'akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_6cda2543-228f-4ea4-842c-353a2b18a985_1.gif',
+                'akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_95f256d7-d9da-4db1-b60e-6c7d95b316f8_1.gif',
+                'akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_c0b67235-2101-4274-b854-9fa0f8f85d25_0.gif',
+                'akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_ed5c0816-dfd1-47aa-b5eb-1e7805171470_2.gif'
+            ];
+            const randomGif = loaderGifs[Math.floor(Math.random() * loaderGifs.length)];
+
+            // Determine correct path based on page depth
+            const pathPrefix = basePath.includes('../../') ? '../../' : '';
+            const gifSrc = pathPrefix + 'images/loaders/' + randomGif;
+
+            // Create loader overlay
+            const loader = document.createElement('div');
+            loader.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;z-index:999999;';
+
+            const content = document.createElement('div');
+            content.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:16px;';
+
+            const img = document.createElement('img');
+            img.src = gifSrc;
+            img.style.cssText = 'width:150px;height:150px;object-fit:contain;image-rendering:pixelated;';
+
+            const loadingBar = document.createElement('div');
+            loadingBar.style.cssText = 'width:150px;height:24px;font-family:monospace;font-size:12px;color:#fff;letter-spacing:1px;text-align:left;border:1px solid #fff;padding:4px 6px;box-sizing:border-box;line-height:1;';
+
+            content.appendChild(img);
+            content.appendChild(loadingBar);
+            loader.appendChild(content);
+
+            // Append to documentElement to avoid body overflow:hidden issues
+            document.documentElement.appendChild(loader);
+
+            // Animate loading bar
+            const totalBlocks = 11;
+            let currentBlock = 0;
+            const intervalTime = 127;
+            const interval = setInterval(() => {
+                currentBlock++;
+                loadingBar.textContent = '\u25AE'.repeat(currentBlock);
+                if (currentBlock >= totalBlocks) {
+                    clearInterval(interval);
+                }
+            }, intervalTime);
+
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 2000);
+        });
+    }
+
     if (!nav || !logoFill) return;
 
     // Get background color at nav position
