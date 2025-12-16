@@ -51,11 +51,6 @@
 
 	<title>Photography by Matthew Colvin</title>
 
-	<script>
-		window.excludeFromAnalytics =
-			localStorage.getItem('exclude_me') === 'true';
-	</script>
-
 	<style>
         * {
             margin: 0;
@@ -640,15 +635,17 @@
         @media (max-width: 768px) {
             /* Mobile mininav with logo and text */
             .minimal-nav {
-                width: 100%;
-                height: 56px;
-                padding: 0 16px;
-                background: rgba(0, 0, 0, 0.8);
+                width: auto !important;
+                height: 44px;
+                left: 50% !important;
+                transform: translateX(-50%);
+                top: 12px !important;
+                padding: 0 14px 0 10px;
+                background: rgba(0, 0, 0, 0.85);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
+                border-radius: 10px;
+                overflow: visible;
             }
 
             .minimal-nav .backdrop-blur {
@@ -662,19 +659,24 @@
             .minimal-nav-container {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                gap: 10px;
+                padding-left: 0;
+                gap: 8px;
             }
 
             .back-btn-minimal {
-                margin-right: 0;
+                margin-right: 4px;
                 flex-shrink: 0;
+            }
+
+            .back-btn-minimal svg {
+                width: 20px;
+                height: 20px;
             }
 
             .min-logo-icon {
                 display: flex !important;
-                width: 28px;
-                height: 28px;
+                width: 26px;
+                height: 26px;
                 flex-shrink: 0;
             }
 
@@ -686,10 +688,8 @@
 
             .min-logo-title {
                 display: flex !important;
-                font-size: 20px;
-                letter-spacing: 0.1em;
-                font-weight: 500;
-                flex-shrink: 0;
+                letter-spacing: -1px;
+                font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             }
 
             .min-logo-title span {
@@ -706,7 +706,7 @@
                 background: var(--photo-bg);
                 z-index: 50;
                 overflow-y: auto;
-                padding: 60px 4px 75px 4px;
+                padding: 65px 4px 75px 4px;
             }
 
             .mobile-grid {
@@ -768,13 +768,13 @@
             .mobile-timeline-line {
                 fill: none;
                 stroke: rgba(255, 255, 255, 0.6);
-                stroke-width: 1.5;
+                stroke-width: 0.4;
                 stroke-linecap: round;
                 stroke-linejoin: round;
             }
 
             .mobile-timeline-area {
-                fill: rgba(255, 255, 255, 0.15);
+                fill: url(#timeline-gradient);
             }
 
             .mobile-timeline-indicator {
@@ -845,7 +845,7 @@
 
             .gallery-layout.photo-mode .photo-viewer {
                 flex: 1;
-                padding: 60px 0 80px 0;
+                padding: 65px 0 80px 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
