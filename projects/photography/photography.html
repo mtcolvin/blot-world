@@ -640,11 +640,12 @@
                 left: 50% !important;
                 transform: translateX(-50%);
                 top: 12px !important;
-                padding: 0 14px 0 10px;
+                padding: 0 10px !important;
                 background: rgba(0, 0, 0, 0.85);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
                 border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 1);
                 overflow: visible;
             }
 
@@ -664,7 +665,8 @@
             }
 
             .back-btn-minimal {
-                margin-right: 4px;
+                margin: 0;
+                padding: 0;
                 flex-shrink: 0;
             }
 
@@ -675,9 +677,11 @@
 
             .min-logo-icon {
                 display: flex !important;
-                width: 26px;
-                height: 26px;
+                width: 24px;
+                height: 24px;
                 flex-shrink: 0;
+                align-items: center;
+                justify-content: center;
             }
 
             .min-logo-icon img {
@@ -689,12 +693,26 @@
             .min-logo-title {
                 display: flex !important;
                 letter-spacing: -1px;
+                font-size: 1.3rem;
                 font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             }
 
             .min-logo-title span {
+                display: inline-block;
                 opacity: 1 !important;
             }
+
+            /* Gradient font weights - matching index.html logo */
+            .min-logo-title span:nth-child(1) { font-weight: 900; }
+            .min-logo-title span:nth-child(2) { font-weight: 820; }
+            .min-logo-title span:nth-child(3) { font-weight: 740; }
+            .min-logo-title span:nth-child(4) { font-weight: 660; }
+            .min-logo-title span:nth-child(5) { font-weight: 580; }
+            .min-logo-title span:nth-child(6) { font-weight: 500; }
+            .min-logo-title span:nth-child(7) { font-weight: 420; }
+            .min-logo-title span:nth-child(8) { font-weight: 340; }
+            .min-logo-title span:nth-child(9) { font-weight: 260; }
+            .min-logo-title span:nth-child(10) { font-weight: 180; }
 
             /* Mobile Grid View - Default on mobile */
             .mobile-grid-view {
@@ -706,7 +724,7 @@
                 background: var(--photo-bg);
                 z-index: 50;
                 overflow-y: auto;
-                padding: 65px 4px 75px 4px;
+                padding: 65px 4px 20px 4px;
             }
 
             .mobile-grid {
@@ -732,18 +750,25 @@
                 transform: scale(0.95);
             }
 
+            .mobile-grid-year {
+                width: 100%;
+                padding: 16px 4px 8px 4px;
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.9);
+                letter-spacing: 0.5px;
+            }
+
+            .mobile-grid-section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+
             /* Mobile Activity Timeline */
             .mobile-timeline {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 70px;
-                background: rgba(0, 0, 0, 0.95);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                z-index: 60;
-                display: flex;
-                flex-direction: column;
+                display: none;
                 padding: 8px 16px 8px;
             }
 
@@ -758,6 +783,7 @@
                 width: 100%;
                 height: 30px;
                 position: relative;
+                pointer-events: none;
             }
 
             .mobile-timeline-graph svg {
@@ -835,7 +861,7 @@
                 right: 0;
                 bottom: 0;
                 z-index: 100;
-                background: var(--photo-bg);
+                background: #000;
             }
 
             .gallery-layout.photo-mode .main-content {
@@ -849,6 +875,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: padding-bottom 0.3s ease;
+                background: #000 !important;
             }
 
             .gallery-layout.photo-mode .main-photo-container {
@@ -919,24 +947,24 @@
                 background: rgba(0, 0, 0, 0.7);
             }
 
-            /* Mobile Metadata Panel (repurpose existing photo-metadata) */
+            /* Mobile Metadata Panel - Full screen (covers mininav) */
             .gallery-layout.photo-mode .photo-metadata {
-                display: block !important;
+                display: flex !important;
+                flex-direction: column;
                 position: fixed !important;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                top: auto !important;
+                top: 0 !important;
                 width: 100% !important;
+                height: 100dvh !important;
                 max-width: 100% !important;
-                background: rgba(0, 0, 0, 0.95);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                border-right: none;
-                padding: 20px;
-                padding-bottom: 30px;
+                max-height: 100dvh !important;
+                background: #000;
+                border: none;
+                padding: 80px 20px 40px 20px;
                 transform: translateY(100%);
-                z-index: 120;
-                max-height: 60vh;
+                z-index: 1100;
                 overflow-y: auto;
                 transition: transform 0.3s ease;
             }
@@ -945,16 +973,68 @@
                 transform: translateY(0);
             }
 
+            /* Info panel close button */
+            .info-close-btn {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                border-radius: 50%;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 10;
+            }
+
+            .info-close-btn:active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            /* Raise z-index when info panel is visible to cover mininav */
+            .gallery-layout.photo-mode.info-visible {
+                z-index: 1100;
+            }
+
+            /* No need to push photo when info is full screen */
+            .gallery-layout.photo-mode.info-visible .photo-viewer {
+                padding-bottom: 80px;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-section {
+                margin-bottom: 12px;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-title {
+                font-size: 10px;
+                margin-bottom: 6px;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-section:not(:first-child) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 12px;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-section:not(:first-child) .metadata-title {
+                grid-column: 1 / -1;
+            }
+
             .gallery-layout.photo-mode .photo-metadata .metadata-item {
-                padding: 8px 0;
+                padding: 4px 0;
+                margin-bottom: 0;
             }
 
             .gallery-layout.photo-mode .photo-metadata .metadata-label {
-                font-size: 10px;
+                font-size: 9px;
             }
 
             .gallery-layout.photo-mode .photo-metadata .metadata-value {
-                font-size: 14px;
+                font-size: 12px;
             }
 
             /* Hide desktop timeline on mobile - use mobile-timeline instead */
@@ -1099,6 +1179,11 @@
 
             <!-- Metadata Panel -->
             <div class="photo-metadata" id="photo-metadata">
+                <button class="info-close-btn" id="info-close-btn" aria-label="Close info panel">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
                 <div class="photo-count-display" id="photo-count"></div>
 
                 <div class="metadata-section">
