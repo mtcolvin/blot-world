@@ -13,68 +13,49 @@ projects/photography/images/
   └── photo-3.jpg
 ```
 
-### Step 2: Update photo-loader.js
-Open `photo-loader.js` and add your photos to the `photos` array:
+**Important:**
+- Photos MUST have EXIF metadata (Date Taken, GPS) for dates and locations to display
+- Avoid spaces or parentheses in filenames (use underscores instead)
 
-```javascript
-const photos = [
-    { file: 'photo-1.jpg', date: '2024-01-15' },
-    { file: 'photo-2.jpg', date: '2024-02-20' },
-    { file: 'photo-3.jpg', date: '2024-03-10' },
-];
+### Step 2: Resize for IP Protection
+Resize photos to 1200px wide to prevent high-quality reproduction:
+
+```bash
+npm run resize:photos
 ```
 
-**Date Format:** Use `YYYY-MM-DD` format for dates
-**File Format:** Supports JPG, PNG, WebP, etc.
+This preserves EXIF metadata while reducing resolution.
 
-### Step 3: That's It!
-The gallery will automatically:
-- Sort photos by date (oldest first in timeline)
-- Create thumbnail stacks
-- Enable smooth scrolling navigation
-- Display photo dates
-- Support keyboard navigation (arrow keys)
+### Step 3: Sync the Photo Array
+Auto-generate the photos array from EXIF metadata:
+
+```bash
+npm run sync:photo-array
+```
+
+### Step 4: Minify JavaScript
+```bash
+npm run minify:js
+```
+
+### Step 5: Test and Commit
+Hard refresh your browser (Ctrl+Shift+R) to see changes, then commit.
 
 ## Features
 
 - **Main Photo Viewer**: Large, centered photo display
 - **Timeline**: Horizontal scrollable timeline with stacked thumbnails
-- **Date Display**: Shows the date of the currently selected photo
+- **Date Display**: Shows the date from EXIF metadata
+- **Location Display**: Shows location from GPS coordinates (reverse geocoded)
 - **Keyboard Navigation**: Use arrow keys to navigate
 - **Drag to Scroll**: Click and drag the timeline to browse
 - **Auto-Centering**: Active photo centers in the timeline
 - **Responsive**: Works on mobile and desktop
+- **IP Protection**: Right-click disabled, images resized to 1200px
 
 ## Tips
 
-- Use high-quality images for best results
-- Photos are sorted chronologically by date
+- Photos are sorted chronologically by EXIF date
 - The oldest photo's date will appear on the project card on the homepage
-- Recommended image sizes: 2000px+ on longest side for main viewer
-
-## IP Protection
-
-Before committing new photos, resize them to 1200px wide for IP protection:
-
-```python
-python -c "
-from PIL import Image
-import os
-
-target_width = 1200
-base_path = r'projects/photography/images'
-
-for img_name in os.listdir(base_path):
-    if img_name.lower().endswith(('.jpg', '.jpeg', '.png')):
-        img_path = os.path.join(base_path, img_name)
-        img = Image.open(img_path)
-        if img.width > target_width:
-            ratio = target_width / img.width
-            new_height = int(img.height * ratio)
-            img = img.resize((target_width, new_height), Image.LANCZOS)
-            img.save(img_path, quality=85)
-            print(f'Resized: {img_name}')
-"
-```
-
-This reduces resolution to prevent high-quality reproduction while maintaining good web display quality. Right-click is also disabled on the photography page.
+- If a photo shows wrong date, check its EXIF "Date Taken" metadata
+- If location doesn't show, verify the photo has GPS coordinates in EXIF

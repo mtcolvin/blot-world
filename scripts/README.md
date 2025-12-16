@@ -7,10 +7,13 @@
 When you add new photos to `projects/photography/images/`, follow these steps:
 
 ```bash
-# 1. Sync photos array (auto-generates entries with dates from EXIF metadata)
+# 1. Resize photos to 1200px for IP protection (preserves EXIF metadata)
+npm run resize:photos
+
+# 2. Sync photos array (auto-generates entries with dates from EXIF metadata)
 npm run sync:photo-array
 
-# 2. Minify the updated JavaScript
+# 3. Minify the updated JavaScript
 npm run minify:js
 
-# 3. Restart your local server and hard refresh browser (Ctrl+Shift+R)
+# 4. Restart your local server and hard refresh browser (Ctrl+Shift+R)
