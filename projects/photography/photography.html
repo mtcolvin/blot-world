@@ -625,20 +625,32 @@
         }
 
         @media (max-width: 768px) {
+            /* Ensure mininav SVG cutout works on mobile */
+            .minimal-nav .backdrop-blur {
+                mask: url(#logo-cut-photo);
+                -webkit-mask: url(#logo-cut-photo);
+            }
+
             .main-content {
                 flex-direction: column;
                 height: calc(100vh - 60px);
             }
 
             .photo-viewer {
-                padding: 50px 15px 50px 15px;
+                padding: 60px 15px 50px 15px;
                 flex: 1;
                 min-height: 0;
             }
 
+            /* Larger nav buttons on mobile */
             .nav-button {
-                width: 40px;
-                height: 40px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .nav-button svg {
+                width: 24px;
+                height: 24px;
             }
 
             .nav-prev {
@@ -647,6 +659,24 @@
 
             .nav-next {
                 right: 10px;
+            }
+
+            /* Move zoom controls below mininav */
+            .zoom-controls {
+                top: 60px;
+                right: 10px;
+            }
+
+            .zoom-btn {
+                width: 40px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .zoom-level {
+                width: 40px;
+                height: 32px;
+                font-size: 9px;
             }
 
             .photo-metadata {
@@ -688,13 +718,15 @@
                 border-bottom: 1px solid rgba(255, 255, 255, 0.4);
             }
 
+            /* Align preview blocks with tick lines */
             .tick-previews {
-                bottom: 22px;
+                bottom: 18px;
                 gap: 0;
             }
 
             .tick-line {
                 height: 10px;
+                bottom: 18px;
             }
 
             .tick-mark.year .tick-line {
