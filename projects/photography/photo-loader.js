@@ -12,10 +12,13 @@
     // The system will auto-load them and sort by date (oldest first in timeline)
     const photos = [
         { file: '68223264_Unknown.JPG', date: '2017-08-21' },
-        { file: 'IMG_1992_result.jpg', date: '2024-08-12' },
-        { file: 'IMG_2010_result.jpg', date: '2024-08-13' },
+        { file: 'IMG_1325_result.jpg', date: '2024-06-22' },
+        { file: 'IMG_1352_result.jpg', date: '2024-06-25' },
+        { file: 'IMG_1395_result.jpg', date: '2024-06-28' },
+        { file: 'IMG_1992_result (1).jpg', date: '2024-08-12' },
+        { file: 'IMG_2010_result (1).jpg', date: '2024-08-13' },
         { file: 'image0.jpeg', date: '2024-12-10' },
-        { file: 'IMG_4037_result.jpg', date: '2025-01-14' },
+        { file: 'IMG_4037_result (1).jpg', date: '2025-01-14' },
         { file: 'IMG_5567_result.jpg', date: '2025-03-10' },
         { file: 'IMG_6346_result_1.jpg', date: '2025-04-04' },
         { file: 'IMG_6582_result.jpg', date: '2025-04-09' },
@@ -42,10 +45,9 @@
         { file: 'IMG_0955_result.jpg', date: '2025-11-02' },
         { file: 'IMG_1264_result.jpg', date: '2025-11-09' },
         { file: 'IMG_1238_result.jpg', date: '2025-11-09' },
-        { file: 'IMG_1443_result.jpg', date: '2025-11-13' },
+        { file: 'IMG_1443_result (1).jpg', date: '2025-11-13' },
         { file: 'IMG_1463_result.jpg', date: '2025-11-16' },
         { file: 'IMG_1507_result.jpg', date: '2025-11-24' },
-        { file: 'IMG_1515_result.jpg', date: '2025-11-25' },
         { file: 'IMG_1574_result.jpg', date: '2025-11-27' },
         { file: 'IMG_1659_result.jpg', date: '2025-11-28' },
         { file: 'IMG_1649_result.jpg', date: '2025-11-28' },
@@ -152,6 +154,7 @@
 
                                     if (exifData) {
                                         console.log(`  EXIF: ${exifData?.Make || 'N/A'} ${exifData?.Model || ''} | GPS: ${exifData?.latitude ? 'Yes' : 'No'}`);
+                                        console.log(`  GPS Debug - lat: ${exifData?.latitude}, lng: ${exifData?.longitude}, GPSLatitude: ${exifData?.GPSLatitude}`);
                                     } else {
                                         console.warn(`  No EXIF data found in ${photo.file}`);
                                     }
