@@ -1007,6 +1007,52 @@
         }
     });
 
+    // Swipe navigation for mobile
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    let swipeStartTime = 0;
+    const swipeThreshold = 50; // minimum distance for swipe
+    const swipeTimeLimit = 300; // maximum time for swipe gesture
+
+    document.querySelector('.photo-viewer').addEventListener('touchstart', (e) => {
+        // Only track single finger swipes when not zoomed
+        if (e.touches.length === 1 && currentZoom === 1) {
+            swipeStartX = e.touches[0].clientX;
+            swipeStartY = e.touches[0].clientY;
+            swipeStartTime = Date.now();
+        }
+    }, { passive: true });
+
+    document.querySelector('.photo-viewer').addEventListener('touchend', (e) => {
+        if (currentZoom !== 1) return; // Don't swipe when zoomed
+        if (swipeStartX === 0) return;
+
+        const swipeEndX = e.changedTouches[0].clientX;
+        const swipeEndY = e.changedTouches[0].clientY;
+        const swipeTime = Date.now() - swipeStartTime;
+
+        const deltaX = swipeEndX - swipeStartX;
+        const deltaY = swipeEndY - swipeStartY;
+
+        // Check if horizontal swipe (more horizontal than vertical)
+        if (Math.abs(deltaX) > Math.abs(deltaY) &&
+            Math.abs(deltaX) > swipeThreshold &&
+            swipeTime < swipeTimeLimit) {
+
+            if (deltaX > 0) {
+                // Swipe right - go to previous
+                navigatePhoto('prev');
+            } else {
+                // Swipe left - go to next
+                navigatePhoto('next');
+            }
+        }
+
+        // Reset
+        swipeStartX = 0;
+        swipeStartY = 0;
+    }, { passive: true });
+
     // Zoom button controls
     if (elements.zoomIn) {
         elements.zoomIn.addEventListener('click', () => {
