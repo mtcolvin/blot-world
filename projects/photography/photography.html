@@ -51,6 +51,11 @@
 
 	<title>Photography by Matthew Colvin</title>
 
+	<script>
+		window.excludeFromAnalytics =
+			localStorage.getItem('exclude_me') === 'true';
+	</script>
+
 	<style>
         * {
             margin: 0;
@@ -82,6 +87,11 @@
 
         .nav-rect {
             fill: transparent;
+        }
+
+        /* Hide mobile logo icon on desktop */
+        .min-logo-icon {
+            display: none;
         }
 
 		body {
@@ -624,143 +634,347 @@
             }
         }
 
+        /* ============================================
+           MOBILE REDESIGN - Google Photos Style
+           ============================================ */
         @media (max-width: 768px) {
-            /* Safari-compatible mask using inline SVG data URL */
+            /* Mobile mininav with logo and text */
+            .minimal-nav {
+                width: 100%;
+                height: 56px;
+                padding: 0 16px;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+
             .minimal-nav .backdrop-blur {
-                -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 170 40'%3E%3Crect x='0' y='0' width='170' height='40' fill='white'/%3E%3Cg transform='translate(46,20) scale(0.028) translate(-500,-490)'%3E%3Cpath fill='black' d='M991,460.892L991,467.417C990.891,471.541 990.574,475.688 990.043,479.868C985.994,511.733 969.382,546.346 934.452,588.386C910.036,617.773 886.483,628.622 864.884,628.983C843.104,629.347 822.351,618.772 803.15,601.339C781.514,581.694 761.573,553.12 743.353,526.84C732.706,511.483 722.691,496.992 712.824,486.256C706.296,479.154 700.646,473.227 694.144,472.875C688.497,472.57 684.012,477.895 677.96,486.659C667.609,501.651 656.963,525.889 645.189,561.882C624.028,626.57 594.224,674.799 567.479,713.734C518.847,784.532 463.748,816.88 412.069,822.169C406.628,822.726 401.22,823 395.854,823C348.855,823 305.12,801.988 271.212,766.077C230.671,723.142 204,658.105 204,583.15C204,502.498 234.88,410.363 312.59,321.927C417.276,202.792 515.293,156.353 603.237,156.003C603.77,156.001 604.303,156 604.836,156C760.712,156 874.851,246.86 934.732,332.382C968.829,381.081 989.926,420.198 991,460.892ZM429.775,332.043C368.872,386.834 339.368,425.638 310.535,510.048C288.666,574.07 296.348,629.231 331.119,679.616C353.445,711.967 375.334,727.662 397.28,730.179C418.739,732.64 439.297,722.479 458.566,706.838C503.108,670.68 540.149,605.196 561.946,562.113C591.8,503.102 616.674,424.109 619.608,360.732C621.284,324.538 616.936,293.587 597.836,278.396C575.999,261.028 548.344,265.774 510.267,279.007C482.05,288.814 466.82,298.716 429.775,332.043ZM837.246,342.426C803.429,308.395 771.489,288.698 746.968,279.148C733.294,273.823 722.532,271.555 715.878,272.522C714.92,272.661 714.747,273.573 714.588,274.515C714.347,275.942 714.254,277.489 714.247,279.137C714.228,284.039 714.981,289.584 716.186,295.564C723.559,332.177 747.03,381.749 757.783,409.859C767.355,434.879 801.075,501.32 839.443,528.626C848.906,535.361 858.483,539.775 868.084,537.94C878.041,536.037 886.981,527.525 895.925,512.194C927.84,457.492 909.454,415.088 837.246,342.426Z'/%3E%3C/g%3E%3C/svg%3E");
-                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 170 40'%3E%3Crect x='0' y='0' width='170' height='40' fill='white'/%3E%3Cg transform='translate(46,20) scale(0.028) translate(-500,-490)'%3E%3Cpath fill='black' d='M991,460.892L991,467.417C990.891,471.541 990.574,475.688 990.043,479.868C985.994,511.733 969.382,546.346 934.452,588.386C910.036,617.773 886.483,628.622 864.884,628.983C843.104,629.347 822.351,618.772 803.15,601.339C781.514,581.694 761.573,553.12 743.353,526.84C732.706,511.483 722.691,496.992 712.824,486.256C706.296,479.154 700.646,473.227 694.144,472.875C688.497,472.57 684.012,477.895 677.96,486.659C667.609,501.651 656.963,525.889 645.189,561.882C624.028,626.57 594.224,674.799 567.479,713.734C518.847,784.532 463.748,816.88 412.069,822.169C406.628,822.726 401.22,823 395.854,823C348.855,823 305.12,801.988 271.212,766.077C230.671,723.142 204,658.105 204,583.15C204,502.498 234.88,410.363 312.59,321.927C417.276,202.792 515.293,156.353 603.237,156.003C603.77,156.001 604.303,156 604.836,156C760.712,156 874.851,246.86 934.732,332.382C968.829,381.081 989.926,420.198 991,460.892ZM429.775,332.043C368.872,386.834 339.368,425.638 310.535,510.048C288.666,574.07 296.348,629.231 331.119,679.616C353.445,711.967 375.334,727.662 397.28,730.179C418.739,732.64 439.297,722.479 458.566,706.838C503.108,670.68 540.149,605.196 561.946,562.113C591.8,503.102 616.674,424.109 619.608,360.732C621.284,324.538 616.936,293.587 597.836,278.396C575.999,261.028 548.344,265.774 510.267,279.007C482.05,288.814 466.82,298.716 429.775,332.043ZM837.246,342.426C803.429,308.395 771.489,288.698 746.968,279.148C733.294,273.823 722.532,271.555 715.878,272.522C714.92,272.661 714.747,273.573 714.588,274.515C714.347,275.942 714.254,277.489 714.247,279.137C714.228,284.039 714.981,289.584 716.186,295.564C723.559,332.177 747.03,381.749 757.783,409.859C767.355,434.879 801.075,501.32 839.443,528.626C848.906,535.361 858.483,539.775 868.084,537.94C878.041,536.037 886.981,527.525 895.925,512.194C927.84,457.492 909.454,415.088 837.246,342.426Z'/%3E%3C/g%3E%3C/svg%3E");
-                -webkit-mask-size: 100% 100%;
-                mask-size: 100% 100%;
-            }
-
-            .main-content {
-                flex-direction: column;
-                height: calc(100vh - 55px);
-            }
-
-            .photo-viewer {
-                padding: 50px 15px 60px 15px;
-                flex: 1;
-                min-height: 0;
-            }
-
-            /* Hide nav buttons on mobile - use swipe instead */
-            .nav-button {
                 display: none;
             }
 
-            /* Zoom controls at bottom as horizontal bar */
-            .zoom-controls {
-                top: auto;
-                bottom: 10px;
-                left: 50%;
-                transform: translateX(-50%);
-                right: auto;
-                flex-direction: row;
-                gap: 0;
-                background: rgba(0, 0, 0, 0.6);
-                border-radius: 8px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                padding: 0;
+            .minimal-nav svg.nav-bg {
+                display: none;
+            }
+
+            .minimal-nav-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .back-btn-minimal {
+                margin-right: 0;
+                flex-shrink: 0;
+            }
+
+            .min-logo-icon {
+                display: flex !important;
+                width: 28px;
+                height: 28px;
+                flex-shrink: 0;
+            }
+
+            .min-logo-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .min-logo-title {
+                display: flex !important;
+                font-size: 20px;
+                letter-spacing: 0.1em;
+                font-weight: 500;
+                flex-shrink: 0;
+            }
+
+            .min-logo-title span {
+                opacity: 1 !important;
+            }
+
+            /* Mobile Grid View - Default on mobile */
+            .mobile-grid-view {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--photo-bg);
+                z-index: 50;
+                overflow-y: auto;
+                padding: 60px 4px 75px 4px;
+            }
+
+            .mobile-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+
+            .mobile-grid-item {
                 overflow: hidden;
+                cursor: pointer;
+                position: relative;
             }
 
-            .zoom-btn {
-                width: 44px;
-                height: 36px;
-                font-size: 18px;
-                border-radius: 0;
-                border: none;
-                background: transparent;
-            }
-
-            .zoom-btn:hover {
-                transform: none;
-            }
-
-            .zoom-level {
-                width: 50px;
-                height: 36px;
-                font-size: 10px;
-                border-radius: 0;
-                border: none;
-                border-left: 1px solid rgba(255, 255, 255, 0.2);
-                border-right: 1px solid rgba(255, 255, 255, 0.2);
-                background: transparent;
-            }
-
-            .photo-metadata {
+            .mobile-grid-item img {
                 width: 100%;
                 height: auto;
-                max-height: 40vh;
-                border-left: none;
+                display: block;
+                transition: transform 0.2s ease;
+            }
+
+            .mobile-grid-item:active img {
+                transform: scale(0.95);
+            }
+
+            /* Mobile Activity Timeline */
+            .mobile-timeline {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 70px;
+                background: rgba(0, 0, 0, 0.95);
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
+                z-index: 60;
+                display: flex;
+                flex-direction: column;
+                padding: 8px 16px 8px;
             }
 
-            /* Timeline - keep original structure, just adjust sizes */
-            .timeline-container {
-                height: 55px;
-            }
-
-            .timeline-scroll {
-                height: 55px;
-            }
-
-            .timeline-track {
-                min-height: 55px;
+            .mobile-timeline-track {
+                flex: 1;
+                position: relative;
+                display: flex;
                 align-items: flex-end;
             }
 
-            .arrow-indicator {
-                bottom: 20px;
+            .mobile-timeline-graph {
+                width: 100%;
+                height: 30px;
+                position: relative;
             }
 
-            .tick-mark {
-                width: 9px;
-                padding: 0 2px;
+            .mobile-timeline-graph svg {
+                width: 100%;
+                height: 100%;
             }
 
-            .tick-thumbnail {
-                width: 5px;
-                height: 5px;
-                border-radius: 0;
-                box-sizing: border-box;
-                border-left: 1px solid rgba(255, 255, 255, 0.4);
-                border-right: 1px solid rgba(255, 255, 255, 0.4);
-                border-top: 1px solid rgba(255, 255, 255, 0.4);
+            .mobile-timeline-line {
+                fill: none;
+                stroke: rgba(255, 255, 255, 0.6);
+                stroke-width: 1.5;
+                stroke-linecap: round;
+                stroke-linejoin: round;
             }
 
-            .tick-thumbnail:first-child {
-                border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            .mobile-timeline-area {
+                fill: rgba(255, 255, 255, 0.15);
             }
 
-            .tick-previews {
-                bottom: 28px;
-                gap: 0;
+            .mobile-timeline-indicator {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: white;
+                transform: translateX(-50%);
+                z-index: 5;
             }
 
-            .tick-line {
-                height: 10px;
-                bottom: 28px;
+            .mobile-timeline-indicator::before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 8px;
+                height: 8px;
+                background: white;
+                border-radius: 50%;
             }
 
-            .tick-mark.year .tick-line {
-                height: 10px;
+            .mobile-timeline-labels {
+                display: flex;
+                justify-content: space-between;
+                padding-top: 4px;
             }
 
-            .tick-label {
-                font-size: 8px;
-                margin-top: 2px;
-                margin-bottom: 4px;
-            }
-
-            .tick-mark.year .tick-label {
+            .mobile-timeline-label-item {
                 font-size: 9px;
-                opacity: 1;
+                color: rgba(255, 255, 255, 0.5);
             }
 
-            .tick-mark.active .tick-label {
-                opacity: 1;
+            .mobile-timeline-current {
+                text-align: center;
+                font-size: 11px;
+                color: rgba(255, 255, 255, 0.9);
+                padding-top: 2px;
+            }
+
+            /* Hide desktop gallery layout on mobile, show grid instead */
+            .gallery-layout {
+                display: none !important;
+            }
+
+            .mobile-grid-view.active {
+                display: block !important;
+            }
+
+            /* Photo Viewer Mode (when photo selected) */
+            .gallery-layout.photo-mode {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+                background: var(--photo-bg);
+            }
+
+            .gallery-layout.photo-mode .main-content {
+                flex-direction: column;
+                height: 100vh;
+            }
+
+            .gallery-layout.photo-mode .photo-viewer {
+                flex: 1;
+                padding: 60px 0 80px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .gallery-layout.photo-mode .main-photo-container {
+                width: 100%;
+                height: 100%;
+            }
+
+            .gallery-layout.photo-mode .main-photo {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                border-radius: 0 !important;
+                box-shadow: none;
+            }
+
+            /* Hide nav buttons, zoom controls, metadata panel on mobile */
+            .nav-button,
+            .zoom-controls,
+            .photo-metadata {
+                display: none !important;
+            }
+
+            /* Mobile Info Button */
+            .mobile-info-btn {
+                display: flex;
+                position: absolute;
+                top: 70px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                color: white;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 110;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .mobile-info-btn:active {
+                background: rgba(0, 0, 0, 0.7);
+            }
+
+            /* Mobile Close Button */
+            .mobile-close-btn {
+                display: flex;
+                position: absolute;
+                top: 70px;
+                left: 16px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                color: white;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 110;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .mobile-close-btn:active {
+                background: rgba(0, 0, 0, 0.7);
+            }
+
+            /* Mobile Metadata Panel (repurpose existing photo-metadata) */
+            .gallery-layout.photo-mode .photo-metadata {
+                display: block !important;
+                position: fixed !important;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: rgba(0, 0, 0, 0.95);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                border-right: none;
+                padding: 20px;
+                padding-bottom: 30px;
+                transform: translateY(100%);
+                z-index: 120;
+                max-height: 60vh;
+                overflow-y: auto;
+                transition: transform 0.3s ease;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata.mobile-visible {
+                transform: translateY(0);
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-item {
+                padding: 8px 0;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-label {
+                font-size: 10px;
+            }
+
+            .gallery-layout.photo-mode .photo-metadata .metadata-value {
+                font-size: 14px;
+            }
+
+            /* Hide desktop timeline on mobile - use mobile-timeline instead */
+            .gallery-layout.photo-mode .timeline-container {
+                display: none !important;
+            }
+
+            /* Mobile timeline visible in both grid and photo mode */
+            .mobile-timeline {
+                z-index: 110;
+            }
+        }
+
+        /* Hide mobile-only elements on desktop */
+        @media (min-width: 769px) {
+            .mobile-grid-view,
+            .mobile-info-btn,
+            .mobile-close-btn,
+            .mobile-timeline {
+                display: none !important;
             }
         }
 	</style>
@@ -794,8 +1008,11 @@
 					<path d="M19 12H5M12 19l-7-7 7-7"/>
 				</svg>
 			</button>
+			<div class="min-logo-icon">
+				<img src="../../images/logo/blot-iconmark-black-bkgnd.png" alt="BLOT Logo">
+			</div>
 			<div class="min-logo-title">
-				<span>B</span><span>L</span><span>O</span><span>T</span><span>.</span><span>W</span><span>O</span><span>R</span><span>L</span><span>D&nbsp;</span>
+				<span>B</span><span>L</span><span>O</span><span>T</span><span>.</span><span>W</span><span>O</span><span>R</span><span>L</span><span>D</span>
 			</div>
 		</div>
 	</nav>
@@ -815,6 +1032,18 @@
     <!-- Hover Info Display -->
     <div class="hover-info" id="hover-info"></div>
 
+    <!-- Mobile Grid View -->
+    <div class="mobile-grid-view" id="mobile-grid-view" style="display: none;">
+        <div class="mobile-grid" id="mobile-grid">
+            <!-- Grid items will be inserted here by JS -->
+        </div>
+    </div>
+
+    <!-- Mobile Activity Timeline -->
+    <div class="mobile-timeline" id="mobile-timeline">
+        <!-- Timeline will be built by JS -->
+    </div>
+
     <!-- Gallery Layout -->
     <div class="gallery-layout" id="gallery-layout" style="display: none;">
         <!-- Main Content -->
@@ -832,6 +1061,23 @@
                 <button class="nav-button nav-next" id="nav-next" aria-label="Next photo">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+
+                <!-- Mobile Info Button -->
+                <button class="mobile-info-btn" id="mobile-info-btn" aria-label="Show photo info">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                </button>
+
+                <!-- Mobile Close Button (back to grid) -->
+                <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Back to grid">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6L6 18"/>
+                        <path d="M6 6l12 12"/>
                     </svg>
                 </button>
 

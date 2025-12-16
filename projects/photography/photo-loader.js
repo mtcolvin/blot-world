@@ -59,6 +59,10 @@
     let currentIndex = 0;
     let loadedPhotos = [];
 
+    // Mobile detection
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    let mobileViewMode = 'grid'; // 'grid' or 'photo'
+
     // Helper function to parse date strings as local dates (not UTC)
     function parseLocalDate(dateString) {
         const [year, month, day] = dateString.split('-').map(Number);
@@ -93,7 +97,12 @@
         zoomIn: document.getElementById('zoom-in'),
         zoomOut: document.getElementById('zoom-out'),
         zoomReset: document.getElementById('zoom-reset'),
-        zoomLevel: document.getElementById('zoom-level')
+        zoomLevel: document.getElementById('zoom-level'),
+        // Mobile elements
+        mobileGridView: document.getElementById('mobile-grid-view'),
+        mobileGrid: document.getElementById('mobile-grid'),
+        mobileInfoBtn: document.getElementById('mobile-info-btn'),
+        mobileCloseBtn: document.getElementById('mobile-close-btn')
     };
 
     // Initialize gallery
@@ -211,32 +220,53 @@
     // Initialize gallery UI
     function initGallery() {
         elements.loading.style.display = 'none';
-        elements.galleryLayout.style.display = 'flex';
 
+        // Build timeline for both mobile and desktop
         buildTimeline();
 
-        // Wait for timeline to render before showing photo
-        setTimeout(() => {
-            isProgrammaticScroll = true;
-            lastProgrammaticScrollTime = Date.now();
+        // Check URL for photo parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const photoParam = urlParams.get('photo');
+        let initialIndex = loadedPhotos.length - 1; // Default to most recent
 
-            // Check URL for photo parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const photoParam = urlParams.get('photo');
-            let initialIndex = loadedPhotos.length - 1; // Default to most recent
+        if (photoParam) {
+            const paramIndex = parseInt(photoParam, 10) - 1; // Convert from 1-indexed to 0-indexed
+            if (paramIndex >= 0 && paramIndex < loadedPhotos.length) {
+                initialIndex = paramIndex;
+            }
+        }
 
+        if (isMobile) {
+            // Mobile: Build grid and timeline, show grid view
+            buildMobileGrid();
+            buildMobileTimeline();
+            setupMobileHandlers();
+
+            // If URL has photo param, go directly to photo mode
             if (photoParam) {
-                const paramIndex = parseInt(photoParam, 10) - 1; // Convert from 1-indexed to 0-indexed
-                if (paramIndex >= 0 && paramIndex < loadedPhotos.length) {
-                    initialIndex = paramIndex;
+                switchToPhotoMode(initialIndex);
+            } else {
+                // Default to grid view
+                elements.galleryLayout.style.display = 'none';
+                if (elements.mobileGridView) {
+                    elements.mobileGridView.style.display = 'block';
                 }
             }
+        } else {
+            // Desktop: Show gallery layout as before
+            elements.galleryLayout.style.display = 'flex';
 
-            showPhoto(initialIndex);
+            // Wait for timeline to render before showing photo
             setTimeout(() => {
-                isProgrammaticScroll = false;
-            }, 1000);
-        }, 100);
+                isProgrammaticScroll = true;
+                lastProgrammaticScrollTime = Date.now();
+
+                showPhoto(initialIndex);
+                setTimeout(() => {
+                    isProgrammaticScroll = false;
+                }, 1000);
+            }, 100);
+        }
 
         setupNavigationButtons();
     }
@@ -441,6 +471,300 @@
         console.log(`Timeline height adjusted to ${finalHeight}px for ${maxPhotosPerMonth} max stacked boxes`);
     }
 
+    // === MOBILE GRID FUNCTIONS ===
+
+    // Build mobile grid view
+    function buildMobileGrid() {
+        if (!elements.mobileGrid) return;
+
+        elements.mobileGrid.innerHTML = '';
+
+        // Sort photos by date (newest first for grid view)
+        const sortedPhotos = [...loadedPhotos].reverse();
+
+        // Process photos in pairs to calculate proportional widths
+        for (let i = 0; i < sortedPhotos.length; i += 2) {
+            const photo1 = sortedPhotos[i];
+            const photo2 = sortedPhotos[i + 1];
+            const originalIndex1 = loadedPhotos.length - 1 - i;
+            const originalIndex2 = photo2 ? loadedPhotos.length - 1 - (i + 1) : null;
+
+            // Calculate aspect ratios (width / height)
+            const ratio1 = photo1.width / photo1.height;
+            const ratio2 = photo2 ? photo2.width / photo2.height : ratio1;
+
+            // Calculate proportional widths (accounting for 2px gap)
+            const totalRatio = ratio1 + ratio2;
+            const width1 = photo2 ? (ratio1 / totalRatio) * 100 : 100;
+            const width2 = photo2 ? (ratio2 / totalRatio) * 100 : 0;
+
+            // Create first grid item
+            const gridItem1 = document.createElement('div');
+            gridItem1.className = 'mobile-grid-item';
+            gridItem1.dataset.photoIndex = originalIndex1;
+            gridItem1.style.width = `calc(${width1}% - 1px)`;
+
+            const img1 = document.createElement('img');
+            img1.src = photo1.src || (imagePath + photo1.file);
+            img1.alt = photo1.file;
+            img1.loading = 'lazy';
+
+            gridItem1.appendChild(img1);
+            gridItem1.addEventListener('click', () => {
+                switchToPhotoMode(originalIndex1);
+            });
+            elements.mobileGrid.appendChild(gridItem1);
+
+            // Create second grid item if exists
+            if (photo2) {
+                const gridItem2 = document.createElement('div');
+                gridItem2.className = 'mobile-grid-item';
+                gridItem2.dataset.photoIndex = originalIndex2;
+                gridItem2.style.width = `calc(${width2}% - 1px)`;
+
+                const img2 = document.createElement('img');
+                img2.src = photo2.src || (imagePath + photo2.file);
+                img2.alt = photo2.file;
+                img2.loading = 'lazy';
+
+                gridItem2.appendChild(img2);
+                gridItem2.addEventListener('click', () => {
+                    switchToPhotoMode(originalIndex2);
+                });
+                elements.mobileGrid.appendChild(gridItem2);
+            }
+        }
+
+        console.log(`Built mobile grid with ${loadedPhotos.length} photos`);
+    }
+
+    // Store timeline data for reuse
+    let timelineData = null;
+
+    // Build mobile activity timeline
+    function buildMobileTimeline() {
+        const mobileTimeline = document.querySelector('.mobile-timeline');
+        if (!mobileTimeline) return;
+
+        // Group photos by month
+        const photosByMonth = new Map();
+        loadedPhotos.forEach((photo, index) => {
+            const photoDate = parseLocalDate(photo.date);
+            const monthKey = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
+            if (!photosByMonth.has(monthKey)) {
+                photosByMonth.set(monthKey, []);
+            }
+            photosByMonth.get(monthKey).push({ ...photo, globalIndex: index });
+        });
+
+        // Get date range
+        const firstDate = parseLocalDate(loadedPhotos[0].date);
+        const lastDate = parseLocalDate(loadedPhotos[loadedPhotos.length - 1].date);
+
+        // Generate all months
+        const allMonths = [];
+        let currentDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+        const endDate = new Date(lastDate.getFullYear(), lastDate.getMonth(), 1);
+
+        while (currentDate <= endDate) {
+            const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+            allMonths.push({
+                key: monthKey,
+                year: currentDate.getFullYear(),
+                month: currentDate.getMonth(),
+                photos: photosByMonth.get(monthKey) || []
+            });
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+
+        // Store for later use
+        timelineData = { allMonths, firstDate, lastDate };
+
+        // Find max photos in any month
+        const maxPhotos = Math.max(...allMonths.map(m => m.photos.length), 1);
+
+        // Build SVG line graph
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const graphHeight = 30;
+        const graphWidth = 100; // percentage
+
+        // Generate path points for the line
+        const points = allMonths.map((month, idx) => {
+            const x = (idx / (allMonths.length - 1 || 1)) * 100;
+            const y = graphHeight - (month.photos.length / maxPhotos) * (graphHeight - 4);
+            return { x, y, month };
+        });
+
+        // Create smooth line path
+        const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+
+        // Create area path (fill under the line)
+        const areaPath = `${linePath} L ${points[points.length - 1].x} ${graphHeight} L ${points[0].x} ${graphHeight} Z`;
+
+        // Get start and end labels
+        const startLabel = `${monthNames[firstDate.getMonth()]} ${firstDate.getFullYear()}`;
+        const endLabel = `${monthNames[lastDate.getMonth()]} ${lastDate.getFullYear()}`;
+
+        mobileTimeline.innerHTML = `
+            <div class="mobile-timeline-track">
+                <div class="mobile-timeline-graph">
+                    <svg viewBox="0 0 100 ${graphHeight}" preserveAspectRatio="none">
+                        <path class="mobile-timeline-area" d="${areaPath}" />
+                        <path class="mobile-timeline-line" d="${linePath}" />
+                    </svg>
+                    <div class="mobile-timeline-indicator" id="mobile-timeline-indicator"></div>
+                </div>
+            </div>
+            <div class="mobile-timeline-labels">
+                <span class="mobile-timeline-label-item">${startLabel}</span>
+                <span class="mobile-timeline-label-item">${endLabel}</span>
+            </div>
+            <div class="mobile-timeline-current" id="mobile-timeline-current"></div>
+        `;
+
+        // Add click/touch handler for scrubbing
+        const graph = mobileTimeline.querySelector('.mobile-timeline-graph');
+        if (graph) {
+            const handleScrub = (clientX) => {
+                const rect = graph.getBoundingClientRect();
+                const x = (clientX - rect.left) / rect.width;
+                const photoIndex = Math.floor(x * loadedPhotos.length);
+                const clampedIndex = Math.max(0, Math.min(loadedPhotos.length - 1, photoIndex));
+
+                if (mobileViewMode === 'grid') {
+                    switchToPhotoMode(clampedIndex);
+                } else {
+                    showPhoto(clampedIndex, true);
+                    updateMobileTimelineIndicator();
+                }
+            };
+
+            graph.addEventListener('click', (e) => handleScrub(e.clientX));
+
+            let isScrubbing = false;
+            graph.addEventListener('touchstart', (e) => {
+                isScrubbing = true;
+                handleScrub(e.touches[0].clientX);
+            }, { passive: true });
+
+            graph.addEventListener('touchmove', (e) => {
+                if (isScrubbing) {
+                    handleScrub(e.touches[0].clientX);
+                }
+            }, { passive: true });
+
+            graph.addEventListener('touchend', () => {
+                isScrubbing = false;
+            }, { passive: true });
+        }
+    }
+
+    // Update mobile timeline indicator position
+    function updateMobileTimelineIndicator() {
+        const indicator = document.getElementById('mobile-timeline-indicator');
+        const currentLabel = document.getElementById('mobile-timeline-current');
+        if (!indicator) return;
+
+        const photo = loadedPhotos[currentIndex];
+        if (!photo) return;
+
+        const photoDate = parseLocalDate(photo.date);
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        // Calculate position based on photo index
+        const position = (currentIndex / (loadedPhotos.length - 1 || 1)) * 100;
+
+        indicator.style.left = `${position}%`;
+
+        if (currentLabel) {
+            currentLabel.textContent = `${monthNames[photoDate.getMonth()]} ${photoDate.getFullYear()} · Photo ${currentIndex + 1} of ${loadedPhotos.length}`;
+        }
+    }
+
+    // Switch to photo viewing mode (from grid)
+    function switchToPhotoMode(index) {
+        mobileViewMode = 'photo';
+
+        // Hide grid, show gallery
+        if (elements.mobileGridView) {
+            elements.mobileGridView.style.display = 'none';
+        }
+        if (elements.galleryLayout) {
+            elements.galleryLayout.style.display = 'flex';
+            elements.galleryLayout.classList.add('photo-mode');
+        }
+
+        // Show photo
+        isProgrammaticScroll = true;
+        lastProgrammaticScrollTime = Date.now();
+        showPhoto(index);
+        setTimeout(() => {
+            isProgrammaticScroll = false;
+        }, 1000);
+    }
+
+    // Switch to grid mode (from photo)
+    function switchToGridMode() {
+        mobileViewMode = 'grid';
+
+        // Hide gallery, show grid
+        if (elements.galleryLayout) {
+            elements.galleryLayout.style.display = 'none';
+            elements.galleryLayout.classList.remove('photo-mode');
+        }
+        if (elements.mobileGridView) {
+            elements.mobileGridView.style.display = 'block';
+        }
+
+        // Hide info overlay if visible
+        hideMobileInfo();
+    }
+
+    // Toggle mobile info overlay
+    function toggleMobileInfo() {
+        const photoMetadata = document.querySelector('.photo-metadata');
+        if (photoMetadata) {
+            photoMetadata.classList.toggle('mobile-visible');
+        }
+    }
+
+    // Hide mobile info overlay
+    function hideMobileInfo() {
+        const photoMetadata = document.querySelector('.photo-metadata');
+        if (photoMetadata) {
+            photoMetadata.classList.remove('mobile-visible');
+        }
+    }
+
+    // Setup mobile event handlers
+    function setupMobileHandlers() {
+        // Close button - return to grid
+        if (elements.mobileCloseBtn) {
+            elements.mobileCloseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchToGridMode();
+            });
+        }
+
+        // Info button - toggle metadata overlay
+        if (elements.mobileInfoBtn) {
+            elements.mobileInfoBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleMobileInfo();
+            });
+        }
+
+        // Also allow tapping metadata panel to close it
+        const photoMetadata = document.querySelector('.photo-metadata');
+        if (photoMetadata) {
+            photoMetadata.addEventListener('click', (e) => {
+                if (e.target === photoMetadata) {
+                    hideMobileInfo();
+                }
+            });
+        }
+    }
+
     // Show specific photo
     function showPhoto(index, skipScroll = false, smoothScroll = true) {
         if (index < 0 || index >= loadedPhotos.length) return;
@@ -614,6 +938,11 @@
 
         // Update navigation button states
         updateNavigationButtons();
+
+        // Update mobile timeline indicator
+        if (isMobile) {
+            updateMobileTimelineIndicator();
+        }
     }
 
     // Calculate aspect ratio
@@ -1110,10 +1439,26 @@
 
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
-        // ESC key to reset zoom
-        if (e.key === 'Escape' && currentZoom > 1) {
-            resetZoom();
-            return;
+        // ESC key behavior
+        if (e.key === 'Escape') {
+            // First, try to close mobile info if visible
+            const photoMetadata = document.querySelector('.photo-metadata');
+            if (photoMetadata && photoMetadata.classList.contains('mobile-visible')) {
+                hideMobileInfo();
+                return;
+            }
+
+            // If zoomed, reset zoom
+            if (currentZoom > 1) {
+                resetZoom();
+                return;
+            }
+
+            // On mobile, return to grid
+            if (isMobile && mobileViewMode === 'photo') {
+                switchToGridMode();
+                return;
+            }
         }
 
         if (e.key === 'r' || e.key === 'R') {
