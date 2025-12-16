@@ -39,9 +39,12 @@ const PageLoader = {
 			loader.classList.add('active');
 			// Animate loading bar with ▮ characters
 			if (loadingBar) {
-				const totalBlocks = 11;
+				// Use 16 blocks on mobile (≤768px), 11 on desktop
+				const isMobile = window.innerWidth <= 768;
+				const totalBlocks = isMobile ? 16 : 11;
+				const totalTime = 1400; // Keep total animation time consistent
+				const intervalTime = Math.floor(totalTime / totalBlocks);
 				let currentBlock = 0;
-				const intervalTime = 127;
 				const interval = setInterval(() => {
 					currentBlock++;
 					loadingBar.textContent = '▮'.repeat(currentBlock);

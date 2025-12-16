@@ -2085,7 +2085,7 @@ body:has(#projects.active) .filter-sidebar {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 16px;
+	gap: 8px;
 	opacity: 0;
 	transition: opacity 0.2s ease;
 }
