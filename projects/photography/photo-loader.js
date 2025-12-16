@@ -482,60 +482,88 @@
         // Sort photos by date (newest first for grid view)
         const sortedPhotos = [...loadedPhotos].reverse();
 
-        // Process photos in pairs to calculate proportional widths
-        for (let i = 0; i < sortedPhotos.length; i += 2) {
-            const photo1 = sortedPhotos[i];
-            const photo2 = sortedPhotos[i + 1];
-            const originalIndex1 = loadedPhotos.length - 1 - i;
-            const originalIndex2 = photo2 ? loadedPhotos.length - 1 - (i + 1) : null;
-
-            // Calculate aspect ratios (width / height)
-            const ratio1 = photo1.width / photo1.height;
-            const ratio2 = photo2 ? photo2.width / photo2.height : ratio1;
-
-            // Calculate proportional widths (accounting for 2px gap)
-            const totalRatio = ratio1 + ratio2;
-            const width1 = photo2 ? (ratio1 / totalRatio) * 100 : 100;
-            const width2 = photo2 ? (ratio2 / totalRatio) * 100 : 0;
-
-            // Create first grid item
-            const gridItem1 = document.createElement('div');
-            gridItem1.className = 'mobile-grid-item';
-            gridItem1.dataset.photoIndex = originalIndex1;
-            gridItem1.style.width = `calc(${width1}% - 1px)`;
-
-            const img1 = document.createElement('img');
-            img1.src = photo1.src || (imagePath + photo1.file);
-            img1.alt = photo1.file;
-            img1.loading = 'lazy';
-
-            gridItem1.appendChild(img1);
-            gridItem1.addEventListener('click', () => {
-                switchToPhotoMode(originalIndex1);
-            });
-            elements.mobileGrid.appendChild(gridItem1);
-
-            // Create second grid item if exists
-            if (photo2) {
-                const gridItem2 = document.createElement('div');
-                gridItem2.className = 'mobile-grid-item';
-                gridItem2.dataset.photoIndex = originalIndex2;
-                gridItem2.style.width = `calc(${width2}% - 1px)`;
-
-                const img2 = document.createElement('img');
-                img2.src = photo2.src || (imagePath + photo2.file);
-                img2.alt = photo2.file;
-                img2.loading = 'lazy';
-
-                gridItem2.appendChild(img2);
-                gridItem2.addEventListener('click', () => {
-                    switchToPhotoMode(originalIndex2);
-                });
-                elements.mobileGrid.appendChild(gridItem2);
+        // Group photos by year
+        const photosByYear = new Map();
+        sortedPhotos.forEach((photo, sortedIndex) => {
+            const photoDate = parseLocalDate(photo.date);
+            const year = photoDate.getFullYear();
+            if (!photosByYear.has(year)) {
+                photosByYear.set(year, []);
             }
-        }
+            // Store both the photo and its original index
+            const originalIndex = loadedPhotos.length - 1 - sortedIndex;
+            photosByYear.get(year).push({ photo, originalIndex });
+        });
 
-        console.log(`Built mobile grid with ${loadedPhotos.length} photos`);
+        // Process each year group
+        photosByYear.forEach((yearPhotos, year) => {
+            // Create year header
+            const yearHeader = document.createElement('div');
+            yearHeader.className = 'mobile-grid-year';
+            yearHeader.textContent = year;
+            elements.mobileGrid.appendChild(yearHeader);
+
+            // Create container for this year's photos
+            const yearGrid = document.createElement('div');
+            yearGrid.className = 'mobile-grid-section';
+
+            // Process photos in pairs to calculate proportional widths
+            for (let i = 0; i < yearPhotos.length; i += 2) {
+                const { photo: photo1, originalIndex: originalIndex1 } = yearPhotos[i];
+                const item2 = yearPhotos[i + 1];
+                const photo2 = item2 ? item2.photo : null;
+                const originalIndex2 = item2 ? item2.originalIndex : null;
+
+                // Calculate aspect ratios (width / height)
+                const ratio1 = photo1.width / photo1.height;
+                const ratio2 = photo2 ? photo2.width / photo2.height : ratio1;
+
+                // Calculate proportional widths (accounting for 2px gap)
+                const totalRatio = ratio1 + ratio2;
+                const width1 = photo2 ? (ratio1 / totalRatio) * 100 : 100;
+                const width2 = photo2 ? (ratio2 / totalRatio) * 100 : 0;
+
+                // Create first grid item
+                const gridItem1 = document.createElement('div');
+                gridItem1.className = 'mobile-grid-item';
+                gridItem1.dataset.photoIndex = originalIndex1;
+                gridItem1.style.width = `calc(${width1}% - 1px)`;
+
+                const img1 = document.createElement('img');
+                img1.src = photo1.src || (imagePath + photo1.file);
+                img1.alt = photo1.file;
+                img1.loading = 'lazy';
+
+                gridItem1.appendChild(img1);
+                gridItem1.addEventListener('click', () => {
+                    switchToPhotoMode(originalIndex1);
+                });
+                yearGrid.appendChild(gridItem1);
+
+                // Create second grid item if exists
+                if (photo2) {
+                    const gridItem2 = document.createElement('div');
+                    gridItem2.className = 'mobile-grid-item';
+                    gridItem2.dataset.photoIndex = originalIndex2;
+                    gridItem2.style.width = `calc(${width2}% - 1px)`;
+
+                    const img2 = document.createElement('img');
+                    img2.src = photo2.src || (imagePath + photo2.file);
+                    img2.alt = photo2.file;
+                    img2.loading = 'lazy';
+
+                    gridItem2.appendChild(img2);
+                    gridItem2.addEventListener('click', () => {
+                        switchToPhotoMode(originalIndex2);
+                    });
+                    yearGrid.appendChild(gridItem2);
+                }
+            }
+
+            elements.mobileGrid.appendChild(yearGrid);
+        });
+
+        console.log(`Built mobile grid with ${loadedPhotos.length} photos across ${photosByYear.size} years`);
     }
 
     // Store timeline data for reuse
@@ -609,8 +637,8 @@
                 const p2 = pts[i + 1];
                 const p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
 
-                // Control point tension (0.3 = smooth curves)
-                const tension = 0.3;
+                // Control point tension (0.5 = more rounded curves)
+                const tension = 0.5;
 
                 const cp1x = p1.x + (p2.x - p0.x) * tension;
                 const cp1y = p1.y + (p2.y - p0.y) * tension;
@@ -655,41 +683,7 @@
             <div class="mobile-timeline-current" id="mobile-timeline-current"></div>
         `;
 
-        // Add click/touch handler for scrubbing
-        const graph = mobileTimeline.querySelector('.mobile-timeline-graph');
-        if (graph) {
-            const handleScrub = (clientX) => {
-                const rect = graph.getBoundingClientRect();
-                const x = (clientX - rect.left) / rect.width;
-                const photoIndex = Math.floor(x * loadedPhotos.length);
-                const clampedIndex = Math.max(0, Math.min(loadedPhotos.length - 1, photoIndex));
-
-                if (mobileViewMode === 'grid') {
-                    switchToPhotoMode(clampedIndex);
-                } else {
-                    showPhoto(clampedIndex, true);
-                    updateMobileTimelineIndicator();
-                }
-            };
-
-            graph.addEventListener('click', (e) => handleScrub(e.clientX));
-
-            let isScrubbing = false;
-            graph.addEventListener('touchstart', (e) => {
-                isScrubbing = true;
-                handleScrub(e.touches[0].clientX);
-            }, { passive: true });
-
-            graph.addEventListener('touchmove', (e) => {
-                if (isScrubbing) {
-                    handleScrub(e.touches[0].clientX);
-                }
-            }, { passive: true });
-
-            graph.addEventListener('touchend', () => {
-                isScrubbing = false;
-            }, { passive: true });
-        }
+        // Timeline is display-only - indicator shows current position
     }
 
     // Update mobile timeline indicator position
@@ -751,20 +745,34 @@
 
         // Hide info overlay if visible
         hideMobileInfo();
+
+        // Remove photo parameter from URL
+        const newUrl = window.location.pathname;
+        window.history.pushState({}, '', newUrl);
     }
 
     // Toggle mobile info overlay
     function toggleMobileInfo() {
         const photoMetadata = document.querySelector('.photo-metadata');
+        const galleryLayout = document.querySelector('.gallery-layout');
         if (photoMetadata) {
             photoMetadata.classList.toggle('mobile-visible');
+            // Also toggle class on gallery to push photo up
+            if (galleryLayout) {
+                galleryLayout.classList.toggle('info-visible');
+            }
         }
     }
 
     // Hide mobile info overlay
     function hideMobileInfo() {
         const photoMetadata = document.querySelector('.photo-metadata');
+        const galleryLayout = document.querySelector('.gallery-layout');
         if (photoMetadata) {
+            // Also remove class from gallery
+            if (galleryLayout) {
+                galleryLayout.classList.remove('info-visible');
+            }
             photoMetadata.classList.remove('mobile-visible');
         }
     }
@@ -795,6 +803,217 @@
                     hideMobileInfo();
                 }
             });
+        }
+
+        // Info panel close button
+        const infoCloseBtn = document.getElementById('info-close-btn');
+        if (infoCloseBtn) {
+            infoCloseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                hideMobileInfo();
+            });
+        }
+
+        // Swipe controls for photo navigation
+        setupSwipeControls();
+    }
+
+    // Setup swipe gesture controls with interactive drag-to-dismiss
+    function setupSwipeControls() {
+        const photoViewer = document.querySelector('.photo-viewer');
+        const mainPhoto = document.getElementById('main-photo');
+        const galleryLayout = document.getElementById('gallery-layout');
+        if (!photoViewer || !mainPhoto) return;
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchCurrentY = 0;
+        let isDraggingVertical = false;
+        let isDraggingHorizontal = false;
+        let dragDirection = null; // 'vertical' or 'horizontal'
+        const minSwipeDistance = 50;
+        const dismissThreshold = 150; // Distance to trigger dismiss
+        const velocityThreshold = 0.5; // Velocity to trigger dismiss
+        let lastTouchY = 0;
+        let lastTouchTime = 0;
+        let velocity = 0;
+
+        photoViewer.addEventListener('touchstart', (e) => {
+            // Don't interfere with info panel
+            if (document.querySelector('.photo-metadata.mobile-visible')) return;
+
+            touchStartX = e.changedTouches[0].clientX;
+            touchStartY = e.changedTouches[0].clientY;
+            touchCurrentY = touchStartY;
+            lastTouchY = touchStartY;
+            lastTouchTime = Date.now();
+            velocity = 0;
+            isDraggingVertical = false;
+            isDraggingHorizontal = false;
+            dragDirection = null;
+
+            // Remove transition during drag
+            mainPhoto.style.transition = 'none';
+            if (galleryLayout) galleryLayout.style.transition = 'none';
+        }, { passive: true });
+
+        photoViewer.addEventListener('touchmove', (e) => {
+            // Don't interfere with info panel
+            if (document.querySelector('.photo-metadata.mobile-visible')) return;
+
+            const currentX = e.changedTouches[0].clientX;
+            const currentY = e.changedTouches[0].clientY;
+            const deltaX = currentX - touchStartX;
+            const deltaY = currentY - touchStartY;
+
+            // Determine drag direction on first significant movement
+            if (!dragDirection && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    dragDirection = 'vertical';
+                    isDraggingVertical = true;
+                } else {
+                    dragDirection = 'horizontal';
+                    isDraggingHorizontal = true;
+                }
+            }
+
+            // Handle vertical drag (dismiss gesture)
+            if (dragDirection === 'vertical' && deltaY > 0) {
+                touchCurrentY = currentY;
+
+                // Calculate velocity
+                const now = Date.now();
+                const dt = now - lastTouchTime;
+                if (dt > 0) {
+                    velocity = (currentY - lastTouchY) / dt;
+                }
+                lastTouchY = currentY;
+                lastTouchTime = now;
+
+                // Apply transform to photo - follow finger
+                const progress = Math.min(deltaY / dismissThreshold, 1);
+                const scale = 1 - (progress * 0.15); // Scale down to 85%
+                const opacity = 1 - (progress * 0.3); // Fade to 70%
+
+                mainPhoto.style.transform = `translateY(${deltaY}px) scale(${scale})`;
+                mainPhoto.style.opacity = opacity;
+
+                // Fade background
+                if (galleryLayout) {
+                    galleryLayout.style.background = `rgba(0, 0, 0, ${1 - progress * 0.5})`;
+                }
+            }
+        }, { passive: true });
+
+        photoViewer.addEventListener('touchend', (e) => {
+            // Don't interfere with info panel
+            if (document.querySelector('.photo-metadata.mobile-visible')) return;
+
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+
+            // Re-enable transitions
+            mainPhoto.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            if (galleryLayout) galleryLayout.style.transition = 'background 0.3s ease';
+
+            // Handle vertical dismiss
+            if (dragDirection === 'vertical' && deltaY > 0) {
+                const shouldDismiss = deltaY > dismissThreshold || velocity > velocityThreshold;
+
+                if (shouldDismiss) {
+                    // Animate out and switch to grid
+                    mainPhoto.style.transform = `translateY(${window.innerHeight}px) scale(0.8)`;
+                    mainPhoto.style.opacity = '0';
+
+                    setTimeout(() => {
+                        // Reset styles before switching
+                        mainPhoto.style.transition = '';
+                        mainPhoto.style.transform = '';
+                        mainPhoto.style.opacity = '';
+                        if (galleryLayout) {
+                            galleryLayout.style.transition = '';
+                            galleryLayout.style.background = '';
+                        }
+                        switchToGridMode();
+                    }, 300);
+                } else {
+                    // Spring back to original position
+                    mainPhoto.style.transform = '';
+                    mainPhoto.style.opacity = '';
+                    if (galleryLayout) galleryLayout.style.background = '';
+
+                    // Clean up after animation
+                    setTimeout(() => {
+                        mainPhoto.style.transition = '';
+                        if (galleryLayout) galleryLayout.style.transition = '';
+                    }, 300);
+                }
+                return;
+            }
+
+            // Handle horizontal swipe for navigation
+            if (dragDirection === 'horizontal' && Math.abs(deltaX) > minSwipeDistance) {
+                // Reset any transforms
+                mainPhoto.style.transform = '';
+                mainPhoto.style.opacity = '';
+                mainPhoto.style.transition = '';
+                if (galleryLayout) {
+                    galleryLayout.style.background = '';
+                    galleryLayout.style.transition = '';
+                }
+
+                if (deltaX < 0) {
+                    navigatePhoto('next');
+                } else {
+                    navigatePhoto('prev');
+                }
+                return;
+            }
+
+            // Handle swipe up for info panel
+            if (dragDirection === 'vertical' && deltaY < -minSwipeDistance) {
+                mainPhoto.style.transform = '';
+                mainPhoto.style.opacity = '';
+                mainPhoto.style.transition = '';
+                if (galleryLayout) {
+                    galleryLayout.style.background = '';
+                    galleryLayout.style.transition = '';
+                }
+                toggleMobileInfo();
+                return;
+            }
+
+            // Reset if no action taken
+            mainPhoto.style.transform = '';
+            mainPhoto.style.opacity = '';
+            setTimeout(() => {
+                mainPhoto.style.transition = '';
+                if (galleryLayout) {
+                    galleryLayout.style.background = '';
+                    galleryLayout.style.transition = '';
+                }
+            }, 300);
+        }, { passive: true });
+
+        // Swipe down on info panel to close it
+        const infoPanel = document.querySelector('.photo-metadata');
+        if (infoPanel) {
+            let infoTouchStartY = 0;
+
+            infoPanel.addEventListener('touchstart', (e) => {
+                infoTouchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            infoPanel.addEventListener('touchend', (e) => {
+                const infoTouchEndY = e.changedTouches[0].screenY;
+                const deltaY = infoTouchEndY - infoTouchStartY;
+
+                if (deltaY > minSwipeDistance) {
+                    hideMobileInfo();
+                }
+            }, { passive: true });
         }
     }
 
