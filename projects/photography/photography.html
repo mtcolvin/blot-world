@@ -997,7 +997,12 @@
 
             /* Raise z-index when info panel is visible to cover mininav */
             .gallery-layout.photo-mode.info-visible {
-                z-index: 1100;
+                z-index: 1100 !important;
+            }
+
+            /* Hide mininav when info panel is visible */
+            body:has(.photo-metadata.mobile-visible) .minimal-nav {
+                display: none !important;
             }
 
             /* No need to push photo when info is full screen */
