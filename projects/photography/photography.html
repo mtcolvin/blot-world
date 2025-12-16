@@ -973,26 +973,35 @@
                 transform: translateY(0);
             }
 
-            /* Info panel close button */
+            /* Info panel close button - hidden by default */
             .info-close-btn {
+                display: none;
+            }
+
+            /* Show close button only when info panel is visible */
+            .photo-metadata.mobile-visible .info-close-btn {
+                display: flex;
                 position: fixed;
                 top: 20px;
                 right: 20px;
                 width: 44px;
                 height: 44px;
-                background: rgba(255, 255, 255, 0.15);
-                border: none;
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
                 border-radius: 50%;
                 color: white;
-                display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                z-index: 1200;
+                z-index: 9999;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+                pointer-events: auto !important;
             }
 
-            .info-close-btn:active {
-                background: rgba(255, 255, 255, 0.2);
+            .photo-metadata.mobile-visible .info-close-btn:active {
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(0.95);
             }
 
             /* Raise z-index when info panel is visible to cover mininav */
