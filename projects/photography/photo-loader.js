@@ -823,6 +823,7 @@
         const photoViewer = document.querySelector('.photo-viewer');
         const mainPhoto = document.getElementById('main-photo');
         const galleryLayout = document.getElementById('gallery-layout');
+        const mobileGridView = document.getElementById('mobile-grid-view');
         if (!photoViewer || !mainPhoto) return;
 
         let touchStartX = 0;
@@ -832,11 +833,20 @@
         let isDraggingHorizontal = false;
         let dragDirection = null; // 'vertical' or 'horizontal'
         const minSwipeDistance = 50;
-        const dismissThreshold = 150; // Distance to trigger dismiss
-        const velocityThreshold = 0.5; // Velocity to trigger dismiss
+        const dismissThreshold = 120; // Distance to trigger dismiss
+        const velocityThreshold = 0.4; // Velocity to trigger dismiss
         let lastTouchY = 0;
         let lastTouchTime = 0;
         let velocity = 0;
+
+        // Get the grid item position for the current photo
+        function getGridItemRect() {
+            const gridItem = document.querySelector(`.mobile-grid-item[data-photo-index="${currentIndex}"]`);
+            if (gridItem) {
+                return gridItem.getBoundingClientRect();
+            }
+            return null;
+        }
 
         photoViewer.addEventListener('touchstart', (e) => {
             // Don't interfere with info panel
@@ -855,6 +865,13 @@
             // Remove transition during drag
             mainPhoto.style.transition = 'none';
             if (galleryLayout) galleryLayout.style.transition = 'none';
+
+            // Show grid underneath during drag
+            if (mobileGridView) {
+                mobileGridView.style.display = 'block';
+                mobileGridView.style.opacity = '0';
+                mobileGridView.style.transition = 'none';
+            }
         }, { passive: true });
 
         photoViewer.addEventListener('touchmove', (e) => {
@@ -890,17 +907,27 @@
                 lastTouchY = currentY;
                 lastTouchTime = now;
 
-                // Apply transform to photo - follow finger
+                // Calculate progress (0 to 1)
                 const progress = Math.min(deltaY / dismissThreshold, 1);
-                const scale = 1 - (progress * 0.15); // Scale down to 85%
-                const opacity = 1 - (progress * 0.3); // Fade to 70%
 
+                // Scale down more dramatically (to 60% at full progress)
+                const scale = 1 - (progress * 0.4);
+
+                // Round corners as it shrinks
+                const borderRadius = progress * 16;
+
+                // Apply transform - photo follows finger and shrinks
                 mainPhoto.style.transform = `translateY(${deltaY}px) scale(${scale})`;
-                mainPhoto.style.opacity = opacity;
+                mainPhoto.style.borderRadius = `${borderRadius}px`;
 
-                // Fade background
+                // Fade the photo viewer background to reveal grid
                 if (galleryLayout) {
-                    galleryLayout.style.background = `rgba(0, 0, 0, ${1 - progress * 0.5})`;
+                    galleryLayout.style.background = `rgba(0, 0, 0, ${1 - progress * 0.8})`;
+                }
+
+                // Show grid underneath
+                if (mobileGridView) {
+                    mobileGridView.style.opacity = String(progress * 0.8);
                 }
             }
         }, { passive: true });
@@ -914,40 +941,81 @@
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
 
-            // Re-enable transitions
-            mainPhoto.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if (galleryLayout) galleryLayout.style.transition = 'background 0.3s ease';
-
             // Handle vertical dismiss
             if (dragDirection === 'vertical' && deltaY > 0) {
                 const shouldDismiss = deltaY > dismissThreshold || velocity > velocityThreshold;
 
                 if (shouldDismiss) {
-                    // Animate out and switch to grid
-                    mainPhoto.style.transform = `translateY(${window.innerHeight}px) scale(0.8)`;
+                    // Get target grid item position
+                    const gridRect = getGridItemRect();
+                    const photoRect = mainPhoto.getBoundingClientRect();
+
+                    // Calculate where to animate to
+                    let targetX = 0;
+                    let targetY = window.innerHeight;
+                    let targetScale = 0.3;
+
+                    if (gridRect) {
+                        // Animate toward the grid item
+                        const photoCenterX = photoRect.left + photoRect.width / 2;
+                        const photoCenterY = photoRect.top + photoRect.height / 2;
+                        const gridCenterX = gridRect.left + gridRect.width / 2;
+                        const gridCenterY = gridRect.top + gridRect.height / 2;
+
+                        targetX = gridCenterX - photoCenterX;
+                        targetY = gridCenterY - photoCenterY;
+                        targetScale = gridRect.width / photoRect.width;
+                    }
+
+                    // Re-enable transitions for smooth animation
+                    mainPhoto.style.transition = 'transform 0.25s ease-out, opacity 0.25s ease-out, border-radius 0.25s ease-out';
+                    if (galleryLayout) galleryLayout.style.transition = 'background 0.25s ease-out';
+                    if (mobileGridView) mobileGridView.style.transition = 'opacity 0.25s ease-out';
+
+                    // Animate to grid position
+                    mainPhoto.style.transform = `translate(${targetX}px, ${targetY}px) scale(${targetScale})`;
                     mainPhoto.style.opacity = '0';
+                    mainPhoto.style.borderRadius = '8px';
+
+                    if (galleryLayout) galleryLayout.style.background = 'transparent';
+                    if (mobileGridView) mobileGridView.style.opacity = '1';
 
                     setTimeout(() => {
                         // Reset styles before switching
                         mainPhoto.style.transition = '';
                         mainPhoto.style.transform = '';
                         mainPhoto.style.opacity = '';
+                        mainPhoto.style.borderRadius = '';
                         if (galleryLayout) {
                             galleryLayout.style.transition = '';
                             galleryLayout.style.background = '';
                         }
+                        if (mobileGridView) {
+                            mobileGridView.style.transition = '';
+                        }
                         switchToGridMode();
-                    }, 300);
+                    }, 250);
                 } else {
                     // Spring back to original position
+                    mainPhoto.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.3s ease, border-radius 0.3s ease';
+                    if (galleryLayout) galleryLayout.style.transition = 'background 0.3s ease';
+                    if (mobileGridView) mobileGridView.style.transition = 'opacity 0.3s ease';
+
                     mainPhoto.style.transform = '';
                     mainPhoto.style.opacity = '';
+                    mainPhoto.style.borderRadius = '';
                     if (galleryLayout) galleryLayout.style.background = '';
+                    if (mobileGridView) mobileGridView.style.opacity = '0';
 
                     // Clean up after animation
                     setTimeout(() => {
                         mainPhoto.style.transition = '';
                         if (galleryLayout) galleryLayout.style.transition = '';
+                        if (mobileGridView) {
+                            mobileGridView.style.display = 'none';
+                            mobileGridView.style.transition = '';
+                            mobileGridView.style.opacity = '';
+                        }
                     }, 300);
                 }
                 return;
@@ -958,10 +1026,16 @@
                 // Reset any transforms
                 mainPhoto.style.transform = '';
                 mainPhoto.style.opacity = '';
+                mainPhoto.style.borderRadius = '';
                 mainPhoto.style.transition = '';
                 if (galleryLayout) {
                     galleryLayout.style.background = '';
                     galleryLayout.style.transition = '';
+                }
+                if (mobileGridView) {
+                    mobileGridView.style.display = 'none';
+                    mobileGridView.style.opacity = '';
+                    mobileGridView.style.transition = '';
                 }
 
                 if (deltaX < 0) {
@@ -976,23 +1050,40 @@
             if (dragDirection === 'vertical' && deltaY < -minSwipeDistance) {
                 mainPhoto.style.transform = '';
                 mainPhoto.style.opacity = '';
+                mainPhoto.style.borderRadius = '';
                 mainPhoto.style.transition = '';
                 if (galleryLayout) {
                     galleryLayout.style.background = '';
                     galleryLayout.style.transition = '';
+                }
+                if (mobileGridView) {
+                    mobileGridView.style.display = 'none';
+                    mobileGridView.style.opacity = '';
+                    mobileGridView.style.transition = '';
                 }
                 toggleMobileInfo();
                 return;
             }
 
             // Reset if no action taken
+            mainPhoto.style.transition = 'transform 0.3s ease, opacity 0.3s ease, border-radius 0.3s ease';
             mainPhoto.style.transform = '';
             mainPhoto.style.opacity = '';
+            mainPhoto.style.borderRadius = '';
+            if (mobileGridView) {
+                mobileGridView.style.transition = 'opacity 0.3s ease';
+                mobileGridView.style.opacity = '0';
+            }
             setTimeout(() => {
                 mainPhoto.style.transition = '';
                 if (galleryLayout) {
                     galleryLayout.style.background = '';
                     galleryLayout.style.transition = '';
+                }
+                if (mobileGridView) {
+                    mobileGridView.style.display = 'none';
+                    mobileGridView.style.opacity = '';
+                    mobileGridView.style.transition = '';
                 }
             }, 300);
         }, { passive: true });

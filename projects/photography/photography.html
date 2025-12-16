@@ -899,52 +899,72 @@
                 display: none !important;
             }
 
-            /* Mobile Info Button */
+            /* Hide mininav when viewing individual photos */
+            .gallery-layout.photo-mode ~ .minimal-nav,
+            body:has(.gallery-layout.photo-mode) .minimal-nav {
+                display: none !important;
+            }
+
+            /* Mobile Info Button - top right */
             .mobile-info-btn {
                 display: flex;
-                position: absolute;
-                top: 70px;
+                position: fixed;
+                top: 16px;
                 right: 16px;
-                width: 40px;
-                height: 40px;
+                width: 48px;
+                height: 48px;
                 border-radius: 50%;
-                background: rgba(0, 0, 0, 0.5);
-                border: none;
+                background: rgba(0, 0, 0, 0.6);
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 color: white;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                z-index: 110;
+                z-index: 120;
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
+                touch-action: manipulation;
+            }
+
+            .mobile-info-btn svg {
+                width: 24px;
+                height: 24px;
             }
 
             .mobile-info-btn:active {
-                background: rgba(0, 0, 0, 0.7);
+                background: rgba(0, 0, 0, 0.8);
+                transform: scale(0.95);
             }
 
-            /* Mobile Close Button */
+            /* Mobile Close Button - top left */
             .mobile-close-btn {
                 display: flex;
-                position: absolute;
-                top: 70px;
+                position: fixed;
+                top: 16px;
                 left: 16px;
-                width: 40px;
-                height: 40px;
+                width: 48px;
+                height: 48px;
                 border-radius: 50%;
-                background: rgba(0, 0, 0, 0.5);
-                border: none;
+                background: rgba(0, 0, 0, 0.6);
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 color: white;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                z-index: 110;
+                z-index: 120;
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
+                touch-action: manipulation;
+            }
+
+            .mobile-close-btn svg {
+                width: 26px;
+                height: 26px;
             }
 
             .mobile-close-btn:active {
-                background: rgba(0, 0, 0, 0.7);
+                background: rgba(0, 0, 0, 0.8);
+                transform: scale(0.95);
             }
 
             /* Mobile Metadata Panel - Full screen (covers mininav) */
