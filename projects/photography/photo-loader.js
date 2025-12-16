@@ -497,11 +497,17 @@
 
         // Process each year group
         photosByYear.forEach((yearPhotos, year) => {
-            // Create year header
+            // Create year header wrapper for centering
+            const yearWrapper = document.createElement('div');
+            yearWrapper.className = 'mobile-grid-year-wrapper';
+
+            // Create year header bubble
             const yearHeader = document.createElement('div');
             yearHeader.className = 'mobile-grid-year';
             yearHeader.textContent = year;
-            elements.mobileGrid.appendChild(yearHeader);
+
+            yearWrapper.appendChild(yearHeader);
+            elements.mobileGrid.appendChild(yearWrapper);
 
             // Create container for this year's photos
             const yearGrid = document.createElement('div');
