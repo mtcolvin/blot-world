@@ -855,8 +855,9 @@
         }
 
         photoViewer.addEventListener('touchstart', (e) => {
-            // Don't interfere with info panel
+            // Don't interfere with info panel or pinch-to-zoom (multi-touch)
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
+            if (e.touches.length > 1) return; // Allow native pinch-zoom
 
             touchStartX = e.changedTouches[0].clientX;
             touchStartY = e.changedTouches[0].clientY;
@@ -881,8 +882,9 @@
         }, { passive: true });
 
         photoViewer.addEventListener('touchmove', (e) => {
-            // Don't interfere with info panel
+            // Don't interfere with info panel or pinch-to-zoom (multi-touch)
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
+            if (e.touches.length > 1) return; // Allow native pinch-zoom
 
             const currentX = e.changedTouches[0].clientX;
             const currentY = e.changedTouches[0].clientY;
@@ -939,8 +941,9 @@
         }, { passive: true });
 
         photoViewer.addEventListener('touchend', (e) => {
-            // Don't interfere with info panel
+            // Don't interfere with info panel or if no drag was started (pinch-zoom)
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
+            if (!dragDirection) return; // Was likely a pinch-zoom, don't process
 
             const touchEndX = e.changedTouches[0].clientX;
             const touchEndY = e.changedTouches[0].clientY;

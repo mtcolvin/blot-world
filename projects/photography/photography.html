@@ -909,6 +909,17 @@
                 object-fit: contain;
                 border-radius: 0 !important;
                 box-shadow: none;
+                touch-action: pinch-zoom pan-x pan-y;
+            }
+
+            .gallery-layout.photo-mode .main-photo-container {
+                touch-action: pinch-zoom pan-x pan-y;
+                overflow: hidden;
+            }
+
+            .gallery-layout.photo-mode .photo-viewer {
+                touch-action: pan-y;
+                overflow: hidden;
             }
 
             /* Hide nav buttons, zoom controls, metadata panel on mobile */
