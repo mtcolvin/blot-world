@@ -249,7 +249,7 @@
                 // Default to grid view
                 elements.galleryLayout.style.display = 'none';
                 if (elements.mobileGridView) {
-                    elements.mobileGridView.style.display = 'block';
+                    elements.mobileGridView.classList.add('active');
                 }
             }
         } else {
@@ -877,7 +877,7 @@
 
             // Show grid underneath during drag
             if (mobileGridView) {
-                mobileGridView.style.display = 'block';
+                mobileGridView.classList.add('active');
                 mobileGridView.style.opacity = '0';
                 mobileGridView.style.transition = 'none';
             }
@@ -1023,7 +1023,7 @@
                         mainPhoto.style.transition = '';
                         if (galleryLayout) galleryLayout.style.transition = '';
                         if (mobileGridView) {
-                            mobileGridView.style.display = 'none';
+                            mobileGridView.classList.remove('active');
                             mobileGridView.style.transition = '';
                             mobileGridView.style.opacity = '';
                         }
@@ -1044,7 +1044,7 @@
                     galleryLayout.style.transition = '';
                 }
                 if (mobileGridView) {
-                    mobileGridView.style.display = 'none';
+                    mobileGridView.classList.remove('active');
                     mobileGridView.style.opacity = '';
                     mobileGridView.style.transition = '';
                 }
@@ -1068,7 +1068,7 @@
                     galleryLayout.style.transition = '';
                 }
                 if (mobileGridView) {
-                    mobileGridView.style.display = 'none';
+                    mobileGridView.classList.remove('active');
                     mobileGridView.style.opacity = '';
                     mobileGridView.style.transition = '';
                 }
@@ -1092,7 +1092,7 @@
                     galleryLayout.style.transition = '';
                 }
                 if (mobileGridView) {
-                    mobileGridView.style.display = 'none';
+                    mobileGridView.classList.remove('active');
                     mobileGridView.style.opacity = '';
                     mobileGridView.style.transition = '';
                 }
