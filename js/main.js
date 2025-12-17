@@ -39,23 +39,26 @@ const PageLoader = {
 			loader.classList.add('active');
 			// Animate loading bar with ▮ characters - dynamically sized
 			if (loadingBar) {
-				// Measure actual block width by adding test characters
-				loadingBar.textContent = '▮▮▮▮▮▮▮▮▮▮'; // 10 blocks
-				const testWidth = loadingBar.scrollWidth;
-				const blockWidth = testWidth / 10;
+				// Create a temporary span to measure exact block width
+				const measureSpan = document.createElement('span');
+				measureSpan.style.cssText = 'font-family:monospace;font-size:12px;letter-spacing:0;visibility:hidden;position:absolute;';
+				measureSpan.textContent = '▮';
+				document.body.appendChild(measureSpan);
+				const blockWidth = measureSpan.offsetWidth;
+				document.body.removeChild(measureSpan);
 
-				// Calculate container inner width (subtract padding + border)
+				// Calculate container inner width
 				const styles = getComputedStyle(loadingBar);
 				const paddingLeft = parseFloat(styles.paddingLeft) || 0;
 				const paddingRight = parseFloat(styles.paddingRight) || 0;
 				const availableWidth = loadingBar.clientWidth - paddingLeft - paddingRight;
 
-				// Calculate blocks that fit, with small buffer to ensure full fill
+				// Calculate blocks that fit
 				const totalBlocks = Math.max(5, Math.floor(availableWidth / blockWidth));
-				const totalTime = 1400; // Keep total animation time consistent
+				const totalTime = 1400;
 				const intervalTime = Math.floor(totalTime / totalBlocks);
 				let currentBlock = 0;
-				loadingBar.textContent = ''; // Clear for animation
+				loadingBar.textContent = '';
 				const interval = setInterval(() => {
 					currentBlock++;
 					loadingBar.textContent = '▮'.repeat(currentBlock);
