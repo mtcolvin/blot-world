@@ -2102,7 +2102,7 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 .page-loader-bar {
-	width: 150px;
+	width: min(80vw, 280px);
 	height: 24px;
 	font-family: monospace;
 	font-size: 12px;
@@ -2113,6 +2113,8 @@ body:has(#projects.active) .filter-sidebar {
 	padding: 4px 6px;
 	box-sizing: border-box;
 	line-height: 1;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .loader-spinner {

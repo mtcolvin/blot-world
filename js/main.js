@@ -37,12 +37,17 @@ const PageLoader = {
 		if (loader && gif) {
 			gif.src = this.getRandomGif();
 			loader.classList.add('active');
-			// Animate loading bar with ▮ characters
+			// Animate loading bar with ▮ characters - dynamically sized
 			if (loadingBar) {
-				const totalBlocks = 11;
+				// Calculate how many blocks fit based on container width
+				// Each ▮ is approximately 9px wide with letter-spacing (12px font + 1px spacing)
+				const containerWidth = loadingBar.clientWidth - 12; // Subtract padding
+				const blockWidth = 9; // Approximate width of ▮ character
+				const totalBlocks = Math.max(5, Math.floor(containerWidth / blockWidth));
 				const totalTime = 1400; // Keep total animation time consistent
 				const intervalTime = Math.floor(totalTime / totalBlocks);
 				let currentBlock = 0;
+				loadingBar.textContent = ''; // Clear first
 				const interval = setInterval(() => {
 					currentBlock++;
 					loadingBar.textContent = '▮'.repeat(currentBlock);
