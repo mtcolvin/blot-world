@@ -720,6 +720,7 @@
 
         // Hide grid, show gallery
         if (elements.mobileGridView) {
+            elements.mobileGridView.classList.remove('active');
             elements.mobileGridView.style.display = 'none';
         }
         if (elements.galleryLayout) {
@@ -746,7 +747,8 @@
             elements.galleryLayout.classList.remove('photo-mode');
         }
         if (elements.mobileGridView) {
-            elements.mobileGridView.style.display = 'block';
+            elements.mobileGridView.classList.add('active');
+            elements.mobileGridView.style.display = '';
         }
 
         // Hide info overlay if visible
