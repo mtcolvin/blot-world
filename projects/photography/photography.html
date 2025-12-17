@@ -633,19 +633,21 @@
            MOBILE REDESIGN - Google Photos Style
            ============================================ */
         @media (max-width: 768px) {
-            /* Mobile mininav with logo and text */
+            /* Mobile mininav - full width bar */
             .minimal-nav {
-                width: auto !important;
+                width: 100% !important;
                 height: auto;
-                left: 50% !important;
-                transform: translateX(-50%);
-                top: 12px !important;
-                padding: 10px 14px !important;
-                background: rgba(0, 0, 0, 0.85);
+                left: 0 !important;
+                right: 0 !important;
+                transform: none;
+                top: 0 !important;
+                padding: 12px 16px !important;
+                background: rgba(0, 0, 0, 0.95);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                border-radius: 12px;
-                border: 1px solid rgba(255, 255, 255, 1);
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
                 overflow: visible;
             }
 
