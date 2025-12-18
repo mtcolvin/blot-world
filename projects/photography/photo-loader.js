@@ -846,12 +846,13 @@
         let lastTouchTime = 0;
         let velocity = 0;
 
-        // Helper to reset all swipe state
+        // Helper to reset all swipe state (preserves zoom transform)
         function resetSwipeState() {
             dragDirection = null;
             isDraggingVertical = false;
             isDraggingHorizontal = false;
-            mainPhoto.style.transform = '';
+            // Don't reset transform - it may contain zoom state
+            // Only reset swipe-specific styles
             mainPhoto.style.opacity = '';
             mainPhoto.style.borderRadius = '';
             mainPhoto.style.transition = '';
@@ -876,8 +877,9 @@
         }
 
         photoViewer.addEventListener('touchstart', (e) => {
-            // Don't interfere with info panel
+            // Don't interfere with info panel or when zoomed
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
+            if (currentZoom > 1) return; // Let zoom/pan handlers take over
 
             // If multi-touch, mark it and reset swipe state
             if (e.touches.length > 1) {
@@ -911,8 +913,9 @@
         }, { passive: true });
 
         photoViewer.addEventListener('touchmove', (e) => {
-            // Don't interfere with info panel
+            // Don't interfere with info panel or when zoomed
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
+            if (currentZoom > 1) return; // Let zoom/pan handlers take over
 
             // If multi-touch detected, mark it and reset swipe state
             if (e.touches.length > 1) {
@@ -981,8 +984,9 @@
         }, { passive: true });
 
         photoViewer.addEventListener('touchend', (e) => {
-            // Don't interfere with info panel
+            // Don't interfere with info panel or when zoomed
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
+            if (currentZoom > 1) return; // Let zoom/pan handlers take over
 
             // If multi-touch occurred during this gesture, skip swipe processing
             if (isMultiTouch) {
@@ -1695,13 +1699,20 @@
         isDragging = false;
     });
 
-    // Touch support for tablets/touchscreen laptops
+    // Touch support for pinch-zoom and pan
     let touchStartDistance = 0;
     let touchStartZoom = 1;
+    let touchPanStartX = 0;
+    let touchPanStartY = 0;
+    let touchPanTranslateX = 0;
+    let touchPanTranslateY = 0;
+    let isTouchPanning = false;
 
     elements.mainPhoto.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
+            // Pinch-zoom start
             e.preventDefault();
+            isTouchPanning = false;
             const touch1 = e.touches[0];
             const touch2 = e.touches[1];
             touchStartDistance = Math.hypot(
@@ -1709,12 +1720,22 @@
                 touch2.clientY - touch1.clientY
             );
             touchStartZoom = currentZoom;
+        } else if (e.touches.length === 1 && currentZoom > 1) {
+            // Single touch pan when zoomed
+            e.preventDefault();
+            isTouchPanning = true;
+            touchPanStartX = e.touches[0].clientX;
+            touchPanStartY = e.touches[0].clientY;
+            touchPanTranslateX = translateX;
+            touchPanTranslateY = translateY;
         }
     }, { passive: false });
 
     elements.mainPhoto.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2) {
+            // Pinch-zoom
             e.preventDefault();
+            isTouchPanning = false;
             const touch1 = e.touches[0];
             const touch2 = e.touches[1];
             const touchDistance = Math.hypot(
@@ -1727,12 +1748,44 @@
                 currentZoom = Math.min(Math.max(touchStartZoom * scale, minZoom), maxZoom);
                 updatePhotoTransform();
             }
+        } else if (e.touches.length === 1 && isTouchPanning && currentZoom > 1) {
+            // Pan when zoomed
+            e.preventDefault();
+            const deltaX = e.touches[0].clientX - touchPanStartX;
+            const deltaY = e.touches[0].clientY - touchPanStartY;
+
+            // Calculate new translation
+            const newTranslateX = touchPanTranslateX + deltaX;
+            const newTranslateY = touchPanTranslateY + deltaY;
+
+            // Constrain panning
+            const rect = elements.mainPhoto.getBoundingClientRect();
+            const containerRect = elements.mainPhoto.parentElement.getBoundingClientRect();
+            const scaledWidth = rect.width;
+            const scaledHeight = rect.height;
+            const maxTranslateX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+            const maxTranslateY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+
+            translateX = Math.max(-maxTranslateX, Math.min(maxTranslateX, newTranslateX));
+            translateY = Math.max(-maxTranslateY, Math.min(maxTranslateY, newTranslateY));
+
+            updatePhotoTransform();
         }
     }, { passive: false });
 
     elements.mainPhoto.addEventListener('touchend', (e) => {
         if (e.touches.length < 2) {
             touchStartDistance = 0;
+        }
+        if (e.touches.length === 0) {
+            isTouchPanning = false;
+            // Reset zoom if it's very close to 1
+            if (currentZoom < 1.05) {
+                currentZoom = 1;
+                translateX = 0;
+                translateY = 0;
+                updatePhotoTransform();
+            }
         }
     });
 
