@@ -26,6 +26,8 @@ const PageLoader = {
 		'images/loaders/akuakua_space-related_nes_graphic_reminiscent_8_bit_pixel_ima_ed5c0816-dfd1-47aa-b5eb-1e7805171470_2.gif'
 	],
 
+	loadingInterval: null,
+
 	getRandomGif() {
 		return this.gifs[Math.floor(Math.random() * this.gifs.length)];
 	},
@@ -39,6 +41,12 @@ const PageLoader = {
 			loader.classList.add('active');
 			// Animate loading bar with ▮ characters - dynamically sized
 			if (loadingBar) {
+				// Clear any existing interval from previous navigation
+				if (this.loadingInterval) {
+					clearInterval(this.loadingInterval);
+					this.loadingInterval = null;
+				}
+
 				// Create a temporary span to measure exact block width
 				const measureSpan = document.createElement('span');
 				measureSpan.style.cssText = 'font-family:monospace;font-size:12px;letter-spacing:0;visibility:hidden;position:absolute;';
@@ -59,11 +67,12 @@ const PageLoader = {
 				const intervalTime = Math.floor(totalTime / totalBlocks);
 				let currentBlock = 0;
 				loadingBar.textContent = '';
-				const interval = setInterval(() => {
+				this.loadingInterval = setInterval(() => {
 					currentBlock++;
 					loadingBar.textContent = '▮'.repeat(currentBlock);
 					if (currentBlock >= totalBlocks) {
-						clearInterval(interval);
+						clearInterval(this.loadingInterval);
+						this.loadingInterval = null;
 					}
 				}, intervalTime);
 			}
@@ -75,9 +84,27 @@ const PageLoader = {
 		if (loader) {
 			loader.classList.remove('active');
 		}
+		// Clear loading interval if still running
+		if (this.loadingInterval) {
+			clearInterval(this.loadingInterval);
+			this.loadingInterval = null;
+		}
+		// Reset loading bar text
+		const loadingBar = document.getElementById('page-loader-bar');
+		if (loadingBar) {
+			loadingBar.textContent = '';
+		}
 	},
 
 	init() {
+		// Reset loader state when page is restored from bfcache
+		window.addEventListener('pageshow', (e) => {
+			if (e.persisted) {
+				// Page was restored from bfcache - reset loader state
+				this.hide();
+			}
+		});
+
 		// Show loader when clicking links that navigate away from index.html
 		document.addEventListener('click', (e) => {
 			const link = e.target.closest('a[href]');

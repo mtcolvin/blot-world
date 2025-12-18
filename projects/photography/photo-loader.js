@@ -383,10 +383,11 @@
                         clearTimeout(isProgrammaticScrollTimeout);
                         isProgrammaticScroll = true;
                         lastProgrammaticScrollTime = Date.now();
-                        showPhoto(photo.globalIndex);
+                        // Use instant scroll to avoid timing issues with smooth scroll
+                        showPhoto(photo.globalIndex, false, false);
                         isProgrammaticScrollTimeout = setTimeout(() => {
                             isProgrammaticScroll = false;
-                        }, 1000); // Wait for smooth scroll to complete
+                        }, 500); // Shorter timeout since we're using instant scroll
                     });
 
                     previewsContainer.appendChild(square);
