@@ -838,12 +838,33 @@
         let isDraggingVertical = false;
         let isDraggingHorizontal = false;
         let dragDirection = null; // 'vertical' or 'horizontal'
+        let isMultiTouch = false; // Track if pinch-zoom occurred
         const minSwipeDistance = 50;
         const dismissThreshold = 120; // Distance to trigger dismiss
         const velocityThreshold = 0.4; // Velocity to trigger dismiss
         let lastTouchY = 0;
         let lastTouchTime = 0;
         let velocity = 0;
+
+        // Helper to reset all swipe state
+        function resetSwipeState() {
+            dragDirection = null;
+            isDraggingVertical = false;
+            isDraggingHorizontal = false;
+            mainPhoto.style.transform = '';
+            mainPhoto.style.opacity = '';
+            mainPhoto.style.borderRadius = '';
+            mainPhoto.style.transition = '';
+            if (galleryLayout) {
+                galleryLayout.style.background = '';
+                galleryLayout.style.transition = '';
+            }
+            if (mobileGridView) {
+                mobileGridView.classList.remove('active');
+                mobileGridView.style.opacity = '';
+                mobileGridView.style.transition = '';
+            }
+        }
 
         // Get the grid item position for the current photo
         function getGridItemRect() {
@@ -855,10 +876,18 @@
         }
 
         photoViewer.addEventListener('touchstart', (e) => {
-            // Don't interfere with info panel or pinch-to-zoom (multi-touch)
+            // Don't interfere with info panel
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
-            if (e.touches.length > 1) return; // Allow native pinch-zoom
 
+            // If multi-touch, mark it and reset swipe state
+            if (e.touches.length > 1) {
+                isMultiTouch = true;
+                resetSwipeState();
+                return;
+            }
+
+            // Single touch - initialize swipe tracking
+            isMultiTouch = false;
             touchStartX = e.changedTouches[0].clientX;
             touchStartY = e.changedTouches[0].clientY;
             touchCurrentY = touchStartY;
@@ -873,7 +902,7 @@
             mainPhoto.style.transition = 'none';
             if (galleryLayout) galleryLayout.style.transition = 'none';
 
-            // Show grid underneath during drag
+            // Show grid underneath during drag (hidden with opacity 0)
             if (mobileGridView) {
                 mobileGridView.classList.add('active');
                 mobileGridView.style.opacity = '0';
@@ -882,9 +911,20 @@
         }, { passive: true });
 
         photoViewer.addEventListener('touchmove', (e) => {
-            // Don't interfere with info panel or pinch-to-zoom (multi-touch)
+            // Don't interfere with info panel
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
-            if (e.touches.length > 1) return; // Allow native pinch-zoom
+
+            // If multi-touch detected, mark it and reset swipe state
+            if (e.touches.length > 1) {
+                if (!isMultiTouch) {
+                    isMultiTouch = true;
+                    resetSwipeState();
+                }
+                return; // Allow native pinch-zoom
+            }
+
+            // Skip if we already detected multi-touch in this gesture
+            if (isMultiTouch) return;
 
             const currentX = e.changedTouches[0].clientX;
             const currentY = e.changedTouches[0].clientY;
@@ -941,9 +981,17 @@
         }, { passive: true });
 
         photoViewer.addEventListener('touchend', (e) => {
-            // Don't interfere with info panel or if no drag was started (pinch-zoom)
+            // Don't interfere with info panel
             if (document.querySelector('.photo-metadata.mobile-visible')) return;
-            if (!dragDirection) return; // Was likely a pinch-zoom, don't process
+
+            // If multi-touch occurred during this gesture, skip swipe processing
+            if (isMultiTouch) {
+                isMultiTouch = false;
+                return;
+            }
+
+            // No drag direction means no swipe gesture started
+            if (!dragDirection) return;
 
             const touchEndX = e.changedTouches[0].clientX;
             const touchEndY = e.changedTouches[0].clientY;
