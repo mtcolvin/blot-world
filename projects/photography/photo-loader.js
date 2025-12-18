@@ -1732,13 +1732,71 @@
         );
     }
 
-    // Helper to get image center in viewport
-    function getImageCenter() {
-        const rect = elements.mainPhoto.getBoundingClientRect();
+    // Helper to get CONTAINER center (fixed reference point, not affected by transforms)
+    function getContainerCenter() {
+        const rect = elements.mainPhoto.parentElement.getBoundingClientRect();
         return {
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2
         };
+    }
+
+    // Helper to constrain pan within image bounds
+    function constrainPan(tx, ty, zoom) {
+        const container = elements.mainPhoto.parentElement.getBoundingClientRect();
+        const img = elements.mainPhoto;
+
+        // If image not loaded yet, no constraints
+        if (!img.naturalWidth || !img.naturalHeight) {
+            return { x: tx, y: ty };
+        }
+
+        // Calculate displayed image size (object-fit: contain)
+        const imgAspect = img.naturalWidth / img.naturalHeight;
+        const containerAspect = container.width / container.height;
+        let displayedWidth, displayedHeight;
+
+        if (imgAspect > containerAspect) {
+            displayedWidth = container.width;
+            displayedHeight = container.width / imgAspect;
+        } else {
+            displayedHeight = container.height;
+            displayedWidth = container.height * imgAspect;
+        }
+
+        // Max pan = how much scaled image extends beyond container
+        const scaledWidth = displayedWidth * zoom;
+        const scaledHeight = displayedHeight * zoom;
+        const maxX = Math.max(0, (scaledWidth - container.width) / 2);
+        const maxY = Math.max(0, (scaledHeight - container.height) / 2);
+
+        return {
+            x: Math.max(-maxX, Math.min(maxX, tx)),
+            y: Math.max(-maxY, Math.min(maxY, ty))
+        };
+    }
+
+    // Helper to animate pan snap-back
+    function animatePanTo(targetX, targetY, duration = 200) {
+        elements.mainPhoto.style.transition = `transform ${duration}ms ease-out`;
+        translateX = targetX;
+        translateY = targetY;
+        updatePhotoTransform();
+        setTimeout(() => {
+            elements.mainPhoto.style.transition = '';
+        }, duration);
+    }
+
+    // Helper to animate zoom snap-back
+    function animateZoomTo(targetZoom, targetX, targetY, duration = 200) {
+        elements.mainPhoto.style.transition = `transform ${duration}ms ease-out`;
+        currentZoom = targetZoom;
+        translateX = targetX;
+        translateY = targetY;
+        updatePhotoTransform();
+        setTimeout(() => {
+            elements.mainPhoto.style.transition = '';
+        }, duration);
     }
 
     elements.mainPhoto.addEventListener('touchstart', (e) => {
@@ -1780,17 +1838,18 @@
                 const scale = currentDistance / touchStartDistance;
                 const newZoom = Math.min(Math.max(touchStartZoom * scale, minZoom), maxZoom);
 
-                // Get image center position
-                const imgCenter = getImageCenter();
+                // Get CONTAINER center (fixed reference point)
+                const containerCenter = getContainerCenter();
 
-                // Calculate offset from image center to pinch start point
-                const offsetX = touchStartCenterX - imgCenter.x;
-                const offsetY = touchStartCenterY - imgCenter.y;
+                // Calculate offset from container center to pinch start point
+                const offsetX = touchStartCenterX - containerCenter.x;
+                const offsetY = touchStartCenterY - containerCenter.y;
 
                 // Zoom toward pinch center: adjust translation so pinch point stays stationary
+                // Formula: newTranslate = oldTranslate + offset * (1 - newScale/oldScale)
                 const zoomRatio = newZoom / touchStartZoom;
-                let newTranslateX = touchStartTranslateX - offsetX * (zoomRatio - 1);
-                let newTranslateY = touchStartTranslateY - offsetY * (zoomRatio - 1);
+                let newTranslateX = touchStartTranslateX + offsetX * (1 - zoomRatio);
+                let newTranslateY = touchStartTranslateY + offsetY * (1 - zoomRatio);
 
                 // Add pan movement (how much the pinch center has moved)
                 const panDeltaX = currentCenter.x - touchStartCenterX;
@@ -1826,12 +1885,22 @@
         }
         if (e.touches.length === 0) {
             isTouchPanning = false;
+
+            // Snap-back zoom if below minimum
+            if (currentZoom < minZoom) {
+                animateZoomTo(minZoom, 0, 0);
+                return;
+            }
+
             // Only reset zoom if actually at or below minimum
             if (currentZoom <= 1) {
-                currentZoom = 1;
-                translateX = 0;
-                translateY = 0;
-                updatePhotoTransform();
+                animateZoomTo(1, 0, 0);
+            } else {
+                // Constrain pan and animate snap-back if needed
+                const constrained = constrainPan(translateX, translateY, currentZoom);
+                if (constrained.x !== translateX || constrained.y !== translateY) {
+                    animatePanTo(constrained.x, constrained.y);
+                }
             }
 
             // Double-tap detection
@@ -1839,21 +1908,18 @@
             if (now - lastTapTime < doubleTapDelay) {
                 // Double-tap detected - toggle zoom
                 if (currentZoom > 1) {
-                    // Reset to 1x
-                    currentZoom = 1;
-                    translateX = 0;
-                    translateY = 0;
+                    // Reset to 1x with animation
+                    animateZoomTo(1, 0, 0);
                 } else {
-                    // Zoom to 2x at tap point
+                    // Zoom to 2x at tap point using container center
                     const touch = e.changedTouches[0];
-                    const imgCenter = getImageCenter();
-                    const offsetX = touch.clientX - imgCenter.x;
-                    const offsetY = touch.clientY - imgCenter.y;
-                    currentZoom = 2;
-                    translateX = -offsetX;
-                    translateY = -offsetY;
+                    const containerCenter = getContainerCenter();
+                    const offsetX = touch.clientX - containerCenter.x;
+                    const offsetY = touch.clientY - containerCenter.y;
+                    // Constrain the zoom translation
+                    const constrained = constrainPan(-offsetX, -offsetY, 2);
+                    animateZoomTo(2, constrained.x, constrained.y);
                 }
-                updatePhotoTransform();
                 lastTapTime = 0; // Reset to prevent triple-tap
             } else {
                 lastTapTime = now;
