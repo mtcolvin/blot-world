@@ -1758,11 +1758,30 @@
             const newTranslateX = touchPanTranslateX + deltaX;
             const newTranslateY = touchPanTranslateY + deltaY;
 
-            // Constrain panning
-            const rect = elements.mainPhoto.getBoundingClientRect();
-            const containerRect = elements.mainPhoto.parentElement.getBoundingClientRect();
-            const scaledWidth = rect.width;
-            const scaledHeight = rect.height;
+            // Constrain panning - use image natural dimensions scaled by zoom
+            const img = elements.mainPhoto;
+            const containerRect = img.parentElement.getBoundingClientRect();
+
+            // Calculate the actual displayed image size (considering object-fit: contain)
+            const containerAspect = containerRect.width / containerRect.height;
+            const imgAspect = img.naturalWidth / img.naturalHeight;
+            let displayedWidth, displayedHeight;
+
+            if (imgAspect > containerAspect) {
+                // Image is wider than container - width fills container
+                displayedWidth = containerRect.width;
+                displayedHeight = containerRect.width / imgAspect;
+            } else {
+                // Image is taller than container - height fills container
+                displayedHeight = containerRect.height;
+                displayedWidth = containerRect.height * imgAspect;
+            }
+
+            // Scale by current zoom
+            const scaledWidth = displayedWidth * currentZoom;
+            const scaledHeight = displayedHeight * currentZoom;
+
+            // Calculate max pan - half the overflow on each side
             const maxTranslateX = Math.max(0, (scaledWidth - containerRect.width) / 2);
             const maxTranslateY = Math.max(0, (scaledHeight - containerRect.height) / 2);
 
@@ -1779,8 +1798,8 @@
         }
         if (e.touches.length === 0) {
             isTouchPanning = false;
-            // Reset zoom if it's very close to 1
-            if (currentZoom < 1.05) {
+            // Only reset zoom if actually at or below minimum (not 1.05 threshold)
+            if (currentZoom <= 1) {
                 currentZoom = 1;
                 translateX = 0;
                 translateY = 0;

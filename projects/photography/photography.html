@@ -913,16 +913,16 @@
                 object-fit: contain;
                 border-radius: 0 !important;
                 box-shadow: none;
-                touch-action: pinch-zoom pan-x pan-y;
+                touch-action: none; /* JS handles all gestures (zoom, pan) */
             }
 
             .gallery-layout.photo-mode .main-photo-container {
-                touch-action: pinch-zoom pan-x pan-y;
+                touch-action: none; /* JS handles all gestures */
                 overflow: hidden;
             }
 
             .gallery-layout.photo-mode .photo-viewer {
-                touch-action: pan-y;
+                touch-action: none; /* JS handles swipe gestures */
                 overflow: hidden;
             }
 
