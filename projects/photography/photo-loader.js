@@ -246,8 +246,7 @@
             if (photoParam) {
                 switchToPhotoMode(initialIndex);
             } else {
-                // Default to grid view
-                elements.galleryLayout.style.display = 'none';
+                // Default to grid view (CSS controls visibility via classes)
                 if (elements.mobileGridView) {
                     elements.mobileGridView.classList.add('active');
                 }
@@ -718,13 +717,11 @@
     function switchToPhotoMode(index) {
         mobileViewMode = 'photo';
 
-        // Hide grid, show gallery
+        // Hide grid, show gallery (use classes only - CSS controls visibility)
         if (elements.mobileGridView) {
             elements.mobileGridView.classList.remove('active');
-            elements.mobileGridView.style.display = 'none';
         }
         if (elements.galleryLayout) {
-            elements.galleryLayout.style.display = 'flex';
             elements.galleryLayout.classList.add('photo-mode');
         }
 
@@ -741,14 +738,15 @@
     function switchToGridMode() {
         mobileViewMode = 'grid';
 
-        // Hide gallery, show grid
+        // Hide gallery, show grid (use classes only - CSS controls visibility)
         if (elements.galleryLayout) {
-            elements.galleryLayout.style.display = 'none';
             elements.galleryLayout.classList.remove('photo-mode');
         }
         if (elements.mobileGridView) {
+            // Clear any inline styles from swipe gestures
+            elements.mobileGridView.style.opacity = '';
+            elements.mobileGridView.style.transition = '';
             elements.mobileGridView.classList.add('active');
-            elements.mobileGridView.style.display = '';
         }
 
         // Hide info overlay if visible
