@@ -1702,24 +1702,59 @@
     // Touch support for pinch-zoom and pan
     let touchStartDistance = 0;
     let touchStartZoom = 1;
+    let touchStartTranslateX = 0;
+    let touchStartTranslateY = 0;
+    let touchStartCenterX = 0;
+    let touchStartCenterY = 0;
+    let lastPinchCenterX = 0;
+    let lastPinchCenterY = 0;
     let touchPanStartX = 0;
     let touchPanStartY = 0;
     let touchPanTranslateX = 0;
     let touchPanTranslateY = 0;
     let isTouchPanning = false;
+    let lastTapTime = 0;
+    const doubleTapDelay = 300;
+
+    // Helper to get pinch center
+    function getPinchCenter(touches) {
+        return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2
+        };
+    }
+
+    // Helper to get touch distance
+    function getTouchDistance(touches) {
+        return Math.hypot(
+            touches[1].clientX - touches[0].clientX,
+            touches[1].clientY - touches[0].clientY
+        );
+    }
+
+    // Helper to get image center in viewport
+    function getImageCenter() {
+        const rect = elements.mainPhoto.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+        };
+    }
 
     elements.mainPhoto.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
             // Pinch-zoom start
             e.preventDefault();
             isTouchPanning = false;
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            touchStartDistance = Math.hypot(
-                touch2.clientX - touch1.clientX,
-                touch2.clientY - touch1.clientY
-            );
+            touchStartDistance = getTouchDistance(e.touches);
             touchStartZoom = currentZoom;
+            touchStartTranslateX = translateX;
+            touchStartTranslateY = translateY;
+            const center = getPinchCenter(e.touches);
+            touchStartCenterX = center.x;
+            touchStartCenterY = center.y;
+            lastPinchCenterX = center.x;
+            lastPinchCenterY = center.y;
         } else if (e.touches.length === 1 && currentZoom > 1) {
             // Single touch pan when zoomed
             e.preventDefault();
@@ -1733,19 +1768,43 @@
 
     elements.mainPhoto.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2) {
-            // Pinch-zoom
+            // Pinch-zoom with pan
             e.preventDefault();
             isTouchPanning = false;
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            const touchDistance = Math.hypot(
-                touch2.clientX - touch1.clientX,
-                touch2.clientY - touch1.clientY
-            );
+
+            const currentDistance = getTouchDistance(e.touches);
+            const currentCenter = getPinchCenter(e.touches);
 
             if (touchStartDistance > 0) {
-                const scale = touchDistance / touchStartDistance;
-                currentZoom = Math.min(Math.max(touchStartZoom * scale, minZoom), maxZoom);
+                // Calculate new zoom
+                const scale = currentDistance / touchStartDistance;
+                const newZoom = Math.min(Math.max(touchStartZoom * scale, minZoom), maxZoom);
+
+                // Get image center position
+                const imgCenter = getImageCenter();
+
+                // Calculate offset from image center to pinch start point
+                const offsetX = touchStartCenterX - imgCenter.x;
+                const offsetY = touchStartCenterY - imgCenter.y;
+
+                // Zoom toward pinch center: adjust translation so pinch point stays stationary
+                const zoomRatio = newZoom / touchStartZoom;
+                let newTranslateX = touchStartTranslateX - offsetX * (zoomRatio - 1);
+                let newTranslateY = touchStartTranslateY - offsetY * (zoomRatio - 1);
+
+                // Add pan movement (how much the pinch center has moved)
+                const panDeltaX = currentCenter.x - touchStartCenterX;
+                const panDeltaY = currentCenter.y - touchStartCenterY;
+                newTranslateX += panDeltaX;
+                newTranslateY += panDeltaY;
+
+                currentZoom = newZoom;
+                translateX = newTranslateX;
+                translateY = newTranslateY;
+
+                lastPinchCenterX = currentCenter.x;
+                lastPinchCenterY = currentCenter.y;
+
                 updatePhotoTransform();
             }
         } else if (e.touches.length === 1 && isTouchPanning && currentZoom > 1) {
@@ -1754,39 +1813,8 @@
             const deltaX = e.touches[0].clientX - touchPanStartX;
             const deltaY = e.touches[0].clientY - touchPanStartY;
 
-            // Calculate new translation
-            const newTranslateX = touchPanTranslateX + deltaX;
-            const newTranslateY = touchPanTranslateY + deltaY;
-
-            // Constrain panning - use image natural dimensions scaled by zoom
-            const img = elements.mainPhoto;
-            const containerRect = img.parentElement.getBoundingClientRect();
-
-            // Calculate the actual displayed image size (considering object-fit: contain)
-            const containerAspect = containerRect.width / containerRect.height;
-            const imgAspect = img.naturalWidth / img.naturalHeight;
-            let displayedWidth, displayedHeight;
-
-            if (imgAspect > containerAspect) {
-                // Image is wider than container - width fills container
-                displayedWidth = containerRect.width;
-                displayedHeight = containerRect.width / imgAspect;
-            } else {
-                // Image is taller than container - height fills container
-                displayedHeight = containerRect.height;
-                displayedWidth = containerRect.height * imgAspect;
-            }
-
-            // Scale by current zoom
-            const scaledWidth = displayedWidth * currentZoom;
-            const scaledHeight = displayedHeight * currentZoom;
-
-            // Calculate max pan - half the overflow on each side
-            const maxTranslateX = Math.max(0, (scaledWidth - containerRect.width) / 2);
-            const maxTranslateY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-
-            translateX = Math.max(-maxTranslateX, Math.min(maxTranslateX, newTranslateX));
-            translateY = Math.max(-maxTranslateY, Math.min(maxTranslateY, newTranslateY));
+            translateX = touchPanTranslateX + deltaX;
+            translateY = touchPanTranslateY + deltaY;
 
             updatePhotoTransform();
         }
@@ -1798,12 +1826,37 @@
         }
         if (e.touches.length === 0) {
             isTouchPanning = false;
-            // Only reset zoom if actually at or below minimum (not 1.05 threshold)
+            // Only reset zoom if actually at or below minimum
             if (currentZoom <= 1) {
                 currentZoom = 1;
                 translateX = 0;
                 translateY = 0;
                 updatePhotoTransform();
+            }
+
+            // Double-tap detection
+            const now = Date.now();
+            if (now - lastTapTime < doubleTapDelay) {
+                // Double-tap detected - toggle zoom
+                if (currentZoom > 1) {
+                    // Reset to 1x
+                    currentZoom = 1;
+                    translateX = 0;
+                    translateY = 0;
+                } else {
+                    // Zoom to 2x at tap point
+                    const touch = e.changedTouches[0];
+                    const imgCenter = getImageCenter();
+                    const offsetX = touch.clientX - imgCenter.x;
+                    const offsetY = touch.clientY - imgCenter.y;
+                    currentZoom = 2;
+                    translateX = -offsetX;
+                    translateY = -offsetY;
+                }
+                updatePhotoTransform();
+                lastTapTime = 0; // Reset to prevent triple-tap
+            } else {
+                lastTapTime = now;
             }
         }
     });
