@@ -77,6 +77,14 @@
             // Append to documentElement to avoid body overflow:hidden issues
             document.documentElement.appendChild(loader);
 
+            // Set safe areas to black for mobile devices
+            document.documentElement.style.background = '#000';
+            document.body.style.background = '#000';
+            const themeColor = document.querySelector('meta[name="theme-color"]');
+            if (themeColor) {
+                themeColor.setAttribute('content', '#000000');
+            }
+
             // Animate loading bar
             const totalBlocks = 11;
             let currentBlock = 0;
