@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Audit Report</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        h1, h2, h3 { color: #333; }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .summary-card.critical { border-left: 4px solid #d32f2f; }
+        .summary-card.serious { border-left: 4px solid #f57c00; }
+        .summary-card.moderate { border-left: 4px solid #fbc02d; }
+        .summary-card.pass { border-left: 4px solid #388e3c; }
+        .summary-card h3 { margin: 0 0 0.5rem; font-size: 0.875rem; color: #666; }
+        .summary-card .count { font-size: 2.5rem; font-weight: bold; }
+        .violations {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+        .violation {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .violation:last-child { border-bottom: none; }
+        .violation h3 { margin: 0 0 0.5rem; }
+        .impact {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .impact.critical { background: #ffebee; color: #d32f2f; }
+        .impact.serious { background: #fff3e0; color: #f57c00; }
+        .impact.moderate { background: #fffde7; color: #f9a825; }
+        .impact.minor { background: #e3f2fd; color: #1976d2; }
+        .elements { margin-top: 1rem; }
+        .element {
+            background: #f5f5f5;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+        a { color: #1976d2; }
+        .meta { color: #666; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <h1>Accessibility Audit Report</h1>
+    <p class="meta">
+        <strong>URL:</strong> https://blot.world<br>
+        <strong>Date:</strong> 2025-12-11T12:16:20.066369<br>
+        <strong>Tools:</strong> axe-core, Pa11y (WCAG 2.1 AA)
+    </p>
+
+    <h2>Summary</h2>
+    <div class="summary">
+        <div class="summary-card critical">
+            <h3>Critical</h3>
+            <div class="count">0</div>
+        </div>
+        <div class="summary-card serious">
+            <h3>Serious</h3>
+            <div class="count">1</div>
+        </div>
+        <div class="summary-card moderate">
+            <h3>Moderate</h3>
+            <div class="count">2</div>
+        </div>
+        <div class="summary-card pass">
+            <h3>Passed</h3>
+            <div class="count">29</div>
+        </div>
+    </div>
+
+    <h2>Violations</h2>
+    <div class="violations">
+
+        <div class="violation">
+            <h3>color-contrast</h3>
+            <span class="impact serious">serious</span>
+            <p>Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds</p>
+            <p><a href="https://dequeuniversity.com/rules/axe/4.8/color-contrast?application=axeAPI" target="_blank">Learn more</a></p>
+            <div class="elements">
+                <strong>Affected elements (1):</strong>
+                <div class="element">#bg-toggle-btn > span</div>
+            </div>
+        </div>
+
+        <div class="violation">
+            <h3>page-has-heading-one</h3>
+            <span class="impact moderate">moderate</span>
+            <p>Ensure that the page, or at least one of its frames contains a level-one heading</p>
+            <p><a href="https://dequeuniversity.com/rules/axe/4.8/page-has-heading-one?application=axeAPI" target="_blank">Learn more</a></p>
+            <div class="elements">
+                <strong>Affected elements (1):</strong>
+                <div class="element">html</div>
+            </div>
+        </div>
+
+        <div class="violation">
+            <h3>region</h3>
+            <span class="impact moderate">moderate</span>
+            <p>Ensures all page content is contained by landmarks</p>
+            <p><a href="https://dequeuniversity.com/rules/axe/4.8/region?application=axeAPI" target="_blank">Learn more</a></p>
+            <div class="elements">
+                <strong>Affected elements (1):</strong>
+                <div class="element">#global-background</div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

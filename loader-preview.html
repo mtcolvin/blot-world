@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loader Variants - BLOT</title>
+    <style>
+        :root {
+            --blot-black: #000000;
+            --primary-blue: #0D28F2;
+            --accent-red: #E60F0F;
+            --blot-white: #ffffff;
+            /* Fire palette */
+            --flame-white: #ffffff;
+            --flame-yellow: #ffd700;
+            --flame-orange: #ff6b35;
+            --flame-red: #e60f0f;
+            --flame-dark: #8b0000;
+            /* Pixel base unit */
+            --px: 4px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto Flex', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .loader-card {
+            background: var(--blot-black);
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .loader-card h3 {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .loader-display {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+
+        /* ==========================================================================
+           VARIANT 1: PIXEL ECLIPSE
+           Dark moon disc over bright sun - corona glows around edges
+           ========================================================================== */
+        .pixel-eclipse {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Sun layer - always visible, provides the glow */
+        .eclipse-sun {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--px);
+            height: var(--px);
+            background: var(--flame-yellow);
+            /* Full sun - static base */
+            box-shadow:
+                /* Core 3x3 */
+                4px 0 0 var(--flame-yellow),
+                -4px 0 0 var(--flame-yellow),
+                0 4px 0 var(--flame-yellow),
+                0 -4px 0 var(--flame-yellow),
+                4px 4px 0 var(--flame-yellow),
+                -4px 4px 0 var(--flame-yellow),
+                4px -4px 0 var(--flame-yellow),
+                -4px -4px 0 var(--flame-yellow),
+                /* Ring 1 - orange */
+                8px 0 0 var(--flame-orange),
+                -8px 0 0 var(--flame-orange),
+                0 8px 0 var(--flame-orange),
+                0 -8px 0 var(--flame-orange),
+                8px 4px 0 var(--flame-orange),
+                8px -4px 0 var(--flame-orange),
+                -8px 4px 0 var(--flame-orange),
+                -8px -4px 0 var(--flame-orange),
+                4px 8px 0 var(--flame-orange),
+                -4px 8px 0 var(--flame-orange),
+                4px -8px 0 var(--flame-orange),
+                -4px -8px 0 var(--flame-orange),
+                /* Ring 2 - red glow */
+                12px 0 0 var(--accent-red),
+                -12px 0 0 var(--accent-red),
+                0 12px 0 var(--accent-red),
+                0 -12px 0 var(--accent-red),
+                8px 8px 0 var(--accent-red),
+                -8px 8px 0 var(--accent-red),
+                8px -8px 0 var(--accent-red),
+                -8px -8px 0 var(--accent-red),
+                12px 4px 0 var(--accent-red),
+                12px -4px 0 var(--accent-red),
+                -12px 4px 0 var(--accent-red),
+                -12px -4px 0 var(--accent-red),
+                4px 12px 0 var(--accent-red),
+                -4px 12px 0 var(--accent-red),
+                4px -12px 0 var(--accent-red),
+                -4px -12px 0 var(--accent-red);
+        }
+
+        /* Moon layer - dark disc that covers the sun */
+        .eclipse-moon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--px);
+            height: var(--px);
+            background: var(--blot-black);
+            animation: eclipse-phase 4s steps(6) infinite;
+        }
+
+        @keyframes eclipse-phase {
+            /* Frame 1: No eclipse - moon not covering sun (invisible/off to side) */
+            0%, 100% {
+                box-shadow:
+                    /* Moon off to the left - not covering sun */
+                    -20px 0 0 var(--blot-black),
+                    -20px -4px 0 var(--blot-black),
+                    -20px 4px 0 var(--blot-black),
+                    -24px 0 0 var(--blot-black),
+                    -16px 0 0 var(--blot-black);
+            }
+            /* Frame 2: Moon entering - partial eclipse begins */
+            17% {
+                box-shadow:
+                    /* Moon covering left edge of sun */
+                    -8px 0 0 var(--blot-black),
+                    -8px -4px 0 var(--blot-black),
+                    -8px 4px 0 var(--blot-black),
+                    -12px 0 0 var(--blot-black),
+                    -4px 0 0 var(--blot-black),
+                    -4px -4px 0 var(--blot-black),
+                    -4px 4px 0 var(--blot-black);
+            }
+            /* Frame 3: More coverage */
+            33% {
+                box-shadow:
+                    /* Moon covering more */
+                    -4px 0 0 var(--blot-black),
+                    -4px -4px 0 var(--blot-black),
+                    -4px 4px 0 var(--blot-black),
+                    -8px 0 0 var(--blot-black),
+                    -8px -4px 0 var(--blot-black),
+                    -8px 4px 0 var(--blot-black),
+                    0 0 0 var(--blot-black),
+                    0 -4px 0 var(--blot-black),
+                    0 4px 0 var(--blot-black);
+            }
+            /* Frame 4: TOTAL ECLIPSE - moon fully covers sun center */
+            50% {
+                box-shadow:
+                    /* Full dark moon disc over sun center */
+                    0 0 0 var(--blot-black),
+                    4px 0 0 var(--blot-black),
+                    -4px 0 0 var(--blot-black),
+                    0 4px 0 var(--blot-black),
+                    0 -4px 0 var(--blot-black),
+                    4px 4px 0 var(--blot-black),
+                    -4px 4px 0 var(--blot-black),
+                    4px -4px 0 var(--blot-black),
+                    -4px -4px 0 var(--blot-black),
+                    /* Slightly larger to fully block */
+                    8px 0 0 var(--blot-black),
+                    -8px 0 0 var(--blot-black),
+                    0 8px 0 var(--blot-black),
+                    0 -8px 0 var(--blot-black);
+            }
+            /* Frame 5: Moon exiting */
+            67% {
+                box-shadow:
+                    /* Moon moving right, revealing left side */
+                    4px 0 0 var(--blot-black),
+                    4px -4px 0 var(--blot-black),
+                    4px 4px 0 var(--blot-black),
+                    8px 0 0 var(--blot-black),
+                    8px -4px 0 var(--blot-black),
+                    8px 4px 0 var(--blot-black),
+                    0 0 0 var(--blot-black),
+                    0 -4px 0 var(--blot-black),
+                    0 4px 0 var(--blot-black);
+            }
+            /* Frame 6: Moon almost gone */
+            83% {
+                box-shadow:
+                    /* Moon exiting right side */
+                    8px 0 0 var(--blot-black),
+                    8px -4px 0 var(--blot-black),
+                    8px 4px 0 var(--blot-black),
+                    12px 0 0 var(--blot-black),
+                    4px 0 0 var(--blot-black),
+                    4px -4px 0 var(--blot-black),
+                    4px 4px 0 var(--blot-black);
+            }
+        }
+
+        /* Corona flares - intensify during totality */
+        .eclipse-corona {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--px);
+            height: var(--px);
+            background: transparent;
+            animation: corona-flare 4s steps(6) infinite;
+        }
+
+        @keyframes corona-flare {
+            /* Dim when sun visible */
+            0%, 17%, 83%, 100% {
+                box-shadow:
+                    16px 0 0 rgba(13, 40, 242, 0.3),
+                    -16px 0 0 rgba(13, 40, 242, 0.3),
+                    0 16px 0 rgba(13, 40, 242, 0.3),
+                    0 -16px 0 rgba(13, 40, 242, 0.3);
+            }
+            /* Brighter as eclipse progresses */
+            33%, 67% {
+                box-shadow:
+                    16px 0 0 rgba(13, 40, 242, 0.6),
+                    -16px 0 0 rgba(13, 40, 242, 0.6),
+                    0 16px 0 rgba(13, 40, 242, 0.6),
+                    0 -16px 0 rgba(13, 40, 242, 0.6),
+                    12px 12px 0 rgba(230, 15, 15, 0.4),
+                    -12px 12px 0 rgba(230, 15, 15, 0.4),
+                    12px -12px 0 rgba(230, 15, 15, 0.4),
+                    -12px -12px 0 rgba(230, 15, 15, 0.4);
+            }
+            /* TOTALITY - corona blazes! */
+            50% {
+                box-shadow:
+                    /* Bright corona rays */
+                    16px 0 0 var(--primary-blue),
+                    -16px 0 0 var(--primary-blue),
+                    0 16px 0 var(--primary-blue),
+                    0 -16px 0 var(--primary-blue),
+                    20px 0 0 rgba(13, 40, 242, 0.7),
+                    -20px 0 0 rgba(13, 40, 242, 0.7),
+                    0 20px 0 rgba(13, 40, 242, 0.7),
+                    0 -20px 0 rgba(13, 40, 242, 0.7),
+                    /* Diagonal flares */
+                    12px 12px 0 var(--accent-red),
+                    -12px 12px 0 var(--accent-red),
+                    12px -12px 0 var(--accent-red),
+                    -12px -12px 0 var(--accent-red),
+                    16px 16px 0 rgba(230, 15, 15, 0.6),
+                    -16px 16px 0 rgba(230, 15, 15, 0.6),
+                    16px -16px 0 rgba(230, 15, 15, 0.6),
+                    -16px -16px 0 rgba(230, 15, 15, 0.6);
+            }
+        }
+
+        /* ==========================================================================
+           VARIANT 2: PIXEL COMET
+           Fixed grid - tail flickers by changing colors, not positions
+           ========================================================================== */
+        .pixel-comet {
+            position: relative;
+            width: 80px;
+            height: 32px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .comet-sprite {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: var(--px);
+            height: var(--px);
+            background: var(--flame-white);
+            animation: comet-flicker 0.3s steps(3) infinite;
+        }
+
+        @keyframes comet-flicker {
+            /* Frame 1 */
+            0% {
+                box-shadow:
+                    /* Comet head - white/blue core */
+                    4px 0 0 var(--flame-white),
+                    0 -4px 0 var(--primary-blue),
+                    0 4px 0 var(--primary-blue),
+                    4px -4px 0 var(--primary-blue),
+                    4px 4px 0 var(--primary-blue),
+                    8px 0 0 var(--primary-blue),
+                    /* Tail segment 1 - yellow */
+                    -4px 0 0 var(--flame-yellow),
+                    -4px -4px 0 var(--flame-orange),
+                    -4px 4px 0 var(--flame-orange),
+                    /* Tail segment 2 - orange */
+                    -8px 0 0 var(--flame-orange),
+                    -8px -4px 0 var(--flame-red),
+                    -8px 4px 0 var(--flame-red),
+                    -12px 0 0 var(--flame-orange),
+                    /* Tail segment 3 - red */
+                    -16px 0 0 var(--flame-red),
+                    -16px -4px 0 var(--flame-dark),
+                    -16px 4px 0 var(--flame-dark),
+                    -20px 0 0 var(--flame-red),
+                    /* Tail end - fading */
+                    -24px 0 0 var(--flame-dark),
+                    -28px 0 0 rgba(139, 0, 0, 0.6),
+                    -32px 0 0 rgba(139, 0, 0, 0.3);
+            }
+            /* Frame 2 - colors shift */
+            33% {
+                box-shadow:
+                    /* Head */
+                    4px 0 0 var(--flame-white),
+                    0 -4px 0 var(--primary-blue),
+                    0 4px 0 var(--primary-blue),
+                    4px -4px 0 var(--primary-blue),
+                    4px 4px 0 var(--primary-blue),
+                    8px 0 0 var(--primary-blue),
+                    /* Tail 1 - shifts */
+                    -4px 0 0 var(--flame-orange),
+                    -4px -4px 0 var(--flame-yellow),
+                    -4px 4px 0 var(--flame-red),
+                    /* Tail 2 */
+                    -8px 0 0 var(--flame-red),
+                    -8px -4px 0 var(--flame-orange),
+                    -8px 4px 0 var(--flame-dark),
+                    -12px 0 0 var(--flame-red),
+                    /* Tail 3 */
+                    -16px 0 0 var(--flame-dark),
+                    -16px -4px 0 var(--flame-red),
+                    -16px 4px 0 rgba(139, 0, 0, 0.6),
+                    -20px 0 0 var(--flame-dark),
+                    /* End */
+                    -24px 0 0 rgba(139, 0, 0, 0.6),
+                    -28px 0 0 rgba(139, 0, 0, 0.3),
+                    -32px 0 0 transparent;
+            }
+            /* Frame 3 */
+            66% {
+                box-shadow:
+                    /* Head */
+                    4px 0 0 var(--flame-white),
+                    0 -4px 0 var(--primary-blue),
+                    0 4px 0 var(--primary-blue),
+                    4px -4px 0 var(--primary-blue),
+                    4px 4px 0 var(--primary-blue),
+                    8px 0 0 var(--primary-blue),
+                    /* Tail 1 */
+                    -4px 0 0 var(--flame-yellow),
+                    -4px -4px 0 var(--flame-red),
+                    -4px 4px 0 var(--flame-yellow),
+                    /* Tail 2 */
+                    -8px 0 0 var(--flame-orange),
+                    -8px -4px 0 var(--flame-dark),
+                    -8px 4px 0 var(--flame-orange),
+                    -12px 0 0 var(--flame-red),
+                    /* Tail 3 */
+                    -16px 0 0 var(--flame-red),
+                    -16px -4px 0 rgba(139, 0, 0, 0.6),
+                    -16px 4px 0 var(--flame-red),
+                    -20px 0 0 var(--flame-dark),
+                    /* End */
+                    -24px 0 0 rgba(139, 0, 0, 0.5),
+                    -28px 0 0 rgba(139, 0, 0, 0.2),
+                    -32px 0 0 transparent;
+            }
+        }
+
+        /* ==========================================================================
+           VARIANT 3: PIXEL ROCKET
+           Fixed grid - exhaust flame flickers via color changes
+           ========================================================================== */
+        .pixel-rocket {
+            position: relative;
+            width: 72px;
+            height: 40px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .rocket-sprite {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: var(--px);
+            height: var(--px);
+            background: var(--blot-white);
+            animation: rocket-exhaust 0.2s steps(3) infinite;
+        }
+
+        @keyframes rocket-exhaust {
+            /* Frame 1 */
+            0% {
+                box-shadow:
+                    /* Rocket body - white */
+                    4px 0 0 var(--blot-white),
+                    8px 0 0 var(--blot-white),
+                    0 -4px 0 var(--blot-white),
+                    4px -4px 0 var(--blot-white),
+                    8px -4px 0 var(--blot-white),
+                    0 4px 0 var(--blot-white),
+                    4px 4px 0 var(--blot-white),
+                    8px 4px 0 var(--blot-white),
+                    /* Nose cone - blue */
+                    12px 0 0 var(--primary-blue),
+                    12px -4px 0 var(--primary-blue),
+                    12px 4px 0 var(--primary-blue),
+                    16px 0 0 var(--primary-blue),
+                    /* Window */
+                    4px 0 0 var(--primary-blue),
+                    /* Fins - red */
+                    0 -8px 0 var(--accent-red),
+                    -4px -8px 0 var(--accent-red),
+                    0 8px 0 var(--accent-red),
+                    -4px 8px 0 var(--accent-red),
+                    /* Exhaust - yellow core */
+                    -8px 0 0 var(--flame-yellow),
+                    -8px -4px 0 var(--flame-orange),
+                    -8px 4px 0 var(--flame-orange),
+                    /* Exhaust mid - orange */
+                    -12px 0 0 var(--flame-orange),
+                    -12px -4px 0 var(--flame-red),
+                    -12px 4px 0 var(--flame-red),
+                    /* Exhaust end - red */
+                    -16px 0 0 var(--flame-red),
+                    -20px 0 0 var(--flame-dark);
+            }
+            /* Frame 2 - exhaust flickers */
+            33% {
+                box-shadow:
+                    /* Rocket body */
+                    4px 0 0 var(--blot-white),
+                    8px 0 0 var(--blot-white),
+                    0 -4px 0 var(--blot-white),
+                    4px -4px 0 var(--blot-white),
+                    8px -4px 0 var(--blot-white),
+                    0 4px 0 var(--blot-white),
+                    4px 4px 0 var(--blot-white),
+                    8px 4px 0 var(--blot-white),
+                    /* Nose */
+                    12px 0 0 var(--primary-blue),
+                    12px -4px 0 var(--primary-blue),
+                    12px 4px 0 var(--primary-blue),
+                    16px 0 0 var(--primary-blue),
+                    /* Window */
+                    4px 0 0 var(--primary-blue),
+                    /* Fins */
+                    0 -8px 0 var(--accent-red),
+                    -4px -8px 0 var(--accent-red),
+                    0 8px 0 var(--accent-red),
+                    -4px 8px 0 var(--accent-red),
+                    /* Exhaust - colors shift */
+                    -8px 0 0 var(--flame-orange),
+                    -8px -4px 0 var(--flame-yellow),
+                    -8px 4px 0 var(--flame-red),
+                    -12px 0 0 var(--flame-red),
+                    -12px -4px 0 var(--flame-orange),
+                    -12px 4px 0 var(--flame-dark),
+                    -16px 0 0 var(--flame-dark),
+                    -20px 0 0 rgba(139, 0, 0, 0.5);
+            }
+            /* Frame 3 */
+            66% {
+                box-shadow:
+                    /* Rocket body */
+                    4px 0 0 var(--blot-white),
+                    8px 0 0 var(--blot-white),
+                    0 -4px 0 var(--blot-white),
+                    4px -4px 0 var(--blot-white),
+                    8px -4px 0 var(--blot-white),
+                    0 4px 0 var(--blot-white),
+                    4px 4px 0 var(--blot-white),
+                    8px 4px 0 var(--blot-white),
+                    /* Nose */
+                    12px 0 0 var(--primary-blue),
+                    12px -4px 0 var(--primary-blue),
+                    12px 4px 0 var(--primary-blue),
+                    16px 0 0 var(--primary-blue),
+                    /* Window */
+                    4px 0 0 var(--primary-blue),
+                    /* Fins */
+                    0 -8px 0 var(--accent-red),
+                    -4px -8px 0 var(--accent-red),
+                    0 8px 0 var(--accent-red),
+                    -4px 8px 0 var(--accent-red),
+                    /* Exhaust - more shift */
+                    -8px 0 0 var(--flame-yellow),
+                    -8px -4px 0 var(--flame-red),
+                    -8px 4px 0 var(--flame-yellow),
+                    -12px 0 0 var(--flame-orange),
+                    -12px -4px 0 var(--flame-dark),
+                    -12px 4px 0 var(--flame-orange),
+                    -16px 0 0 var(--flame-red),
+                    -20px 0 0 var(--flame-dark),
+                    -24px 0 0 rgba(139, 0, 0, 0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Loader Variants</h1>
+
+    <div class="grid">
+        <!-- Variant 1: Pixel Eclipse -->
+        <div class="loader-card">
+            <h3>Pixel Eclipse</h3>
+            <div class="loader-display">
+                <div class="pixel-eclipse">
+                    <div class="eclipse-sun"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variant 2: Pixel Comet -->
+        <div class="loader-card">
+            <h3>Pixel Comet</h3>
+            <div class="loader-display">
+                <div class="pixel-comet">
+                    <div class="comet-sprite"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variant 3: Pixel Rocket -->
+        <div class="loader-card">
+            <h3>Pixel Rocket</h3>
+            <div class="loader-display">
+                <div class="pixel-rocket">
+                    <div class="rocket-sprite"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
