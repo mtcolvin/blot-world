@@ -1748,14 +1748,14 @@
         };
     }
 
-    // Helper to constrain pan within image bounds
-    function constrainPan(tx, ty, zoom) {
+    // Helper to get pan bounds for current zoom
+    function getPanBounds(zoom) {
         const container = elements.mainPhoto.parentElement.getBoundingClientRect();
         const img = elements.mainPhoto;
 
         // If image not loaded yet, no constraints
         if (!img.naturalWidth || !img.naturalHeight) {
-            return { x: tx, y: ty };
+            return { maxX: Infinity, maxY: Infinity };
         }
 
         // Calculate displayed image size (object-fit: contain)
@@ -1777,10 +1777,45 @@
         const maxX = Math.max(0, (scaledWidth - container.width) / 2);
         const maxY = Math.max(0, (scaledHeight - container.height) / 2);
 
+        return { maxX, maxY };
+    }
+
+    // Helper to constrain pan within image bounds
+    function constrainPan(tx, ty, zoom) {
+        const { maxX, maxY } = getPanBounds(zoom);
         return {
             x: Math.max(-maxX, Math.min(maxX, tx)),
             y: Math.max(-maxY, Math.min(maxY, ty))
         };
+    }
+
+    // Helper to apply rubber-band effect when panning past edges
+    function rubberBandPan(tx, ty, zoom) {
+        const { maxX, maxY } = getPanBounds(zoom);
+        const rubberBandFactor = 0.3; // How much resistance when past edge
+
+        let resultX = tx;
+        let resultY = ty;
+
+        // Apply rubber band on X axis
+        if (tx > maxX) {
+            const overflow = tx - maxX;
+            resultX = maxX + overflow * rubberBandFactor;
+        } else if (tx < -maxX) {
+            const overflow = -maxX - tx;
+            resultX = -maxX - overflow * rubberBandFactor;
+        }
+
+        // Apply rubber band on Y axis
+        if (ty > maxY) {
+            const overflow = ty - maxY;
+            resultY = maxY + overflow * rubberBandFactor;
+        } else if (ty < -maxY) {
+            const overflow = -maxY - ty;
+            resultY = -maxY - overflow * rubberBandFactor;
+        }
+
+        return { x: resultX, y: resultY };
     }
 
     // Helper to animate pan snap-back
@@ -1874,13 +1909,19 @@
                 updatePhotoTransform();
             }
         } else if (e.touches.length === 1 && isTouchPanning && currentZoom > 1) {
-            // Pan when zoomed
+            // Pan when zoomed with rubber-band effect at edges
             e.preventDefault();
             const deltaX = e.touches[0].clientX - touchPanStartX;
             const deltaY = e.touches[0].clientY - touchPanStartY;
 
-            translateX = touchPanTranslateX + deltaX;
-            translateY = touchPanTranslateY + deltaY;
+            // Calculate raw pan position
+            const rawX = touchPanTranslateX + deltaX;
+            const rawY = touchPanTranslateY + deltaY;
+
+            // Apply rubber-band effect when past edges
+            const rubberBanded = rubberBandPan(rawX, rawY, currentZoom);
+            translateX = rubberBanded.x;
+            translateY = rubberBanded.y;
 
             updatePhotoTransform();
         }
