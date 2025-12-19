@@ -29,6 +29,7 @@
 	<link rel="shortcut icon" href="../../images/favicon/favicon.ico" />
 	<link rel="apple-touch-icon" sizes="180x180" href="../../images/favicon/apple-touch-icon.png" />
 	<link rel="manifest" href="../../images/favicon/site.webmanifest" />
+	<meta name="theme-color" content="#0b0f1a">
 
 	<!-- SEO Meta Tags -->
 	<meta name="description" content="Photography by Matthew Colvin - A visual timeline of moments captured through the lens.">
@@ -114,10 +115,10 @@
 			font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 			color: var(--photo-light);
 			line-height: 1.6;
-			overflow: hidden;
 			margin: 0;
 			padding: 0;
-			height: 100vh;
+			min-height: 100dvh;
+			background: #0b0f1a;
 		}
 
 
@@ -659,8 +660,10 @@
            ============================================ */
         @media (max-width: 768px) {
             /* iOS Safe Areas - white top, transparent bottom */
-            html {
-                background: rgba(255, 255, 255, 1) !important;
+            html, body {
+				margin: 0;
+                background-color: #0b0f1a !important;
+				min-height: 100dvh;
             }
 
             body {
