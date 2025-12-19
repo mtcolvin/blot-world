@@ -214,7 +214,7 @@ nav.minimal-nav:hover .logo-fill {
     font-size: 1.3rem;
     font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--mininav-mobile-color);
-    margin-left: 0;
+    margin-left: auto;
   }
 
   .min-logo-title span {
