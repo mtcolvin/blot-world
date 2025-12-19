@@ -1,6 +1,6 @@
 /* Mobile mininav color defaults (can be overridden per-page) */
 :root {
-  --mininav-mobile-bg: rgba(254, 254, 254, 0.95);
+  --mininav-mobile-bg: rgba(254, 254, 254, 0.85);
   --mininav-mobile-border: rgba(26, 26, 26, 0.1);
   --mininav-mobile-color: #1a1a1a;
 }
