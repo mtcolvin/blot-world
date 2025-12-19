@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <!-- Google Tag Manager -->
     <script>
@@ -29,7 +29,7 @@
 	<link rel="shortcut icon" href="../../images/favicon/favicon.ico" />
 	<link rel="apple-touch-icon" sizes="180x180" href="../../images/favicon/apple-touch-icon.png" />
 	<link rel="manifest" href="../../images/favicon/site.webmanifest" />
-	<meta name="theme-color" content="#0a0a0a">
+	<meta name="theme-color" content="#ffffff">
 
 	<!-- SEO Meta Tags -->
 	<meta name="description" content="Photography by Matthew Colvin - A visual timeline of moments captured through the lens.">
@@ -64,29 +64,46 @@
             --photo-light: #f5f5f5;
             --photo-accent: #888888;
 
-            /* Mini Nav Color Overrides */
+            /* Mini Nav Color Overrides - White background, black text */
             --mininav-bg: transparent;
             --mininav-logo-fill: transparent;
             --mininav-logo-opacity: 0;
             --mininav-logo-opacity-active: 0;
             --mininav-backdrop-display: block;
 
-            /* Mobile Mini Nav - Match desktop dark gray */
-            --mininav-mobile-bg: rgba(40, 40, 40, 0.85);
-            --mininav-mobile-border: rgba(255, 255, 255, 0.08);
-            --mininav-mobile-color: #ffffff;
+            /* Mobile Mini Nav - White background, black text */
+            --mininav-mobile-bg: rgba(255, 255, 255, 0.85);
+            --mininav-mobile-border: rgba(0, 0, 0, 0.1);
+            --mininav-mobile-color: #1a1a1a;
         }
 
-        /* Override backdrop mask and styling for this page */
+        /* Override backdrop mask and styling for this page - white bg, black text */
         .minimal-nav .backdrop-blur {
             mask: url(#logo-cut-photo);
             -webkit-mask: url(#logo-cut-photo);
-            background: rgba(40, 40, 40, 0.98);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .nav-rect {
             fill: transparent;
+        }
+
+        /* Desktop mininav - black text */
+        .minimal-nav .minimal-nav-container {
+            color: #1a1a1a;
+        }
+
+        .minimal-nav .back-btn-minimal {
+            color: #1a1a1a;
+        }
+
+        .minimal-nav .back-btn-minimal svg {
+            stroke: #1a1a1a;
+        }
+
+        .minimal-nav .min-logo-title {
+            color: #1a1a1a;
         }
 
         /* Hide mobile logo icon on desktop */
@@ -643,6 +660,18 @@
            MOBILE REDESIGN - Google Photos Style
            ============================================ */
         @media (max-width: 768px) {
+            /* Mobile safe areas - white background */
+            html {
+                background: #ffffff;
+            }
+
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+
             /* Mobile mininav styles now in minimal-nav.css */
             /* Colors configured via --mininav-mobile-* variables in :root */
 
