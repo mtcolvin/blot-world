@@ -3,7 +3,6 @@
   --mininav-mobile-bg: rgba(254, 254, 254, 0.95);
   --mininav-mobile-border: rgba(26, 26, 26, 0.1);
   --mininav-mobile-color: #1a1a1a;
-  --mininav-mobile-logo-filter: none; /* Use invert(1) for white logo */
 }
 
 /* Mini nav container */
@@ -199,13 +198,19 @@ nav.minimal-nav:hover .logo-fill {
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
+    background-color: var(--mininav-mobile-color);
+    mask-image: url('../../images/logo/blot-iconmark-black-bkgnd.png');
+    -webkit-mask-image: url('../../images/logo/blot-iconmark-black-bkgnd.png');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
   }
 
   .min-logo-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: var(--mininav-mobile-logo-filter);
+    visibility: hidden;
   }
 
   .min-logo-title {
