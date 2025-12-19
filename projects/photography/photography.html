@@ -70,6 +70,11 @@
             --mininav-logo-opacity: 0;
             --mininav-logo-opacity-active: 0;
             --mininav-backdrop-display: block;
+
+            /* Mobile Mini Nav - Dark Theme */
+            --mininav-mobile-bg: rgba(0, 0, 0, 0.95);
+            --mininav-mobile-border: rgba(255, 255, 255, 0.2);
+            --mininav-mobile-color: #ffffff;
         }
 
         /* Override backdrop mask and styling for this page */
@@ -638,88 +643,8 @@
            MOBILE REDESIGN - Google Photos Style
            ============================================ */
         @media (max-width: 768px) {
-            /* Mobile mininav - full width bar */
-            .minimal-nav {
-                width: 100% !important;
-                height: auto;
-                left: 0 !important;
-                right: 0 !important;
-                transform: none;
-                top: 0 !important;
-                padding: 24px 16px !important;
-                background: rgba(0, 0, 0, 0.95);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border-radius: 0 0 12px 12px !important;
-                border: none !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-                overflow: visible;
-            }
-
-            .minimal-nav .backdrop-blur {
-                display: none;
-            }
-
-            .minimal-nav svg.nav-bg {
-                display: none;
-            }
-
-            .minimal-nav-container {
-                display: flex;
-                align-items: center;
-                padding-left: 0;
-                gap: 8px;
-            }
-
-            .back-btn-minimal {
-                margin: 0;
-                padding: 0;
-                flex-shrink: 0;
-            }
-
-            .back-btn-minimal svg {
-                width: 20px;
-                height: 20px;
-            }
-
-            .min-logo-icon {
-                display: flex !important;
-                width: 24px;
-                height: 24px;
-                flex-shrink: 0;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .min-logo-icon img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-            }
-
-            .min-logo-title {
-                display: flex !important;
-                letter-spacing: -1px;
-                font-size: 1.3rem;
-                font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            }
-
-            .min-logo-title span {
-                display: inline-block;
-                opacity: 1 !important;
-            }
-
-            /* Gradient font weights - matching index.html logo */
-            .min-logo-title span:nth-child(1) { font-weight: 900; }
-            .min-logo-title span:nth-child(2) { font-weight: 820; }
-            .min-logo-title span:nth-child(3) { font-weight: 740; }
-            .min-logo-title span:nth-child(4) { font-weight: 660; }
-            .min-logo-title span:nth-child(5) { font-weight: 580; }
-            .min-logo-title span:nth-child(6) { font-weight: 500; }
-            .min-logo-title span:nth-child(7) { font-weight: 420; }
-            .min-logo-title span:nth-child(8) { font-weight: 340; }
-            .min-logo-title span:nth-child(9) { font-weight: 260; }
-            .min-logo-title span:nth-child(10) { font-weight: 180; }
+            /* Mobile mininav styles now in minimal-nav.css */
+            /* Colors configured via --mininav-mobile-* variables in :root */
 
             /* Mobile Grid View - Default on mobile */
             .mobile-grid-view {

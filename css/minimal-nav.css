@@ -1,3 +1,10 @@
+/* Mobile mininav color defaults (can be overridden per-page) */
+:root {
+  --mininav-mobile-bg: rgba(254, 254, 254, 0.95);
+  --mininav-mobile-border: rgba(26, 26, 26, 0.1);
+  --mininav-mobile-color: #1a1a1a;
+}
+
 /* Mini nav container */
 nav.minimal-nav {
   position: fixed;
@@ -137,4 +144,79 @@ nav.minimal-nav:hover .logo-fill {
 
 .minimal-nav:hover .min-logo-title span {
   font-weight: 600;
+}
+
+/* Mobile mininav styles */
+@media (max-width: 768px) {
+  nav.minimal-nav {
+    width: 100% !important;
+    height: auto;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    transform: none;
+    padding: 24px 16px !important;
+    background: var(--mininav-mobile-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 0 0 12px 12px !important;
+    border: none !important;
+    border-bottom: 1px solid var(--mininav-mobile-border) !important;
+    overflow: visible;
+  }
+
+  .minimal-nav .backdrop-blur,
+  .minimal-nav svg.nav-bg {
+    display: none;
+  }
+
+  .minimal-nav .minimal-nav-container {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+    gap: 8px;
+    color: var(--mininav-mobile-color);
+  }
+
+  .back-btn-minimal {
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    color: var(--mininav-mobile-color);
+  }
+
+  .back-btn-minimal svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--mininav-mobile-color);
+  }
+
+  .min-logo-icon {
+    display: flex !important;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .min-logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .min-logo-title {
+    display: flex !important;
+    letter-spacing: -1px;
+    font-size: 1.3rem;
+    font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--mininav-mobile-color);
+    margin-left: 0;
+  }
+
+  .min-logo-title span {
+    display: inline-block;
+    opacity: 1 !important;
+  }
 }
