@@ -24,6 +24,7 @@
 	<link rel="stylesheet" href="../../css/minimal-nav.css">	
 	
     <title>Café Mexicali Brand Redesign by Matthew Colvin</title>
+    <meta name="theme-color" content="#F04923">
     
     <style>
         * {
@@ -416,7 +417,11 @@
         .footer a:hover {
             opacity: 0.7;
         }
-        
+
+        .mobile-break {
+            display: inline;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .logo-magazine {
@@ -443,7 +448,7 @@
             .hero-left,
             .hero-right {
                 min-height: 60vh;
-                padding: 80px 40px 40px;
+                padding: 100px 40px 40px;
             }
             
             .info-strip {
@@ -499,6 +504,57 @@
                 right: 20px;
                 padding: 14px 28px;
                 font-size: 13px;
+            }
+
+            /* Mobile logo icon */
+            .min-logo-icon {
+                display: flex !important;
+                width: 24px;
+                height: 24px;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--mininav-mobile-color);
+                mask-image: url('../../images/logo/blot-iconmark-black-bkgnd.png');
+                -webkit-mask-image: url('../../images/logo/blot-iconmark-black-bkgnd.png');
+                mask-size: contain;
+                -webkit-mask-size: contain;
+                mask-repeat: no-repeat;
+                -webkit-mask-repeat: no-repeat;
+                mask-position: center;
+                -webkit-mask-position: center;
+            }
+
+            .min-logo-icon img {
+                visibility: hidden;
+            }
+
+            /* Footer text line break */
+            .mobile-break {
+                display: block;
+            }
+
+            /* Safe area backgrounds for notched devices */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: env(safe-area-inset-top, 0);
+                background: var(--cafemex-orange);
+                z-index: 9999;
+            }
+
+            body::after {
+                content: '';
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: env(safe-area-inset-bottom, 0);
+                background: var(--cafemex-orange);
+                z-index: 9999;
             }
         }
     </style>
@@ -692,7 +748,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 Matthew Colvin. All rights reserved. <a href="../../index.html">BLOT.WORLD</a></p>
+        <p>&copy; 2025 Matthew Colvin. <span class="mobile-break">All rights reserved.</span> <a href="../../index.html">BLOT.WORLD</a></p>
         <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">Independent design exercise. Not affiliated with or endorsed by Cafe Mexicali, who retain all rights to their name and branding.</p>
     </footer>
 
