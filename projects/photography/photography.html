@@ -59,7 +59,7 @@
         }
 
         :root {
-            --photo-bg: #000000;
+            --photo-bg: #000001;
             --photo-dark: #000000;
             --photo-light: #f5f5f5;
             --photo-accent: #888888;
@@ -118,7 +118,7 @@
 			margin: 0;
 			padding: 0;
 			min-height: 100dvh;
-			background: #0b0f1a;
+			background: var(--photo-bg);
 		}
 
 
@@ -419,18 +419,24 @@
 
         /* Minimal Timeline Container */
         .timeline-container {
-            min-height: 70px;
-            max-height: 300px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--photo-bg);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
+			position: static;            
         }
+		
+		@media (min-width: 769px) {
+			.timeline-container {
+				min-height: 70px;
+				max-height: 300px;
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background: var(--photo-bg);
+				border-top: 1px solid rgba(255, 255, 255, 0.1);
+				z-index: 100;
+				display: flex;
+				flex-direction: column;
+			}
+		}
 
         /* Timeline Scroll Area */
         .timeline-scroll {
@@ -664,10 +670,6 @@
 				margin: 0;
                 background-color: #0b0f1a !important;
 				min-height: 100dvh;
-            }
-
-            body {
-                background: transparent !important;
             }
 
             .gallery-layout {
