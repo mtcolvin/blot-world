@@ -115,6 +115,11 @@ nav.minimal-nav:hover .logo-fill {
   transform: translateX(-4px);
 }
 
+/* Logo icon - hidden on desktop, visible on mobile */
+.min-logo-icon {
+  display: none;
+}
+
 /* Logo title */
 .min-logo-title {
   display: flex;
