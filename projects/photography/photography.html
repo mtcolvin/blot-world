@@ -660,11 +660,7 @@
            MOBILE REDESIGN - Google Photos Style
            ============================================ */
         @media (max-width: 768px) {
-            /* Mobile safe areas - white background */
-            html, body {
-                background: #ffffff !important;
-            }
-
+            /* Mobile safe areas */
             body {
                 padding-top: env(safe-area-inset-top);
                 padding-bottom: env(safe-area-inset-bottom);
@@ -672,10 +668,20 @@
                 padding-right: env(safe-area-inset-right);
             }
 
-            /* Keep gallery content black */
-            .gallery-layout {
-                background: var(--photo-bg);
+            /* Top safe area - white with opacity matching mininav */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: env(safe-area-inset-top, 0);
+                background: rgba(255, 255, 255, 0.85);
+                z-index: 9999;
+                pointer-events: none;
             }
+
+            /* Bottom safe area - transparent (content shows through) */
 
             /* Mobile mininav styles now in minimal-nav.css */
             /* Colors configured via --mininav-mobile-* variables in :root */
