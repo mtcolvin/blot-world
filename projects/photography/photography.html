@@ -661,8 +661,8 @@
            ============================================ */
         @media (max-width: 768px) {
             /* Mobile safe areas - white background */
-            html {
-                background: #ffffff;
+            html, body {
+                background: #ffffff !important;
             }
 
             body {
@@ -670,6 +670,11 @@
                 padding-bottom: env(safe-area-inset-bottom);
                 padding-left: env(safe-area-inset-left);
                 padding-right: env(safe-area-inset-right);
+            }
+
+            /* Keep gallery content black */
+            .gallery-layout {
+                background: var(--photo-bg);
             }
 
             /* Mobile mininav styles now in minimal-nav.css */
