@@ -1792,27 +1792,32 @@
     // Helper to apply rubber-band effect when panning past edges
     function rubberBandPan(tx, ty, zoom) {
         const { maxX, maxY } = getPanBounds(zoom);
-        const rubberBandFactor = 0.3; // How much resistance when past edge
+        const rubberBandFactor = 0.2; // How much resistance when past edge
+        const maxOverscroll = 60; // Maximum pixels past edge (prevents disappearing)
 
         let resultX = tx;
         let resultY = ty;
 
-        // Apply rubber band on X axis
+        // Apply rubber band on X axis with max limit
         if (tx > maxX) {
             const overflow = tx - maxX;
-            resultX = maxX + overflow * rubberBandFactor;
+            const dampedOverflow = Math.min(overflow * rubberBandFactor, maxOverscroll);
+            resultX = maxX + dampedOverflow;
         } else if (tx < -maxX) {
             const overflow = -maxX - tx;
-            resultX = -maxX - overflow * rubberBandFactor;
+            const dampedOverflow = Math.min(overflow * rubberBandFactor, maxOverscroll);
+            resultX = -maxX - dampedOverflow;
         }
 
-        // Apply rubber band on Y axis
+        // Apply rubber band on Y axis with max limit
         if (ty > maxY) {
             const overflow = ty - maxY;
-            resultY = maxY + overflow * rubberBandFactor;
+            const dampedOverflow = Math.min(overflow * rubberBandFactor, maxOverscroll);
+            resultY = maxY + dampedOverflow;
         } else if (ty < -maxY) {
             const overflow = -maxY - ty;
-            resultY = -maxY - overflow * rubberBandFactor;
+            const dampedOverflow = Math.min(overflow * rubberBandFactor, maxOverscroll);
+            resultY = -maxY - dampedOverflow;
         }
 
         return { x: resultX, y: resultY };
@@ -1899,9 +1904,12 @@
                 newTranslateX += panDeltaX;
                 newTranslateY += panDeltaY;
 
+                // Apply rubber-band effect to prevent image from disappearing
+                const rubberBanded = rubberBandPan(newTranslateX, newTranslateY, newZoom);
+
                 currentZoom = newZoom;
-                translateX = newTranslateX;
-                translateY = newTranslateY;
+                translateX = rubberBanded.x;
+                translateY = rubberBanded.y;
 
                 lastPinchCenterX = currentCenter.x;
                 lastPinchCenterY = currentCenter.y;
