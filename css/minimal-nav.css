@@ -199,8 +199,8 @@ nav.minimal-nav:hover .logo-fill {
     align-items: center;
     justify-content: center;
     background-color: var(--mininav-mobile-color);
-    mask-image: url('../../images/logo/blot-iconmark-black-bkgnd.png');
-    -webkit-mask-image: url('../../images/logo/blot-iconmark-black-bkgnd.png');
+    mask-image: url('../images/logo/blot-iconmark-black-bkgnd.png');
+    -webkit-mask-image: url('../images/logo/blot-iconmark-black-bkgnd.png');
     mask-size: contain;
     -webkit-mask-size: contain;
     mask-repeat: no-repeat;
