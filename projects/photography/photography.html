@@ -689,6 +689,11 @@
                 padding: 12px 16px !important;
             }
 
+            /* Move timeline above safe area so grid shows through home indicator */
+            .timeline-container {
+                bottom: env(safe-area-inset-bottom, 0) !important;
+            }
+
             /* Mobile mininav styles now in minimal-nav.css */
             /* Colors configured via --mininav-mobile-* variables in :root */
 
