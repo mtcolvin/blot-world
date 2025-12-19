@@ -660,20 +660,29 @@
            MOBILE REDESIGN - Google Photos Style
            ============================================ */
         @media (max-width: 768px) {
-            /* Top safe area overlay element */
-            .top-safe-area-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: env(safe-area-inset-top, 47px);
-                background: rgba(255, 255, 255, 0.85);
-                z-index: 9998;
-                pointer-events: none;
+            /* iOS Safe Areas - white top, transparent bottom */
+            html {
+                background: rgba(255, 255, 255, 1) !important;
             }
 
-            /* Bottom safe area - transparent (content shows through) */
-            /* No overlay needed - gallery content visible behind home indicator */
+            body {
+                background: transparent !important;
+            }
+
+            .gallery-layout {
+                position: fixed;
+                top: env(safe-area-inset-top, 47px);
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: auto;
+                background: var(--photo-bg);
+            }
+
+            /* Hide the overlay element on mobile - using html background instead */
+            .top-safe-area-overlay {
+                display: none;
+            }
 
             /* Mobile mininav styles now in minimal-nav.css */
             /* Colors configured via --mininav-mobile-* variables in :root */
