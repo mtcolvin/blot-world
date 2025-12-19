@@ -660,28 +660,20 @@
            MOBILE REDESIGN - Google Photos Style
            ============================================ */
         @media (max-width: 768px) {
-            /* Mobile safe areas */
-            body {
-                padding-top: env(safe-area-inset-top);
-                padding-bottom: env(safe-area-inset-bottom);
-                padding-left: env(safe-area-inset-left);
-                padding-right: env(safe-area-inset-right);
-            }
-
-            /* Top safe area - white with opacity matching mininav */
-            body::before {
-                content: '';
+            /* Top safe area overlay element */
+            .top-safe-area-overlay {
                 position: fixed;
                 top: 0;
                 left: 0;
                 right: 0;
-                height: env(safe-area-inset-top, 0);
+                height: env(safe-area-inset-top, 47px);
                 background: rgba(255, 255, 255, 0.85);
-                z-index: 9999;
+                z-index: 9998;
                 pointer-events: none;
             }
 
             /* Bottom safe area - transparent (content shows through) */
+            /* No overlay needed - gallery content visible behind home indicator */
 
             /* Mobile mininav styles now in minimal-nav.css */
             /* Colors configured via --mininav-mobile-* variables in :root */
@@ -1102,6 +1094,9 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBBHS254"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Top safe area overlay for iOS -->
+    <div class="top-safe-area-overlay"></div>
 
     <!-- Mini Nav -->
     <nav class="minimal-nav" aria-label="minimal nav" onclick="window.location.href='../../index.html'">
