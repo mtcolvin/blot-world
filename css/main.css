@@ -592,10 +592,10 @@ main {
 	height: 4px;
 	margin: 0 auto;
 	background: linear-gradient(90deg,
-		transparent,
+		rgba(13, 40, 242, 0) 0%,
 		var(--primary-blue) 20%,
 		var(--accent-red) 80%,
-		transparent);
+		rgba(230, 15, 15, 0) 100%);
 	position: relative;
 	box-shadow:
 		0 0 40px rgba(13, 40, 242, 1),
