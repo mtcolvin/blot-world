@@ -63,6 +63,13 @@
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     let mobileViewMode = 'grid'; // 'grid' or 'photo'
 
+    // Timeline scroll state (declared early for use in click handlers)
+    let scrollTimeout;
+    let isProgrammaticScroll = false;
+    let isProgrammaticScrollTimeout = null;
+    let lastScrollUpdate = 0;
+    let lastProgrammaticScrollTime = 0;
+
     // Helper function to parse date strings as local dates (not UTC)
     function parseLocalDate(dateString) {
         const [year, month, day] = dateString.split('-').map(Number);
@@ -380,6 +387,8 @@
                     // Click handler - navigate to specific photo
                     square.addEventListener('click', (e) => {
                         e.stopPropagation(); // Prevent tick mark click
+                        // Clear any pending scroll timeouts to prevent interference
+                        clearTimeout(scrollTimeout);
                         clearTimeout(isProgrammaticScrollTimeout);
                         isProgrammaticScroll = true;
                         lastProgrammaticScrollTime = Date.now();
@@ -727,6 +736,7 @@
         }
 
         // Show photo
+        clearTimeout(scrollTimeout);
         isProgrammaticScroll = true;
         lastProgrammaticScrollTime = Date.now();
         showPhoto(index);
@@ -1399,12 +1409,6 @@
     }
 
     // Timeline scroll handler - update photo based on centered tick
-    let scrollTimeout;
-    let isProgrammaticScroll = false;
-    let isProgrammaticScrollTimeout = null;
-    let lastScrollUpdate = 0;
-    let lastProgrammaticScrollTime = 0;
-
     function updatePhotoFromScroll() {
         const scrollContainer = elements.timelineScroll;
         const containerRect = scrollContainer.getBoundingClientRect();
@@ -1503,6 +1507,8 @@
         }
 
         if (newIndex !== currentIndex) {
+            // Clear any pending scroll timeouts to prevent interference
+            clearTimeout(scrollTimeout);
             clearTimeout(isProgrammaticScrollTimeout);
             isProgrammaticScroll = true;
             lastProgrammaticScrollTime = Date.now();
@@ -2019,6 +2025,7 @@
     // Handle browser back/forward buttons
     window.addEventListener('popstate', (e) => {
         if (e.state && e.state.photoIndex !== undefined) {
+            clearTimeout(scrollTimeout);
             clearTimeout(isProgrammaticScrollTimeout);
             isProgrammaticScroll = true;
             lastProgrammaticScrollTime = Date.now();
