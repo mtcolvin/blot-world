@@ -1164,11 +1164,14 @@ const NightSky = {
 
 		// Default to night-sky unless user chose grid
 		const savedMode = localStorage.getItem('backgroundMode');
+		console.log('[NightSky.init] savedMode from localStorage:', savedMode);
 
 		if (savedMode === 'grid') {
-			this.deactivate(); // explicit choice to use grid
+			console.log('[NightSky.init] Calling deactivate() for grid mode');
+			this.deactivate();
 		} else {
-			this.activate(); // default to night-sky
+			console.log('[NightSky.init] Calling activate() for night-sky mode');
+			this.activate();
 		}
 	},
 	

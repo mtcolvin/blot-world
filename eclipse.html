@@ -243,24 +243,59 @@
             z-index: -1;
         }
 
-        /* Hidden Toggle */
-        .hidden-toggle {
+        /* Toggle Switch */
+        .toggle-container {
             margin-top: 4rem;
-            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+
+        .toggle-container:hover {
+            opacity: 0.6;
+        }
+
+        .toggle-label {
             font-size: 0.7rem;
-            color: rgba(245, 245, 245, 0.15);
-            text-align: center;
+            color: rgba(245, 245, 245, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             cursor: pointer;
-            transition: color 0.3s ease;
-            user-select: none;
+            transition: background 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .hidden-toggle:hover {
-            color: rgba(245, 245, 245, 0.4);
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
-        .hidden-toggle:active {
-            color: rgba(13, 40, 242, 0.6);
+        .toggle-switch.active {
+            background: rgba(13, 40, 242, 0.5);
+            border-color: rgba(13, 40, 242, 0.6);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+            background: #0D28F2;
         }
 
         /* Responsive */
@@ -376,9 +411,11 @@
             <figcaption>The photo I got extremely lucky capturing during my 2017 eclipse. I was not, and still am not, an expert in photography; but after finicking with the buttons on my Canon G16, I looked down at the small screen on my camera in awe.</figcaption>
         </figure>
 
-        <!-- Hidden toggle for background/poetry mode -->
-        <div id="bg-toggle-btn" class="hidden-toggle" title="Toggle background mode">
-            <span>Toggle vibes</span>
+        <!-- Background mode toggle -->
+        <div class="toggle-container">
+            <span class="toggle-label">Stars</span>
+            <div id="bg-toggle-btn" class="toggle-switch" title="Toggle background mode"></div>
+            <span class="toggle-label">Grid</span>
         </div>
     </div>
 
@@ -406,9 +443,11 @@
 
                 window.addEventListener('resize', () => this.resize());
 
-                // Check saved preference
+                // Check saved preference and apply
                 const savedMode = localStorage.getItem('backgroundMode');
-                if (savedMode === 'night-sky' || savedMode === null) {
+                if (savedMode === 'grid') {
+                    this.deactivate();
+                } else {
                     this.activate();
                 }
             },
@@ -494,6 +533,8 @@
                 const background = document.getElementById('global-background');
                 background?.classList.remove('night-sky-mode');
                 localStorage.setItem('backgroundMode', 'grid');
+                console.log('[eclipse.html] Saved backgroundMode: grid');
+                console.log('[eclipse.html] Verify read:', localStorage.getItem('backgroundMode'));
                 if (this.animationId) {
                     cancelAnimationFrame(this.animationId);
                 }
@@ -514,9 +555,25 @@
         // Toggle button
         const bgToggleBtn = document.getElementById('bg-toggle-btn');
 
+        // Sync toggle switch visual state with current mode
+        function syncToggleUI() {
+            if (bgToggleBtn) {
+                // Toggle is "active" (right position) when grid mode is on (night sky OFF)
+                if (!NightSky.isActive) {
+                    bgToggleBtn.classList.add('active');
+                } else {
+                    bgToggleBtn.classList.remove('active');
+                }
+            }
+        }
+
+        // Initial sync
+        syncToggleUI();
+
         if (bgToggleBtn) {
             bgToggleBtn.addEventListener('click', () => {
                 NightSky.toggle();
+                syncToggleUI();
             });
         }
     </script>
