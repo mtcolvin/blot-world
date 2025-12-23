@@ -39,7 +39,7 @@ const PageLoader = {
 		if (loader && gif) {
 			gif.src = this.getRandomGif();
 			loader.classList.add('active');
-			// Animate loading bar with ▮ characters - dynamically sized
+			// Animate loading bar with ▮ characters - fixed 11 blocks
 			if (loadingBar) {
 				// Clear any existing interval from previous navigation
 				if (this.loadingInterval) {
@@ -47,24 +47,8 @@ const PageLoader = {
 					this.loadingInterval = null;
 				}
 
-				// Create a temporary span to measure exact block width
-				const measureSpan = document.createElement('span');
-				measureSpan.style.cssText = 'font-family:monospace;font-size:12px;letter-spacing:0;visibility:hidden;position:absolute;';
-				measureSpan.textContent = '▮';
-				document.body.appendChild(measureSpan);
-				const blockWidth = measureSpan.offsetWidth;
-				document.body.removeChild(measureSpan);
-
-				// Calculate container inner width
-				const styles = getComputedStyle(loadingBar);
-				const paddingLeft = parseFloat(styles.paddingLeft) || 0;
-				const paddingRight = parseFloat(styles.paddingRight) || 0;
-				const availableWidth = loadingBar.clientWidth - paddingLeft - paddingRight;
-
-				// Calculate blocks that fit
-				const totalBlocks = Math.max(5, Math.floor(availableWidth / blockWidth));
-				const totalTime = 1400;
-				const intervalTime = Math.floor(totalTime / totalBlocks);
+				const totalBlocks = 11;
+				const intervalTime = 127;
 				let currentBlock = 0;
 				loadingBar.textContent = '';
 				this.loadingInterval = setInterval(() => {

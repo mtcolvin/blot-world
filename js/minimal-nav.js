@@ -68,7 +68,7 @@
             img.style.cssText = 'width:150px;height:150px;object-fit:contain;image-rendering:pixelated;';
 
             const loadingBar = document.createElement('div');
-            loadingBar.style.cssText = 'width:150px;height:24px;font-family:monospace;font-size:12px;color:#fff;letter-spacing:1px;text-align:left;border:1px solid #fff;padding:4px 6px;box-sizing:border-box;line-height:1;';
+            loadingBar.style.cssText = 'width:150px;height:24px;font-family:monospace;font-size:12px;color:#fff;letter-spacing:1px;text-align:left;border:1px solid #fff;padding:4px 0 4px 6px;box-sizing:border-box;line-height:1;';
 
             content.appendChild(img);
             content.appendChild(loadingBar);
