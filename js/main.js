@@ -928,6 +928,7 @@ document.addEventListener('DOMContentLoaded', function() {
     populateAreaBadges();
     initializeBlog();
     QuoteRotator.init();
+    NameTyper.init();
     markAIProjects();
 
     // Initialize project counter (excluding hidden poetry card)
@@ -1377,6 +1378,59 @@ function populateAreaBadges() {
 }
 
 // ==========================================================================
+// ABOUT SECTION - NAME TYPING ANIMATION
+// ==========================================================================
+
+const NameTyper = {
+    element: null,
+    text: '',
+    hasTyped: false,
+
+    init() {
+        this.element = document.querySelector('.about-name');
+        if (!this.element) return;
+
+        this.text = this.element.dataset.text || '';
+        this.element.textContent = '';
+
+        // Use IntersectionObserver to trigger when about section is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.hasTyped) {
+                    this.hasTyped = true;
+                    this.type();
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(this.element);
+    },
+
+    type() {
+        this.element.classList.add('typing');
+        let i = 0;
+        const speed = 100;
+
+        const typeChar = () => {
+            if (i < this.text.length) {
+                this.element.textContent += this.text.charAt(i);
+                i++;
+                setTimeout(typeChar, speed);
+            } else {
+                // Typing complete - keep cursor blinking briefly then remove
+                setTimeout(() => {
+                    this.element.classList.remove('typing');
+                    this.element.classList.add('typing-done');
+                }, 1000);
+            }
+        };
+
+        typeChar();
+    }
+};
+
+// ==========================================================================
 // ABOUT SECTION - ROTATING QUOTES
 // ==========================================================================
 
@@ -1409,6 +1463,10 @@ const QuoteRotator = {
         {
             text: "Understanding is love's other name.",
             author: "Thích Nhất Hạnh"
+        },
+        {
+            text: "Everyone you meet is fighting a battle you know absolutely nothing about. Be kind. Always.",
+            author: "Robin Williams"
         }
     ],
     currentIndex: 0,
