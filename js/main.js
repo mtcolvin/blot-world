@@ -930,6 +930,7 @@ document.addEventListener('DOMContentLoaded', function() {
     QuoteRotator.init();
     NameTyper.init();
     markAIProjects();
+    checkTagsOverflow();
 
     // Initialize project counter (excluding hidden poetry card)
     const updateProjectCounter = () => {
@@ -1147,17 +1148,40 @@ const NightSky = {
 			});
 		}
 
-		// Default to night-sky unless user chose grid
+		// Apply saved background mode (default to grid unless explicitly night-sky)
 		const savedMode = localStorage.getItem('backgroundMode');
 		console.log('[NightSky.init] savedMode from localStorage:', savedMode);
 
-		if (savedMode === 'grid') {
-			console.log('[NightSky.init] Calling deactivate() for grid mode');
-			this.deactivate();
-		} else {
-			console.log('[NightSky.init] Calling activate() for night-sky mode');
-			this.activate();
-		}
+		const applyMode = () => {
+			const background = document.getElementById('global-background');
+			if (savedMode === 'night-sky') {
+				console.log('[NightSky.init] Applying night-sky mode');
+				this.isActive = true;
+				background?.classList.add('night-sky-mode');
+				if (!this.animationFrame) {
+					this.animate();
+				}
+			} else {
+				// Default to grid mode (includes 'grid', null, undefined, etc.)
+				console.log('[NightSky.init] Applying grid mode (default)');
+				this.isActive = false;
+				background?.classList.remove('night-sky-mode');
+				if (this.animationFrame) {
+					cancelAnimationFrame(this.animationFrame);
+					this.animationFrame = null;
+				}
+				if (this.ctx && this.canvas) {
+					this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+				}
+			}
+		};
+
+		// Apply immediately
+		applyMode();
+
+		// Re-apply after a delay to catch any interference
+		setTimeout(applyMode, 50);
+		setTimeout(applyMode, 200);
 	},
 	
 	resizeCanvas() {
@@ -1286,33 +1310,37 @@ const NightSky = {
 		this.animationFrame = requestAnimationFrame(() => this.animate());
 	},
 	
-	activate() {
+	activate(savePreference = true) {
 		this.isActive = true;
 		const background = document.getElementById('global-background');
 		background?.classList.add('night-sky-mode');
-		
-		// Save preference
-		localStorage.setItem('backgroundMode', 'night-sky');
-		
+
+		if (savePreference) {
+			localStorage.setItem('backgroundMode', 'night-sky');
+		}
+
 		if (!this.animationFrame) {
 			this.animate();
 		}
 	},
-	
-	deactivate() {
+
+	deactivate(savePreference = true) {
 		this.isActive = false;
 		const background = document.getElementById('global-background');
 		background?.classList.remove('night-sky-mode');
-		
-		// Save preference
-		localStorage.setItem('backgroundMode', 'grid');
-		
+
+		if (savePreference) {
+			localStorage.setItem('backgroundMode', 'grid');
+		}
+
 		if (this.animationFrame) {
 			cancelAnimationFrame(this.animationFrame);
 			this.animationFrame = null;
 		}
-		
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		if (this.ctx && this.canvas) {
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		}
 	},
 	
 	toggle() {
@@ -1323,6 +1351,40 @@ const NightSky = {
 		}
 	}
 };
+
+// ==========================================================================
+// PROJECT TAGS OVERFLOW DETECTION
+// ==========================================================================
+
+function checkTagsOverflow() {
+    // Only run on desktop (min-width: 769px)
+    if (window.innerWidth < 769) return;
+
+    // Use requestAnimationFrame to ensure layout is complete
+    requestAnimationFrame(() => {
+        const tagContainers = document.querySelectorAll('.project-tags');
+
+        tagContainers.forEach(container => {
+            const parent = container.closest('.project-content-bottom');
+            if (!parent) return;
+
+            // Check if content overflows (scrollHeight > visible height)
+            const hasOverflow = container.scrollHeight > container.clientHeight + 5;
+            if (hasOverflow) {
+                parent.classList.add('has-overflow');
+            } else {
+                parent.classList.remove('has-overflow');
+            }
+        });
+    });
+}
+
+// Re-check on window resize and load
+window.addEventListener('resize', checkTagsOverflow);
+window.addEventListener('load', () => {
+    // Additional delay to ensure all layout calculations are complete
+    setTimeout(checkTagsOverflow, 100);
+});
 
 // ==========================================================================
 // ABOUT SECTION - AUTO-POPULATE AREA BADGES

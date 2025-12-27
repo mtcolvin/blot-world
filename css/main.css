@@ -1332,6 +1332,7 @@ main {
 .project-card h3 {
 	font-size: 1.25rem;
 	letter-spacing: -0.5px;
+	line-height: 1;
 	overflow-wrap: break-word;
 	word-break: break-word;
 	hyphens: auto;
@@ -1342,9 +1343,9 @@ main {
 	line-height: 1.5;
 	font-size: 0.8rem;
 	margin-bottom: 0;
-	margin-top: 0.3rem;
-	max-width: 70%;
-	padding-right: 1rem;
+	margin-top: 1rem;
+	max-width: 100%;
+	padding-right: 0;
 }
 
 .project-date-container {
@@ -1376,21 +1377,114 @@ main {
 	transition: all 0.2s ease;
 }
 
-/* Reduce tag size on desktop and position area badge to bottom right */
+/* Header area badge - hidden on mobile, shown on desktop */
+.header-area-badge {
+	display: none;
+}
+
+/* Desktop: Tags in separate scrollable column on the right */
 @media (min-width: 769px) {
-	.tag {
-		padding: 0.15rem 0.5rem;
-		font-size: 0.7rem;
+	.project-card {
+		position: relative;
+	}
+
+	.project-details {
+		min-height: unset;
+		padding-right: 160px;
+		position: relative;
+	}
+
+	.project-content-top {
+		position: relative;
+	}
+
+	.project-date {
+		font-size: 0.75rem;
+	}
+
+	/* Area badge in header - shown on desktop */
+	.header-area-badge {
+		display: inline-block;
+		font-size: 0.65rem;
+	}
+
+	/* Adjust project-header for flex layout with area badge below title */
+	.project-header {
+		flex-wrap: wrap;
+		gap: 0.3rem;
+	}
+
+	.project-header h3 {
+		width: 100%;
+	}
+
+	/* Tech tags column on the right */
+	.project-content-bottom {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 150px;
+		height: 100%;
+		border-left: 1px solid var(--blot-gray);
+		margin: 0;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.project-tags {
-		padding-right: 140px;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		padding: 0.8rem;
+		padding-bottom: 1.5rem;
+		overflow-y: auto;
+		flex: 1;
+		min-height: 0;
+		align-items: flex-start;
+		flex-wrap: nowrap;
+		box-sizing: border-box;
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE/Edge */
 	}
 
-	.project-area-badge {
+	.project-tags::-webkit-scrollbar {
+		display: none; /* Chrome/Safari */
+	}
+
+	.tag {
+		padding: 0.15rem 0.5rem;
+		font-size: 0.7rem;
+		white-space: nowrap;
+	}
+
+	/* Area badge at top of tags section - styled like tech tags */
+	.project-tags .project-area-badge {
+		order: -1;
+		margin: 0;
+		margin-left: 0;
+		align-items: flex-start;
+		gap: 0;
+	}
+
+	.project-tags .area-badge {
+		padding: 0.15rem 0.5rem;
+		font-size: 0.7rem;
+		border-radius: 0;
+		text-transform: none;
+		letter-spacing: normal;
+		font-weight: normal;
+	}
+
+	/* Hide header area badge on desktop - showing in tags instead */
+	.header-area-badge {
+		display: none !important;
+	}
+
+	/* Hide date from original position - it's repositioned to top right */
+	.project-content-top .project-date-container {
 		position: absolute;
-		bottom: 1rem;
-		right: 1rem;
+		top: 0;
+		right: 0;
 	}
 }
 
@@ -1414,8 +1508,8 @@ main {
 
 .area-badge {
 	display: inline-block;
-	padding: 0.3rem 0.8rem;
-	font-size: 0.75rem;
+	padding: 0.2rem 0.5rem;
+	font-size: 0.65rem;
 	font-weight: 500;
 	letter-spacing: 0.5px;
 	text-transform: uppercase;
