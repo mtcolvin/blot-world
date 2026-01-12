@@ -5,24 +5,16 @@ category: "Case Study"
 excerpt: "I wanted a place to keep track of my work and think through why I make certain decisions. Writing it down helps me understand my own process better."
 image: "blog/images/blot-world-case-study.png"
 tags:
-  - Web Design
-  - HTML
-  - CSS
-  - JavaScript
   - Portfolio
-  - Responsive Design
+  - Web Design
   - Dark Mode
-  - Variable Fonts
-  - Single Page App
-  - Vanilla JavaScript
-  - Mobile-First
   - Typography
-  - Accessibility
-  - Canvas API
+  - Variable Fonts
   - CSS Gradients
-  - Lazy Loading
-  - State Management
-  - CSS Minification
+  - JavaScript
+  - Vanilla JavaScript
+  - Single Page App
+  - CSS
 ---
 
 ## Why this exists

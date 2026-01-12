@@ -27,21 +27,24 @@ async function resizePhotos() {
         const filePath = path.join(imagesDir, file);
 
         try {
-            const metadata = await sharp(filePath).metadata();
+            // Read file into buffer first (works better with OneDrive)
+            const inputBuffer = fs.readFileSync(filePath);
+            const metadata = await sharp(inputBuffer).metadata();
 
             if (metadata.width > TARGET_WIDTH) {
                 const newHeight = Math.round((TARGET_WIDTH / metadata.width) * metadata.height);
 
                 // Read, resize, and save with EXIF preserved
-                await sharp(filePath)
+                const outputBuffer = await sharp(inputBuffer)
                     .resize(TARGET_WIDTH, newHeight, {
                         fit: 'inside',
                         withoutEnlargement: true
                     })
                     .withMetadata() // Preserves EXIF data
                     .jpeg({ quality: QUALITY })
-                    .toBuffer()
-                    .then(data => fs.writeFileSync(filePath, data));
+                    .toBuffer();
+
+                fs.writeFileSync(filePath, outputBuffer);
 
                 console.log(`✓ ${file}: ${metadata.width}x${metadata.height} → ${TARGET_WIDTH}x${newHeight}`);
                 resizedCount++;

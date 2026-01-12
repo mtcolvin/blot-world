@@ -1529,6 +1529,10 @@ const QuoteRotator = {
         {
             text: "Everyone you meet is fighting a battle you know absolutely nothing about. Be kind. Always.",
             author: "Robin Williams"
+        },
+        {
+            text: "Don't gain the world and lose your soul; wisdom is better than silver or gold.",
+            author: "Bob Marley"
         }
     ],
     currentIndex: 0,
@@ -1666,11 +1670,25 @@ function generateBlogPostsFromHTML() {
             imagePath = imageElement.getAttribute('src') || imageElement.src;
         }
 
+        // Get content text for card preview (first 300 chars, rounded to full word)
+        let contentPreview = '';
+        if (contentElement) {
+            const fullText = (contentElement.textContent || contentElement.innerText).trim().replace(/\s+/g, ' ');
+            if (fullText.length <= 300) {
+                contentPreview = fullText;
+            } else {
+                const truncated = fullText.substring(0, 300);
+                const lastSpace = truncated.lastIndexOf(' ');
+                contentPreview = (lastSpace > 0 ? truncated.substring(0, lastSpace) : truncated) + '...';
+            }
+        }
+
         // Build post object
         posts.push({
             id: sectionId,
             title: titleElement ? titleElement.textContent.trim() : '',
             excerpt: excerptElement ? excerptElement.textContent.trim() : '',
+            contentPreview: contentPreview,
             date: parseDateFromText(dateElement ? dateElement.textContent.trim() : ''),
             category: categoryKey,
             tags: Array.from(tagElements).map(tag => tag.textContent.trim()),
@@ -1790,10 +1808,19 @@ function renderBlogPosts() {
         return new Date(b.date) - new Date(a.date);
     });
 
-    blogGrid.innerHTML = sortedPosts.map((post, index) => createBlogCard(post, sortedPosts.length - index)).join('');
+    // RSS-style feed header
+    const feedHeader = `
+        <div class="blog-feed-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 11a9 9 0 0 1 9 9"></path>
+                <path d="M4 4a16 16 0 0 1 16 16"></path>
+                <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+            <span>Feed · ${sortedPosts.length} ${sortedPosts.length === 1 ? 'post' : 'posts'}</span>
+        </div>
+    `;
 
-    // Adjust tags to fit one line after rendering
-    adjustBlogCardTags();
+    blogGrid.innerHTML = feedHeader + sortedPosts.map((post, index) => createBlogCard(post, sortedPosts.length - index)).join('');
 }
 
 // Adjust blog card tags to show fixed number
@@ -1833,35 +1860,23 @@ function adjustBlogCardTags() {
     });
 }
 
-// Create Blog Card HTML
+// Create Blog Card HTML - RSS Feed Style
 function createBlogCard(post, postNumber) {
-    const formattedDate = formatBlogDate(post.date);
-    const categoryLabel = getBlogCategoryLabel(post.category);
-    const readTime = post.readTime ? `${post.readTime} min read` : '';
+    const formattedDate = formatBlogDateRSS(post.date);
+    const readTime = post.readTime ? `${post.readTime} min` : '';
 
     return `
         <a href="#" data-section="${post.section}" class="blog-card" data-post-id="${post.id}">
-            <div class="blog-card-image">
-                <img src="${post.image}" alt="${post.title}" loading="lazy">
-            </div>
             <div class="blog-card-content">
-                <span class="blog-card-number">#${postNumber}</span>
-                <h2 class="blog-card-title">${post.title}</h2>
                 <div class="blog-card-meta">
                     <span class="blog-card-date">${formattedDate}</span>
-                    ${readTime ? `<span class="blog-card-separator">·</span><span class="blog-card-read-time">${readTime}</span>` : ''}
+                    ${readTime ? `<span class="blog-card-read-time">${readTime}</span>` : ''}
                 </div>
-                <p class="blog-card-excerpt">${post.excerpt}</p>
+                <h2 class="blog-card-title">${post.title}</h2>
+                <p class="blog-card-excerpt">${post.contentPreview}</p>
                 <div class="blog-card-tags" data-total-tags="${post.tags.length}">
-                    ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
+                    ${[...post.tags].sort((a, b) => a.localeCompare(b)).map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
                 </div>
-                <span class="blog-card-read-more">
-                    Read more
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </span>
             </div>
         </a>
     `;
@@ -1884,6 +1899,16 @@ function formatBlogDate(dateString) {
     const date = new Date(dateString + 'T00:00:00Z');
     const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
     return date.toLocaleDateString('en-US', options);
+}
+
+// Format Blog Date - RSS Style (e.g., "Dec 27, 2025")
+function formatBlogDateRSS(dateString) {
+    const date = new Date(dateString + 'T00:00:00Z');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getUTCMonth()];
+    const day = date.getUTCDate();
+    const year = date.getUTCFullYear();
+    return `${month} ${day}, ${year}`;
 }
 
 // Get Blog Category Label

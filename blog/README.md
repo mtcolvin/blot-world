@@ -5,10 +5,11 @@ This blog system uses Markdown files with YAML frontmatter to generate blog post
 ## How It Works
 
 1. **Markdown Files**: Blog posts are written in Markdown format with YAML frontmatter for metadata
-2. **Build Script**: `npm run build:blog` converts `.md` files to HTML
+2. **Build Script**: `npm run build:blog` converts `.md` files to HTML and generates RSS feed
 3. **Build-Time Integration**: Content is converted and injected into `index.html` during build
-4. **Auto Features**: Read time, tags, and metadata are all handled automatically
-5. **No Runtime Overhead**: Posts are pre-built, so no CORS issues or fetch delays
+4. **RSS Feed**: Auto-generated at `blog/rss.xml` for subscribers
+5. **Auto Features**: Read time, tags, and metadata are all handled automatically
+6. **No Runtime Overhead**: Posts are pre-built, so no CORS issues or fetch delays
 
 ## Adding a New Blog Post
 
@@ -83,12 +84,24 @@ npm run build
 ```
 
 This runs:
-1. `build:blog` - Converts markdown to HTML
+1. `build:blog` - Converts markdown to HTML and generates RSS feed
 2. `optimize:images` - Optimizes images
 3. `minify:css` - Minifies CSS
 4. `minify:js` - Minifies JavaScript
 
-### Step 5: (Optional) Create Standalone Page
+### Step 5: Verify RSS Feed
+
+The build automatically generates `blog/rss.xml` with:
+- All posts sorted by date (newest first)
+- Post titles, descriptions, and links
+- Categories and tags
+- Proper RSS 2.0 format with Atom namespace
+
+**RSS Feed URL**: `https://blot.world/blog/rss.xml`
+
+The feed is discoverable via the `<link rel="alternate">` tag in `index.html`, so RSS readers can auto-detect it.
+
+### Step 6: (Optional) Create Standalone Page
 
 If you want a standalone HTML page for direct access, you can manually create one in `blog/posts/` based on the template structure. However, the main single-page app automatically includes all posts.
 
@@ -141,6 +154,7 @@ Current categories (you can add more):
 ```
 blog/
 ├── README.md (this file)
+├── rss.xml (auto-generated RSS feed)
 ├── images/
 │   ├── blot-world-case-study.png
 │   └── your-post-image.png

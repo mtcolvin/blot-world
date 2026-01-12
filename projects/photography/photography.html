@@ -63,6 +63,7 @@
             --photo-dark: #000000;
             --photo-light: #f5f5f5;
             --photo-accent: #888888;
+            --timeline-height: 45px;
 
             /* Mini Nav Color Overrides - White background, black text */
             --mininav-bg: transparent;
@@ -412,9 +413,7 @@
         .photo-count-display {
             font-size: 12px;
             color: var(--photo-accent);
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 12px;
         }
 
         /* Minimal Timeline Container */
@@ -424,8 +423,7 @@
 		
 		@media (min-width: 769px) {
 			.timeline-container {
-				min-height: 70px;
-				max-height: 300px;
+				height: auto;
 				position: fixed;
 				bottom: 0;
 				left: 0;
@@ -444,8 +442,7 @@
             overflow-x: auto;
             overflow-y: hidden;
             padding: 0 50%;
-            scroll-behavior: smooth;
-            min-height: 70px;
+            /* scroll-behavior handled by JS for precise control */
         }
 
         .timeline-scroll::-webkit-scrollbar {
@@ -471,7 +468,7 @@
             align-items: flex-end;
             position: relative;
             min-width: max-content;
-            min-height: 70px;
+            min-height: 45px;
             padding: 0;
             flex-direction: row;
         }
@@ -480,13 +477,13 @@
         .arrow-indicator {
             position: absolute;
             left: 50%;
-            bottom: 28px;
+            bottom: 18px;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 6px solid rgba(255, 255, 255, 0.7);
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 5px solid rgba(255, 255, 255, 0.7);
             pointer-events: none;
             z-index: 100;
         }
@@ -525,69 +522,42 @@
         /* Stacked Squares Container */
         .tick-previews {
             position: absolute;
-            bottom: 38px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             flex-direction: column-reverse;
-            gap: 0;
+            gap: 3px;
             align-items: center;
         }
 
         /* Individual Square */
         .tick-thumbnail {
             width: 6px;
-            height: 6px;
-            border-radius: 0;
+            height: 3px;
+            border-radius: 1px;
             background: rgba(255, 255, 255, 0.3);
-            border-left: 1px solid rgba(255, 255, 255, 0.4);
-            border-right: 1px solid rgba(255, 255, 255, 0.4);
-            border-top: 1px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
+            border: none;
             position: relative;
-            cursor: pointer;
             box-sizing: border-box;
-        }
-
-        /* First square (bottom-most in visual order) gets bottom border */
-        .tick-thumbnail:first-child {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        .tick-thumbnail:hover {
-            background: rgba(255, 255, 255, 0.5);
-            border-left-color: rgba(255, 255, 255, 0.6);
-            border-right-color: rgba(255, 255, 255, 0.6);
-            border-top-color: rgba(255, 255, 255, 0.6);
-        }
-
-        .tick-thumbnail:hover:first-child {
-            border-bottom-color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
         }
 
         .tick-thumbnail.active {
-            background: rgba(255, 255, 255, 0.7) !important;
-            border-left-color: rgba(255, 255, 255, 0.9);
-            border-right-color: rgba(255, 255, 255, 0.9);
-            border-top-color: rgba(255, 255, 255, 0.9);
-        }
-
-        .tick-thumbnail.active:first-child {
-            border-bottom-color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.9);
         }
 
         /* Tick Line */
         .tick-line {
             width: 1px;
-            height: 15px;
+            height: 12px;
             background: rgba(255, 255, 255, 0.35);
-            transition: background 0.3s ease, height 0.3s ease;
             position: absolute;
-            bottom: 38px;
+            bottom: 24px;
         }
 
         .tick-mark.year .tick-line {
-            height: 27px;
+            height: 22px;
             background: rgba(255, 255, 255, 0.65);
             width: 2px;
         }
@@ -600,7 +570,7 @@
         /* Date Label */
         .tick-label {
             margin-top: 2px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             font-size: 9px;
             color: rgba(255, 255, 255, 0.4);
             white-space: nowrap;
@@ -1310,7 +1280,7 @@
     <!-- Scripts -->
     <script src="../../js/minimal-nav.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/exifr@4/dist/full.umd.js"></script>
-    <script src="photo-loader.min.js?v=4" defer></script>
+    <script src="photo-loader.min.js?v=24" defer></script>
 
     <!-- Disable right-click on images -->
     <script>

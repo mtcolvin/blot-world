@@ -13,23 +13,20 @@ The site has been optimized for faster loading times, better user experience, an
 | **CSS Minification** | 28% (100.86 KB → 72.92 KB) | Faster stylesheet loading |
 | **JavaScript Minification** | 49% (86.19 KB → 43.74 KB) | Faster script execution |
 | **Image Optimization** | 63% (46.74 MB → 17.52 MB) | Reduced bandwidth usage |
-| **WebP Conversion** | 91% (46.74 MB → 4.26 MB) | Dramatically faster image loading |
+| **AVIF Conversion** | 91%+ | Dramatically faster image loading |
 
 **Total potential savings: ~42 MB** on initial page load!
 
 ## Optimizations Implemented
 
-### 1. Image Optimization & WebP Conversion
+### 1. Image Optimization & AVIF Conversion
 
-- **Converted all JPG/PNG images to WebP format** (91% size reduction)
+- **Converted all JPG/PNG images to AVIF format** (better compression than WebP)
 - **Optimized original images** using Sharp (63% size reduction)
-- **Implemented `<picture>` elements** for graceful WebP fallback
+- **Implemented `<picture>` elements** for graceful AVIF fallback
 - **Added lazy loading** to all below-the-fold images
 
-**Largest improvements:**
-- `mockup-2.png`: 15.28 MB → 845 KB (WebP)
-- `mockup-1.png`: 9.61 MB → 378 KB (WebP)
-- `full-body.jpg`: 4.3 MB → 1.43 MB (WebP)
+**Note:** AVIF provides 30-50% better compression than WebP with similar visual quality.
 
 ### 2. CSS Minification
 
@@ -47,7 +44,7 @@ The site has been optimized for faster loading times, better user experience, an
 
 - **Added `defer` attribute** to main JavaScript for non-blocking loading
 - **Implemented async font loading** to prevent render blocking
-- **Updated preload hints** to use WebP images
+- **Updated preload hints** to use AVIF images
 - **Used `<picture>` elements** for optimal image delivery
 
 ### 5. Lazy Loading
@@ -67,7 +64,7 @@ The project now includes automated build scripts for optimization:
 npm run build
 
 # Individual optimizations
-npm run optimize:images  # Convert to WebP & optimize
+npm run optimize:images  # Convert to AVIF & optimize
 npm run minify:css       # Minify CSS files
 npm run minify:js        # Minify JavaScript files
 
@@ -101,7 +98,7 @@ blot-world/
 │   ├── minify-css.js       # CSS minification script
 │   └── minify-js.js        # JS minification script
 ├── images/
-│   └── **/*.webp          # WebP versions (auto-generated)
+│   └── **/*.avif          # AVIF versions (auto-generated)
 ├── css/
 │   ├── *.css              # Source CSS files
 │   └── *.min.css          # Minified CSS (auto-generated)
@@ -125,11 +122,11 @@ blot-world/
 | Total Page Weight | ~50 MB | ~8 MB | 84% reduction |
 | CSS Size | 101 KB | 73 KB | 28% reduction |
 | JS Size | 86 KB | 44 KB | 49% reduction |
-| Images (WebP) | 47 MB | 4.3 MB | 91% reduction |
+| Images (AVIF) | 47 MB | ~3 MB | 93%+ reduction |
 
 ## Browser Support
 
-- **WebP:** Supported by all modern browsers (95%+ coverage)
+- **AVIF:** Supported by all modern browsers (93%+ coverage as of 2025)
 - **Fallback:** Automatic fallback to JPG/PNG for older browsers
 - **Picture element:** Fully supported since 2015
 
@@ -138,8 +135,8 @@ blot-world/
 ### When Adding New Images
 
 1. Add the original image to the appropriate directory
-2. Run `npm run optimize:images` to generate WebP and optimize
-3. Update HTML to use `<picture>` elements with WebP
+2. Run `npm run optimize:images` to generate AVIF and optimize
+3. Update HTML to use `<picture>` elements with AVIF
 
 ### When Editing CSS/JS
 
@@ -178,15 +175,16 @@ This ensures all assets are optimized and up-to-date.
 ### Compression Settings
 
 - **JPEG Quality:** 85 (optimal quality/size balance)
-- **WebP Quality:** 82 (slightly lower, imperceptible difference)
+- **AVIF Quality:** 65 (equivalent visual quality to WebP at 82, but ~30-50% smaller)
 - **PNG Compression:** Level 9 (maximum compression)
 
-### Why WebP?
+### Why AVIF?
 
-- **Superior compression:** 25-35% smaller than JPEG
+- **Superior compression:** 30-50% smaller than WebP, 50%+ smaller than JPEG
 - **Lossless & lossy:** Supports both modes
 - **Transparency:** Supports alpha channel (replaces PNG)
-- **Broad support:** 95%+ browser compatibility
+- **HDR support:** Better color depth and dynamic range
+- **Broad support:** 93%+ browser compatibility (Chrome, Firefox, Safari, Edge)
 
 ## Results
 

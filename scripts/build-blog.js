@@ -10,6 +10,8 @@ class BlogBuilder {
     constructor() {
         this.postsDir = path.join(__dirname, '../blog/posts');
         this.indexPath = path.join(__dirname, '../index.html');
+        this.rssPath = path.join(__dirname, '../blog/rss.xml');
+        this.siteUrl = 'https://blot.world';
         this.posts = [];
     }
 
@@ -201,7 +203,8 @@ class BlogBuilder {
      * Generate HTML for a blog post section
      */
     generatePostSection(post) {
-        const tagsHTML = post.tags.map(tag => `\t\t\t\t\t<span class="post-tag">${tag}</span>`).join('\n');
+        const sortedTags = [...post.tags].sort((a, b) => a.localeCompare(b));
+        const tagsHTML = sortedTags.map(tag => `\t\t\t\t\t<span class="post-tag">${tag}</span>`).join('\n');
 
         return `\t\t<!-- Blog Post: ${post.title} -->
 \t\t<section id="${post.id}" class="section post-section">
@@ -214,11 +217,9 @@ class BlogBuilder {
 \t\t\t\t</a>
 
 \t\t\t\t<article>
-\t\t\t\t\t<div class="post-featured-image">
-\t\t\t\t\t\t<img src="${post.image}" alt="${post.title}">
-\t\t\t\t\t</div>
-
 \t\t\t\t\t<header class="post-header">
+\t\t\t\t\t\t<h1 class="post-title">${post.title}</h1>
+
 \t\t\t\t\t\t<div class="post-meta">
 \t\t\t\t\t\t\t<span class="post-date">
 \t\t\t\t\t\t\t\t<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -232,12 +233,6 @@ class BlogBuilder {
 \t\t\t\t\t\t\t<span class="post-category">${post.category}</span>
 \t\t\t\t\t\t\t<span class="post-read-time"></span>
 \t\t\t\t\t\t</div>
-
-\t\t\t\t\t\t<h1 class="post-title">${post.title}</h1>
-
-\t\t\t\t\t\t<p class="post-excerpt">
-\t\t\t\t\t\t\t${post.excerpt}
-\t\t\t\t\t\t</p>
 
 \t\t\t\t\t\t<div class="post-tags">
 ${tagsHTML}
@@ -285,6 +280,115 @@ ${post.content}
     }
 
     /**
+     * Parse human-readable date to RFC 2822 format for RSS
+     */
+    parseDate(dateStr) {
+        if (!dateStr) return new Date().toUTCString();
+
+        // Handle "Month Day, Year" format (e.g., "November 27, 2025")
+        const date = new Date(dateStr);
+        if (!isNaN(date.getTime())) {
+            return date.toUTCString();
+        }
+
+        return new Date().toUTCString();
+    }
+
+    /**
+     * Escape XML special characters
+     */
+    escapeXml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
+    }
+
+    /**
+     * Strip HTML tags and get plain text
+     */
+    stripHtml(html) {
+        if (!html) return '';
+        return html
+            .replace(/<[^>]*>/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    /**
+     * Truncate text to specified length with ellipsis
+     */
+    truncate(text, maxLength) {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength).trim() + '...';
+    }
+
+    /**
+     * Generate RSS feed from posts
+     */
+    generateRSS() {
+        // Sort posts by date (newest first)
+        const sortedPosts = [...this.posts].sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
+
+        const lastBuildDate = new Date().toUTCString();
+
+        let rss = `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>BLOT.WORLD Thoughts</title>
+        <description>Insights on design, development, and creative processes by Matthew Colvin</description>
+        <link>${this.siteUrl}</link>
+        <atom:link href="${this.siteUrl}/blog/rss.xml" rel="self" type="application/rss+xml" />
+        <language>en-us</language>
+        <lastBuildDate>${lastBuildDate}</lastBuildDate>
+        <image>
+            <url>${this.siteUrl}/images/favicon/android-chrome-512x512.png</url>
+            <title>BLOT.WORLD</title>
+            <link>${this.siteUrl}</link>
+        </image>
+`;
+
+        sortedPosts.forEach(post => {
+            const postUrl = `${this.siteUrl}/blog/posts/${path.basename(post.filename, '.md')}.html`;
+            const pubDate = this.parseDate(post.date);
+
+            // Get full content as plain text for RSS description
+            const plainText = this.stripHtml(post.content);
+
+            // Build category tags (sorted alphabetically)
+            let categoryTags = `        <category>${this.escapeXml(post.category)}</category>\n`;
+            if (post.tags && post.tags.length > 0) {
+                const sortedTags = [...post.tags].sort((a, b) => a.localeCompare(b));
+                sortedTags.forEach(tag => {
+                    categoryTags += `            <category>${this.escapeXml(tag)}</category>\n`;
+                });
+            }
+
+            rss += `
+        <item>
+            <title>${this.escapeXml(post.title)}</title>
+            <description>${this.escapeXml(plainText)}</description>
+            <link>${postUrl}</link>
+            <guid>${postUrl}</guid>
+            <pubDate>${pubDate}</pubDate>
+${categoryTags}        </item>
+`;
+        });
+
+        rss += `    </channel>
+</rss>
+`;
+
+        fs.writeFileSync(this.rssPath, rss, 'utf-8');
+        console.log(`\n📡 Generated RSS feed with ${sortedPosts.length} item(s)`);
+    }
+
+    /**
      * Build all blog posts
      */
     build() {
@@ -292,6 +396,7 @@ ${post.content}
 
         this.readMarkdownFiles();
         this.updateIndexHTML();
+        this.generateRSS();
 
         console.log('\n✨ Blog build complete!\n');
     }

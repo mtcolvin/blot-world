@@ -84,7 +84,10 @@
     <meta name="author" content="Matthew Colvin">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://your-actual-domain.com">
-    
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="BLOT.WORLD Thoughts" href="blog/rss.xml">
+
     <!-- ==================== OPEN GRAPH META TAGS ==================== -->
     <meta property="og:title" content="BLOT.WORLD - Matthew Colvin Portfolio">
     <meta property="og:description" content="Creative developer crafting digital experiences">
@@ -747,21 +750,31 @@
 				<!-- Section Header -->
 				<div class="section-header blog-header-layout">
 					<h2>Thoughts</h2>
+					<a href="blog/rss.xml" class="rss-link" target="_blank" title="Subscribe via RSS">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+							<circle cx="6.18" cy="17.82" r="2.18"/>
+							<path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/>
+						</svg>
+						RSS
+					</a>
 				</div>
 
-				<!-- Blog Grid -->
-				<div class="blog-grid" id="blog-grid">
-					<!-- Blog posts will be dynamically loaded here -->
-				</div>
+				<!-- Blog Content Area -->
+				<div class="blog-content-area">
+					<!-- Blog Grid -->
+					<div class="blog-grid" id="blog-grid">
+						<!-- Blog posts will be dynamically loaded here -->
+					</div>
 
-				<!-- No Results Message -->
-				<div class="no-results" id="no-results" style="display: none;">
-					<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<circle cx="11" cy="11" r="8"></circle>
-						<path d="m21 21-4.35-4.35"></path>
-					</svg>
-					<h3>No posts found</h3>
-					<p>Try adjusting your search or filter</p>
+					<!-- No Results Message -->
+					<div class="no-results" id="no-results" style="display: none;">
+						<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<circle cx="11" cy="11" r="8"></circle>
+							<path d="m21 21-4.35-4.35"></path>
+						</svg>
+						<h3>No posts found</h3>
+						<p>Try adjusting your search or filter</p>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -778,11 +791,9 @@
 				</a>
 
 				<article>
-					<div class="post-featured-image">
-						<img src="blog/images/blot-world-case-study.png" alt="Why I Made Blot.World">
-					</div>
-
 					<header class="post-header">
+						<h1 class="post-title">Why I Made Blot.World</h1>
+
 						<div class="post-meta">
 							<span class="post-date">
 								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -797,97 +808,81 @@
 							<span class="post-read-time"></span>
 						</div>
 
-						<h1 class="post-title">Why I Made Blot.World</h1>
-
-						<p class="post-excerpt">
-							I wanted a place to keep track of my work and think through why I make certain decisions. Writing it down helps me understand my own process better.
-						</p>
-
 						<div class="post-tags">
-					<span class="post-tag">Web Design</span>
-					<span class="post-tag">HTML</span>
 					<span class="post-tag">CSS</span>
+					<span class="post-tag">CSS Gradients</span>
+					<span class="post-tag">Dark Mode</span>
 					<span class="post-tag">JavaScript</span>
 					<span class="post-tag">Portfolio</span>
-					<span class="post-tag">Responsive Design</span>
-					<span class="post-tag">Dark Mode</span>
-					<span class="post-tag">Variable Fonts</span>
 					<span class="post-tag">Single Page App</span>
-					<span class="post-tag">Vanilla JavaScript</span>
-					<span class="post-tag">Mobile-First</span>
 					<span class="post-tag">Typography</span>
-					<span class="post-tag">Accessibility</span>
-					<span class="post-tag">Canvas API</span>
-					<span class="post-tag">CSS Gradients</span>
-					<span class="post-tag">Lazy Loading</span>
-					<span class="post-tag">State Management</span>
-					<span class="post-tag">CSS Minification</span>
+					<span class="post-tag">Vanilla JavaScript</span>
+					<span class="post-tag">Variable Fonts</span>
+					<span class="post-tag">Web Design</span>
 						</div>
 					</header>
 
 					<div class="post-content">
-
-						<h2>Why this exists</h2>
-
-						<p>I have always wanted a place where I could see everything I've worked on, everything that's made me the person I am today and the person I continue to grow into, together and in one place. Somewhere I could showcase who I am and how what I stand for is incorporated in what I do. I'm not trying to impress anyone; I'm not expecting any visitors anytime soon. It's a way for me to look back and reflect.</p>
-
-						<p>For years I had iterated trying to build a website to combine all these different aspects of my life. Everything without outside input because I was (and, for better or for worse, still am in many ways) a private person. I had learned the basics of web design back in high school and had continued to experiment in the years following, but could never find satisfaction with what I had created. I wanted something bigger than what one person could feasibly make.</p>
-
-						<p>I am very transparent about my AI/LLM use. Here on BLOT.WORLD, projects for example, are a transparent blue to emphasize their AI-assistedness. Just like any other tool, I use it to accomplish the barrage of ideas I have in my head. It's not a walker for me; it's more of a crotch rocket (something I also dream of having one day). It doesn't replace my creativity; it just allows me to bring the thoughts I have in my head into the real world.</p>
-
-						<p>It turned a project that would have probably taken multiple years, if I ever finished it all, into something that was feasible in a few months. Using Claude, I could focus on the creative decisions and design while getting help with the implementation. When I wanted a specific animation or layout, I could describe what I was after and work through the technical details together. It's like having a collaborator who never gets tired of iterating.</p>
-
-						<p>This doesn't diminish the work - I still made every design decision, wrote most of the code, and understood what was happening. But AI opened the door to building something at a scale I wouldn't have attempted otherwise. It removed the barrier between having an idea and being able to execute it.</p>
-
-						<p>For anyone hesitant about building something because the technical side feels overwhelming: this is what AI is good for. Not replacing your creativity or decision-making, but helping you realize your vision without getting stuck on implementation details.</p>
-
-						<p>Having such a powerful tool at my disposal allowed me to take this dream I have had for forever and transform it into actual code. It allowed me to accomplish my goal. I would finally be able to compile all these different aspects of my life into one place and be able to to see how they looked together. I like to joke to myself that, before I die, I want to write my own Wikipedia page. Whether anyone wants to read it is another question! I guess that's why I try to be the best person I can be and try and improve the lives of the people I meet and the environment I walk through: pass it on and be the good you want to see they say. At the very least, I hope to be able to my part, however small.</p>
-
-						<p>The primary purpose of this website is not to showcase my work to others, although if it ends up being an influence to others or something that other creators can distill value from I would be especially happy. The primary purpose is to:</p>
-
-						<ol>
-							<li>Have a central place to compile my work on a platform where I have creative control. Everything I do is driven by what I value and what I enjoy doing. It's difficult to express yourself through someone else's template. Building something from scratch meant I could make it feel like mine. I hope in the future (although I find similar problems seem to persist lol) that it's easier to have more control over how your work is presented. I like seeing everything together, and how they all connect to each other.</li>
-							<li>Centralize my work so that I have a record for myself—to look back and see what I was thinking at different points, what problems I was trying to solve, and how my approach has evolved. I want to see how I've grown.</li>
-							<li>Communicate who I am, through every perspective, as an individual and how the values I have are instilled in everything I work on. I have a distant hope that maybe someone in the future finds some value in what I've done.</li>
-						</ol>
-
-						<h2>About the name</h2>
-
-						<p>"Blot Out The Sun" comes from my fascination with astronomy, specifically total solar eclipses. A total solar eclipse—notably different from a partial solar eclipse—is this spectacular moment where the Moon (an object about 2% the volume of the Earth) can block out something so large it's hard for our brains to comprehend—the Sun (an object around 1.3 million times the size of the earth). I'll combine that concisely, but you still will not be able to comprehend it: the sun is 64,000,000x larger than the moon and still, somehow, they are perfectly distanced in our solar system to appear the same size.</p>
-
-						<p>I use this phrase to remind myself that scale isn't everything. Small things can have a massive impact when positioned right.</p>
-
-						<h2>Design decisions</h2>
 						
-						<h3>Dark theme</h3>
-
-						<p>I like black. It's my favorite color if you consider it as such (purple if we're only talking about the visible light spectrum). It saves batter on OLED. It's easier on the eyes. Enough said imho.</p>
-
-						<h3>Typography</h3>
-
+						<h2>Why this exists</h2>
+						
+						<p>I have always wanted a place where I could see everything I’ve worked on, everything that’s made me the person I am today and the person I continue to grow into, together and in one place. Somewhere I could showcase who I am and how what I stand for is incorporated in what I do. I’m not trying to impress anyone; I’m not expecting any visitors anytime soon. It’s a way for me to look back and reflect.</p>
+						
+						<p>For years I had iterated trying to build a website to combine all these different aspects of my life. Everything without outside input because I was (and, for better or for worse, still am in many ways) a private person. I had learned the basics of web design back in high school and had continued to experiment in the years following, but could never find satisfaction with what I had created. I wanted something bigger than what one person could feasibly make.</p>
+						
+						<p>I am very transparent about my AI/LLM use. Here on BLOT.WORLD, projects for example, are a transparent blue to emphasize their AI-assistedness. Just like any other tool, I use it to accomplish the barrage of ideas I have in my head. It’s not a walker for me; it’s more of a crotch rocket (something I also dream of having one day). It doesn’t replace my creativity; it just allows me to bring the thoughts I have in my head into the real world.</p>
+						
+						<p>It turned a project that would have probably taken multiple years, if I ever finished it all, into something that was feasible in a few months. Using Claude, I could focus on the creative decisions and design while getting help with the implementation. When I wanted a specific animation or layout, I could describe what I was after and work through the technical details together. It's like having a collaborator who never gets tired of iterating.</p>
+						
+						<p>This doesn't diminish the work - I still made every design decision, wrote most of the code, and understood what was happening. But AI opened the door to building something at a scale I wouldn't have attempted otherwise. It removed the barrier between having an idea and being able to execute it.</p>
+						
+						<p>For anyone hesitant about building something because the technical side feels overwhelming: this is what AI is good for. Not replacing your creativity or decision-making, but helping you realize your vision without getting stuck on implementation details.</p>
+						
+						<p>Having such a powerful tool at my disposal allowed me to take this dream I have had for forever and transform it into actual code. It allowed me to accomplish my goal. I would finally be able to compile all these different aspects of my life into one place and be able to to see how they looked together. I like to joke to myself that, before I die, I want to write my own Wikipedia page. Whether anyone wants to read it is another question! I guess that’s why I try to be the best person I can be and try and improve the lives of the people I meet and the environment I walk through: pass it on and be the good you want to see they say. At the very least, I hope to be able to my part, however small.</p>
+						
+						<p>The primary purpose of this website is not to showcase my work to others, although if it ends up being an influence to others or something that other creators can distill value from I would be especially happy. The primary purpose is to:</p>
+						
+						<li>Have a central place to compile my work on a platform where I have creative control. Everything I do is driven by what I value and what I enjoy doing. It’s difficult to express yourself through someone else’s template. Building something from scratch meant I could make it feel like mine. I hope in the future (although I find similar problems seem to persist lol) that it’s easier to have more control over how your work is presented. I like seeing everything together, and how they all connect to each other.</li>
+						
+						<li>Centralize my work so that I have a record for myself—to look back and see what I was thinking at different points, what problems I was trying to solve, and how my approach has evolved. I want to see how I’ve grown.</li>
+						
+						<li>Communicate who I am, through every perspective, as an individual and how the values I have are instilled in everything I work on. I have a distant hope that maybe someone in the future finds some value in what I’ve done.</li>
+						
+						<h2>About the name</h2>
+						
+						<p>“Blot Out The Sun” comes from my fascination with astronomy, specifically total solar eclipses. A total solar eclipse—notably different from a partial solar eclipse—is this spectacular moment where the Moon (an object about 2% the volume of the Earth) can block out something so large it’s hard for our brains to comprehend—the Sun (an object around 1.3 million times the size of the earth). I’ll combine that concisely, but you still will not be able to comprehend it: the sun is 64,000,000x larger than the moon and still, somehow, they are perfectly distanced in our solar system to appear the same size.</p>
+						
+						<p>I use this phrase to remind myself that scale isn’t everything. Small things can have a massive impact when positioned right. </p>
+						
+						<p>##Design decisions</p>
+						
+						<p>###Dark theme</p>
+						
+						<p>I like black. It’s my favorite color if you consider it as such (purple if we’re only talking about the visible light spectrum). It saves batter on OLED. It’s easier on the eyes. Enough said imho.</p>
+						
+						<p>###Typography</p>
+						
 						<p>I used Robot Flex because I wanted a variable font for flexibility. I used Space Grotesk for its distinctiveness from Robot Flex and its serif-like impact, while remaining sans-serif and modern.</p>
-
-						<h3>Visual consistency</h3>
-
+						
+						<p>###Visual consistency</p>
+						
 						<p>The blue-to-red gradient runs throughout the site – in buttons, headings, and interactive elements. It ties everything together visually and gives the site a consistent identity. They are a color pair I have always liked together, mix to form my favorite color, and are a subtle nod to 3D-glasses: something I loved in the movies as a child and represent the full-dimensional aspect of my portfolio.</p>
 						
-						<h2>What I learned</h2>
-
+						<p>##What I learned</p>
+						
 						<p>Building this website reinforced a few things:</p>
-						<ul>
-							<li>Create content that communicates who you are</li>
+						<ul><li>Create content that communicates who you are</li>
 							<li>Iterate relentlessly</li>
-							<li>Nothing is ever finished</li>
-						</ul>
-
-						<h2>What's next</h2>
-
-						<p>Who knows what the future may hold. I certainly don't try and predict the unpredictable. I'm here for a good time, not a long time. Let's see what we can do together.</p>
-
+							<li>Nothing is ever finished</li></ul>
+						
+						<p>##What's next</p>
+						
+						<p>Who knows what the future may hold. I certainly don’t try and predict the unpredictable. I’m here for a good time, not a long time. Let’s see what we can do together.</p>
+						
 						<hr>
-
+						
 						<p>This site is primarily a place for me to gather my work and reflect on my process. If you're reading this and found something useful, that's great.</p>
-
+						
 						<p>If you're thinking about building your own portfolio, make it feel authentic to you. Use it as a tool to understand your own work better, not just to present it to others. And don't be afraid to use AI tools to help bring your vision to life - there's no shame in collaboration.</p>
 						
 					</div>

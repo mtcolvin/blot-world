@@ -6,9 +6,9 @@ const sharp = require('sharp');
 const { glob } = require('glob');
 
 const IMAGES_DIR = path.join(__dirname, '..', 'images');
-const MIN_SIZE_FOR_WEBP = 10 * 1024; // 10KB - skip small images
+const MIN_SIZE_FOR_AVIF = 10 * 1024; // 10KB - skip small images
 const JPEG_QUALITY = 85;
-const WEBP_QUALITY = 82;
+const AVIF_QUALITY = 65; // AVIF at 65 ≈ WebP at 82, but ~30-50% smaller
 const PNG_QUALITY = 85;
 
 async function getFileSize(filePath) {
@@ -29,24 +29,24 @@ async function optimizeImage(filePath) {
   const originalSize = await getFileSize(filePath);
 
   // Skip if too small or not JPG/PNG
-  if (originalSize < MIN_SIZE_FOR_WEBP || !['.jpg', '.jpeg', '.png'].includes(ext)) {
+  if (originalSize < MIN_SIZE_FOR_AVIF || !['.jpg', '.jpeg', '.png'].includes(ext)) {
     return null;
   }
 
-  const webpPath = filePath.replace(/\.(jpe?g|png)$/i, '.webp');
-  const stats = { original: originalSize, optimized: 0, webp: 0 };
+  const avifPath = filePath.replace(/\.(jpe?g|png)$/i, '.avif');
+  const stats = { original: originalSize, optimized: 0, avif: 0 };
 
   try {
     const image = sharp(filePath);
     const metadata = await image.metadata();
 
-    // Create WebP version (always smaller and better quality)
-    if (!fs.existsSync(webpPath)) {
+    // Create AVIF version (better compression than WebP)
+    if (!fs.existsSync(avifPath)) {
       await image
-        .webp({ quality: WEBP_QUALITY, effort: 6 })
-        .toFile(webpPath);
-      stats.webp = await getFileSize(webpPath);
-      console.log(`✓ Created WebP: ${path.relative(IMAGES_DIR, webpPath)} (${formatBytes(originalSize)} → ${formatBytes(stats.webp)})`);
+        .avif({ quality: AVIF_QUALITY, effort: 6 })
+        .toFile(avifPath);
+      stats.avif = await getFileSize(avifPath);
+      console.log(`✓ Created AVIF: ${path.relative(IMAGES_DIR, avifPath)} (${formatBytes(originalSize)} → ${formatBytes(stats.avif)})`);
     }
 
     // Optimize the original file
@@ -97,7 +97,7 @@ async function main() {
 
   let totalOriginalSize = 0;
   let totalOptimizedSize = 0;
-  let totalWebpSize = 0;
+  let totalAvifSize = 0;
   let processedCount = 0;
 
   for (const imagePath of allImages) {
@@ -105,20 +105,20 @@ async function main() {
     if (result) {
       totalOriginalSize += result.original;
       totalOptimizedSize += result.optimized;
-      totalWebpSize += result.webp;
+      totalAvifSize += result.avif;
       processedCount++;
     }
   }
 
   const originalSavings = totalOriginalSize - totalOptimizedSize;
-  const webpSavings = totalOriginalSize - totalWebpSize;
+  const avifSavings = totalOriginalSize - totalAvifSize;
 
   console.log('\n📊 Summary:');
   console.log(`   Processed: ${processedCount} images`);
   console.log(`   Original total size: ${formatBytes(totalOriginalSize)}`);
   console.log(`   Optimized total size: ${formatBytes(totalOptimizedSize)} (saved ${formatBytes(originalSavings)})`);
-  console.log(`   WebP total size: ${formatBytes(totalWebpSize)} (saved ${formatBytes(webpSavings)} vs original)`);
-  console.log(`   Savings: ${Math.round((originalSavings / totalOriginalSize) * 100)}% from optimization, ${Math.round((webpSavings / totalOriginalSize) * 100)}% with WebP`);
+  console.log(`   AVIF total size: ${formatBytes(totalAvifSize)} (saved ${formatBytes(avifSavings)} vs original)`);
+  console.log(`   Savings: ${Math.round((originalSavings / totalOriginalSize) * 100)}% from optimization, ${Math.round((avifSavings / totalOriginalSize) * 100)}% with AVIF`);
 }
 
 main().catch(console.error);

@@ -49,15 +49,32 @@
         { file: 'IMG_0969_result.jpg', date: '2025-11-02' },
         { file: 'IMG_0966_result.jpg', date: '2025-11-02' },
         { file: 'IMG_0955_result.jpg', date: '2025-11-02' },
-        { file: 'IMG_1264_result.jpg', date: '2025-11-09' },
-        { file: 'IMG_1238_result.jpg', date: '2025-11-09' },
+        { file: 'IMG_1264_result1.jpg', date: '2025-11-09' },
+        { file: 'IMG_1238_result2.jpg', date: '2025-11-09' },
         { file: 'IMG_1443_result_1.jpg', date: '2025-11-13' },
         { file: 'IMG_1463_result.jpg', date: '2025-11-16' },
         { file: 'IMG_1507_result.jpg', date: '2025-11-24' },
         { file: 'IMG_1574_result.jpg', date: '2025-11-27' },
         { file: 'IMG_1659_result.jpg', date: '2025-11-28' },
         { file: 'IMG_1649_result.jpg', date: '2025-11-28' },
-        { file: 'IMG_1648_result.jpg', date: '2025-11-28' }
+        { file: 'IMG_1648_result.jpg', date: '2025-11-28' },
+        { file: 'IMG_1790_result.jpg', date: '2025-12-03' },
+        { file: 'IMG_1795_result.jpg', date: '2025-12-04' },
+        { file: 'IMG_1936_result.jpg', date: '2025-12-08' },
+        { file: 'IMG_1914_result.jpg', date: '2025-12-08' },
+        { file: 'IMG_1907_result.jpg', date: '2025-12-08' },
+        { file: 'IMG_1872.jpg', date: '2025-12-08' },
+        { file: 'IMG_1867_result.jpg', date: '2025-12-08' },
+        { file: 'IMG_1850_result.jpg', date: '2025-12-08' },
+        { file: 'IMG_2020_result.jpg', date: '2025-12-14' },
+        { file: 'IMG_2106_result.jpg', date: '2025-12-17' },
+        { file: 'IMG_2201_result.jpg', date: '2025-12-22' },
+        { file: 'IMG_2266_result.jpg', date: '2025-12-25' },
+        { file: 'IMG_2288_result.jpg', date: '2025-12-28' },
+        { file: 'IMG_2361_result.jpg', date: '2025-12-29' },
+        { file: 'IMG_2325_result.jpg', date: '2025-12-29' },
+        { file: 'IMG_2319_result.jpg', date: '2025-12-29' },
+        { file: 'IMG_2397_result.jpg', date: '2025-12-30' }
     ];
 
     // === AUTO-LOAD SYSTEM ===
@@ -373,38 +390,7 @@
                 photos.forEach((photo, index) => {
                     const square = document.createElement('div');
                     square.className = 'tick-thumbnail';
-                    square.dataset.photoIndex = photo.globalIndex; // Store global photo index
-                    square.dataset.photoNumber = photo.globalIndex + 1; // 1-indexed number
-
-                    // Add hover event listeners
-                    square.addEventListener('mouseenter', () => {
-                        if (elements.hoverInfo) {
-                            elements.hoverInfo.textContent = `Photo ${square.dataset.photoNumber} of ${loadedPhotos.length}`;
-                            elements.hoverInfo.classList.add('visible');
-                        }
-                    });
-
-                    square.addEventListener('mouseleave', () => {
-                        if (elements.hoverInfo) {
-                            elements.hoverInfo.classList.remove('visible');
-                        }
-                    });
-
-                    // Click handler - navigate to specific photo
-                    square.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent tick mark click
-                        // Clear any pending scroll timeouts to prevent interference
-                        clearTimeout(scrollTimeout);
-                        clearTimeout(isProgrammaticScrollTimeout);
-                        isProgrammaticScroll = true;
-                        lastProgrammaticScrollTime = Date.now();
-                        // Use instant scroll to avoid timing issues with smooth scroll
-                        showPhoto(photo.globalIndex, false, false);
-                        isProgrammaticScrollTimeout = setTimeout(() => {
-                            isProgrammaticScroll = false;
-                        }, 500); // Shorter timeout since we're using instant scroll
-                    });
-
+                    square.dataset.photoIndex = photo.globalIndex;
                     previewsContainer.appendChild(square);
                 });
 
@@ -1397,18 +1383,25 @@
         for (let tick of ticks) {
             if (tick.dataset.monthKey === photoMonthKey) {
                 const scrollContainer = elements.timelineScroll;
+                const containerRect = scrollContainer.getBoundingClientRect();
+                const containerCenterX = containerRect.left + (containerRect.width / 2);
 
-                // With padding: 0 50%, the padding naturally centers content
-                // We just need to scroll to the tick's center position
-                const tickOffsetLeft = tick.offsetLeft;
-                const tickWidth = tick.offsetWidth;
-                const tickCenter = tickOffsetLeft + (tickWidth / 2);
+                // Get tick's current visual position
+                const tickRect = tick.getBoundingClientRect();
+                const tickCenterX = tickRect.left + (tickRect.width / 2);
 
-                // Scroll so the tick center aligns with the arrow (viewport center)
-                scrollContainer.scrollTo({
-                    left: tickCenter,
-                    behavior: smooth ? 'smooth' : 'auto'
-                });
+                // Calculate offset from center
+                const offset = tickCenterX - containerCenterX;
+
+                // Only scroll if the tick is more than 2px off center
+                // This prevents oscillation when navigating within the same month
+                if (Math.abs(offset) > 2) {
+                    const newScrollLeft = scrollContainer.scrollLeft + offset;
+                    scrollContainer.scrollTo({
+                        left: newScrollLeft,
+                        behavior: smooth ? 'smooth' : 'instant'
+                    });
+                }
                 break;
             }
         }
