@@ -27,6 +27,7 @@ async function syncPhotoArray() {
         for (const file of imageFiles) {
             const filePath = path.join(imagesDir, file);
             let date = null;
+            let exif = {};
 
             try {
                 const metadata = await exiftool.read(filePath);
@@ -41,6 +42,31 @@ async function syncPhotoArray() {
                 if (!date && metadata.ModifyDate) {
                     date = formatDate(metadata.ModifyDate);
                 }
+                if (!date && metadata.FileCreateDate) {
+                    date = formatDate(metadata.FileCreateDate);
+                }
+
+                // Extract GPS coordinates
+                if (metadata.GPSLatitude !== undefined && metadata.GPSLongitude !== undefined) {
+                    exif.latitude = metadata.GPSLatitude;
+                    exif.longitude = metadata.GPSLongitude;
+                }
+
+                // Extract camera info
+                if (metadata.Make) exif.Make = metadata.Make;
+                if (metadata.Model) exif.Model = metadata.Model;
+
+                // Extract camera settings
+                if (metadata.ISO) exif.ISO = metadata.ISO;
+                if (metadata.FNumber) exif.FNumber = metadata.FNumber;
+                if (metadata.ExposureTime) exif.ExposureTime = metadata.ExposureTime;
+                if (metadata.FocalLength) exif.FocalLength = metadata.FocalLength;
+
+                // Extract additional EXIF
+                if (metadata.Flash !== undefined) exif.Flash = metadata.Flash;
+                if (metadata.ColorSpace !== undefined) exif.ColorSpace = metadata.ColorSpace;
+                if (metadata.Software) exif.Software = metadata.Software;
+
             } catch (error) {
                 console.warn(`⚠ Could not read metadata for ${file}`);
             }
@@ -51,19 +77,28 @@ async function syncPhotoArray() {
                 date = stats.mtime.toISOString().split('T')[0];
                 console.log(`✓ ${file} → ${date} (from file mtime)`);
             } else {
-                console.log(`✓ ${file} → ${date}`);
+                const hasLocation = exif.latitude !== undefined;
+                const locationInfo = hasLocation ? ` 📍` : '';
+                console.log(`✓ ${file} → ${date}${locationInfo}`);
             }
 
-            photoEntries.push({ file, date });
+            const entry = { file, date };
+            if (Object.keys(exif).length > 0) {
+                entry.exif = exif;
+            }
+            photoEntries.push(entry);
         }
 
         // Sort by date (oldest first)
         photoEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         // Generate the photos array code
-        const photosArrayCode = `const photos = [\n${photoEntries.map(entry =>
-            `        { file: '${entry.file}', date: '${entry.date}' }`
-        ).join(',\n')}\n    ];`;
+        const photosArrayCode = `const photos = [\n${photoEntries.map(entry => {
+            if (entry.exif) {
+                return `        { file: '${entry.file}', date: '${entry.date}', exif: ${JSON.stringify(entry.exif)} }`;
+            }
+            return `        { file: '${entry.file}', date: '${entry.date}' }`;
+        }).join(',\n')}\n    ];`;
 
         // Read the current photo-loader.js
         let photoLoaderContent = fs.readFileSync(photoLoaderPath, 'utf8');
@@ -80,8 +115,12 @@ async function syncPhotoArray() {
         // Write back to file
         fs.writeFileSync(photoLoaderPath, photoLoaderContent, 'utf8');
 
+        // Count photos with location
+        const photosWithLocation = photoEntries.filter(e => e.exif?.latitude !== undefined).length;
+
         console.log('\n✅ Successfully updated photo-loader.js!');
         console.log(`\nGenerated array with ${photoEntries.length} photos`);
+        console.log(`Photos with GPS: ${photosWithLocation}`);
         console.log('First photo:', photoEntries[0].file, '→', photoEntries[0].date);
         console.log('Last photo:', photoEntries[photoEntries.length - 1].file, '→', photoEntries[photoEntries.length - 1].date);
 

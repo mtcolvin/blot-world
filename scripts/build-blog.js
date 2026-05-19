@@ -203,9 +203,6 @@ class BlogBuilder {
      * Generate HTML for a blog post section
      */
     generatePostSection(post) {
-        const sortedTags = [...post.tags].sort((a, b) => a.localeCompare(b));
-        const tagsHTML = sortedTags.map(tag => `\t\t\t\t\t<span class="post-tag">${tag}</span>`).join('\n');
-
         return `\t\t<!-- Blog Post: ${post.title} -->
 \t\t<section id="${post.id}" class="section post-section">
 \t\t\t<div class="post-container">
@@ -232,10 +229,6 @@ class BlogBuilder {
 \t\t\t\t\t\t\t</span>
 \t\t\t\t\t\t\t<span class="post-category">${post.category}</span>
 \t\t\t\t\t\t\t<span class="post-read-time"></span>
-\t\t\t\t\t\t</div>
-
-\t\t\t\t\t\t<div class="post-tags">
-${tagsHTML}
 \t\t\t\t\t\t</div>
 \t\t\t\t\t</header>
 

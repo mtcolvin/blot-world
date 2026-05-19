@@ -1,0 +1,160 @@
+/**
+ * Pre-compute dominant color per photo, written to projects/photography/photo-colors.js.
+ *
+ * Runs at build time so the page works via file:// (no browser canvas needed).
+ * Uses the same hue-bin histogram algorithm as the previous in-browser version:
+ *   - downsample to 40x40
+ *   - filter out near-black, near-white, near-grey pixels
+ *   - bin remaining pixels by hue (8 bins) with neighbor smoothing
+ *   - return saturation-weighted centroid of the winning bin
+ */
+
+const sharp = require('sharp');
+const fs = require('fs');
+const path = require('path');
+
+const imagesDir = path.join(__dirname, '..', 'projects', 'photography', 'images');
+const photoDataPath = path.join(__dirname, '..', 'projects', 'photography', 'photo-data.js');
+const outPath = path.join(__dirname, '..', 'projects', 'photography', 'photo-colors.js');
+
+const NUM_HUE_BINS = 8;
+
+function rgbHue(r, g, b) {
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const d = max - min;
+    if (d === 0) return -1;
+    let h;
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+    else if (max === g) h = ((b - r) / d + 2) / 6;
+    else h = ((r - g) / d + 4) / 6;
+    return h;
+}
+
+function rgbToHueBin(r, g, b) {
+    const h = rgbHue(r, g, b);
+    if (h < 0) return -1;
+    return Math.floor(h * NUM_HUE_BINS) % NUM_HUE_BINS;
+}
+
+async function extractDominantColor(filePath) {
+    const SIZE = 40;
+    const { data } = await sharp(filePath)
+        .rotate() // honor EXIF orientation
+        .resize(SIZE, SIZE, { fit: 'fill' })
+        .removeAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+
+    const bins = [];
+    for (let i = 0; i < NUM_HUE_BINS; i++) bins.push({ r: 0, g: 0, b: 0, w: 0 });
+
+    for (let i = 0; i < data.length; i += 3) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const d = max - min;
+        if (max < 25 || min > 240 || d < 8) continue;
+        const bin = rgbToHueBin(r, g, b);
+        if (bin < 0) continue;
+        const sat = d / 255;
+        const w = 1 + sat * 2;
+        bins[bin].r += r * w; bins[bin].g += g * w; bins[bin].b += b * w; bins[bin].w += w;
+        const nw = w * 0.35;
+        const left = (bin - 1 + NUM_HUE_BINS) % NUM_HUE_BINS;
+        const right = (bin + 1) % NUM_HUE_BINS;
+        bins[left].r  += r * nw; bins[left].g  += g * nw; bins[left].b  += b * nw; bins[left].w  += nw;
+        bins[right].r += r * nw; bins[right].g += g * nw; bins[right].b += b * nw; bins[right].w += nw;
+    }
+
+    let best = null, bw = 0;
+    for (const bin of bins) {
+        if (bin.w > bw) { bw = bin.w; best = bin; }
+    }
+    if (!best || best.w === 0) {
+        // Fallback to plain average if no saturated pixels qualified
+        let r = 0, g = 0, b = 0, n = 0;
+        for (let i = 0; i < data.length; i += 3) {
+            r += data[i]; g += data[i + 1]; b += data[i + 2]; n++;
+        }
+        if (n === 0) return null;
+        return [Math.round(r / n), Math.round(g / n), Math.round(b / n)];
+    }
+    return [
+        Math.round(best.r / best.w),
+        Math.round(best.g / best.w),
+        Math.round(best.b / best.w)
+    ];
+}
+
+function toHex(rgb) {
+    return '#' + rgb.map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join('');
+}
+
+async function main() {
+    console.log('🎨 Computing dominant color per photo...\n');
+
+    // Parse filenames out of photo-data.js
+    const photoData = fs.readFileSync(photoDataPath, 'utf8');
+    const fileRegex = /file:\s*['"]([^'"]+)['"]/g;
+    const files = [];
+    let m;
+    while ((m = fileRegex.exec(photoData)) !== null) files.push(m[1]);
+
+    if (files.length === 0) {
+        console.error('❌ No photos found in photo-data.js');
+        process.exit(1);
+    }
+    console.log(`Found ${files.length} photos to process\n`);
+
+    const colors = {};
+    let processed = 0, failed = 0;
+    for (const file of files) {
+        const filePath = path.join(imagesDir, file);
+        if (!fs.existsSync(filePath)) {
+            console.warn(`  ✗ ${file} (missing on disk)`);
+            failed++;
+            continue;
+        }
+        try {
+            const rgb = await extractDominantColor(filePath);
+            if (rgb) {
+                const hex = toHex(rgb);
+                colors[file] = hex;
+                console.log(`  ✓ ${file.padEnd(45)} → ${hex}`);
+                processed++;
+            } else {
+                console.warn(`  ✗ ${file} (no usable pixels)`);
+                failed++;
+            }
+        } catch (err) {
+            console.warn(`  ✗ ${file} (${err.message})`);
+            failed++;
+        }
+    }
+
+    // Sort keys for stable diffs
+    const sorted = {};
+    Object.keys(colors).sort().forEach(k => { sorted[k] = colors[k]; });
+
+    const output = `/**
+ * Pre-computed dominant color per photo, generated by scripts/sync-photo-colors.js.
+ * Re-run \`npm run sync:photo-colors\` after adding new photos.
+ *
+ * Exposes window.BLOT_PHOTO_COLORS = { 'filename.jpg': '#rrggbb', ... }
+ */
+(function () {
+    "use strict";
+    window.BLOT_PHOTO_COLORS = ${JSON.stringify(sorted, null, 4)};
+})();
+`;
+    fs.writeFileSync(outPath, output, 'utf8');
+
+    console.log(`\n✅ Wrote ${processed} colors to photo-colors.js`);
+    if (failed > 0) console.log(`   (${failed} photos skipped)`);
+}
+
+main().catch(err => {
+    console.error('Fatal:', err);
+    process.exit(1);
+});

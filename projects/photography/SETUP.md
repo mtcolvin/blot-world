@@ -1,98 +1,58 @@
-# Photography Gallery - Quick Setup Guide
+# Photography — Quick Reference
 
-## ✅ What's Been Created
+Cheat sheet for the most common task: adding a photo. Full docs in `README.md`.
 
-Your photography gallery is ready! Here's what was set up:
+## Add a photo (3 steps)
 
-```
-/projects/photography/
-├── photography.html      # Main gallery page
-├── photo-loader.js       # Auto-loading system
-├── images/              # Put your photos here
-├── README.md            # Full documentation
-└── SETUP.md             # This file
-```
+```bash
+# 1. Drop file in images/
+cp ~/Downloads/IMG_XXXX.jpg projects/photography/images/
 
-## 🚀 Quick Start (3 Steps)
+# 2. Edit projects/photography/photo-data.js — add one line:
+#    { file: 'IMG_XXXX.jpg', date: '2026-MM-DD', location: 'City, ST' },
 
-### 1. Add Your Photos
-Drop your image files into the `images/` folder:
-```
-/projects/photography/images/
-├── sunset-beach.jpg
-├── city-lights.jpg
-└── mountain-view.jpg
+# 3. Compute its color
+npm run sync:photo-colors
 ```
 
-### 2. Update photo-loader.js
-Open `photo-loader.js` and add your photos to the array (around line 10):
+Hard-refresh the page. Done.
 
-```javascript
-const photos = [
-    { file: 'sunset-beach.jpg', date: '2024-01-15' },
-    { file: 'city-lights.jpg', date: '2024-02-20' },
-    { file: 'mountain-view.jpg', date: '2024-03-10' },
-];
+## All the photography commands
+
+```bash
+npm run resize:photos       # Shrink raw photos to 1200px for IP protection
+npm run sync:photo-colors   # Extract dominant color per photo → photo-colors.js
+npm run minify:js           # Minify JS (auto-runs in `npm run build`)
+npm run serve               # Local server at http://localhost:8080
+npm run build               # Full prod build (includes sync:photo-colors)
 ```
 
-**That's it!** The gallery will automatically:
-- Sort by date (oldest first)
-- Create the timeline
-- Enable navigation
+## File map
 
-### 3. Add a Preview Image (Optional)
-For the homepage project card, add a preview image:
 ```
-/images/previews/photography-preview.jpg
-```
-
-Recommended size: 800x600px or similar aspect ratio
-
-## 🎨 Features
-
-- **Large Photo Viewer**: Main focus on selected image
-- **Stacked Timeline**: Horizontal scroll with overlapping thumbnails
-- **Keyboard Navigation**: Use ← → arrow keys
-- **Drag to Scroll**: Click and drag the timeline
-- **Auto-Centering**: Active photo centers automatically
-- **Responsive**: Works on all devices
-
-## 📝 Example Setup
-
-```javascript
-// photo-loader.js
-const photos = [
-    { file: 'photo-2024-01.jpg', date: '2024-01-01' },
-    { file: 'photo-2024-02.jpg', date: '2024-02-15' },
-    { file: 'vacation-01.jpg', date: '2024-06-20' },
-    { file: 'vacation-02.jpg', date: '2024-06-21' },
-    { file: 'fall-colors.jpg', date: '2024-10-15' },
-];
+projects/photography/
+├── photography.html        ← The page itself
+├── photo-data.js           ← Edit this when adding/removing/relocating photos
+├── photo-colors.js         ← Auto-generated, don't edit by hand
+├── images/                 ← Photo files live here
+└── README.md               ← Full docs
 ```
 
-## 🔗 Links
+## Date format
 
-- Gallery Page: `/projects/photography/photography.html`
-- Project Card: Added to homepage automatically
-- Full Docs: See `README.md` in this folder
+`YYYY-MM-DD` always — `'2026-01-18'`, never `'1/18/2026'`. The page sorts chronologically by string comparison.
 
-## ⚡ Tips
+## Location format
 
-- Use YYYY-MM-DD format for dates
-- Supports JPG, PNG, WebP, etc.
-- High-res images recommended (2000px+)
-- Photos sort chronologically
-- Oldest photo's date shows on project card
+- US: `'Denver, CO'` — state code auto-expands to "Colorado" when a month has 3+ locations and the section header collapses to regions
+- International: `'Naples, Italy'` — works as-is
+- Unknown: `''` — caption hides the location line
 
-## 🎯 Current Status
+## Troubleshooting
 
-- ✅ Gallery page created
-- ✅ Auto-loader system ready
-- ✅ Project card added to homepage
-- ⚠️ **TODO**: Add your photos to `images/` folder
-- ⚠️ **TODO**: Update `photo-loader.js` with photo list
-- ⚠️ **TODO**: Add `photography-preview.jpg` to `/images/previews/`
-
----
-
-Need help? Check the full `README.md` for detailed documentation!
+| Symptom | Fix |
+|---|---|
+| New photo doesn't appear | Did you add it to `photo-data.js`? Then hard-refresh. |
+| No color halo on a new month | Run `npm run sync:photo-colors` |
+| `BLOT_PHOTO_COLORS is undefined` error | `photo-colors.js` is missing — run `npm run sync:photo-colors` |
+| Cross-Origin Request Blocked in console for `.png` | Mobile-only logo mask issue when opening via `file://`. Harmless on desktop. |

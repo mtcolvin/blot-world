@@ -21,3 +21,6 @@ yarn-error.log*
 
 nul
 _ul
+
+# Claude Code temp directories
+tmpclaude-*

@@ -78,7 +78,14 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.geeksforgeeks.org)",
       "Bash(chcp:*)",
-      "Bash(.js \")"
+      "Bash(node projects/poetry/convert-poetry.js:*)",
+      "Bash(PYTHONUTF8=1 python:*)",
+      "Bash(done)",
+      "WebFetch(domain:www.svgrepo.com)",
+      "WebFetch(domain:simpleicons.org)",
+      "Bash(awk 'NR>=13 && NR<=76' \"/c/Users/mtcol/OneDrive/Documents/PROFESSIONAL/GITHUB/BLOT-WORLD/blot-world/projects/photography/photo-loader.js\")",
+      "Read(//tmp/**)",
+      "Bash(python3 -m http.server 8080)"
     ],
     "deny": [],
     "ask": []

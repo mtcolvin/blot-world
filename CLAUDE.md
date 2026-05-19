@@ -19,11 +19,25 @@ npm run serve              # Start local server at http://localhost:8080
 
 ### Photography Workflow
 
+The photography page (`projects/photography/photography.html`) is data-driven from two files:
+- **`photo-data.js`** — hand-curated source of truth: `{ file, date, location }` per photo. Exposes `window.BLOT_PHOTOS`.
+- **`photo-colors.js`** — auto-generated dominant color per photo. Exposes `window.BLOT_PHOTO_COLORS`.
+
 ```bash
-npm run resize:photos      # Resize photos to 1200px (preserves EXIF)
-npm run sync:photo-array   # Generate photo entries from EXIF metadata
-npm run minify:js          # Minify after sync
+npm run resize:photos          # Resize incoming photos to 1200px (preserves EXIF)
+npm run sync:photo-colors      # Compute dominant color per photo with sharp → photo-colors.js
+npm run minify:js              # Minify after data/color changes
 ```
+
+**Adding a new photo:**
+1. Drop the file in `projects/photography/images/`
+2. Append a `{ file, date, location }` entry to `projects/photography/photo-data.js`
+3. Run `npm run sync:photo-colors` (or `npm run build` which includes it)
+4. Hard refresh the page
+
+**Why pre-computed colors?** The page works via `file://` (no local server needed). In-browser canvas pixel extraction is blocked by CORS for `file://` URLs, so colors are computed at build time by `scripts/sync-photo-colors.js` using sharp + a hue-bin histogram. Per-month aggregation (hue voting + saturation boost) still happens in the browser at page load.
+
+> The older `photo-loader.js` + `npm run sync:photo-array` (EXIF-driven) pipeline is no longer used by the page. `photo-data.js` is the authoritative source.
 
 ## Architecture
 

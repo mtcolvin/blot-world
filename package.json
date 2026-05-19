@@ -5,13 +5,14 @@
   "private": true,
   "scripts": {
     "sync:photo-array": "node scripts/sync-photo-array.js",
+    "sync:photo-colors": "node scripts/sync-photo-colors.js",
     "resize:photos": "node scripts/resize-photos.js",
     "optimize:images": "node scripts/optimize-images.js",
     "minify:css": "node scripts/minify-css.js",
     "minify:js": "node scripts/minify-js.js",
     "build:blog": "node scripts/build-blog.js",
     "update:photo-metadata": "node scripts/add-vlcsnap-metadata.js",
-    "build": "npm run build:blog && npm run optimize:images && npm run minify:css && npm run minify:js",
+    "build": "npm run build:blog && npm run optimize:images && npm run sync:photo-colors && npm run minify:css && npm run minify:js",
     "serve": "python3 -m http.server 8080"
   },
   "devDependencies": {
@@ -58,9 +59,12 @@
     "mdn-data": "^2.0.28",
     "minimatch": "^10.1.1",
     "minipass": "^7.1.2",
+    "next": "^16.1.4",
     "package-json-from-dist": "^1.0.1",
     "path-key": "^3.1.1",
     "path-scurry": "^2.0.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "semver": "^7.7.3",
     "shebang-command": "^2.0.0",
     "shebang-regex": "^3.0.0",

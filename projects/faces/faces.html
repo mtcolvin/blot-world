@@ -103,7 +103,7 @@
             transition: background 0.6s ease;
         }
 
-        body.joni-active .minimal-nav .backdrop-blur {
+        body.joni-hover .minimal-nav .backdrop-blur {
             background: rgba(70, 20, 35, 0.95);
         }
 
@@ -123,9 +123,7 @@
 			transition: background-color 0.6s ease;
 		}
 
-		/* Dynamic backgrounds for each piece */
-		body.amari-active { background: #331304; }
-		body.joni-active { background: #2D000D; }
+		body.joni-hover { background: #2D000D; }
 
         /* Gallery Container */
         .gallery {
@@ -134,285 +132,163 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px 40px 60px;
+            gap: 2vw;
+            padding: 60px 40px 40px;
             position: relative;
         }
 
-        /* Artwork Container */
-        .artwork-container {
-            width: 100%;
+		/* Series label */
+		.series-label {
+			position: fixed;
+			top: var(--mininav-spacing);
+			right: var(--mininav-spacing);
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			color: var(--faces-accent);
+			padding: 12px 20px;
+			background: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(10px);
+			border-radius: 10px;
+			transition: color 0.6s ease;
+		}
+
+		body.joni-hover .series-label { color: #D1005D; }
+
+        /* Individual artwork piece */
+        .piece {
+            position: relative;
+            flex: 1;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            cursor: pointer;
         }
 
-		/* Carousel Wrapper */
-		.carousel-wrapper {
-			width: 100%;
-			height: 100%;
-			position: relative;
-			overflow: hidden;
-		}
-
-		.carousel-track {
-			display: flex;
-			height: 100%;
-			transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-		}
-
-		.carousel-slide {
-			min-width: 100%;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-
-        .artwork-image {
-            max-width: 60vw;
-            max-height: calc(100vh - 200px);
+        .piece .artwork-image {
+            max-width: 100%;
+            max-height: calc(100vh - 120px);
             width: auto;
             height: auto;
             object-fit: contain;
             display: block;
+            transition: filter 0.4s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Artwork Info - Bottom */
-        .artwork-info {
-            position: fixed;
+        /* Info overlay */
+        .piece-info {
+            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 30px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, transparent 100%);
+            padding: 30px 20px 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
         }
 
-        .info-left {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .piece:hover .piece-info {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .artwork-title {
-            font-size: 48px;
+        .piece-title {
+            font-size: 36px;
             font-weight: 700;
             letter-spacing: -1px;
             color: var(--faces-light);
             margin: 0;
             line-height: 1;
-			transition: opacity 0.3s ease;
         }
 
-        .artwork-series {
-            font-size: 14px;
+        .piece-series {
+            font-size: 12px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--faces-accent);
-            opacity: 0.9;
-			transition: color 0.6s ease, opacity 0.3s ease;
+            margin-top: 6px;
         }
 
-        .artwork-series .series-word {
+        .piece[data-slug="amari"] .piece-series { color: #E8B77D; }
+        .piece[data-slug="joni"] .piece-series { color: #D1005D; }
+
+        .piece-series .series-word {
             opacity: 0.5;
         }
 
-		/* Dynamic accent colors */
-		body.amari-active .artwork-series,
-		body.amari-active .series-number { color: #E8B77D; }
-		body.joni-active .artwork-series,
-		body.joni-active .series-number { color: #D1005D; }
-
-        .info-right {
+        .piece-meta {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
+            gap: 16px;
+            margin-top: 10px;
         }
 
-        .artwork-date {
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--faces-light);
-            opacity: 0.6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-			transition: opacity 0.3s ease;
-        }
-
-        .artwork-medium {
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--faces-light);
-            opacity: 0.6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-			transition: opacity 0.3s ease;
-        }
-
-        /* Series Number Badge */
-        .series-number {
-            position: fixed;
-            top: var(--mininav-spacing);
-            right: var(--mininav-spacing);
+        .piece-date,
+        .piece-medium {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 400;
+            color: var(--faces-light);
+            opacity: 0.6;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--faces-accent);
-            padding: 12px 20px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-			transition: color 0.6s ease;
+            letter-spacing: 1px;
         }
-
-		/* Navigation Arrows */
-		.nav-arrow {
-			position: fixed;
-			top: 50%;
-			transform: translateY(-50%);
-			width: 50px;
-			height: 50px;
-			background: rgba(0, 0, 0, 0.5);
-			backdrop-filter: blur(10px);
-			border: none;
-			border-radius: 50%;
-			color: var(--faces-light);
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: all 0.3s ease;
-			z-index: 10;
-		}
-
-		.nav-arrow:hover {
-			background: rgba(255, 255, 255, 0.1);
-			transform: translateY(-50%) scale(1.1);
-		}
-
-		.nav-arrow:active {
-			transform: translateY(-50%) scale(0.95);
-		}
-
-		.nav-arrow.prev {
-			left: var(--mininav-spacing);
-		}
-
-		.nav-arrow.next {
-			right: var(--mininav-spacing);
-		}
-
-		.nav-arrow svg {
-			width: 24px;
-			height: 24px;
-		}
-
-		/* Dot Navigation */
-		.dot-nav {
-			position: fixed;
-			bottom: 40px;
-			left: 50%;
-			transform: translateX(-50%);
-			display: flex;
-			gap: 12px;
-			z-index: 10;
-		}
-
-		.dot {
-			width: 8px;
-			height: 8px;
-			border-radius: 50%;
-			background: rgba(255, 255, 255, 0.3);
-			cursor: pointer;
-			transition: all 0.3s ease;
-		}
-
-		.dot.active {
-			background: var(--faces-light);
-			transform: scale(1.3);
-		}
-
-		.dot:hover {
-			background: rgba(255, 255, 255, 0.6);
-		}
 
         /* Responsive */
         @media (max-width: 768px) {
             .gallery {
-                padding: 80px 20px 120px;
-            }
-
-            .artwork-container {
-                max-width: 95vw;
-                max-height: 70vh;
-            }
-
-            .artwork-info {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-                padding: 20px;
+                gap: 3vh;
+                padding: 60px 20px 20px;
             }
 
-            .artwork-title {
-                font-size: 32px;
+            .piece {
+                flex: none;
+                width: 100%;
+                height: auto;
+                max-height: 45vh;
             }
 
-            .artwork-series {
-                font-size: 12px;
+            .piece .artwork-image {
+                max-height: 40vh;
+                max-width: 90vw;
             }
 
-            .info-right {
-                align-items: flex-start;
-            }
-
-            .series-number {
-                top: auto;
-                bottom: calc(var(--mininav-spacing) + 120px);
-                right: var(--mininav-spacing);
-                font-size: 10px;
-                padding: 10px 16px;
-            }
-
-			.nav-arrow {
-				width: 40px;
-				height: 40px;
+			.piece-info {
+				opacity: 1;
+				transform: translateY(0);
+				padding: 16px 12px 10px;
 			}
 
-			.nav-arrow svg {
-				width: 20px;
-				height: 20px;
-			}
+            .piece-title {
+                font-size: 24px;
+            }
 
-			.dot-nav {
-				bottom: 40px;
+            .piece-meta {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+			.series-label {
+				font-size: 10px;
+				padding: 10px 16px;
 			}
         }
 
         @media (max-width: 480px) {
-            .artwork-title {
-                font-size: 28px;
+            .piece-title {
+                font-size: 20px;
             }
 
-			.artwork-image {
-				max-width: 85vw;
+			.piece .artwork-image {
+				max-width: 95vw;
 			}
         }
 	</style>
 </head>
-<body class="amari-active">
+<body>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBBHS254"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -447,52 +323,34 @@
 		</div>
 	</nav>
 
-    <!-- Series Number Badge -->
-    <div class="series-number">01 / 02</div>
-
-	<!-- Navigation Arrows -->
-	<button class="nav-arrow prev" onclick="navigate(-1)" aria-label="Previous artwork">
-		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-			<polyline points="15 18 9 12 15 6"></polyline>
-		</svg>
-	</button>
-	<button class="nav-arrow next" onclick="navigate(1)" aria-label="Next artwork">
-		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-			<polyline points="9 18 15 12 9 6"></polyline>
-		</svg>
-	</button>
-
-	<!-- Dot Navigation -->
-	<div class="dot-nav">
-		<div class="dot active" onclick="goToSlide(0)"></div>
-		<div class="dot" onclick="goToSlide(1)"></div>
-	</div>
+	<!-- Series Label -->
+	<div class="series-label">Faces Series</div>
 
     <!-- Gallery -->
     <div class="gallery">
-        <div class="carousel-wrapper">
-			<div class="carousel-track">
-				<!-- Amari -->
-				<div class="carousel-slide">
-					<img class="artwork-image" src="images/amari.jpg" alt="Amari - Digital Portrait" />
-				</div>
-				<!-- Joni -->
-				<div class="carousel-slide">
-					<img class="artwork-image" src="images/joni.jpg" alt="Joni - Digital Portrait" />
-				</div>
-			</div>
-		</div>
-    </div>
-
-    <!-- Artwork Info -->
-    <div class="artwork-info">
-        <div class="info-left">
-            <h1 class="artwork-title">Amari</h1>
-            <p class="artwork-series">Faces <span class="series-word">Series</span></p>
+        <!-- Amari -->
+        <div class="piece" data-slug="amari">
+            <img class="artwork-image" src="images/amari.jpg" alt="Amari - Digital Portrait" />
+            <div class="piece-info">
+                <h2 class="piece-title">Amari</h2>
+                <p class="piece-series">Faces <span class="series-word">Series</span></p>
+                <div class="piece-meta">
+                    <span class="piece-date">September 2023</span>
+                    <span class="piece-medium">Digital Art / Affinity Designer</span>
+                </div>
+            </div>
         </div>
-        <div class="info-right">
-            <p class="artwork-date">September 2023</p>
-            <p class="artwork-medium">Digital Art / Affinity Designer</p>
+        <!-- Joni -->
+        <div class="piece" data-slug="joni">
+            <img class="artwork-image" src="images/joni.jpg" alt="Joni - Digital Portrait" />
+            <div class="piece-info">
+                <h2 class="piece-title">Joni</h2>
+                <p class="piece-series">Faces <span class="series-word">Series</span></p>
+                <div class="piece-meta">
+                    <span class="piece-date">October 2025</span>
+                    <span class="piece-medium">Digital Art / Affinity Designer</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -500,139 +358,15 @@
     <script src="../../js/minimal-nav.js"></script>
 
 	<script>
-		// Artwork data
-		const artworks = [
-			{
-				title: 'Amari',
-				date: 'September 2023',
-				medium: 'Digital Art / Affinity Designer',
-				number: '01',
-				className: 'amari-active',
-				slug: 'amari'
-			},
-			{
-				title: 'Joni',
-				date: 'October 2025',
-				medium: 'Digital Art / Affinity Designer',
-				number: '02',
-				className: 'joni-active',
-				slug: 'joni'
-			}
-		];
-
-		let currentIndex = 0;
-
-		// Initialize from URL hash on page load
-		function initializeFromURL() {
-			const hash = window.location.hash.slice(1).toLowerCase();
-			const index = artworks.findIndex(art => art.slug === hash);
-			if (index !== -1) {
-				currentIndex = index;
-				updateCarousel(false); // Don't push to history on initial load
-			}
-		}
-
-		// Navigate through carousel
-		function navigate(direction) {
-			currentIndex = (currentIndex + direction + artworks.length) % artworks.length;
-			updateCarousel();
-		}
-
-		// Go to specific slide
-		function goToSlide(index) {
-			currentIndex = index;
-			updateCarousel();
-		}
-
-		// Update carousel position and info
-		function updateCarousel(pushState = true) {
-			const track = document.querySelector('.carousel-track');
-			const title = document.querySelector('.artwork-title');
-			const date = document.querySelector('.artwork-date');
-			const medium = document.querySelector('.artwork-medium');
-			const seriesNumber = document.querySelector('.series-number');
-			const dots = document.querySelectorAll('.dot');
-
-			// Fade out text
-			title.style.opacity = '0';
-			date.style.opacity = '0';
-			medium.style.opacity = '0';
-
-			// Update carousel position
-			track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-			// Update body class for background color
-			document.body.className = artworks[currentIndex].className;
-
-			// Update URL hash
-			if (pushState) {
-				const newURL = `#${artworks[currentIndex].slug}`;
-				window.history.pushState({ index: currentIndex }, '', newURL);
-			}
-
-			// Update text after brief delay
-			setTimeout(() => {
-				title.textContent = artworks[currentIndex].title;
-				date.textContent = artworks[currentIndex].date;
-				medium.textContent = artworks[currentIndex].medium;
-				seriesNumber.textContent = `${artworks[currentIndex].number} / 02`;
-
-				// Fade in text
-				title.style.opacity = '1';
-				date.style.opacity = '0.8';
-				medium.style.opacity = '0.6';
-			}, 300);
-
-			// Update dots
-			dots.forEach((dot, index) => {
-				dot.classList.toggle('active', index === currentIndex);
+		// Background color shift on hover
+		document.querySelectorAll('.piece').forEach(piece => {
+			piece.addEventListener('mouseenter', () => {
+				document.body.className = piece.dataset.slug === 'joni' ? 'joni-hover' : '';
 			});
-		}
-
-		// Keyboard navigation
-		document.addEventListener('keydown', (e) => {
-			if (e.key === 'ArrowLeft') {
-				navigate(-1);
-			} else if (e.key === 'ArrowRight') {
-				navigate(1);
-			}
+			piece.addEventListener('mouseleave', () => {
+				document.body.className = '';
+			});
 		});
-
-		// Touch swipe support
-		let touchStartX = 0;
-		let touchEndX = 0;
-
-		document.addEventListener('touchstart', (e) => {
-			touchStartX = e.changedTouches[0].screenX;
-		});
-
-		document.addEventListener('touchend', (e) => {
-			touchEndX = e.changedTouches[0].screenX;
-			handleSwipe();
-		});
-
-		function handleSwipe() {
-			const swipeThreshold = 50;
-			if (touchEndX < touchStartX - swipeThreshold) {
-				navigate(1); // Swipe left
-			}
-			if (touchEndX > touchStartX + swipeThreshold) {
-				navigate(-1); // Swipe right
-			}
-		}
-
-		// Handle browser back/forward navigation
-		window.addEventListener('popstate', (e) => {
-			if (e.state && e.state.index !== undefined) {
-				currentIndex = e.state.index;
-				updateCarousel(false);
-			} else {
-				initializeFromURL();
-			}
-		});
-
-		// Initialize on page load
-		initializeFromURL();
 
 		// Disable right-click on images
 		document.addEventListener('contextmenu', function(e) {

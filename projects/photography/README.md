@@ -1,61 +1,93 @@
 # Photography Gallery
 
-A visual timeline showcase for your photography with smooth scrolling and stacked thumbnail navigation.
+A magazine-style chronological archive of photos, grouped by month into viewport-snapped sections with horizontal filmstrips and per-month color halos derived from each month's photos.
 
-## How to Add Photos
+## How It's Built
 
-### Step 1: Add Image Files
-Place your photo files in the `images/` folder:
+The gallery is data-driven from two files:
+
+| File | Maintained by | Purpose |
+|---|---|---|
+| `photo-data.js` | **You (by hand)** | Source of truth: filename, date, location per photo |
+| `photo-colors.js` | **Build script** | Pre-computed dominant color per photo |
+
+The page (`photography.html`) reads both at load time, groups photos by year/month, renders sections, and aggregates per-month mood color from the per-photo hex values.
+
+## Adding a New Photo
+
+### 1. Drop the file in `images/`
+
 ```
 projects/photography/images/
-  ├── photo-1.jpg
-  ├── photo-2.jpg
-  └── photo-3.jpg
+  └── IMG_XXXX_result.jpg
 ```
 
-**Important:**
-- Photos MUST have EXIF metadata (Date Taken, GPS) for dates and locations to display
-- Avoid spaces or parentheses in filenames (use underscores instead)
+**Filename tips:**
+- Avoid spaces, parentheses — use underscores
+- JPG / PNG / WebP are all fine
+- High-res is fine but `npm run resize:photos` will shrink to 1200px for IP protection
 
-### Step 2: Resize for IP Protection
-Resize photos to 1200px wide to prevent high-quality reproduction:
+### 2. Add an entry to `photo-data.js`
+
+```javascript
+window.BLOT_PHOTOS = [
+    // ...
+    { file: 'IMG_XXXX_result.jpg', date: '2026-MM-DD', location: 'City, ST' },
+];
+```
+
+- **`date`** — YYYY-MM-DD format. Doesn't need to be from EXIF; manually curated is fine.
+- **`location`** — free-form string. Use `'City, ST'` for US (state codes auto-expand to full names in multi-region collapse) or `'City, Country'` for international. Leave `''` if unknown.
+- **Order doesn't matter** — photos sort chronologically at render time.
+
+### 3. Compute the dominant color
 
 ```bash
-npm run resize:photos
+npm run sync:photo-colors
 ```
 
-This preserves EXIF metadata while reducing resolution.
+This reads `photo-data.js`, runs each photo through a hue-histogram dominant-color extractor (using sharp), and writes hex values to `photo-colors.js`.
 
-### Step 3: Sync the Photo Array
-Auto-generate the photos array from EXIF metadata:
+### 4. Refresh the page
 
-```bash
-npm run sync:photo-array
-```
+Hard-refresh (Ctrl+Shift+R / Cmd+Shift+R) to pick up the new data + color.
 
-### Step 4: Minify JavaScript
-```bash
-npm run minify:js
-```
+For production: `npm run build` runs the color sync + minification in one shot.
 
-### Step 5: Test and Commit
-Hard refresh your browser (Ctrl+Shift+R) to see changes, then commit.
+## Why a Pre-compute Step?
+
+The gallery is designed to work via `file://` (open `photography.html` directly in a browser, no server needed). Browsers treat `file://` resources as cross-origin, which blocks the in-browser canvas pixel reads we'd need to extract colors at runtime. So we extract at build time with Node + sharp instead.
+
+Per-month color aggregation (voting per-photo colors into hue bins, picking the dominant family, boosting saturation) still happens in the browser at page load — it just operates on the pre-computed hex values rather than canvas pixel data.
+
+## Location Display Rules
+
+When rendering each month's section header:
+
+| Unique locations | Shown as |
+|---|---|
+| 1 | `"Naples, FL"` |
+| 2 | `"Florida Keys · Miami, FL"` |
+| 3+ | Collapsed to unique parent regions — e.g., 11 Italian cities → `"Italy"`, mixed cities → `"Colorado · Utah"` |
+
+US state codes (`CO`, `UT`, `FL`, etc.) auto-expand to full names when collapsing. The state lookup table is at the top of the inline script in `photography.html` — extend it there for new states or non-US regions.
+
+## Removing a Photo
+
+1. Remove the entry from `photo-data.js`
+2. Delete the file from `images/` (optional — keeps disk clean)
+3. Re-run `npm run sync:photo-colors` (so `photo-colors.js` doesn't have a stale entry)
 
 ## Features
 
-- **Main Photo Viewer**: Large, centered photo display
-- **Timeline**: Horizontal scrollable timeline with stacked thumbnails
-- **Date Display**: Shows the date from EXIF metadata
-- **Location Display**: Shows location from GPS coordinates (reverse geocoded)
-- **Keyboard Navigation**: Use arrow keys to navigate
-- **Drag to Scroll**: Click and drag the timeline to browse
-- **Auto-Centering**: Active photo centers in the timeline
-- **Responsive**: Works on mobile and desktop
-- **IP Protection**: Right-click disabled, images resized to 1200px
+- **Magazine layout** — each month is its own viewport-snapped section
+- **Horizontal filmstrip** — uniform-height photos with scroll snap and a custom progress bar
+- **Sticky spine nav** — left-side index of year/month, click to jump
+- **Per-month color halo** — dominant color of the month's photos, rendered as a soft gradient in the top-left
+- **Lightbox** — click any photo, navigate with arrows / keyboard, close with Esc
+- **Full-image display** — no cropping; aspect ratios preserved everywhere
+- **Mobile responsive** — spine hides, layout reflows to a single column
 
-## Tips
+## Legacy Files
 
-- Photos are sorted chronologically by EXIF date
-- The oldest photo's date will appear on the project card on the homepage
-- If a photo shows wrong date, check its EXIF "Date Taken" metadata
-- If location doesn't show, verify the photo has GPS coordinates in EXIF
+`photo-loader.js`, `photo-loader.min.js`, and `npm run sync:photo-array` are leftovers from the previous EXIF-driven gallery. They are **not loaded by the current page**. Safe to delete if you want to clean up.

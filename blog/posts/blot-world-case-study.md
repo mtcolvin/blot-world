@@ -47,28 +47,28 @@ The primary purpose of this website is not to showcase my work to others, althou
 
 I use this phrase to remind myself that scale isn’t everything. Small things can have a massive impact when positioned right. 
 
-##Design decisions
+## Design decisions
 
-###Dark theme
+### Dark theme
 
 I like black. It’s my favorite color if you consider it as such (purple if we’re only talking about the visible light spectrum). It saves batter on OLED. It’s easier on the eyes. Enough said imho.
 
-###Typography
+### Typography
 
 I used Robot Flex because I wanted a variable font for flexibility. I used Space Grotesk for its distinctiveness from Robot Flex and its serif-like impact, while remaining sans-serif and modern.
 
-###Visual consistency
+### Visual consistency
 
 The blue-to-red gradient runs throughout the site – in buttons, headings, and interactive elements. It ties everything together visually and gives the site a consistent identity. They are a color pair I have always liked together, mix to form my favorite color, and are a subtle nod to 3D-glasses: something I loved in the movies as a child and represent the full-dimensional aspect of my portfolio.
 
-##What I learned
+## What I learned
 
 Building this website reinforced a few things:
 - Create content that communicates who you are
 - Iterate relentlessly
 - Nothing is ever finished
 
-##What's next
+## What's next
 
 Who knows what the future may hold. I certainly don’t try and predict the unpredictable. I’m here for a good time, not a long time. Let’s see what we can do together.
 

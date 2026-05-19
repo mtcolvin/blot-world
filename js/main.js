@@ -240,6 +240,9 @@ const Navigation = {
 						AppState.activeFilters = urlFilters;
 						FilterSystem.applyFromState();
 					}
+				} else if (sectionId.startsWith('post-')) {
+					// Load markdown content for blog posts
+					MarkdownLoader.loadPost(sectionId);
 				}
 				
 				this.updateNavState(sectionId);
@@ -383,8 +386,11 @@ const Navigation = {
 		if (sectionId === 'home') {
 			setTimeout(() => HeroAnimations.trigger(), 100);
 			window.addEventListener('scroll', ProjectsPreview.handleScroll);
+		} else if (sectionId.startsWith('post-')) {
+			// Load markdown content for blog posts
+			MarkdownLoader.loadPost(sectionId);
 		}
-		
+
 		this.updateNavState(sectionId);
 		this.closeMobileMenu();
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1527,12 +1533,24 @@ const QuoteRotator = {
             author: "Thích Nhất Hạnh"
         },
         {
+            text: "We're all just walking each other home.",
+            author: "Ram Dass"
+        },
+        {
             text: "Everyone you meet is fighting a battle you know absolutely nothing about. Be kind. Always.",
             author: "Robin Williams"
         },
         {
             text: "Don't gain the world and lose your soul; wisdom is better than silver or gold.",
             author: "Bob Marley"
+        },
+        {
+            text: "Learning never exhausts the mind.",
+            author: "Leonardo da Vinci"
+        },
+        {
+            text: "Rivers know this: there is no hurry. We shall get there some day.",
+            author: "A.A. Milne"
         }
     ],
     currentIndex: 0,
@@ -1823,42 +1841,217 @@ function renderBlogPosts() {
     blogGrid.innerHTML = feedHeader + sortedPosts.map((post, index) => createBlogCard(post, sortedPosts.length - index)).join('');
 }
 
-// Adjust blog card tags to show fixed number
-function adjustBlogCardTags() {
-    const MAX_VISIBLE_TAGS = 5;
-    const tagContainers = document.querySelectorAll('.blog-card-tags');
+// ==========================================================================
+// MARKDOWN LOADER - Runtime markdown fetching and parsing
+// ==========================================================================
 
-    tagContainers.forEach(container => {
-        const tags = Array.from(container.querySelectorAll('.blog-tag:not(.blog-tag-more)'));
-        const totalTags = parseInt(container.dataset.totalTags);
+const MarkdownLoader = {
+    cache: {},
 
-        if (tags.length === 0) return;
+    // Parse YAML frontmatter from markdown content
+    parseFrontmatter(content) {
+        content = content.replace(/\r\n/g, '\n');
+        const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+        const match = content.match(frontmatterRegex);
 
-        // Remove any existing "+more" tags first
-        const existingMoreTag = container.querySelector('.blog-tag-more');
-        if (existingMoreTag) {
-            existingMoreTag.remove();
+        if (!match) {
+            return { metadata: {}, content: content };
         }
 
-        // Show only first MAX_VISIBLE_TAGS
-        tags.forEach((tag, index) => {
-            if (index < MAX_VISIBLE_TAGS) {
-                tag.style.display = '';
-            } else {
-                tag.style.display = 'none';
+        const frontmatter = match[1];
+        const markdown = match[2];
+        const metadata = {};
+
+        const lines = frontmatter.split('\n');
+        let currentKey = null;
+        let currentArray = null;
+
+        lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) return;
+
+            if (trimmed.startsWith('-')) {
+                if (currentArray) {
+                    currentArray.push(trimmed.substring(1).trim());
+                }
+                return;
+            }
+
+            const colonIndex = trimmed.indexOf(':');
+            if (colonIndex > -1) {
+                const key = trimmed.substring(0, colonIndex).trim();
+                const value = trimmed.substring(colonIndex + 1).trim();
+                const cleanValue = value.replace(/^["']|["']$/g, '');
+
+                if (cleanValue === '') {
+                    currentKey = key;
+                    currentArray = [];
+                    metadata[key] = currentArray;
+                } else {
+                    metadata[key] = cleanValue;
+                    currentKey = null;
+                    currentArray = null;
+                }
             }
         });
 
-        // Add "+X more" tag if there are hidden tags
-        if (totalTags > MAX_VISIBLE_TAGS) {
-            const remainingCount = totalTags - MAX_VISIBLE_TAGS;
-            const moreTag = document.createElement('span');
-            moreTag.className = 'blog-tag blog-tag-more';
-            moreTag.textContent = `+${remainingCount} more`;
-            container.appendChild(moreTag);
+        return { metadata, content: markdown };
+    },
+
+    // Escape HTML entities
+    escapeHtml(text) {
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    },
+
+    // Convert Markdown to HTML
+    markdownToHtml(markdown) {
+        let html = markdown;
+
+        // Headers (with space after #)
+        html = html.replace(/^### (.+)$/gim, '<h3>$1</h3>');
+        html = html.replace(/^## (.+)$/gim, '<h2>$1</h2>');
+        html = html.replace(/^# (.+)$/gim, '<h1>$1</h1>');
+
+        // Bold
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+        // Italic
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+        // Code blocks with HTML escaping
+        html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+            return '<pre><code>' + this.escapeHtml(code.trim()) + '</code></pre>';
+        });
+
+        // Inline code
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+        // Horizontal rules
+        html = html.replace(/^---$/gim, '<hr>');
+
+        // Process paragraphs and lists
+        const lines = html.split('\n');
+        let result = [];
+        let inList = false;
+        let listItems = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const trimmed = line.trim();
+
+            // Skip empty lines
+            if (!trimmed) {
+                if (inList && listItems.length > 0) {
+                    result.push('<ul>' + listItems.join('') + '</ul>');
+                    listItems = [];
+                    inList = false;
+                }
+                continue;
+            }
+
+            // Unordered list items
+            if (trimmed.match(/^[-*] (.+)$/)) {
+                inList = true;
+                const content = trimmed.replace(/^[-*] /, '');
+                listItems.push('<li>' + content + '</li>');
+                continue;
+            }
+
+            // Ordered list items
+            if (trimmed.match(/^\d+\. (.+)$/)) {
+                inList = true;
+                const content = trimmed.replace(/^\d+\. /, '');
+                listItems.push('<li>' + content + '</li>');
+                continue;
+            }
+
+            // Close list if we hit non-list content
+            if (inList && listItems.length > 0) {
+                result.push('<ul>' + listItems.join('') + '</ul>');
+                listItems = [];
+                inList = false;
+            }
+
+            // Skip if already an HTML tag
+            if (trimmed.startsWith('<') && trimmed.endsWith('>')) {
+                result.push(trimmed);
+                continue;
+            }
+
+            // Wrap in paragraph if plain text
+            if (!trimmed.startsWith('<')) {
+                result.push('<p>' + trimmed + '</p>');
+            } else {
+                result.push(trimmed);
+            }
         }
-    });
-}
+
+        // Close any remaining list
+        if (listItems.length > 0) {
+            result.push('<ul>' + listItems.join('') + '</ul>');
+        }
+
+        return result.join('\n');
+    },
+
+    // Fetch and render markdown for a post
+    async loadPost(postId) {
+        // Extract filename from post ID (e.g., "post-blot-world-case-study" -> "blot-world-case-study")
+        const filename = postId.replace(/^post-/, '');
+        const mdPath = `blog/posts/${filename}.md`;
+
+        // Check cache first
+        if (this.cache[postId]) {
+            this.renderToSection(postId, this.cache[postId]);
+            return;
+        }
+
+        try {
+            const response = await fetch(mdPath);
+            if (!response.ok) {
+                console.error(`Failed to fetch markdown: ${mdPath}`);
+                return;
+            }
+
+            const mdContent = await response.text();
+            const { metadata, content } = this.parseFrontmatter(mdContent);
+            const htmlContent = this.markdownToHtml(content);
+
+            // Cache the result
+            this.cache[postId] = { metadata, htmlContent };
+
+            // Render to the section
+            this.renderToSection(postId, { metadata, htmlContent });
+
+        } catch (error) {
+            console.error('Error loading markdown:', error);
+        }
+    },
+
+    // Render parsed content to the post section
+    renderToSection(postId, { metadata, htmlContent }) {
+        const section = document.getElementById(postId);
+        if (!section) return;
+
+        const contentElement = section.querySelector('.post-content');
+        if (contentElement) {
+            contentElement.innerHTML = htmlContent;
+        }
+
+        // Update read time
+        const readTimeElement = section.querySelector('.post-read-time');
+        if (readTimeElement && contentElement) {
+            const wordCount = contentElement.textContent.split(/\s+/).length;
+            const readTime = Math.ceil(wordCount / 200);
+            readTimeElement.textContent = `${readTime} min read`;
+        }
+    }
+};
 
 // Create Blog Card HTML - RSS Feed Style
 function createBlogCard(post, postNumber) {
@@ -1873,10 +2066,6 @@ function createBlogCard(post, postNumber) {
                     ${readTime ? `<span class="blog-card-read-time">${readTime}</span>` : ''}
                 </div>
                 <h2 class="blog-card-title">${post.title}</h2>
-                <p class="blog-card-excerpt">${post.contentPreview}</p>
-                <div class="blog-card-tags" data-total-tags="${post.tags.length}">
-                    ${[...post.tags].sort((a, b) => a.localeCompare(b)).map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
-                </div>
             </div>
         </a>
     `;
