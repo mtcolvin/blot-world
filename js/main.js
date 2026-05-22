@@ -425,7 +425,7 @@ const ProjectsPreview = {
 		previewGrid.innerHTML = '';
 
 		const projectCardLinks = mainGrid.querySelectorAll('.project-card-link');
-		const previewCount = Math.min(6, projectCardLinks.length);
+		const previewCount = Math.min(3, projectCardLinks.length);
 
 		for (let i = 0; i < previewCount; i++) {
 			const originalLink = projectCardLinks[i];
@@ -923,8 +923,73 @@ function markAIProjects() {
 // 9. INITIALIZATION
 // ==========================================================================
 
+// Render project cards from window.PROJECTS_DATA into #projects-grid.
+// Runs BEFORE filter/preview init so downstream code sees the populated DOM.
+function renderProjectCards() {
+    const grid = document.getElementById('projects-grid');
+    if (!grid) return;
+    const projects = window.PROJECTS_DATA || [];
+
+    const flipArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
+    const viewArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+    const externalIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" style="margin-left:4px;vertical-align:baseline;flex-shrink:0;"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/><path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/></svg>';
+
+    const html = projects.map(p => {
+        const linkAttrs = [
+            `href="${p.href}"`,
+            'class="project-card-link"',
+            'data-project="true"',
+            p.hidden ? `id="${p.id}-card"` : '',
+            p.external ? 'target="_blank" rel="noopener noreferrer"' : '',
+            p.modal ? 'onclick="event.preventDefault(); showInceptionModal();"' : ''
+        ].filter(Boolean).join(' ');
+
+        const tags = (p.techDisplay || []).map(t => `<span class="back-tag">${t}</span>`).join('');
+        const extIcon = p.externalIcon ? externalIcon : '';
+
+        return `
+            <a ${linkAttrs}>
+                <div class="project-card"
+                    data-area="${p.area}"
+                    data-tech="${p.dataTech}"
+                    data-name="${p.dataName}"
+                    data-month="${p.month}"
+                    data-year="${p.year}">
+                    <div class="card-face card-front">
+                        <div class="card-image"><img src="${p.image}" alt="${p.imageAlt || p.name}"></div>
+                        <div class="area-ribbon">${p.area}</div>
+                        <div class="body">
+                            <div class="card-name">${p.name}${extIcon}</div>
+                            <div class="meta">
+                                <span>${p.dateDisplay}</span>
+                                <span class="flip-hint">Flip ${flipArrow}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="back-scroll">
+                            <div class="back-area"><span class="dot"></span>${p.area}</div>
+                            <div class="back-name">${p.name}</div>
+                            <div class="back-divider"></div>
+                            <div class="back-desc">${p.description}</div>
+                            <div class="back-tags">${tags}</div>
+                        </div>
+                        <div class="back-footer">
+                            <span>${p.dateDisplay}</span>
+                            <span class="view-cta">View ${viewArrow}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>`;
+    }).join('');
+
+    grid.innerHTML = html;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('loading');
+
+    renderProjectCards();
 
     PageLoader.init();
     Navigation.init();

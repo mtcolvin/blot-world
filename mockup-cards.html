@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Card Mockup — BLOT.WORLD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blot-black: #0a0a0a;
+            --bg: #0a0a0a;
+            --text: #f0f0f0;
+            --text-muted: rgba(255,255,255,0.5);
+            --border: rgba(255,255,255,0.1);
+
+            /* Brand colors */
+            --primary-blue: #0D28F2;
+            --accent-red: #E60F0F;
+        }
+
+        body {
+            font-family: "Roboto Flex", sans-serif;
+            background:
+                radial-gradient(circle at 15% 0%, rgba(13, 40, 242, 0.08), transparent 50%),
+                radial-gradient(circle at 85% 100%, rgba(230, 15, 15, 0.06), transparent 50%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 60px 24px 100px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-header {
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            text-align: center;
+        }
+        .page-header h1 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 48px;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+        .page-header p {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .hint {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 11px;
+            color: var(--accent-red);
+            letter-spacing: 1px;
+            margin-top: 14px;
+            text-transform: uppercase;
+        }
+
+        .grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        /* ==========================================================
+           CARD — sports-style image-dominant front, flip-to-reveal back
+           with theme-color pop. Wraps as <a> so the whole card is a link.
+           ========================================================== */
+        .card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            perspective: 1400px;
+            aspect-ratio: 3 / 4.4;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 14px;
+            /* clip-path instead of overflow:hidden — the latter breaks
+               3D rendering in Chrome/Safari when paired with backface-visibility */
+            clip-path: inset(0 round 14px);
+            transform: translateZ(0);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.06) inset,
+                0 18px 40px rgba(0,0,0,0.5);
+        }
+        .card-back {
+            transform: translateZ(0) rotateY(180deg);
+        }
+
+        /* ============ FRONT ============ */
+        .card-front {
+            background: #1a1a1a;
+        }
+        .card-front .image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .card-front .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* Subtle iridescent shimmer on hover */
+        .card-front::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg,
+                transparent 30%,
+                rgba(13, 40, 242, 0.15) 50%,
+                rgba(230, 15, 15, 0.12) 60%,
+                transparent 75%);
+            mix-blend-mode: overlay;
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .card:hover .card-front::after { opacity: 1; }
+
+        .card-front .area-ribbon {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--accent-red);
+            color: white;
+            padding: 6px 14px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 3px;
+            z-index: 3;
+            box-shadow:
+                0 4px 14px rgba(230, 15, 15, 0.35),
+                0 0 0 1px rgba(255,255,255,0.1) inset;
+        }
+        .card-front .body {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 90px 18px 16px;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.96) 65%);
+            z-index: 3;
+        }
+        .card-front .name {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: white;
+            line-height: 1.05;
+            margin-bottom: 4px;
+        }
+        .card-front .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+        .card-front .flip-hint {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 700;
+            opacity: 0.85;
+        }
+        .card-front .flip-hint svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ============ BACK ============ */
+        .card-back {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
+            transform: translateZ(0) rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 22px 20px 18px;
+            color: white;
+        }
+        .card-back::before {
+            /* Diagonal foil sweep */
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg,
+                transparent 40%,
+                rgba(255,255,255,0.05) 50%,
+                transparent 60%);
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .card-back .back-area {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+        .card-back .back-area .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 12px rgba(255,255,255,0.7);
+        }
+        .card-back .back-name {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: 1.5px;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .card-back .back-divider {
+            width: 36px;
+            height: 2px;
+            background: white;
+            margin-bottom: 14px;
+            box-shadow: 0 0 8px rgba(255,255,255,0.6);
+        }
+        .card-back .back-desc {
+            font-size: 12px;
+            line-height: 1.55;
+            color: rgba(255,255,255,0.78);
+            margin-bottom: 16px;
+        }
+        .card-back .back-section {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+        }
+        .card-back .back-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 6px;
+            margin-bottom: auto;
+        }
+        .card-back .back-tag {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.85);
+        }
+        .card-back .back-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            margin-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 1px;
+        }
+        .card-back .view-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #0a0a0a;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+        .card-back .view-cta svg { width: 12px; height: 12px; }
+
+        @media (max-width: 1000px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .grid { grid-template-columns: 1fr; max-width: 340px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="page-header">
+    <h1>Trading Card Mockup</h1>
+    <p>Sports-style front · flip on hover · theme-color back</p>
+    <div class="hint">Hover any card to flip ↻</div>
+</header>
+
+<div class="grid">
+
+    <!-- ========== CAFÉ MEX ========== -->
+    <a class="card" href="projects/cafemex/cafemex.html">
+        <div class="card-inner">
+            <!-- FRONT -->
+            <div class="card-face card-front">
+                <div class="image"><img src="images/previews/cafemex-preview.jpg" alt=""></div>
+                <div class="area-ribbon">Branding &amp; Identity</div>
+                <div class="body">
+                    <div class="name">Café Mexicali</div>
+                    <div class="meta">
+                        <span>Sep 2025</span>
+                        <span class="flip-hint">Flip
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- BACK -->
+            <div class="card-face card-back">
+                <div class="back-area"><span class="dot"></span>Branding &amp; Identity</div>
+                <div class="back-name">Café Mexicali Rebrand</div>
+                <div class="back-divider"></div>
+                <div class="back-desc">Modernist refresh of a Mexican-Californian fusion restaurant. Identity system anchored on a single confident stroke.</div>
+                <div class="back-section">Tools</div>
+                <div class="back-tags">
+                    <span class="back-tag">Affinity Designer</span>
+                    <span class="back-tag">Brand Identity</span>
+                    <span class="back-tag">Print Design</span>
+                </div>
+                <div class="back-footer">
+                    <span>Sep 2025</span>
+                    <span class="view-cta">View
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <!-- ========== PHOTOGRAPHY ========== -->
+    <a class="card" href="projects/photography/photography.html">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <div class="image"><img src="projects/photography/images/IMG_8513_result.jpg" alt=""></div>
+                <div class="area-ribbon">Photography</div>
+                <div class="body">
+                    <div class="name">Photography</div>
+                    <div class="meta">
+                        <span>2017 — 2026</span>
+                        <span class="flip-hint">Flip
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-face card-back">
+                <div class="back-area"><span class="dot"></span>Photography</div>
+                <div class="back-name">Photography</div>
+                <div class="back-divider"></div>
+                <div class="back-desc">A magazine-style chronological archive of 62 frames, grouped by month with photo-derived color halos and snap navigation.</div>
+                <div class="back-section">Equipment &amp; Stack</div>
+                <div class="back-tags">
+                    <span class="back-tag">iPhone 15</span>
+                    <span class="back-tag">Canon G16</span>
+                    <span class="back-tag">Sharp · Node</span>
+                    <span class="back-tag">Vanilla JS</span>
+                </div>
+                <div class="back-footer">
+                    <span>2017 — 2026</span>
+                    <span class="view-cta">View
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <!-- ========== BLOT.WORLD ========== -->
+    <a class="card" href="#">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <div class="image"><img src="images/previews/inception-protection.png" alt=""></div>
+                <div class="area-ribbon">Web Design</div>
+                <div class="body">
+                    <div class="name">BLOT.WORLD</div>
+                    <div class="meta">
+                        <span>Sep 2025</span>
+                        <span class="flip-hint">Flip
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-face card-back">
+                <div class="back-area"><span class="dot"></span>Web Design</div>
+                <div class="back-name">BLOT.WORLD Portfolio</div>
+                <div class="back-divider"></div>
+                <div class="back-desc">The site you're looking at. Vanilla HTML/CSS/JS, no frameworks, custom build pipeline, deployed on GitHub Pages.</div>
+                <div class="back-section">Tech Stack</div>
+                <div class="back-tags">
+                    <span class="back-tag">HTML</span>
+                    <span class="back-tag">CSS</span>
+                    <span class="back-tag">JavaScript</span>
+                    <span class="back-tag">JSON</span>
+                    <span class="back-tag">Python</span>
+                    <span class="back-tag">GitHub Pages</span>
+                    <span class="back-tag">GA · GTM</span>
+                </div>
+                <div class="back-footer">
+                    <span>Sep 2025</span>
+                    <span class="view-cta">View
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+
+</div>
+
+</body>
+</html>

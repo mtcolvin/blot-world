@@ -524,6 +524,7 @@ main {
 
 #home .container {
 	overflow-x: visible;
+	width: 100%;
 }
 
 .hero-content {
@@ -969,14 +970,13 @@ main {
    ========================================================================== */
 
 .projects-preview-section {
-	padding: 3rem 2rem 0 2rem;
+	padding: 3rem 0 0 0;
 	opacity: 0;
 	visibility: hidden;
 	transform: translateY(20px);
 	transition: all 0.6s ease;
-	max-width: 1200px;
+	width: 80%;
 	margin: 0 auto;
-	width: 100%;
 }
 
 .projects-preview-section.visible {
@@ -991,6 +991,7 @@ main {
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 2rem;
+	text-align: left;
 }
 
 .projects-preview-header h3 {
@@ -998,15 +999,22 @@ main {
 	letter-spacing: -1px;
 	margin: 0;
 	text-transform: uppercase;
+	text-align: left;
 }
 
 .projects-preview-grid {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-	max-width: 886px;
-	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 4rem;
 	width: 100%;
+}
+
+/* Tablet — 2 columns to keep cards a comfortable size */
+@media (max-width: 1024px) {
+	.projects-preview-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem;
+	}
 }
 
 /* Mobile: Remove horizontal padding on projects preview */
@@ -1029,110 +1037,19 @@ main {
 		padding: 0 !important;
 	}
 
-	/* Project card mobile layout - compact footprint */
-	.project-card {
-		flex-direction: column !important;
-		min-height: auto;
-	}
-
-	.project-image {
-		width: 100%;
-		min-width: 100%;
-		height: 95px;
-		min-height: 95px;
-	}
-
-	.project-details {
-		display: grid !important;
+	/* Trading-card mobile sizing — single column, slightly taller aspect */
+	.projects-grid {
 		grid-template-columns: 1fr;
-		grid-auto-flow: row;
-		gap: 0.35rem;
-		padding: 0.75rem !important;
+		gap: 3.5rem;
 	}
-
-	.project-content-top {
-		display: contents !important;
+	.projects-preview-grid {
+		grid-template-columns: 1fr;
+		gap: 3.5rem;
 	}
-
-	.project-content-bottom {
-		display: contents !important;
-	}
-
-	/* Explicit grid row positioning - title first, then area badge */
-	.project-header {
-		grid-row: 1;
-		grid-column: 1;
-		max-width: 100% !important;
-		width: 100%;
-		margin-bottom: 0;
-	}
-
-	.project-header h3 {
-		line-height: 1.2;
-		font-size: 1rem;
-	}
-
-	.project-area-badge {
-		grid-row: 2 !important;
-		grid-column: 1 !important;
-		justify-self: start !important;
-		margin: 0.5rem 0 -0.25rem 0 !important;
-		padding: 0 !important;
-		align-items: flex-start;
-		justify-content: flex-start;
-		display: flex !important;
-		flex-direction: row;
-	}
-
-	.project-card p {
-		grid-row: 3;
-		grid-column: 1;
-		max-width: 100%;
-		padding-right: 0;
-		margin-top: -0.15rem;
-		font-size: 0.85rem;
-		line-height: 1;
-	}
-
-	.project-date-container {
-		grid-row: 4;
-		grid-column: 1;
-		position: static !important;
-		right: auto !important;
-		left: 0;
-		margin: 0.25rem 0 0 0 !important;
-		text-align: left !important;
-		width: 100%;
-	}
-
-	.project-date {
-		text-align: left !important;
-		display: block;
-	}
-
-	.project-tags {
-		display: contents !important;
-	}
-
-	/* Hide tech tags and header area badge on mobile */
-	.tech-tags-wrapper,
-	.project-tags .tag {
-		display: none !important;
-	}
-
-	.more-tag {
-		display: none !important;
-	}
-
-	/* Hide header area badge on mobile - only show project-area-badge */
-	.header-area-badge {
-		display: none !important;
-	}
-
-	.area-badge {
-		font-size: 0.65rem;
-		padding: 0.25rem 0.5rem;
-		border-radius: 0 !important;
+	.project-card-link {
+		max-width: 340px;
+		margin: 0 auto;
+		aspect-ratio: 3 / 4.4;
 	}
 }
 
@@ -1208,17 +1125,38 @@ main {
 }
 
 .projects-grid {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+	gap: 4.5rem;
 }
 
-/* Project Cards */
+/* ==========================================================================
+   PROJECT CARDS — Trading Card style with flip-on-hover
+   ========================================================================== */
+
 .project-card-link {
 	text-decoration: none;
 	color: inherit;
 	display: block;
-	width: 100%;
+	perspective: 1400px;
+	aspect-ratio: 3 / 4.4;
+	cursor: pointer;
+	position: relative;
+}
+
+/* Animated brand-gradient border — lives INSIDE the card-front so it:
+   1) flips with the card (hidden on the back via backface-visibility)
+   2) only appears on the front face
+   The mask trick (gradient bg + padding + xor/exclude composite) makes the
+   gradient visible only along the padding ring — i.e. just the border. */
+@property --card-border-angle {
+	syntax: '<angle>';
+	initial-value: 0deg;
+	inherits: false;
+}
+
+@keyframes card-border-spin {
+	to { --card-border-angle: 360deg; }
 }
 
 /* Hide poetry card by default */
@@ -1228,350 +1166,358 @@ main {
 	transform: scale(0.95);
 	transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
 #poetry-card.visible {
 	display: block !important;
 	opacity: 1 !important;
 	transform: scale(1) !important;
 	animation: fadeInScale 0.4s ease forwards;
 }
-
 @keyframes fadeInScale {
-	from {
-		opacity: 0;
-		transform: scale(0.95);
-	}
-	to {
-		opacity: 1;
-		transform: scale(1);
-	}
+	from { opacity: 0; transform: scale(0.95); }
+	to   { opacity: 1; transform: scale(1); }
 }
 
 .project-card {
-	background-color: var(--blot-dark-gray);
-	border: 1px solid var(--blot-gray);
-	border-radius: 5px;
-	transition: all var(--transition-base);
-	cursor: pointer;
 	position: relative;
-	display: flex;
-	overflow: hidden;
-	flex-direction: row;
 	width: 100%;
-	min-height: 180px;
-	isolation: isolate;
+	height: 100%;
+	transform-style: preserve-3d;
+	transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	min-height: 0;
+	overflow: visible;
+	display: block;
+	/* DO NOT set isolation:isolate here — it forces a 2D stacking context,
+	   which flattens preserve-3d and breaks the back face visibility. */
 }
-
-.project-card.hidden {
-	display: none;
-}
-
-.project-card.fade-out {
-	opacity: 0;
-	transform: scale(0.95);
-}
+.project-card.hidden { display: none; }
+.project-card.fade-out { opacity: 0; transform: scale(0.95); }
 
 .project-card-link:hover .project-card {
-	transform: translateY(-5px);
-	border-color: var(--blot-light-gray);
+	transform: rotateY(180deg);
 }
 
-.project-image {
-	width: 200px;
-	min-width: 200px;
-	height: 100%;
-	background: linear-gradient(135deg, var(--blot-dark-gray), var(--blot-gray));
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--blot-light-gray);
-	font-size: 0.85rem;
-	position: relative;
-	overflow: hidden;
-	z-index: 1;
+.card-face {
+	position: absolute;
+	inset: 0;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	border-radius: 14px;
+	/* clip-path instead of overflow:hidden — the latter breaks 3D
+	   backface rendering in Chrome/Safari */
+	clip-path: inset(0 round 14px);
+	transform: translateZ(0);
+	box-shadow:
+		0 0 0 1px rgba(255,255,255,0.06) inset,
+		0 18px 40px rgba(0,0,0,0.5);
+	text-align: left;
 }
 
-.project-image img {
+/* === FRONT === */
+.card-front {
+	background: #1a1a1a;
+}
+.card-front::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 14px;
+	padding: 3px;
+	background: conic-gradient(
+		from var(--card-border-angle),
+		var(--primary-blue),
+		var(--accent-red),
+		var(--primary-blue)
+	);
+	-webkit-mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	mask-composite: exclude;
+	pointer-events: none;
+	z-index: 4;
+	animation: card-border-spin 7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+	.card-front::before { animation: none; }
+}
+.card-front .card-image {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+.card-front .card-image img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	object-position: center;
-	transition: transform var(--transition-base);
 	display: block;
 }
-
-.project-card:hover .project-image img {
-	transform: scale(1.05);
-}
-
-.project-details {
-	padding: 1rem;
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	text-align: left;
-	justify-content: space-between;
-}
-
-.project-content-top {
-	display: flex;
-	flex-direction: column;
-	gap: 0.2rem;
-}
-
-.project-content-bottom {
-	display: flex;
-	flex-direction: column;
-	margin-top: auto;
-	flex: 0 0 auto;
-}
-
-.project-header {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 0.5rem;
-}
-
-.project-card h3 {
-	font-size: 2rem;
-	letter-spacing: -0.5px;
-	line-height: 1.1;
-	overflow-wrap: break-word;
-	word-break: break-word;
-	hyphens: auto;
-}
-
-.project-date-container {
-	margin: 0;
-}
-
-.project-date {
-	color: var(--blot-little-light-gray);
-	font-size: 1.2rem;
-	white-space: nowrap;
-	text-transform: uppercase;
-}
-
-.project-tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.4rem;
-	align-items: flex-end;
-}
-
-.tag {
-	padding: 0.2rem 0.6rem;
-	background-color: var(--blot-gray);
-	font-size: 0.8rem;
-	color: var(--blot-light-gray);
-	transition: all 0.2s ease;
-}
-
-/* Header area badge - hidden on mobile, shown on desktop */
-.header-area-badge {
-	display: none;
-}
-
-/* Desktop: Tags in separate scrollable column on the right */
-@media (min-width: 769px) {
-	.project-card {
-		position: relative;
-	}
-
-	.project-details {
-		padding: 1rem;
-		padding-right: 185px;
-		position: relative;
-	}
-
-	.project-content-top {
-		flex-direction: column;
-		gap: 0.2rem;
-	}
-
-	.project-date {
-		font-size: 1rem;
-	}
-
-	/* Area badge in header - shown on desktop */
-	.header-area-badge {
-		display: inline-block;
-		font-size: 0.65rem;
-	}
-
-	/* Tech tags column on the right */
-	.project-content-bottom {
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: 175px;
-		height: 100%;
-		border-left: 1px solid var(--blot-gray);
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Down arrow indicator when tags overflow */
-	.project-content-bottom.has-overflow::after {
-		content: '▼';
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		text-align: center;
-		font-size: 0.6rem;
-		color: var(--blot-light-gray);
-		background: linear-gradient(transparent, var(--blot-black) 60%);
-		padding: 1rem 0 0.3rem;
-		pointer-events: none;
-		opacity: 0.7;
-		transition: opacity 0.2s ease;
-	}
-
-	.project-card:hover .project-content-bottom.has-overflow::after {
-		opacity: 1;
-	}
-
-	.project-tags {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		padding: 0.8rem;
-		padding-bottom: 1.5rem;
-		overflow-y: auto;
-		flex: 1;
-		min-height: 0;
-		align-items: flex-start;
-		flex-wrap: nowrap;
-		box-sizing: border-box;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-
-	.project-tags::-webkit-scrollbar {
-		display: none;
-	}
-
-	.tag {
-		padding: 0.15rem 0.4rem;
-		font-size: 0.75rem;
-		white-space: nowrap;
-	}
-
-	/* Area badge at top of tags section - styled like tech tags */
-	.project-tags .project-area-badge {
-		order: -1;
-		margin: 0;
-		align-items: flex-start;
-		gap: 0;
-	}
-
-	.project-tags .area-badge {
-		padding: 0.15rem 0.4rem;
-		font-size: 0.75rem;
-		border-radius: 0;
-		text-transform: none;
-		letter-spacing: normal;
-		font-weight: normal;
-	}
-
-	/* Hide header area badge on desktop - showing in tags instead */
-	.header-area-badge {
-		display: none !important;
-	}
-}
-
-/* Hide series tags - series info is now in project titles */
-.series-tag {
-	display: none !important;
-}
-
-.project-card:hover .tag {
-	background-color: rgba(255, 255, 255, 0.1);
-}
-
-.project-area-badge {
-	margin-left: auto;
-	flex-shrink: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 0.5rem;
-}
-
-.area-badge {
-	display: inline-block;
-	padding: 0.2rem 0.5rem;
-	font-size: 0.65rem;
-	font-weight: 500;
-	letter-spacing: 0.5px;
-	text-transform: uppercase;
-	background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
-	color: var(--blot-white);
-	border-radius: 12px;
-	position: relative;
-	overflow: hidden;
-}
-
-.area-badge::before {
-	content: '';
+/* Black inner frame between the gradient border and the card content.
+   Inset by 2px (not 3px) so the black border overlaps the gradient's inner
+   edge by 1px — covers any subpixel gap from anti-aliasing. */
+.card-front::after {
+	content: "";
 	position: absolute;
-	top: 0;
+	inset: 2px;
+	border-radius: 12px;
+	border: 7px solid #000;
+	pointer-events: none;
+	z-index: 5;
+}
+
+.card-front .area-ribbon {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	color: white;
+	padding: 4px 10px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 8px;
+	font-weight: 700;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	border-radius: 3px;
+	z-index: 3;
+	overflow: hidden;
+	/* Signature brand gradient (blue → red), continuously sliding. */
+	background: linear-gradient(110deg,
+		var(--primary-blue) 0%,
+		var(--accent-red) 25%,
+		var(--primary-blue) 50%,
+		var(--accent-red) 75%,
+		var(--primary-blue) 100%
+	);
+	background-size: 200% 100%;
+	animation: ribbon-gradient 4s linear infinite;
+	box-shadow:
+		0 3px 10px rgba(13, 40, 242, 0.35),
+		0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes ribbon-gradient {
+	from { background-position: 0% 50%; }
+	to   { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.card-front .area-ribbon { animation: none; }
+}
+.card-front .body {
+	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
-	opacity: 0;
-	transition: opacity var(--transition-base);
+	padding: 70px 14px 12px;
+	background: linear-gradient(180deg, transparent, rgba(0,0,0,0.96) 65%);
+	z-index: 3;
 }
-
-.project-card:hover .area-badge::before {
-	opacity: 1;
+.card-front .card-name {
+	font-family: "Bebas Neue", sans-serif;
+	font-size: 20px;
+	letter-spacing: 1.5px;
+	color: white;
+	line-height: 1.05;
+	margin-bottom: 4px;
 }
-
-/* Series Tag */
-.series-tag {
-	display: inline-block;
-	padding: 0.2rem 0.6rem;
-	font-size: 0.6rem;
-	font-weight: 600;
+.card-front .meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	color: rgba(255,255,255,0.65);
 	letter-spacing: 1px;
 	text-transform: uppercase;
-	background: rgba(255, 255, 255, 0.08);
-	color: var(--blot-light-gray);
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	border-radius: 6px;
-	position: relative;
+	padding-top: 8px;
+	border-top: 1px solid rgba(255,255,255,0.12);
+}
+.card-front .meta > span:first-child {
+	white-space: nowrap;
 	overflow: hidden;
-	transition: all 0.2s ease;
-	align-self: baseline;
-	margin-top: 0.2rem;
+	text-overflow: ellipsis;
+	min-width: 0;
 }
+.card-front .meta .flip-hint {
+	flex-shrink: 0;
+	white-space: nowrap;
+}
+.card-front .flip-hint {
+	color: white;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-weight: 700;
+	opacity: 0.85;
+}
+.card-front .flip-hint svg { width: 12px; height: 12px; }
 
-.series-tag::before {
-	content: '';
+/* === BACK === */
+.card-back {
+	background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
+	transform: translateZ(0) rotateY(180deg);
+	display: flex;
+	flex-direction: column;
+	padding: 16px 14px 14px;
+	color: white;
+}
+.card-back::before {
+	content: "";
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-	opacity: 0;
-	transition: opacity var(--transition-base);
+	inset: 0;
+	background: linear-gradient(115deg,
+		transparent 40%,
+		rgba(255,255,255,0.05) 50%,
+		transparent 60%);
+	pointer-events: none;
+	opacity: 0.6;
+}
+.card-back .back-area {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 9px;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	color: white;
+	margin-bottom: 10px;
+	font-weight: 700;
+}
+.card-back .back-area .dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: white;
+	box-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+.card-back .back-name {
+	font-family: "Bebas Neue", sans-serif;
+	font-size: 21px;
+	letter-spacing: 1.2px;
+	line-height: 1;
+	margin-bottom: 5px;
+	color: white;
+}
+.card-back .back-divider {
+	width: 28px;
+	height: 2px;
+	background: white;
+	margin-bottom: 10px;
+	box-shadow: 0 0 8px rgba(255,255,255,0.6);
+}
+.card-back .back-desc {
+	font-size: 11px;
+	line-height: 1.5;
+	color: rgba(255,255,255,0.92);
+	margin-bottom: 12px;
+}
+.card-back .back-section {
+	font-family: "JetBrains Mono", monospace;
+	font-size: 9px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.75);
+	margin-bottom: 8px;
+}
+.card-back .back-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px 6px;
 }
 
-.project-card:hover .series-tag {
-	background: rgba(255, 255, 255, 0.12);
-	border-color: rgba(255, 255, 255, 0.25);
-	color: var(--blot-white);
+/* Scrollable region — everything above the footer scrolls together */
+.card-back .back-scroll {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding-right: 4px;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+.card-back .back-scroll::-webkit-scrollbar {
+	width: 4px;
+}
+.card-back .back-scroll::-webkit-scrollbar-track {
+	background: transparent;
+}
+.card-back .back-scroll::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.35);
+	border-radius: 2px;
+}
+.card-back .back-tag {
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	letter-spacing: 0.5px;
+	padding: 3px 8px;
+	border-radius: 3px;
+	background: rgba(255,255,255,0.12);
+	border: 1px solid rgba(255,255,255,0.22);
+	color: rgba(255,255,255,0.96);
+	white-space: nowrap;
+}
+.card-back .back-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	padding-top: 14px;
+	margin-top: 14px;
+	border-top: 1px solid rgba(255,255,255,0.22);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	color: rgba(255,255,255,0.78);
+	letter-spacing: 1px;
+}
+.card-back .back-footer > span:first-child {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-width: 0;
+}
+.card-back .back-footer .view-cta {
+	flex-shrink: 0;
+}
+.card-face.card-back .view-cta,
+.card-back .back-footer .view-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	color: #0a0a0a;
+	background: #ffffff;
+	padding: 6px 12px;
+	border-radius: 4px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+	text-decoration: none;
+	line-height: 1;
+}
+.card-face.card-back .view-cta svg,
+.card-back .back-footer .view-cta svg {
+	width: 12px;
+	height: 12px;
+	stroke: currentColor;
+	flex-shrink: 0;
 }
 
-.project-card:hover .series-tag::before {
-	opacity: 1;
+/* Touch devices (no hover) — disable the flip; show only the front.
+   The back content is still in DOM for accessibility/future toggling. */
+@media (hover: none) {
+	.project-card-link:hover .project-card { transform: none; }
 }
+
+/* Hide series tags — series info now lives in project titles */
+.series-tag { display: none !important; }
 
 /* AI Project Cards */
 .project-card.ai-project {

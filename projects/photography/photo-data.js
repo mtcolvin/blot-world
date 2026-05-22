@@ -51,15 +51,13 @@
         { file: 'IMG_1238_result2.jpg',                   date: '2025-11-09', location: 'Grand Junction, CO' },
         { file: 'IMG_1264_result1.jpg',                   date: '2025-11-09', location: 'Grand Junction, CO' },
         { file: 'IMG_1443_result_1.jpg',                  date: '2025-11-13', location: 'Fort Collins, CO' },
-        { file: 'IMG_1463_result.jpg',                    date: '2025-11-16', location: 'Poudre Canyon, CO' },
-        { file: 'IMG_1507_result.jpg',                    date: '2025-11-24', location: 'Greeley, CO' },
-        { file: 'IMG_1574_result.jpg',                    date: '2025-11-27', location: 'Park City, UT' },
-        { file: 'IMG_1648_result.jpg',                    date: '2025-11-28', location: 'Park City, UT' },
-        { file: 'IMG_1649_result.jpg',                    date: '2025-11-28', location: 'Park City, UT' },
-        { file: 'IMG_1659_result.jpg',                    date: '2025-11-28', location: 'Park City, UT' },
+        { file: 'IMG_1463_result.jpg',                    date: '2025-11-16', location: 'near Poudre Canyon, CO' },
+        { file: 'IMG_1507_result.jpg',                    date: '2025-11-24', location: 'near Timnath, CO' },
+        { file: 'IMG_1574_result.jpg',                    date: '2025-11-27', location: 'Heber City, UT' },
+        { file: 'IMG_1648_result.jpg',                    date: '2025-11-28', location: 'Hidden Peak, UT' },
+        { file: 'IMG_1649_result.jpg',                    date: '2025-11-28', location: 'Hidden Peak, UT' },
+        { file: 'IMG_1659_result.jpg',                    date: '2025-11-28', location: 'Hidden Peak, UT' },
 
-        { file: 'IMG_1790_result.jpg',                    date: '2025-12-03', location: 'Greeley, CO' },
-        { file: 'IMG_1795_result.jpg',                    date: '2025-12-04', location: 'Greeley, CO' },
         { file: 'IMG_1850_result.jpg',                    date: '2025-12-08', location: 'Estes Park, CO' },
         { file: 'IMG_1867_result.jpg',                    date: '2025-12-08', location: 'Estes Park, CO' },
         { file: 'IMG_1907_result.jpg',                    date: '2025-12-08', location: 'Rocky Mountain NP, CO' },
@@ -78,7 +76,6 @@
         { file: 'IMG_2319_result.jpg',                    date: '2025-12-29', location: 'Wyoming' },
         { file: 'IMG_2397_result.jpg',                    date: '2025-12-30', location: 'Park City, UT' },
 
-        { file: 'IMG_2596_result.jpg',                    date: '2026-01-17', location: 'Greeley, CO' },
-        { file: 'IMG_2603_result.jpg',                    date: '2026-01-18', location: 'Greeley, CO' }
+        { file: 'IMG_2596_result.jpg',                    date: '2026-01-17', location: 'Greeley, CO' }
     ];
 })();
