@@ -42,9 +42,9 @@
         }
 		
 		:root {
-			--upon-cream: #fefefe;
-			--upon-warm-white: #f9f9f9;
-			--upon-warm-white-dark: #e8e8e8;
+			--upon-near-white: #fefefe;
+			--upon-off-white: #f9f9f9;
+			--upon-light-gray: #e8e8e8;
 			--upon-ink: #1a1a1a;
 			--upon-faded-ink: #888888;
 			--upon-accent: #4a4a4a;
@@ -84,7 +84,7 @@
 		}
         
         body {            
-            background: var(--upon-warm-white-dark);
+            background: var(--upon-light-gray);
             color: var(--upon-ink);
             line-height: 1.8;
             overflow-x: hidden;
@@ -166,7 +166,7 @@
             padding: 0.5rem;
             width: 36px;
             height: 36px;
-            background: var(--upon-cream);
+            background: var(--upon-near-white);
             border: 1px solid var(--upon-border);
             color: var(--upon-faded-ink);
             cursor: pointer;
@@ -181,13 +181,13 @@
         .nav-btn:hover {
             border-color: var(--upon-accent-light);
             color: var(--upon-ink);
-            background: var(--upon-warm-white);
+            background: var(--upon-off-white);
         }
         
         .nav-btn.active {
             background: var(--upon-ink);
             border-color: var(--upon-ink);
-            color: var(--upon-cream);
+            color: var(--upon-near-white);
         }
         
         /* Tooltip */
@@ -196,7 +196,7 @@
             position: absolute;
             right: calc(100% + 1rem);
             background: var(--upon-ink);
-            color: var(--upon-cream);
+            color: var(--upon-near-white);
             padding: 0.5rem 0.75rem;
             border-radius: 4px;
             font-size: 0.8rem;
@@ -241,7 +241,7 @@
         
         /* Individual poem page */
         .poem-page {
-            background: var(--upon-cream);
+            background: var(--upon-near-white);
             padding: 3rem 2.5rem;
             border: 2px solid var(--upon-border);
             position: relative;
@@ -312,7 +312,7 @@
             display: none;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             /* Mobile mininav colors - uses defaults from minimal-nav.css */
             /* Override with: --mininav-mobile-bg, --mininav-mobile-border, --mininav-mobile-color */
 
@@ -388,7 +388,7 @@
                 left: 50%;
                 transform: translateX(-50%);
                 background: var(--upon-ink);
-                color: var(--upon-cream);
+                color: var(--upon-near-white);
                 padding: 6px 12px;
                 border-radius: 4px;
                 font-family: 'EB Garamond', serif;
@@ -467,7 +467,7 @@
 
         /* Safe area for notched devices */
         @supports (padding: env(safe-area-inset-bottom)) {
-            @media (max-width: 768px) {
+            @media (max-width: 640px) {
                 nav#poem-nav {
                     padding-bottom: calc(12px + env(safe-area-inset-bottom));
                 }

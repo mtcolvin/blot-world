@@ -283,7 +283,7 @@ nav {
 }
 
 /* Reduce social spacing on desktop */
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
 	.social-icons {
 		gap: 0.5rem;
 	}
@@ -573,7 +573,7 @@ main {
 }
 
 /* Desktop: balanced spacing */
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
 	.hero-brand:first-of-type {
 		transform: translateX(-90px);
 	}
@@ -956,7 +956,7 @@ main {
 	height: 15px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
 	.bg-toggle-btn {
 		bottom: 1.5rem;
 		right: 1.5rem;
@@ -1018,7 +1018,7 @@ main {
 }
 
 /* Mobile: Remove horizontal padding on projects preview */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
 	.projects-preview-section {
 		padding-left: 0;
 		padding-right: 0;
@@ -1195,8 +1195,10 @@ main {
 .project-card.hidden { display: none; }
 .project-card.fade-out { opacity: 0; transform: scale(0.95); }
 
-.project-card-link:hover .project-card {
-	transform: rotateY(180deg);
+@media (hover: hover) {
+	.project-card-link:hover .project-card {
+		transform: rotateY(180deg);
+	}
 }
 
 .card-face {
@@ -1313,7 +1315,7 @@ main {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	padding: 70px 14px 12px;
+	padding: clamp(36px, 18%, 70px) 14px 12px;
 	background: linear-gradient(180deg, transparent, rgba(0,0,0,0.96) 65%);
 	z-index: 3;
 }
@@ -1461,6 +1463,11 @@ main {
 	border: 1px solid rgba(255,255,255,0.22);
 	color: rgba(255,255,255,0.96);
 	white-space: nowrap;
+	transition: background 0.2s ease, border-color 0.2s ease;
+}
+.card-back .back-tag:hover {
+	background: rgba(255,255,255,0.2);
+	border-color: rgba(255,255,255,0.35);
 }
 .card-back .back-footer {
 	display: flex;
@@ -1510,10 +1517,9 @@ main {
 	flex-shrink: 0;
 }
 
-/* Touch devices (no hover) — disable the flip; show only the front.
-   The back content is still in DOM for accessibility/future toggling. */
+/* Touch devices: JS adds .flipped on tap; tap again navigates the anchor. */
 @media (hover: none) {
-	.project-card-link:hover .project-card { transform: none; }
+	.project-card-link.flipped .project-card { transform: rotateY(180deg); }
 }
 
 /* Hide series tags — series info now lives in project titles */
@@ -2313,7 +2319,7 @@ body:has(#projects.active) .filter-sidebar {
 	}
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
 	/* Mobile navbar: hamburger on left, logo centered, filter on right */
 	.mobile-menu-btn {
 		align-items: center;
@@ -3289,7 +3295,7 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 /* Responsive for minimal nav */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .minimal-nav {
         top: 15px;
         left: 15px;
@@ -3749,7 +3755,7 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .about-content {
         padding: 0 20px;
     }
@@ -4174,7 +4180,7 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .blog-header-layout {
         flex-direction: column;
         align-items: flex-start;
@@ -4391,7 +4397,7 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 /* Responsive Post Styles */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .post-section .post-container {
         padding: 0 20px;
     }

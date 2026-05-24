@@ -152,7 +152,7 @@ nav.minimal-nav:hover .logo-fill {
 }
 
 /* Mobile mininav styles */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   nav.minimal-nav {
     width: 100% !important;
     height: auto;

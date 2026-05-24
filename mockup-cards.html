@@ -89,8 +89,12 @@
             transform-style: preserve-3d;
             transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-        .card:hover .card-inner {
-            transform: rotateY(180deg);
+        @media (hover: hover) {
+            .card:hover .card-inner { transform: rotateY(180deg); }
+        }
+        /* Touch devices: JS toggles .flipped on tap. */
+        @media (hover: none) {
+            .card.flipped .card-inner { transform: rotateY(180deg); }
         }
 
         .card-face {
@@ -315,7 +319,7 @@
         }
         .card-back .view-cta svg { width: 12px; height: 12px; }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 1024px) {
             .grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 640px) {
@@ -328,7 +332,7 @@
 <header class="page-header">
     <h1>Trading Card Mockup</h1>
     <p>Sports-style front · flip on hover · theme-color back</p>
-    <div class="hint">Hover any card to flip ↻</div>
+    <div class="hint" id="cardHint">Hover any card to flip ↻</div>
 </header>
 
 <div class="grid">
@@ -414,7 +418,7 @@
     <a class="card" href="#">
         <div class="card-inner">
             <div class="card-face card-front">
-                <div class="image"><img src="images/previews/inception-protection.png" alt=""></div>
+                <div class="image"><img src="images/previews/inception-protection.jpg" alt=""></div>
                 <div class="area-ribbon">Web Design</div>
                 <div class="body">
                     <div class="name">BLOT.WORLD</div>
@@ -452,6 +456,30 @@
     </a>
 
 </div>
+
+<script>
+    // Touch-device: tap to flip, tap again on flipped card to navigate, tap outside to unflip.
+    if (matchMedia('(hover: none)').matches) {
+        const hint = document.getElementById('cardHint');
+        if (hint) hint.textContent = 'Tap to flip, tap again to open ↻';
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('click', e => {
+                if (!card.classList.contains('flipped')) {
+                    e.preventDefault();
+                    cards.forEach(c => { if (c !== card) c.classList.remove('flipped'); });
+                    card.classList.add('flipped');
+                }
+                // Second tap: do nothing — anchor navigation proceeds.
+            });
+        });
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.card')) {
+                cards.forEach(c => c.classList.remove('flipped'));
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

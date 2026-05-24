@@ -1022,6 +1022,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateProjectCounter();
 
+    // Touch-device project cards: tap to flip, tap again to navigate, tap outside to unflip.
+    if (matchMedia('(hover: none)').matches) {
+        const cardLinks = document.querySelectorAll('.project-card-link');
+        cardLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!link.classList.contains('flipped')) {
+                    e.preventDefault();
+                    cardLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
+                    link.classList.add('flipped');
+                }
+                // Second tap: anchor navigation proceeds.
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.project-card-link')) {
+                cardLinks.forEach(l => l.classList.remove('flipped'));
+            }
+        });
+    }
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -1082,6 +1102,24 @@ document.addEventListener('DOMContentLoaded', function() {
             filterOverlay.classList.remove('active');
             document.body.style.overflow = '';
         });
+
+        // Touch swipe-right to dismiss (sidebar slides in from the right).
+        let fsStartX = 0, fsStartY = 0;
+        filterSidebar.addEventListener('touchstart', e => {
+            fsStartX = e.touches[0].clientX;
+            fsStartY = e.touches[0].clientY;
+        }, { passive: true });
+        filterSidebar.addEventListener('touchend', e => {
+            if (!filterSidebar.classList.contains('active')) return;
+            const t = e.changedTouches[0];
+            const dx = t.clientX - fsStartX;
+            const dy = t.clientY - fsStartY;
+            if (dx > 80 && Math.abs(dy) < 60) {
+                filterSidebar.classList.remove('active');
+                filterOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }, { passive: true });
     }
 
     NightSky.init();
@@ -1647,6 +1685,24 @@ const QuoteRotator = {
     setupEventListeners() {
         document.getElementById('quote-prev')?.addEventListener('click', () => this.prevQuote());
         document.getElementById('quote-next')?.addEventListener('click', () => this.nextQuote());
+
+        // Touch swipe — left = next, right = previous.
+        const container = document.getElementById('rotating-quote');
+        if (!container) return;
+        let startX = 0, startY = 0;
+        container.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+        container.addEventListener('touchend', e => {
+            const t = e.changedTouches[0];
+            const dx = t.clientX - startX;
+            const dy = t.clientY - startY;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                if (dx < 0) this.nextQuote();
+                else this.prevQuote();
+            }
+        }, { passive: true });
     },
 
     showQuote(index) {

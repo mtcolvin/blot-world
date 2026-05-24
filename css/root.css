@@ -1,3 +1,19 @@
+/* ============================================================
+   RESPONSIVE BREAKPOINTS — 3-tier convention (site-wide)
+   ------------------------------------------------------------
+   Desktop:  >= 1025px       (default styles, no media query)
+   Tablet:   <= 1024px       @media (max-width: 1024px)
+   Mobile:   <=  640px       @media (max-width: 640px)
+
+   Conventions:
+   - Mobile-first cascade: tablet rules also apply to mobile
+     unless mobile re-declares them.
+   - Use (max-width: ...) only. Avoid (min-width: 1025px) — it
+     fights the cascade above.
+   - Use (hover: hover) / (hover: none) for pointer-capability
+     gating, NOT viewport width.
+   - Use (prefers-reduced-motion: reduce) where animation runs.
+   ============================================================ */
 :root {
 	  --mininav-spacing: 18px;
 	  --mininav-height: 40px;
@@ -20,7 +36,7 @@
 	--gradient-blue: #0D28F2;
 	
 	/* Sizing */
-	--headshot-size: 130px;
+	--headshot-size: clamp(80px, 22vw, 130px);
 	--nav-height: 65px;
 	
 	/* Font Variation Settings */

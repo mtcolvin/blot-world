@@ -191,9 +191,18 @@
             pointer-events: none;
         }
 
-        .piece:hover .piece-info {
-            opacity: 1;
-            transform: translateY(0);
+        @media (hover: hover) {
+            .piece:hover .piece-info {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Touch devices: tap on the piece reveals the info overlay. */
+        @media (hover: none) {
+            .piece.touched .piece-info {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .piece-title {
@@ -237,7 +246,7 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             .gallery {
                 flex-direction: column;
                 gap: 3vh;
@@ -358,7 +367,7 @@
     <script src="../../js/minimal-nav.js"></script>
 
 	<script>
-		// Background color shift on hover
+		// Background color shift on hover (desktop)
 		document.querySelectorAll('.piece').forEach(piece => {
 			piece.addEventListener('mouseenter', () => {
 				document.body.className = piece.dataset.slug === 'joni' ? 'joni-hover' : '';
@@ -367,6 +376,28 @@
 				document.body.className = '';
 			});
 		});
+
+		// Touch devices: tap to reveal info + shift background; tap outside to clear.
+		if (matchMedia('(hover: none)').matches) {
+			const pieces = document.querySelectorAll('.piece');
+			pieces.forEach(piece => {
+				piece.addEventListener('click', e => {
+					e.stopPropagation();
+					const wasTouched = piece.classList.contains('touched');
+					pieces.forEach(p => p.classList.remove('touched'));
+					if (!wasTouched) {
+						piece.classList.add('touched');
+						document.body.className = piece.dataset.slug === 'joni' ? 'joni-hover' : '';
+					} else {
+						document.body.className = '';
+					}
+				});
+			});
+			document.addEventListener('click', () => {
+				pieces.forEach(p => p.classList.remove('touched'));
+				document.body.className = '';
+			});
+		}
 
 		// Disable right-click on images
 		document.addEventListener('contextmenu', function(e) {

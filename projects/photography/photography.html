@@ -75,10 +75,18 @@
 
         html {
             scroll-behavior: smooth;
-            /* `proximity` instead of `mandatory` — mandatory was re-snapping
-               to the nearest section on every zoom/resize, yanking the user
-               back to the top of the current photo. */
-            scroll-snap-type: y proximity;
+            /* Mandatory snap gives the magazine page-by-page feel.
+               When the user zooms (pinch or browser zoom), JS adds the
+               `zoomed` class which turns snap OFF — otherwise mandatory
+               snap re-snaps on every zoom/resize and yanks the user
+               back to the section top. */
+            scroll-snap-type: y mandatory;
+        }
+        html.zoomed { scroll-snap-type: none !important; }
+        html.zoomed .issue,
+        html.zoomed .year-break {
+            scroll-snap-align: none !important;
+            scroll-snap-stop: normal !important;
         }
         body {
             font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -371,9 +379,19 @@
             transform: translateY(6px);
             transition: all 0.3s ease;
         }
-        .frame:hover .caption {
-            opacity: 1;
-            transform: translateY(0);
+        @media (hover: hover) {
+            .frame:hover .caption {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Touch devices: captions are always visible (no hover state). */
+        @media (hover: none) {
+            .caption {
+                opacity: 1;
+                transform: none;
+                font-size: 11px;
+            }
         }
         .caption .loc {
             color: #fff;
@@ -427,6 +445,10 @@
             max-width: 90vw;
             max-height: 90vh;
             object-fit: contain;
+            transform-origin: center;
+            transition: transform 0.2s ease;
+            will-change: transform;
+            touch-action: none;
         }
         .lightbox-close {
             position: absolute;
@@ -467,11 +489,54 @@
         .lightbox-nav.next:hover { transform: translateY(-50%) translateX(3px); }
         .lightbox-nav svg { width: 22px; height: 22px; }
 
-        @media (max-width: 600px) {
-            .lightbox-nav { width: 40px; height: 40px; }
+        @media (max-width: 640px) {
+            .lightbox-nav { width: 44px; height: 44px; }
             .lightbox-nav.prev { left: 12px; }
             .lightbox-nav.next { right: 12px; }
             .lightbox-nav svg { width: 18px; height: 18px; }
+        }
+
+        /* Mobile spine — horizontal chip strip, shown when desktop spine is hidden.
+           Sticks below the minimal nav. Auto-scrolls active chip into view. */
+        .spine-mobile {
+            display: none;
+            position: sticky;
+            top: 64px;
+            z-index: 40;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            white-space: nowrap;
+        }
+        .spine-mobile::-webkit-scrollbar { display: none; }
+        .spine-mobile .chip {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-right: 6px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            text-transform: uppercase;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .spine-mobile .chip:last-child { margin-right: 0; }
+        .spine-mobile .chip.active {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .spine-mobile .chip .year {
+            opacity: 0.5;
+            margin-left: 4px;
         }
 
         /* Loading shim */
@@ -492,9 +557,17 @@
         }
         .page-loading.hidden { opacity: 0; pointer-events: none; }
 
-        @media (max-width: 900px) {
+        /* Tablet — hide rail, show mobile chip strip, reduce padding. */
+        @media (max-width: 1024px) {
             :root { --rail-width: 0px; }
             .spine { display: none; }
+            .spine-mobile { display: block; }
+            .issue { padding: 80px 32px 40px; }
+            .year-break { padding: 80px 32px 40px; }
+            .layout-filmstrip .frame { height: min(60vh, 460px); }
+        }
+        /* Mobile — tighter padding, reflow issue-head, smaller typography. */
+        @media (max-width: 640px) {
             .issue { padding: 80px 20px 40px; }
             .issue-head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; padding-bottom: 14px; }
             .issue-month { font-size: 22px; letter-spacing: 2px; }
@@ -553,6 +626,9 @@
 
     <!-- In-page Spine Navigation (generated by JS) -->
     <nav class="spine" id="spine"></nav>
+
+    <!-- Mobile chip strip (generated by JS, shown <=1024px) -->
+    <nav class="spine-mobile" id="spine-mobile" aria-label="Months"></nav>
 
     <!-- Main content (issues generated by JS) -->
     <main class="main" id="main"></main>
@@ -675,6 +751,16 @@
         }
         spine.innerHTML = spineHTML;
 
+        // ============ Build the mobile chip strip ============
+        const spineMobile = document.getElementById('spine-mobile');
+        let chipHTML = '';
+        for (const g of orderedMonths) {
+            const monthIdx = parseInt(g.month, 10);
+            const id = `m-${g.year}-${g.month}`;
+            chipHTML += `<a href="#${id}" class="chip" data-target="${id}">${MONTH_SHORT[monthIdx]}<span class="year">${g.year.slice(2)}</span></a>`;
+        }
+        spineMobile.innerHTML = chipHTML;
+
         // ============ Build the main month sections ============
         const main = document.getElementById('main');
         let mainHTML = '';
@@ -737,11 +823,15 @@
         // ============ Lightbox with prev/next navigation ============
         const allFrames = Array.from(document.querySelectorAll('.frame'));
         let lightboxIdx = 0;
+        let lightboxScale = 1;
 
         function showLightboxFrame(idx) {
             lightboxIdx = (idx + allFrames.length) % allFrames.length;
             const src = allFrames[lightboxIdx].getAttribute('data-src');
-            document.getElementById('lightbox-img').src = src;
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightboxScale = 1;
+            img.style.transform = '';
         }
 
         allFrames.forEach((frame, idx) => {
@@ -770,6 +860,65 @@
             else if (e.key === 'ArrowRight') window.navLightbox(1);
         });
 
+        // ============ Touch: 1-finger swipe nav/dismiss, 2-finger pinch zoom ============
+        (function () {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            let startX = 0, startY = 0;
+            let initialPinchDist = 0;
+            let initialScale = 1;
+            let fingerCount = 0;
+
+            function pinchDist(t) {
+                const dx = t[0].clientX - t[1].clientX;
+                const dy = t[0].clientY - t[1].clientY;
+                return Math.hypot(dx, dy);
+            }
+
+            lightbox.addEventListener('touchstart', e => {
+                fingerCount = e.touches.length;
+                if (fingerCount === 2) {
+                    initialPinchDist = pinchDist(e.touches);
+                    initialScale = lightboxScale;
+                } else if (fingerCount === 1) {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            lightbox.addEventListener('touchmove', e => {
+                if (e.touches.length === 2 && initialPinchDist > 0) {
+                    e.preventDefault();
+                    const dist = pinchDist(e.touches);
+                    const next = Math.max(0.5, Math.min(5, initialScale * (dist / initialPinchDist)));
+                    lightboxScale = next;
+                    img.style.transform = `scale(${next})`;
+                }
+            }, { passive: false });
+
+            lightbox.addEventListener('touchend', e => {
+                // Only handle gestures after the last finger lifts AND we're at base scale.
+                if (e.touches.length > 0) return;
+                if (fingerCount === 1 && lightboxScale === 1) {
+                    const t = e.changedTouches[0];
+                    const dx = t.clientX - startX;
+                    const dy = t.clientY - startY;
+                    const absX = Math.abs(dx), absY = Math.abs(dy);
+                    if (absX > 50 && absX > absY) {
+                        window.navLightbox(dx < 0 ? 1 : -1);
+                    } else if (dy > 80 && absY > absX) {
+                        window.closeLightbox({ target: lightbox, currentTarget: lightbox });
+                    }
+                } else if (fingerCount === 2 && lightboxScale < 1.1) {
+                    // Pinched back near 1 — snap to base scale.
+                    lightboxScale = 1;
+                    img.style.transform = '';
+                }
+                fingerCount = 0;
+                initialPinchDist = 0;
+            }, { passive: true });
+        })();
+
         // ============ Spine click → set active (no scroll auto-tracking) ============
         const spineLinks = document.querySelectorAll('.spine-month');
         spineLinks.forEach(link => {
@@ -780,6 +929,34 @@
         });
         // Default-active: first month
         if (spineLinks[0]) spineLinks[0].classList.add('active');
+
+        // ============ Mobile chip strip: scrollspy + auto-scroll active into view ============
+        const mobileChips = Array.from(document.querySelectorAll('.spine-mobile .chip'));
+        const chipById = new Map();
+        mobileChips.forEach(c => chipById.set(c.getAttribute('data-target'), c));
+        if (mobileChips.length) {
+            mobileChips[0].classList.add('active');
+            const setActive = id => {
+                const chip = chipById.get(id);
+                if (!chip || chip.classList.contains('active')) return;
+                mobileChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                // Keep active chip in view without scrolling the page
+                const strip = chip.parentElement;
+                const targetLeft = chip.offsetLeft - (strip.clientWidth / 2) + (chip.offsetWidth / 2);
+                strip.scrollTo({ left: targetLeft, behavior: 'smooth' });
+            };
+            const issueObserver = new IntersectionObserver(entries => {
+                // Pick the entry with the largest intersection ratio that's visible
+                let best = null;
+                for (const e of entries) {
+                    if (!e.isIntersecting) continue;
+                    if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+                }
+                if (best) setActive(best.target.id);
+            }, { rootMargin: '-40% 0px -40% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+            document.querySelectorAll('.issue').forEach(el => issueObserver.observe(el));
+        }
 
         // ============ Filmstrip scroll progress + end-state ============
         document.querySelectorAll('.strip-wrap').forEach(wrap => {
@@ -935,6 +1112,50 @@
                 if (rgb) applyIssueColor(issue, rgb);
             });
         });
+
+        // ============ Disable scroll-snap while zoomed ============
+        // Mandatory snap fights zoom: every zoom-induced reflow re-snaps to
+        // the current section's top. We watch two signals and toggle the
+        // `zoomed` class on <html> to disable snap during zoom.
+        //
+        //  - Pinch zoom (touch): visualViewport.scale > 1
+        //  - Browser zoom (desktop Ctrl+/-, trackpad pinch): devicePixelRatio
+        //    changes. resize events are unreliable for this, so we listen to
+        //    a matchMedia query on the CURRENT dppx — it fires `change` the
+        //    instant zoom shifts the DPR, and we re-arm on a new dppx value.
+        (function () {
+            const html = document.documentElement;
+            const baseDpr = window.devicePixelRatio || 1;
+            let zoomed = false;
+            let dprMq = null;
+
+            function isZoomed() {
+                const vvScale = (window.visualViewport && window.visualViewport.scale) || 1;
+                if (vvScale > 1.02) return true;
+                const dprRatio = (window.devicePixelRatio || 1) / baseDpr;
+                if (dprRatio > 1.02 || dprRatio < 0.98) return true;
+                return false;
+            }
+            function sync() {
+                const now = isZoomed();
+                if (now !== zoomed) {
+                    zoomed = now;
+                    html.classList.toggle('zoomed', zoomed);
+                }
+                rearmDprWatcher();
+            }
+            function rearmDprWatcher() {
+                if (dprMq) dprMq.removeEventListener('change', sync);
+                dprMq = matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+                dprMq.addEventListener('change', sync, { once: true });
+            }
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', sync);
+                window.visualViewport.addEventListener('scroll', sync);
+            }
+            window.addEventListener('resize', sync);
+            sync();
+        })();
 
         // ============ Hide loading shim once first issue is interactive ============
         requestAnimationFrame(() => {
