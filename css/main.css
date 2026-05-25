@@ -2697,11 +2697,6 @@ body:has(#projects.active) .filter-sidebar {
 
 	/* No hover effects on touch devices */
 
-	.project-card {
-		border-radius: 12px;
-		overflow: hidden;
-	}
-
 	.project-image {
 		height: 95px;
 		min-height: 95px;
