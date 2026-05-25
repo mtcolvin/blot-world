@@ -1225,7 +1225,6 @@ main {
 /* === FRONT === */
 .card-front {
 	background: #1a1a1a;
-	transform: rotateY(0deg);
 }
 .card-front::before {
 	content: "";
@@ -1527,17 +1526,18 @@ main {
    Why: `backface-visibility: hidden` is unreliable on mobile Chromium /
    WebKit when combined with clip-path / nested transforms — the front
    face shows through mirrored after the rotation. Crossfading both
-   faces sidesteps the entire backface culling pipeline. */
+   faces sidesteps the entire backface culling pipeline.
+   Both faces get `transform: none` so no 3D rotation happens; z-index
+   makes the back layer above the front for the crossfade. */
 @media (hover: none) {
 	.card-face {
-		backface-visibility: visible;
-		-webkit-backface-visibility: visible;
+		backface-visibility: visible !important;
+		-webkit-backface-visibility: visible !important;
+		transform: none !important;
 		transition: opacity 0.35s ease;
 	}
-	.card-back {
-		transform: none;
-		opacity: 0;
-	}
+	.card-front { opacity: 1; z-index: 1; }
+	.card-back { opacity: 0; z-index: 2; }
 	.project-card-link.flipped .card-front { opacity: 0; }
 	.project-card-link.flipped .card-back { opacity: 1; }
 }

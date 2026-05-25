@@ -107,14 +107,17 @@
             transform: rotateY(180deg);
         }
         /* Touch devices — opacity crossfade. `backface-visibility: hidden` is
-           unreliable on mobile renderers, so swap faces by opacity instead. */
+           unreliable on mobile renderers, so swap faces by opacity instead.
+           !important + z-index ordering defeats specificity/stacking quirks. */
         @media (hover: none) {
             .card-face {
-                backface-visibility: visible;
-                -webkit-backface-visibility: visible;
+                backface-visibility: visible !important;
+                -webkit-backface-visibility: visible !important;
+                transform: none !important;
                 transition: opacity 0.35s ease;
             }
-            .card-back { transform: none; opacity: 0; }
+            .card-front { opacity: 1; z-index: 1; }
+            .card-back { opacity: 0; z-index: 2; }
             .card.flipped .card-front { opacity: 0; }
             .card.flipped .card-back { opacity: 1; }
         }
