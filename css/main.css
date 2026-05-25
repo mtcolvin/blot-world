@@ -1531,38 +1531,28 @@ main {
    We use a JS-set `.touch-device` class on <html> instead of
    `@media (hover: none)` because iPad Safari reports `hover: hover`
    even though it's touch-only and has the same backface bug. */
+/* Touch-device crossfade — explicit transitions on each face so the
+   opacity change is animated even when other transform rules also
+   apply to the same elements. */
 html.touch-device .card-face {
 	backface-visibility: visible !important;
 	-webkit-backface-visibility: visible !important;
 	transform: none !important;
-	transition: opacity 0.35s ease;
 }
-html.touch-device .card-front { opacity: 1; z-index: 1; }
-html.touch-device .card-back { opacity: 0; z-index: 2; }
+html.touch-device .card-front {
+	opacity: 1;
+	z-index: 1;
+	transition: opacity 0.5s ease;
+}
+html.touch-device .card-back {
+	opacity: 0;
+	z-index: 2;
+	transition: opacity 0.5s ease;
+}
 html.touch-device .project-card-link.flipped .card-front { opacity: 0; }
 html.touch-device .project-card-link.flipped .card-back { opacity: 1; }
-/* Suppress the desktop :hover rotation on touch devices (it triggers
-   on iPad and creates the mirroring bug). */
+/* Suppress the desktop :hover rotation on touch devices. */
 html.touch-device .project-card-link:hover .project-card { transform: none !important; }
-/* Lift flipped card above siblings + add a faint backdrop so the user
-   has a generous tap-anywhere-else area to dismiss it. */
-html.touch-device .project-card-link.flipped {
-	position: relative;
-	z-index: 100;
-}
-html.touch-device body.has-flipped-card::after {
-	content: "";
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.55);
-	z-index: 50;
-	pointer-events: none;
-	animation: flipBackdropIn 0.25s ease forwards;
-}
-@keyframes flipBackdropIn {
-	from { opacity: 0; }
-	to   { opacity: 1; }
-}
 
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }
