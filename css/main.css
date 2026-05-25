@@ -1049,6 +1049,7 @@ main {
 	.project-card-link {
 		max-width: 340px;
 		margin: 0 auto;
+		justify-self: center;
 		aspect-ratio: 3 / 4.4;
 	}
 }
@@ -1527,20 +1528,22 @@ main {
    WebKit when combined with clip-path / nested transforms — the front
    face shows through mirrored after the rotation. Crossfading both
    faces sidesteps the entire backface culling pipeline.
-   Both faces get `transform: none` so no 3D rotation happens; z-index
-   makes the back layer above the front for the crossfade. */
-@media (hover: none) {
-	.card-face {
-		backface-visibility: visible !important;
-		-webkit-backface-visibility: visible !important;
-		transform: none !important;
-		transition: opacity 0.35s ease;
-	}
-	.card-front { opacity: 1; z-index: 1; }
-	.card-back { opacity: 0; z-index: 2; }
-	.project-card-link.flipped .card-front { opacity: 0; }
-	.project-card-link.flipped .card-back { opacity: 1; }
+   We use a JS-set `.touch-device` class on <html> instead of
+   `@media (hover: none)` because iPad Safari reports `hover: hover`
+   even though it's touch-only and has the same backface bug. */
+html.touch-device .card-face {
+	backface-visibility: visible !important;
+	-webkit-backface-visibility: visible !important;
+	transform: none !important;
+	transition: opacity 0.35s ease;
 }
+html.touch-device .card-front { opacity: 1; z-index: 1; }
+html.touch-device .card-back { opacity: 0; z-index: 2; }
+html.touch-device .project-card-link.flipped .card-front { opacity: 0; }
+html.touch-device .project-card-link.flipped .card-back { opacity: 1; }
+/* Suppress the desktop :hover rotation on touch devices (it triggers
+   on iPad and creates the mirroring bug). */
+html.touch-device .project-card-link:hover .project-card { transform: none !important; }
 
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }

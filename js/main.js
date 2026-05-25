@@ -1023,7 +1023,11 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProjectCounter();
 
     // Touch-device project cards: tap to flip, tap again to navigate, tap outside to unflip.
-    if (matchMedia('(hover: none)').matches) {
+    // Detect touch via JS (not @media hover: none) because iPad Safari reports
+    // hover:hover even on pure touch, missing the mobile crossfade path.
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
+        document.documentElement.classList.add('touch-device');
         const cardLinks = document.querySelectorAll('.project-card-link');
         cardLinks.forEach(link => {
             // Cards with their own onclick (e.g. inception modal trigger) keep

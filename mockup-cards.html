@@ -106,21 +106,20 @@
         .card-back {
             transform: rotateY(180deg);
         }
-        /* Touch devices — opacity crossfade. `backface-visibility: hidden` is
-           unreliable on mobile renderers, so swap faces by opacity instead.
-           !important + z-index ordering defeats specificity/stacking quirks. */
-        @media (hover: none) {
-            .card-face {
-                backface-visibility: visible !important;
-                -webkit-backface-visibility: visible !important;
-                transform: none !important;
-                transition: opacity 0.35s ease;
-            }
-            .card-front { opacity: 1; z-index: 1; }
-            .card-back { opacity: 0; z-index: 2; }
-            .card.flipped .card-front { opacity: 0; }
-            .card.flipped .card-back { opacity: 1; }
+        /* Touch devices — opacity crossfade. Triggered by JS-set
+           .touch-device class on <html> (covers iPad Safari which reports
+           hover:hover despite being touch-only). */
+        html.touch-device .card-face {
+            backface-visibility: visible !important;
+            -webkit-backface-visibility: visible !important;
+            transform: none !important;
+            transition: opacity 0.35s ease;
         }
+        html.touch-device .card-front { opacity: 1; z-index: 1; }
+        html.touch-device .card-back { opacity: 0; z-index: 2; }
+        html.touch-device .card.flipped .card-front { opacity: 0; }
+        html.touch-device .card.flipped .card-back { opacity: 1; }
+        html.touch-device .card:hover .card-inner { transform: none !important; }
 
         /* ============ FRONT ============ */
         .card-front {
@@ -466,7 +465,10 @@
 
 <script>
     // Touch-device: tap to flip, tap again on flipped card to navigate, tap outside to unflip.
-    if (matchMedia('(hover: none)').matches) {
+    // Detect via touch capability (not hover media) because iPad reports hover:hover.
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
+        document.documentElement.classList.add('touch-device');
         const hint = document.getElementById('cardHint');
         if (hint) hint.textContent = 'Tap to flip, tap again to open ↻';
         const cards = document.querySelectorAll('.card');
