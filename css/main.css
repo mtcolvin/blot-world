@@ -1143,6 +1143,11 @@ main {
 	aspect-ratio: 3 / 4.4;
 	cursor: pointer;
 	position: relative;
+	/* Round corners here on the OUTER perspective container — applying
+	   clip-path to the inner faces breaks backface-visibility on mobile
+	   Chromium/WebKit (front face shows through mirrored after flip). */
+	border-radius: 14px;
+	clip-path: inset(0 round 14px);
 }
 
 /* Animated brand-gradient border — lives INSIDE the card-front so it:
@@ -1208,19 +1213,19 @@ main {
 	backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 	border-radius: 14px;
-	/* clip-path instead of overflow:hidden — the latter breaks 3D
-	   backface rendering in Chrome/Safari */
-	clip-path: inset(0 round 14px);
-	transform: translateZ(0);
-	box-shadow:
-		0 0 0 1px rgba(255,255,255,0.06) inset,
-		0 18px 40px rgba(0,0,0,0.5);
+	/* Corners + outer shadow live on .project-card-link to avoid breaking
+	   backface-visibility on mobile renderers. */
+	box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
 	text-align: left;
+}
+.project-card-link {
+	box-shadow: 0 18px 40px rgba(0,0,0,0.5);
 }
 
 /* === FRONT === */
 .card-front {
 	background: #1a1a1a;
+	transform: rotateY(0deg);
 }
 .card-front::before {
 	content: "";
@@ -1364,7 +1369,7 @@ main {
 /* === BACK === */
 .card-back {
 	background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
-	transform: translateZ(0) rotateY(180deg);
+	transform: rotateY(180deg);
 	display: flex;
 	flex-direction: column;
 	padding: 16px 14px 14px;
@@ -1518,9 +1523,23 @@ main {
 	flex-shrink: 0;
 }
 
-/* Touch devices: JS adds .flipped on tap; tap again navigates the anchor. */
+/* Touch devices — opacity crossfade instead of 3D flip.
+   Why: `backface-visibility: hidden` is unreliable on mobile Chromium /
+   WebKit when combined with clip-path / nested transforms — the front
+   face shows through mirrored after the rotation. Crossfading both
+   faces sidesteps the entire backface culling pipeline. */
 @media (hover: none) {
-	.project-card-link.flipped .project-card { transform: rotateY(180deg); }
+	.card-face {
+		backface-visibility: visible;
+		-webkit-backface-visibility: visible;
+		transition: opacity 0.35s ease;
+	}
+	.card-back {
+		transform: none;
+		opacity: 0;
+	}
+	.project-card-link.flipped .card-front { opacity: 0; }
+	.project-card-link.flipped .card-back { opacity: 1; }
 }
 
 /* Hide series tags — series info now lives in project titles */

@@ -1026,6 +1026,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (matchMedia('(hover: none)').matches) {
         const cardLinks = document.querySelectorAll('.project-card-link');
         cardLinks.forEach(link => {
+            // Cards with their own onclick (e.g. inception modal trigger) keep
+            // their existing one-tap behavior — don't intercept with flip.
+            if (link.hasAttribute('onclick')) return;
             link.addEventListener('click', (e) => {
                 if (!link.classList.contains('flipped')) {
                     e.preventDefault();
