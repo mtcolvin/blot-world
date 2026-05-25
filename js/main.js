@@ -1034,47 +1034,56 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.classList.toggle('has-flipped-card', anyFlipped);
         };
 
-        // Track which card a touch started on so we can suppress navigation
-        // on touchend for unflipped cards. iOS Safari's `click` preventDefault
-        // is unreliable for taps — touchend is the authoritative cancel point.
-        let touchStartedOn = null;
-        document.addEventListener('touchstart', (e) => {
-            touchStartedOn = e.target.closest('.project-card-link');
-        }, { capture: true, passive: true });
+        // Strip href from project-card-links and stash it in data-touch-href.
+        // This is the most reliable way to suppress first-tap navigation on
+        // mobile — preventDefault on click/touchend is unreliable on iOS.
+        // We re-implement navigation in JS on the second tap.
+        function neutralizeCardLinks() {
+            document.querySelectorAll('.project-card-link').forEach(link => {
+                if (link.hasAttribute('onclick')) return;  // inception modal — leave alone
+                if (link.dataset.touchHrefDone) return;
+                const href = link.getAttribute('href');
+                if (href) {
+                    link.dataset.touchHref = href;
+                    link.dataset.touchTarget = link.getAttribute('target') || '';
+                    link.removeAttribute('href');  // no navigation on click
+                    link.style.cursor = 'pointer';
+                }
+                link.dataset.touchHrefDone = '1';
+            });
+        }
+        neutralizeCardLinks();
+        // Re-run if cards get added later (preview clones, filter re-renders).
+        new MutationObserver(neutralizeCardLinks).observe(document.body, {
+            childList: true, subtree: true
+        });
 
-        document.addEventListener('touchend', (e) => {
-            const link = touchStartedOn;
-            touchStartedOn = null;
-            if (!link) return;
-            if (link.hasAttribute('onclick')) return;  // inception modal
-            if (!link.classList.contains('flipped')) {
-                // First tap — suppress navigation, flip the card.
-                e.preventDefault();
-                const allLinks = document.querySelectorAll('.project-card-link');
-                allLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
-                link.classList.add('flipped');
-                setBodyFlipState();
-            }
-            // Second tap on flipped card → let touchend/click proceed → navigation.
-        }, { capture: true, passive: false });
-
-        // Click handler: redundant safety net + outside-tap to unflip.
         document.addEventListener('click', (e) => {
             const link = e.target.closest('.project-card-link');
             const allLinks = document.querySelectorAll('.project-card-link');
             if (!link) {
+                // Tap outside any card → unflip.
                 allLinks.forEach(l => l.classList.remove('flipped'));
                 setBodyFlipState();
                 return;
             }
-            if (link.hasAttribute('onclick')) return;
+            if (link.hasAttribute('onclick')) return;  // inception modal
             if (!link.classList.contains('flipped')) {
-                e.preventDefault();
+                // First tap → flip the card.
                 allLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
                 link.classList.add('flipped');
                 setBodyFlipState();
+            } else {
+                // Second tap on already-flipped card → navigate manually.
+                const href = link.dataset.touchHref;
+                if (!href) return;
+                if (link.dataset.touchTarget === '_blank') {
+                    window.open(href, '_blank', 'noopener,noreferrer');
+                } else {
+                    window.location.href = href;
+                }
             }
-        }, true);
+        });
     }
 
     // Keyboard navigation
