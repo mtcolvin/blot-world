@@ -1025,7 +1025,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Touch-device project cards: tap to flip, tap again to navigate, tap outside to unflip.
     // Detect touch via JS (not @media hover: none) because iPad Safari reports
     // hover:hover even on pure touch, missing the mobile crossfade path.
-    // Use event delegation so cards rendered/cloned after this runs still work.
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     if (isTouchDevice) {
         document.documentElement.classList.add('touch-device');
@@ -1035,26 +1034,47 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.classList.toggle('has-flipped-card', anyFlipped);
         };
 
+        // Track which card a touch started on so we can suppress navigation
+        // on touchend for unflipped cards. iOS Safari's `click` preventDefault
+        // is unreliable for taps — touchend is the authoritative cancel point.
+        let touchStartedOn = null;
+        document.addEventListener('touchstart', (e) => {
+            touchStartedOn = e.target.closest('.project-card-link');
+        }, { capture: true, passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            const link = touchStartedOn;
+            touchStartedOn = null;
+            if (!link) return;
+            if (link.hasAttribute('onclick')) return;  // inception modal
+            if (!link.classList.contains('flipped')) {
+                // First tap — suppress navigation, flip the card.
+                e.preventDefault();
+                const allLinks = document.querySelectorAll('.project-card-link');
+                allLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
+                link.classList.add('flipped');
+                setBodyFlipState();
+            }
+            // Second tap on flipped card → let touchend/click proceed → navigation.
+        }, { capture: true, passive: false });
+
+        // Click handler: redundant safety net + outside-tap to unflip.
         document.addEventListener('click', (e) => {
             const link = e.target.closest('.project-card-link');
             const allLinks = document.querySelectorAll('.project-card-link');
             if (!link) {
-                // Tap outside any card → unflip any flipped card.
                 allLinks.forEach(l => l.classList.remove('flipped'));
                 setBodyFlipState();
                 return;
             }
-            // Cards with their own onclick (e.g. inception modal) keep one-tap behavior.
             if (link.hasAttribute('onclick')) return;
             if (!link.classList.contains('flipped')) {
-                // First tap — flip this one, unflip others.
                 e.preventDefault();
                 allLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
                 link.classList.add('flipped');
                 setBodyFlipState();
             }
-            // Second tap on already-flipped card → anchor navigation proceeds.
-        }, true);  // useCapture so we run before the link's default action
+        }, true);
     }
 
     // Keyboard navigation
