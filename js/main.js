@@ -925,11 +925,13 @@ function markAIProjects() {
 
 // Render project cards from window.PROJECTS_DATA into #projects-grid.
 // Runs BEFORE filter/preview init so downstream code sees the populated DOM.
-function renderProjectCards() {
+function renderProjectCards(isTouchDevice) {
     const grid = document.getElementById('projects-grid');
     if (!grid) return;
     const projects = window.PROJECTS_DATA || [];
 
+    // Desktop hovers to flip; touch taps to expand — reflect that in the hint.
+    const hintLabel = isTouchDevice ? 'More info' : 'Flip';
     const flipArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
     const viewArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
     const externalIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" style="margin-left:4px;vertical-align:baseline;flex-shrink:0;"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/><path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/></svg>';
@@ -962,7 +964,7 @@ function renderProjectCards() {
                             <div class="card-name">${p.name}${extIcon}</div>
                             <div class="meta">
                                 <span>${p.dateDisplay}</span>
-                                <span class="flip-hint">Flip ${flipArrow}</span>
+                                <span class="flip-hint">${hintLabel} ${flipArrow}</span>
                             </div>
                         </div>
                     </div>
@@ -989,7 +991,20 @@ function renderProjectCards() {
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('loading');
 
-    renderProjectCards();
+    // Touch-only detection — must run BEFORE renderProjectCards so the card
+    // template can pick the right hint label ("More info" vs "Flip").
+    // Two cases qualify as touch-only:
+    //   1) Primary input is coarse + no hover → phones, Android tablets.
+    //   2) iPad: reports hover:hover (lies), but no real Mac has a touchscreen,
+    //      so MacIntel + maxTouchPoints > 1 is unambiguously an iPad.
+    const isCoarseNoHover = matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const isIPad = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    const isTouchDevice = isCoarseNoHover || isIPad;
+    if (isTouchDevice) {
+        document.documentElement.classList.add('touch-device');
+    }
+
+    renderProjectCards(isTouchDevice);
 
     PageLoader.init();
     Navigation.init();
@@ -1022,26 +1037,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateProjectCounter();
 
-    // Touch-device project cards: tap to flip, tap again to navigate, tap outside to unflip.
-    // Detect touch via JS (not @media hover: none) because iPad Safari reports
-    // hover:hover even on pure touch, missing the mobile crossfade path.
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    // Touch-device project cards: tap to expand, tap again to navigate, tap outside to collapse.
+    // (isTouchDevice was computed at the top of DOMContentLoaded above.)
     if (isTouchDevice) {
-        document.documentElement.classList.add('touch-device');
-
         const setBodyFlipState = () => {
             const anyFlipped = !!document.querySelector('.project-card-link.flipped');
             document.body.classList.toggle('has-flipped-card', anyFlipped);
         };
 
-        // Strip href from project-card-links and stash it in data-touch-href.
-        // This is the most reliable way to suppress first-tap navigation on
-        // mobile — preventDefault on click/touchend is unreliable on iOS.
-        // We re-implement navigation in JS on the second tap.
+        // Strip href + onclick from project-card-links and stash them in
+        // data-*. This is the most reliable way to suppress first-tap
+        // navigation on mobile — preventDefault on click/touchend is
+        // unreliable on iOS. We re-implement navigation in JS on the second
+        // tap. Also strips the inception modal onclick so the BLOT.WORLD
+        // card behaves like a normal card on touch (slide-out, no modal).
         function neutralizeCardLinks() {
             document.querySelectorAll('.project-card-link').forEach(link => {
-                if (link.hasAttribute('onclick')) return;  // inception modal — leave alone
                 if (link.dataset.touchHrefDone) return;
+                if (link.hasAttribute('onclick')) {
+                    link.removeAttribute('onclick');
+                }
                 const href = link.getAttribute('href');
                 if (href) {
                     link.dataset.touchHref = href;
@@ -1062,26 +1077,34 @@ document.addEventListener('DOMContentLoaded', function() {
             const link = e.target.closest('.project-card-link');
             const allLinks = document.querySelectorAll('.project-card-link');
             if (!link) {
-                // Tap outside any card → unflip.
+                // Tap outside any card → collapse all.
                 allLinks.forEach(l => l.classList.remove('flipped'));
                 setBodyFlipState();
                 return;
             }
-            if (link.hasAttribute('onclick')) return;  // inception modal
-            if (!link.classList.contains('flipped')) {
-                // First tap → flip the card.
-                allLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
-                link.classList.add('flipped');
-                setBodyFlipState();
-            } else {
-                // Second tap on already-flipped card → navigate manually.
+            // Navigate ONLY when tapping the back's view CTA on a flipped card.
+            // Skip navigation for hash-only hrefs (e.g., the inception card has
+            // href="#") so the View button stays inert rather than scrolling.
+            if (link.classList.contains('flipped') && e.target.closest('.view-cta')) {
                 const href = link.dataset.touchHref;
-                if (!href) return;
+                if (!href || href === '#') return;
                 if (link.dataset.touchTarget === '_blank') {
                     window.open(href, '_blank', 'noopener,noreferrer');
                 } else {
                     window.location.href = href;
                 }
+                return;
+            }
+
+            if (!link.classList.contains('flipped')) {
+                // First tap on a card → slide out the back.
+                allLinks.forEach(l => { if (l !== link) l.classList.remove('flipped'); });
+                link.classList.add('flipped');
+                setBodyFlipState();
+            } else {
+                // Tap anywhere on a flipped card (not the view CTA) → collapse it.
+                link.classList.remove('flipped');
+                setBodyFlipState();
             }
         });
     }

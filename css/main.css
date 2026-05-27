@@ -472,7 +472,9 @@ nav {
 main {
 	margin-top: 40px;
 	max-width: 100vw;
-	overflow-x: hidden;
+	/* `clip` keeps vertical visual overflow visible (so 3D card flip doesn't
+	   get cut off) while still preventing horizontal scrollbars. */
+	overflow-x: clip;
 	padding: 0 1rem;
 }
 
@@ -498,7 +500,10 @@ main {
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
-	overflow-x: hidden;
+	/* `clip` (not `hidden`) so vertical overflow stays visible — needed so
+	   the 3D flip's perspective foreshortening can render past the card's
+	   bounding box without getting cut off at the container's bottom. */
+	overflow-x: clip;
 }
 
 /* ==========================================================================
@@ -1004,16 +1009,19 @@ main {
 
 .projects-preview-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 4rem;
+	/* Always 3 columns on desktop, each capped at 240px so cards stay small
+	   and shrink (not stretch) when the section is narrower. */
+	grid-template-columns: repeat(3, minmax(0, 240px));
+	justify-content: center;
+	gap: 5rem;
 	width: 100%;
 }
 
-/* Tablet — 2 columns to keep cards a comfortable size */
+/* Tablet — drop to 2 columns. */
 @media (max-width: 1024px) {
 	.projects-preview-grid {
-		grid-template-columns: repeat(2, 1fr);
-		gap: 2rem;
+		grid-template-columns: repeat(2, minmax(0, 240px));
+		gap: 3rem;
 	}
 }
 
@@ -1037,13 +1045,16 @@ main {
 		padding: 0 !important;
 	}
 
-	/* Trading-card mobile sizing — single column, slightly taller aspect */
+	/* Trading-card mobile sizing — single centered column with a max width
+	   so the card isn't full viewport on wider phones/tablets. */
 	.projects-grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 320px);
+		justify-content: center;
 		gap: 3.5rem;
 	}
 	.projects-preview-grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 240px);
+		justify-content: center;
 		gap: 3.5rem;
 	}
 	.project-card-link {
@@ -1127,8 +1138,15 @@ main {
 
 .projects-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-	gap: 4.5rem;
+	/* Cap column max at 240 (not 280) so 3 columns fit at typical desktop
+	   widths — auto-fill picks track count based on the MAX value, not min,
+	   so 280 + this gap was forcing it down to 2 tracks at ~850px grids. */
+	grid-template-columns: repeat(auto-fill, minmax(210px, 240px));
+	justify-content: center;
+	gap: 3rem;
+	/* Don't stretch siblings — when one card expands taller (touch flip),
+	   other cards in the same row should stay their natural size. */
+	align-items: start;
 }
 
 /* ==========================================================================
@@ -1141,14 +1159,16 @@ main {
 	display: block;
 	width: 100%;
 	perspective: 1400px;
-	aspect-ratio: 3 / 4.4;
 	cursor: pointer;
 	position: relative;
-	/* Round corners here on the OUTER perspective container — applying
-	   clip-path to the inner faces breaks backface-visibility on mobile
-	   Chromium/WebKit (front face shows through mirrored after flip). */
+	/* aspect-ratio moved to .project-card so the link can grow vertically
+	   (via padding-bottom on touch when flipped) without resizing the card
+	   itself — needed to push grid neighbors down when the back slides out. */
+	/* No clip-path / overflow:hidden here — both force Chromium to flatten
+	   the preserve-3d descendant, which breaks backface-visibility on the
+	   flipped face (front shows through mirrored on top of back).
+	   Each .card-face clips its own content instead. */
 	border-radius: 14px;
-	clip-path: inset(0 round 14px);
 }
 
 /* Animated brand-gradient border — lives INSIDE the card-front so it:
@@ -1187,12 +1207,15 @@ main {
 .project-card {
 	position: relative;
 	width: 100%;
-	height: 100%;
+	aspect-ratio: 3 / 4.4;
 	transform-style: preserve-3d;
 	transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
 	background: transparent;
 	border: none;
-	border-radius: 0;
+	/* Match the .card-face corner radius so ai-project gradient backgrounds
+	   (which sit on .project-card behind the faces) don't show square blue
+	   corners poking out from under the rounded card-face. */
+	border-radius: 14px;
 	min-height: 0;
 	overflow: visible;
 	display: block;
@@ -1214,8 +1237,13 @@ main {
 	backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 	border-radius: 14px;
-	/* Corners + outer shadow live on .project-card-link to avoid breaking
-	   backface-visibility on mobile renderers. */
+	/* Clip child content (image, body gradient, pseudos) to rounded corners.
+	   Safe here — .card-face is a leaf in the 3D context (the preserve-3d
+	   lives on .project-card), so overflow:hidden doesn't flatten the 3D. */
+	overflow: hidden;
+	/* Force own compositing layer so backface-visibility is respected on
+	   Chromium even when the parent has pseudo-elements with mask/filter. */
+	transform: translateZ(0);
 	box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
 	text-align: left;
 }
@@ -1369,7 +1397,10 @@ main {
 /* === BACK === */
 .card-back {
 	background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
-	transform: rotateY(180deg);
+	/* translateZ(0) overrides the .card-face base translateZ and combines
+	   with rotateY for layer separation — keeps the back face on its own
+	   compositing layer so backface culling stays reliable. */
+	transform: rotateY(180deg) translateZ(0);
 	display: flex;
 	flex-direction: column;
 	padding: 16px 14px 14px;
@@ -1523,36 +1554,64 @@ main {
 	flex-shrink: 0;
 }
 
-/* Touch devices — opacity crossfade instead of 3D flip.
-   Why: `backface-visibility: hidden` is unreliable on mobile Chromium /
-   WebKit when combined with clip-path / nested transforms — the front
-   face shows through mirrored after the rotation. Crossfading both
-   faces sidesteps the entire backface culling pipeline.
+/* ==========================================================================
+   TOUCH DEVICES — drawer slide-out instead of 3D flip
+   --------------------------------------------------------------------------
+   Why no 3D flip on touch: `backface-visibility: hidden` is unreliable on
+   mobile Chromium / WebKit (the front face shows through mirrored after
+   rotation, same as the bug we work around on desktop with translateZ).
+   Instead, the back slides out from underneath the front: front stays in
+   place, back animates down into view directly below it.
+
    We use a JS-set `.touch-device` class on <html> instead of
    `@media (hover: none)` because iPad Safari reports `hover: hover`
-   even though it's touch-only and has the same backface bug. */
-/* Touch-device crossfade — explicit transitions on each face so the
-   opacity change is animated even when other transform rules also
-   apply to the same elements. */
+   even though it's touch-only. */
+
+/* Suppress 3D / hover rotation on touch — the card is a flat element. */
 html.touch-device .card-face {
 	backface-visibility: visible !important;
 	-webkit-backface-visibility: visible !important;
-	transform: none !important;
 }
+html.touch-device .project-card-link:hover .project-card { transform: none !important; }
+
+/* Front stays put on top; back sits stacked behind it (hidden by overlap). */
 html.touch-device .card-front {
-	opacity: 1;
-	z-index: 1;
-	transition: opacity 0.5s ease;
+	transform: none !important;
+	z-index: 2;
 }
 html.touch-device .card-back {
-	opacity: 0;
-	z-index: 2;
-	transition: opacity 0.5s ease;
+	/* Match the flipped transform function list (translateY + scaleX) so the
+	   animation interpolates smoothly between states. */
+	transform: translateY(0) scaleX(1) !important;
+	transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+	opacity: 1;
+	z-index: 1;
+	/* The back's top ~15% is tucked under the front, so we need a chunky
+	   top padding to push the area badge fully past the seam (~53px hidden
+	   at 240px cards) and give it visible breathing room. */
+	padding-top: 60px;
 }
-html.touch-device .project-card-link.flipped .card-front { opacity: 0; }
-html.touch-device .project-card-link.flipped .card-back { opacity: 1; }
-/* Suppress the desktop :hover rotation on touch devices. */
-html.touch-device .project-card-link:hover .project-card { transform: none !important; }
+
+/* Flipped: back slides down behind the front, peeking out below with the
+   top tucked under the front's bottom edge and narrowed 10% on the X axis
+   for a layered "card behind card" silhouette. */
+html.touch-device .project-card-link.flipped .card-back {
+	transform: translateY(85%) scaleX(0.9) !important;
+}
+
+/* Lift the flipped card above grid neighbors during the transition so the
+   slid-out back doesn't get clipped behind them. */
+html.touch-device .project-card-link {
+	transition: padding-bottom 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+html.touch-device .project-card-link.flipped {
+	z-index: 100;
+	/* Pad the link to make room for the slid-out back: card height is
+	   (4.4/3 = 1.467) × cell_width; back extends 85% of that below
+	   = 1.247 × cell_width ≈ 124.7%. Grid sees the taller item and pushes
+	   subsequent rows down. */
+	padding-bottom: 124.7%;
+}
 
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }
@@ -2454,6 +2513,11 @@ body:has(#projects.active) .filter-sidebar {
 
 	.projects-main {
 		margin-right: 0;
+		/* Stretch to fill the column-flex parent's cross-axis (horizontal).
+		   Without this, projects-main shrinks to its intrinsic content width
+		   (~280px from a single grid column) and the cards can't center
+		   because there's no extra space on either side. */
+		align-self: stretch;
 	}
 
 	.projects-main .projects-counter {

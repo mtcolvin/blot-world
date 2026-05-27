@@ -85,7 +85,8 @@
       "WebFetch(domain:simpleicons.org)",
       "Bash(awk 'NR>=13 && NR<=76' \"/c/Users/mtcol/OneDrive/Documents/PROFESSIONAL/GITHUB/BLOT-WORLD/blot-world/projects/photography/photo-loader.js\")",
       "Read(//tmp/**)",
-      "Bash(python3 -m http.server 8080)"
+      "Bash(python3 -m http.server 8080)",
+      "Bash(Get-ChildItem *)"
     ],
     "deny": [],
     "ask": []

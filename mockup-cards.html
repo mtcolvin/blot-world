@@ -464,9 +464,12 @@
 </div>
 
 <script>
-    // Touch-device: tap to flip, tap again on flipped card to navigate, tap outside to unflip.
-    // Detect via touch capability (not hover media) because iPad reports hover:hover.
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    // Touch-only detection: coarse pointer with no hover (phones/Android tablets)
+    // OR iPad (lies about hover but no real Mac has touch, so MacIntel + multi-touch = iPad).
+    // Plain "has touch capability" wrongly flags Windows laptops with touchscreens.
+    const isCoarseNoHover = matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const isIPad = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    const isTouchDevice = isCoarseNoHover || isIPad;
     if (isTouchDevice) {
         document.documentElement.classList.add('touch-device');
         const hint = document.getElementById('cardHint');
