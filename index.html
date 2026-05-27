@@ -35,6 +35,28 @@
     }, true);
     </script>
 
+    <!-- Internal-user opt-out — must run BEFORE GTM so the dataLayer flag is
+         set before any tags fire. Visit ?disable_analytics=1 on any device
+         once to mark it internal (flag persists in localStorage). Visit
+         ?enable_analytics=1 to clear. See README "Excluding personal devices
+         from analytics" for the GTM blocking-trigger setup. -->
+    <script>
+    (function () {
+        try {
+            var params = new URLSearchParams(window.location.search);
+            if (params.has('disable_analytics')) {
+                localStorage.setItem('blot_disable_ga', '1');
+            } else if (params.has('enable_analytics')) {
+                localStorage.removeItem('blot_disable_ga');
+            }
+            window.dataLayer = window.dataLayer || [];
+            if (localStorage.getItem('blot_disable_ga') === '1') {
+                window.dataLayer.push({ internal_user: true });
+            }
+        } catch (e) { /* localStorage blocked → just let analytics fire */ }
+    })();
+    </script>
+
     <!-- Google Tag Manager -->
     <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

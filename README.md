@@ -432,6 +432,59 @@ npm run serve
 
 ---
 
+## 🚫 Excluding personal devices from analytics
+
+Personal visits to your own site can skew analytics on a low-traffic
+portfolio. The site supports a per-device opt-out via a URL flag stored
+in `localStorage`.
+
+### On each device (one-time)
+
+Visit either of these URLs once per browser:
+
+- **Disable:** `https://blot.world/?disable_analytics=1`
+- **Re-enable:** `https://blot.world/?enable_analytics=1`
+
+The flag is persisted in `localStorage` under the key `blot_disable_ga`
+and survives across visits. Clearing site data or using a different
+browser/device requires re-visiting the URL.
+
+### Verify it's set
+
+In DevTools console:
+
+```js
+localStorage.getItem('blot_disable_ga')  // → "1" when disabled
+```
+
+### GTM configuration (one-time, in the GTM workspace)
+
+The opt-out snippet in `index.html` (just before the GTM loader) pushes
+`{ internal_user: true }` to the `dataLayer` when the flag is set. To
+make GTM actually skip the analytics tags for those visits, configure:
+
+1. **Variables → New → User-Defined Variable**
+   - Type: *Data Layer Variable*
+   - Name: `dlv - Internal User`
+   - Data Layer Variable Name: `internal_user`
+   - Default Value: `false`
+
+2. **Triggers → New**
+   - Name: `Block - Internal User`
+   - Type: *Page View* (works for both pageview + custom event tags)
+   - Fires on: *Some Page Views*
+   - Conditions: `dlv - Internal User` *equals* `true`
+
+3. **For every GA4 tag** (Configuration + Events) you want to block:
+   - Open the tag → *Triggering* → *Exceptions* → Add `Block - Internal User`
+   - Publish the workspace
+
+After publishing, internal devices will hit the page normally but the
+GA4 tags won't fire — verify in GTM's preview mode by visiting
+`?disable_analytics=1` and watching the Tags panel.
+
+---
+
 ## 📚 Additional Documentation
 
 - **Blog System:** See `blog/README.md` for detailed blog documentation
