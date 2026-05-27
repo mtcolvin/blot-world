@@ -1061,7 +1061,9 @@ main {
 		max-width: 340px;
 		margin: 0 auto;
 		justify-self: center;
-		aspect-ratio: 3 / 4.4;
+		/* aspect-ratio lives on .project-card now — if we set it here too,
+		   border-box absorbs the touch flipped state's padding-bottom inside
+		   the fixed aspect box, so grid neighbors stop being pushed down. */
 	}
 }
 
