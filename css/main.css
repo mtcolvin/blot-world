@@ -3440,12 +3440,12 @@ body:has(#projects.active) .filter-sidebar {
    =================================== */
 
 #about .container {
-    width: 700px;
+    width: 100%;
     max-width: 700px;
 }
 
 .about-content {
-    width: 700px;
+    width: 100%;
     max-width: 700px;
     margin: 0 auto;
     padding: 0;
@@ -3619,26 +3619,34 @@ body:has(#projects.active) .filter-sidebar {
 
 .quote-indicators {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    justify-content: center;
 }
 
-.quote-indicator {
-    width: 8px;
-    height: 8px;
+/* Universal typing-dots indicator — three dots stable at low opacity, bounce
+   in sequence (chat-typing style) on quote change via .animating class. */
+.quote-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 16px;
+}
+
+.quote-icon span {
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.55);
+    transform: translateY(0);
 }
 
-.quote-indicator:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
+.quote-icon.animating span:nth-child(1) { animation: quote-dot-bounce 0.6s ease 0s; }
+.quote-icon.animating span:nth-child(2) { animation: quote-dot-bounce 0.6s ease 0.12s; }
+.quote-icon.animating span:nth-child(3) { animation: quote-dot-bounce 0.6s ease 0.24s; }
 
-.quote-indicator.active {
-    background: var(--primary-blue);
-    width: 24px;
-    border-radius: 4px;
+@keyframes quote-dot-bounce {
+    0%, 100% { transform: translateY(0);    background: rgba(255, 255, 255, 0.55); }
+    50%      { transform: translateY(-8px); background: white; }
 }
 
 /* Shared About Section Title */
@@ -3848,7 +3856,12 @@ body:has(#projects.active) .filter-sidebar {
 /* Responsive */
 @media (max-width: 640px) {
     .about-content {
-        padding: 0 20px;
+        padding: 0;
+    }
+
+    #about .container {
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .about-name {
@@ -3860,11 +3873,35 @@ body:has(#projects.active) .filter-sidebar {
     }
 
     .rotating-quote-container {
-        padding: 24px 24px;
+        padding: 16px 18px;
+        margin-bottom: 32px;
+    }
+
+    .rotating-quote {
+        /* Auto height so longer quotes wrap to more lines without getting
+           clipped by the 120px fixed height from base. */
+        height: auto;
+        min-height: 110px;
     }
 
     .rotating-quote-text {
-        font-size: 16px;
+        font-size: 15px;
+    }
+
+    .quote-controls {
+        gap: 14px;
+        margin-top: 8px;
+    }
+
+    .quote-nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .quote-nav-btn svg {
+        width: 22px;
+        height: 22px;
     }
 
     .principles-grid {
@@ -3890,8 +3927,22 @@ body:has(#projects.active) .filter-sidebar {
         font-size: 28px;
     }
 
+    .rotating-quote-container {
+        padding: 14px 14px;
+    }
+
     .rotating-quote-text {
-        font-size: 18px;
+        font-size: 14px;
+    }
+
+    .quote-nav-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .quote-nav-btn svg {
+        width: 20px;
+        height: 20px;
     }
 
     .about-areas-grid {

@@ -1739,14 +1739,20 @@ const QuoteRotator = {
         const container = document.getElementById('quote-indicators');
         if (!container) return;
 
-        container.innerHTML = '';
-        this.quotes.forEach((_, index) => {
-            const indicator = document.createElement('div');
-            indicator.className = 'quote-indicator';
-            if (index === 0) indicator.classList.add('active');
-            indicator.addEventListener('click', () => this.goToQuote(index));
-            container.appendChild(indicator);
-        });
+        // Universal typing-dots indicator (no per-quote dots). Stable at low
+        // opacity while a quote is showing; three dots bounce in sequence
+        // on change via the .animating class added in showQuote().
+        container.innerHTML = `
+            <div class="quote-icon" aria-hidden="true">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+        const icon = container.querySelector('.quote-icon');
+        // The third dot has the latest stagger (0.24s + 0.6s = 0.84s). When
+        // its animation ends, all dots are done — safe to drop .animating
+        // so the next quote change can re-trigger cleanly.
+        const lastDot = icon?.querySelector('span:last-child');
+        lastDot?.addEventListener('animationend', () => icon.classList.remove('animating'));
     },
 
     setupEventListeners() {
@@ -1791,10 +1797,13 @@ const QuoteRotator = {
             quoteText.classList.add('active');
             quoteAuthor.classList.add('active');
 
-            // Update indicators
-            document.querySelectorAll('.quote-indicator').forEach((indicator, i) => {
-                indicator.classList.toggle('active', i === index);
-            });
+            // Pulse the universal icon to signal the quote changed.
+            const icon = document.querySelector('.quote-icon');
+            if (icon) {
+                icon.classList.remove('animating');
+                void icon.offsetWidth;  // force reflow so the class re-application restarts the animation
+                icon.classList.add('animating');
+            }
 
             this.currentIndex = index;
         }, 300);
