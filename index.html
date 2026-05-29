@@ -74,7 +74,7 @@
     
     <!-- ==================== STYLESHEETS ==================== -->
     <link rel="stylesheet" href="css/root.min.css">
-	<link rel="stylesheet" href="css/main.min.css?v=51">
+	<link rel="stylesheet" href="css/main.min.css?v=64">
 	<link rel="stylesheet" href="css/about-section.min.css">
 	<link rel="stylesheet" href="blog/css/post.min.css">
     
@@ -273,7 +273,7 @@
     <!-- Filter Sidebar -->
     <aside class="filter-sidebar" id="filter-sidebar">
         <div class="filter-sidebar-header">
-            <h3 style="font-size: 1rem; letter-spacing: -0.5px; margin: 0;">Filters</h3>
+            <h3 class="filter-sidebar-title">Filters</h3>
             <button class="filter-close-btn" id="filter-close-btn" aria-label="Close filters">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
                     <rect x="2" y="2" width="20" height="20" rx="4" fill="white"/>
@@ -293,6 +293,16 @@
                     <option value="name-desc">Name (Z-A)</option>
                 </select>
                 <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
+            </div>
+        </div>
+
+        <!-- Made with Filter -->
+        <div class="filter-section made-with-section">
+            <h3>Made with</h3>
+            <div class="filter-segmented" role="group" aria-label="Filter by who built it">
+                <button type="button" class="seg-btn active" data-made-with="all" aria-pressed="true">All</button>
+                <button type="button" class="seg-btn" data-made-with="solo" aria-pressed="false">Solo</button>
+                <button type="button" class="seg-btn" data-made-with="ai" aria-pressed="false">With AI</button>
             </div>
         </div>
 
@@ -440,27 +450,6 @@
 					</a>
 				</div>
 
-				<!-- Rotating Quote Display -->
-				<div class="rotating-quote-container">
-					<div class="rotating-quote" id="rotating-quote">
-						<blockquote class="rotating-quote-text"></blockquote>
-						<cite class="rotating-quote-author"></cite>
-					</div>
-					<div class="quote-controls">
-						<button class="quote-nav-btn" id="quote-prev" aria-label="Previous quote">
-							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M15 18l-6-6 6-6"/>
-							</svg>
-						</button>
-						<div class="quote-indicators" id="quote-indicators"></div>
-						<button class="quote-nav-btn" id="quote-next" aria-label="Next quote">
-							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M9 18l6-6-6-6"/>
-							</svg>
-						</button>
-					</div>
-				</div>
-
 				<!-- What I Value -->
 				<div class="about-principles">
 					<h3 class="about-section-title">WHAT I VALUE</h3>
@@ -564,6 +553,27 @@
 						</svg>
 						Get in touch
 					</button>
+				</div>
+
+				<!-- Rotating Quote Display -->
+				<div class="rotating-quote-container">
+					<div class="rotating-quote" id="rotating-quote">
+						<blockquote class="rotating-quote-text"></blockquote>
+						<cite class="rotating-quote-author"></cite>
+					</div>
+					<div class="quote-controls">
+						<button class="quote-nav-btn" id="quote-prev" aria-label="Previous quote">
+							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M15 18l-6-6 6-6"/>
+							</svg>
+						</button>
+						<div class="quote-indicators" id="quote-indicators"></div>
+						<button class="quote-nav-btn" id="quote-next" aria-label="Next quote">
+							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M9 18l6-6-6-6"/>
+							</svg>
+						</button>
+					</div>
 				</div>
 			</div>
 			</div>
@@ -795,6 +805,6 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script src="js/projects-data.js" defer></script>
-    <script src="js/main.min.js?v=15" defer></script>
+    <script src="js/main.min.js?v=20" defer></script>
 </body>
 </html>

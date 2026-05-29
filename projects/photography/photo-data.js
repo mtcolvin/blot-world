@@ -76,6 +76,19 @@
         { file: 'IMG_2319_result.jpg',                    date: '2025-12-29', location: 'Wyoming' },
         { file: 'IMG_2397_result.jpg',                    date: '2025-12-30', location: 'Park City, UT' },
 
-        { file: 'IMG_2596_result.jpg',                    date: '2026-01-17', location: 'Greeley, CO' }
+        { file: 'IMG_2596_result.jpg',                    date: '2026-01-17', location: 'Greeley, CO' },
+        { file: 'IMG_2719.jpg',                           date: '2026-01-28', location: 'Fort Collins, CO' },
+
+        { file: 'IMG_2780.jpg',                           date: '2026-02-10', location: 'Mead, CO' },
+        { file: 'IMG_2812.jpg',                           date: '2026-02-14', location: 'Loveland, CO' },
+        { file: 'IMG_2857.jpg',                           date: '2026-02-18', location: 'Timnath, CO' },
+        { file: 'IMG_2891.jpg',                           date: '2026-02-21', location: 'Loveland, CO' },
+        { file: 'IMG_2939.jpg',                           date: '2026-02-26', location: 'Timnath, CO' },
+
+        { file: 'IMG_3010.jpg',                           date: '2026-03-05', location: 'Fort Collins, CO' },
+        { file: 'IMG_3089.jpg',                           date: '2026-03-14', location: 'Timnath, CO' },
+        { file: 'IMG_3158.jpg',                           date: '2026-03-20', location: 'Fort Collins, CO' },
+        { file: 'IMG_3287.jpg',                           date: '2026-03-28', location: 'Bobcat Ridge Natural Area, CO' },
+        { file: 'IMG_3298.jpg',                           date: '2026-03-29', location: 'Loveland, CO' }
     ];
 })();

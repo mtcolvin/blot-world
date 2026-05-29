@@ -343,24 +343,57 @@
             50% { transform: translateX(6px); }
         }
 
-        /* Progress bar under strip */
+        /* Interactive scrollbar under strip — minimal, matches the prior
+           progress-bar look. Track is clickable (jump), thumb is draggable. */
         .strip-progress {
             position: relative;
-            height: 2px;
-            background: rgba(255,255,255,0.06);
+            height: 6px;
             margin-top: 10px;
+            cursor: pointer;
+            /* Hit-target is taller than the visible track for easier mouse
+               targeting — pseudo element below paints the 2px line. */
+        }
+        .strip-progress::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 1px;
-            overflow: hidden;
+            transition: background 0.2s ease, height 0.15s ease;
+            pointer-events: none;
+        }
+        .strip-progress:hover::before {
+            background: rgba(255, 255, 255, 0.1);
+            height: 3px;
         }
         .strip-progress-fill {
             position: absolute;
-            top: 0;
+            top: 50%;
             left: 0;
-            height: 100%;
-            background: rgba(255,255,255,0.5);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 1px;
-            transition: width 0.1s ease, left 0.1s ease;
+            transform: translateY(-50%);
+            transition: background 0.2s ease, height 0.15s ease;
             width: 20%;
+            cursor: grab;
+        }
+        .strip-progress:hover .strip-progress-fill {
+            background: rgba(255, 255, 255, 0.7);
+            height: 3px;
+        }
+        .strip-progress-fill.is-dragging {
+            cursor: grabbing;
+            background: rgba(255, 255, 255, 0.85);
+            height: 3px;
+        }
+        .strip-progress.is-dragging::before {
+            background: rgba(255, 255, 255, 0.12);
+            height: 3px;
         }
 
         /* Caption overlay on hover */
@@ -962,6 +995,7 @@
         document.querySelectorAll('.strip-wrap').forEach(wrap => {
             const strip = wrap.querySelector('.layout-filmstrip');
             const fill = wrap.querySelector('.strip-progress-fill');
+            const track = wrap.querySelector('.strip-progress');
             if (!strip || !fill) return;
 
             function update() {
@@ -994,6 +1028,95 @@
                     img.addEventListener('load', () => { if (--pending <= 0) update(); }, { once: true });
                     img.addEventListener('error', () => { if (--pending <= 0) update(); }, { once: true });
                 }
+            });
+
+            // --- Wheel: translate vertical wheel into horizontal pan so
+            // mouse-only desktop users can scroll the filmstrip. Detection
+            // distinguishes mouse wheel (deltaMode=1 line OR large integer
+            // deltaY with no deltaX) from trackpad (continuous small/fractional
+            // deltas, often with deltaX present). Trackpads pass through so
+            // vertical swipes still navigate months via body scroll-snap.
+            // At horizontal scroll edges we also release so a mouse user can
+            // continue past the strip into the next/prev month. ---
+            function isMouseWheel(e) {
+                if (e.shiftKey) return false;
+                if (e.deltaMode === 1) return true; // line mode = mouse wheel
+                if (e.deltaX !== 0) return false;   // any deltaX = trackpad
+                if (!Number.isInteger(e.deltaY)) return false;
+                return Math.abs(e.deltaY) >= 50;    // large discrete tick
+            }
+            strip.addEventListener('wheel', (e) => {
+                if (!isMouseWheel(e)) return;
+                const max = strip.scrollWidth - strip.clientWidth;
+                if (max <= 4) return;
+                const atStart = strip.scrollLeft <= 0;
+                const atEnd = strip.scrollLeft >= max - 1;
+                if ((e.deltaY < 0 && atStart) || (e.deltaY > 0 && atEnd)) return;
+                e.preventDefault();
+                strip.scrollLeft += e.deltaY;
+            }, { passive: false });
+
+            // --- Draggable scrollbar thumb + click-to-jump on track. ---
+            // Values are cached at pointerdown so the anchor doesn't drift
+            // as the page repaints, and scroll-snap is disabled during the
+            // drag so the strip doesn't fight us. ---
+            if (!track) return;
+            let drag = null;
+
+            function applyDrag(clientX) {
+                const x = clientX - drag.trackLeft - drag.anchorOffset;
+                const clamped = Math.max(0, Math.min(drag.usable, x));
+                strip.scrollLeft = (clamped / drag.usable) * drag.maxScroll;
+            }
+
+            fill.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const trackRect = track.getBoundingClientRect();
+                const fillRect = fill.getBoundingClientRect();
+                const maxScroll = strip.scrollWidth - strip.clientWidth;
+                const usable = Math.max(trackRect.width - fillRect.width, 1);
+                if (maxScroll <= 0) return;
+                drag = {
+                    trackLeft: trackRect.left,
+                    anchorOffset: e.clientX - fillRect.left,
+                    usable,
+                    maxScroll,
+                    snapPrev: strip.style.scrollSnapType
+                };
+                strip.style.scrollSnapType = 'none';
+                fill.setPointerCapture?.(e.pointerId);
+                fill.classList.add('is-dragging');
+                track.classList.add('is-dragging');
+            });
+
+            fill.addEventListener('pointermove', (e) => {
+                if (!drag) return;
+                applyDrag(e.clientX);
+            });
+
+            const endDrag = (e) => {
+                if (!drag) return;
+                strip.style.scrollSnapType = drag.snapPrev || '';
+                drag = null;
+                try { fill.releasePointerCapture?.(e.pointerId); } catch (_) {}
+                fill.classList.remove('is-dragging');
+                track.classList.remove('is-dragging');
+            };
+            fill.addEventListener('pointerup', endDrag);
+            fill.addEventListener('pointercancel', endDrag);
+
+            // Click empty track → center the thumb on the click position.
+            track.addEventListener('pointerdown', (e) => {
+                if (e.target === fill) return;
+                const trackRect = track.getBoundingClientRect();
+                const fillRect = fill.getBoundingClientRect();
+                const maxScroll = strip.scrollWidth - strip.clientWidth;
+                const usable = Math.max(trackRect.width - fillRect.width, 1);
+                if (maxScroll <= 0) return;
+                const x = e.clientX - trackRect.left - fillRect.width / 2;
+                const clamped = Math.max(0, Math.min(usable, x));
+                strip.scrollLeft = (clamped / usable) * maxScroll;
             });
         });
 

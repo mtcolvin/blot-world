@@ -18,6 +18,10 @@
 	  --mininav-spacing: 18px;
 	  --mininav-height: 40px;
 	  --mininav-width: 170px;
+
+	/* Dynamic — pushed up by JS when the footer scrolls into view so the
+	   floating filter sidebar doesn't overlap the footer. Default = 16px gap. */
+	--filter-sidebar-bottom: 16px;
 	
 	/* Colors */
 	--blot-black: #000000;
@@ -34,6 +38,12 @@
 	--accent-purple-glow: rgba(187, 134, 252, 0.3);
 	--gradient-purple: #6366f1;
 	--gradient-blue: #0D28F2;
+	/* Dedicated AI co-built accent — used by the corner badge on cards,
+	   the AI-tag chips on the back, and the "Made with → With AI" filter.
+	   Lavender extends the accent-purple family and pairs with dark text. */
+	--ai-accent: #C7B8FF;
+	--ai-accent-glow: rgba(199, 184, 255, 0.35);
+	--ai-accent-soft: rgba(199, 184, 255, 0.18);
 	
 	/* Sizing */
 	--headshot-size: clamp(80px, 22vw, 130px);

@@ -124,6 +124,7 @@ const AppState = {
 		status: ['all'],
 		area: [],
 		tech: [],
+		madeWith: 'all',
 		sort: 'date-desc'
 	},
 
@@ -134,10 +135,21 @@ const AppState = {
 			status: ['all'],
 			area: [],
 			tech: [],
+			madeWith: 'all',
 			sort: 'date-desc'
 		};
 	}
 };
+
+// Tag substrings that flag a project as AI co-built. Match is case-insensitive
+// and substring-based against dataTech, so "Claude Code" matches "claude".
+const AI_TECH_TAGS = ['claude', 'chatgpt', 'grok', 'gemini', 'copilot'];
+
+function isAITech(techValue) {
+	if (!techValue) return false;
+	const haystack = techValue.toLowerCase();
+	return AI_TECH_TAGS.some(needle => haystack.includes(needle));
+}
 
 // ==========================================================================
 // 2. NAVIGATION & SECTION MANAGEMENT
@@ -439,9 +451,6 @@ const ProjectsPreview = {
 			previewGrid.appendChild(clonedLink);
 		}
 
-		// Re-apply AI project styling after cloning
-		markAIProjects();
-
 		// Append series to titles
 		if (typeof appendSeriesToTitles === 'function') {
 			appendSeriesToTitles();
@@ -483,6 +492,36 @@ const ProjectsPreview = {
 };
 
 // ==========================================================================
+// 4b. FILTER SIDEBAR — pushes up off the bottom when the footer scrolls in
+// so the fixed panel never overlaps the footer.
+// ==========================================================================
+
+const FilterSidebarSticky = {
+	BASE_GAP: 16,
+	init() {
+		this.sidebar = document.getElementById('filter-sidebar');
+		this.footer = document.querySelector('.global-footer');
+		if (!this.sidebar || !this.footer) return;
+		this.ticking = false;
+		const onScroll = () => {
+			if (this.ticking) return;
+			this.ticking = true;
+			requestAnimationFrame(() => this.update());
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll, { passive: true });
+		this.update();
+	},
+	update() {
+		this.ticking = false;
+		const footerTop = this.footer.getBoundingClientRect().top;
+		const intrusion = window.innerHeight - footerTop;
+		const bottom = Math.max(this.BASE_GAP, intrusion + this.BASE_GAP);
+		document.documentElement.style.setProperty('--filter-sidebar-bottom', `${bottom}px`);
+	}
+};
+
+// ==========================================================================
 // 5. FILTER SYSTEM
 // ==========================================================================
 
@@ -492,8 +531,30 @@ const FilterSystem = {
 		// Add delay before attaching listeners
 		setTimeout(() => {
 			this.attachEventListeners();
+			this.attachMadeWithListeners();
 			this.initCollapsibleSections();
 		}, 200);
+	},
+
+	attachMadeWithListeners() {
+		const buttons = document.querySelectorAll('.made-with-section .seg-btn');
+		buttons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const value = btn.dataset.madeWith;
+				AppState.activeFilters.madeWith = value;
+				this.syncMadeWithUI();
+				this.applyFilters();
+			});
+		});
+	},
+
+	syncMadeWithUI() {
+		const value = AppState.activeFilters.madeWith || 'all';
+		document.querySelectorAll('.made-with-section .seg-btn').forEach(btn => {
+			const active = btn.dataset.madeWith === value;
+			btn.classList.toggle('active', active);
+			btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+		});
 	},
 
 	initCollapsibleSections() {
@@ -645,9 +706,13 @@ const FilterSystem = {
 		const poetryCard = document.getElementById('poetry-card');
 		const isPoetrVisible = poetryCard?.classList.contains('visible');
 
+		const madeWith = AppState.activeFilters.madeWith || 'all';
+
 		projectCards.forEach(card => {
-			const area = card.querySelector('.project-card')?.dataset.area;
-			const tech = card.querySelector('.project-card')?.dataset.tech;
+			const projectCard = card.querySelector('.project-card');
+			const area = projectCard?.dataset.area;
+			const tech = projectCard?.dataset.tech;
+			const isAI = projectCard?.dataset.ai === 'true';
 
 			const areaMatch = AppState.activeFilters.area.length === 0 ||
 							AppState.activeFilters.area.includes(area);
@@ -657,9 +722,15 @@ const FilterSystem = {
 								tech && tech.toLowerCase().includes(filterTech.toLowerCase())
 							);
 
+			const madeWithMatch = madeWith === 'all'
+				|| (madeWith === 'ai' && isAI)
+				|| (madeWith === 'solo' && !isAI);
+
+			const allMatch = areaMatch && techMatch && madeWithMatch;
+
 			// Poetry card visibility is controlled by background toggle AND filters
 			if (card.id === 'poetry-card') {
-				if (isPoetrVisible && areaMatch && techMatch) {
+				if (isPoetrVisible && allMatch) {
 					card.classList.remove('hidden', 'fade-out');
 					visibleCount++;
 				} else if (isPoetrVisible) {
@@ -671,7 +742,7 @@ const FilterSystem = {
 				return;
 			}
 
-			if (areaMatch && techMatch) {
+			if (allMatch) {
 				card.classList.remove('hidden', 'fade-out');
 				visibleCount++;
 			} else {
@@ -695,28 +766,29 @@ const FilterSystem = {
 	
 	applyFromState() {
 		document.getElementById('sort-select').value = AppState.activeFilters.sort;
-		
+
 		document.querySelectorAll('.filter-checkbox').forEach(cb => {
 			cb.classList.remove('checked');
 		});
-		
+
 		AppState.activeFilters.area.forEach(area => {
 			const checkbox = document.querySelector(
 				`[data-filter="area"][data-value="${area}"] .filter-checkbox`
 			);
 			if (checkbox) checkbox.classList.add('checked');
 		});
-		
+
 		AppState.activeFilters.tech.forEach(tech => {
 			const checkbox = document.querySelector(
 				`[data-filter="tech"][data-value="${tech}"] .filter-checkbox`
 			);
 			if (checkbox) checkbox.classList.add('checked');
 		});
-		
+
+		this.syncMadeWithUI();
 		this.applyFilters();
 	},
-	
+
 	clearAll() {
 		document.querySelectorAll('.filter-checkbox').forEach(cb => {
 			cb.classList.remove('checked');
@@ -725,6 +797,7 @@ const FilterSystem = {
 		document.getElementById('sort-select').value = 'date-desc';
 
 		AppState.resetFilters();
+		this.syncMadeWithUI();
 		this.applyFilters();
 	},
 	
@@ -844,6 +917,10 @@ const URLManager = {
 			params.set('tech', AppState.activeFilters.tech.join(','));
 		}
 
+		if (AppState.activeFilters.madeWith && AppState.activeFilters.madeWith !== 'all') {
+			params.set('made-with', AppState.activeFilters.madeWith);
+		}
+
 		if (AppState.activeFilters.sort !== 'date-desc') {
 			params.set('sort', AppState.activeFilters.sort);
 		}
@@ -858,6 +935,7 @@ const URLManager = {
 			status: ['all'],
 			area: [],
 			tech: [],
+			madeWith: 'all',
 			sort: 'date-desc'
 		};
 
@@ -867,6 +945,11 @@ const URLManager = {
 
 		if (urlParams.has('tech')) {
 			filters.tech = urlParams.get('tech').split(',');
+		}
+
+		if (urlParams.has('made-with')) {
+			const v = urlParams.get('made-with');
+			if (v === 'solo' || v === 'ai' || v === 'all') filters.madeWith = v;
 		}
 
 		if (urlParams.has('sort')) {
@@ -895,32 +978,7 @@ function showSection(sectionId) {
 }
 
 // ==========================================================================
-// 8. AI PROJECT DETECTION
-// ==========================================================================
-
-function markAIProjects() {
-    const aiNames = ['claude', 'chatgpt', 'grok', 'gemini'];
-    const projectCards = document.querySelectorAll('.project-card');
-
-    projectCards.forEach(card => {
-        const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
-        const description = card.querySelector('p')?.textContent.toLowerCase() || '';
-        const tech = card.dataset.tech?.toLowerCase() || '';
-        const name = card.dataset.name?.toLowerCase() || '';
-        const combinedText = title + ' ' + description + ' ' + tech + ' ' + name;
-
-        // Check if any AI name is present
-        const hasAIName = aiNames.some(aiName => combinedText.includes(aiName));
-
-        if (hasAIName) {
-            card.classList.add('ai-project');
-            console.log('AI project detected:', card.dataset.name);
-        }
-    });
-}
-
-// ==========================================================================
-// 9. INITIALIZATION
+// 8. INITIALIZATION
 // ==========================================================================
 
 // Render project cards from window.PROJECTS_DATA into #projects-grid.
@@ -932,7 +990,9 @@ function renderProjectCards(isTouchDevice) {
 
     // Desktop hovers to flip; touch taps to expand — reflect that in the hint.
     const hintLabel = isTouchDevice ? 'More info' : 'Flip';
-    const flipArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
+    const flipArrow = isTouchDevice
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
     const viewArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
     const externalIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" style="margin-left:4px;vertical-align:baseline;flex-shrink:0;"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/><path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/></svg>';
 
@@ -946,20 +1006,39 @@ function renderProjectCards(isTouchDevice) {
             p.modal ? 'onclick="event.preventDefault(); showInceptionModal();"' : ''
         ].filter(Boolean).join(' ');
 
-        const tags = (p.techDisplay || []).map(t => `<span class="back-tag">${t}</span>`).join('');
+        // AI-co-built treatment: sort AI-related tags to the front, tag them
+        // with .is-ai for the violet styling, and surface a "CO-BUILT" badge on
+        // the front when any AI tool is in the stack.
+        const orderedTags = [...(p.techDisplay || [])].sort((a, b) => {
+            const aAI = isAITech(a) ? 0 : 1;
+            const bAI = isAITech(b) ? 0 : 1;
+            return aAI - bAI;
+        });
+        const tags = orderedTags
+            .map(t => `<span class="back-tag${isAITech(t) ? ' is-ai' : ''}">${t}</span>`)
+            .join('');
+        const isAI = isAITech(p.dataTech);
+        const aiBadge = isAI
+            ? '<div class="ai-badge" aria-label="Co-built with AI">CO-BUILT</div>'
+            : '';
+        const cardClass = isAI ? 'project-card ai-project' : 'project-card';
         const extIcon = p.externalIcon ? externalIcon : '';
 
         return `
             <a ${linkAttrs}>
-                <div class="project-card"
+                <div class="${cardClass}"
                     data-area="${p.area}"
                     data-tech="${p.dataTech}"
                     data-name="${p.dataName}"
                     data-month="${p.month}"
-                    data-year="${p.year}">
+                    data-year="${p.year}"
+                    data-ai="${isAI}">
                     <div class="card-face card-front">
                         <div class="card-image"><img src="${p.image}" alt="${p.imageAlt || p.name}"></div>
-                        <div class="area-ribbon">${p.area}</div>
+                        <div class="corner-chips">
+                            <div class="area-ribbon">${p.area}</div>
+                            ${aiBadge}
+                        </div>
                         <div class="body">
                             <div class="card-name">${p.name}${extIcon}</div>
                             <div class="meta">
@@ -1010,12 +1089,12 @@ document.addEventListener('DOMContentLoaded', function() {
     Navigation.init();
     HeroAnimations.initRotatingTagline();
     FilterSystem.init();
+    FilterSidebarSticky.init();
     ProjectsPreview.populate();
     populateAreaBadges();
     initializeBlog();
     QuoteRotator.init();
     NameTyper.init();
-    markAIProjects();
     checkTagsOverflow();
 
     // Initialize project counter (excluding hidden poetry card)
@@ -1584,35 +1663,39 @@ function populateAreaBadges() {
     // Convert to array and sort alphabetically
     const sortedAreas = Array.from(areas).sort();
 
-    // Clear container and create badge elements
+    // Calculate optimal items per row to avoid orphans
+    const totalBadges = sortedAreas.length;
+    let optimalPerRow = 4; // default
+    for (let perRow = 3; perRow <= 5; perRow++) {
+        const lastRowCount = totalBadges % perRow || perRow;
+        // Prefer layouts where the last row has at least half the items
+        if (lastRowCount >= Math.ceil(perRow / 2)) {
+            optimalPerRow = perRow;
+            break;
+        }
+    }
+
+    // Render badges with .area-row-break flex children injected after every
+    // Nth badge — forces wrap without making badges uniform width (each
+    // badge keeps its natural text-content width).
     container.innerHTML = '';
-    sortedAreas.forEach(area => {
+    sortedAreas.forEach((area, i) => {
         const badge = document.createElement('span');
         badge.className = 'area-badge';
         badge.textContent = area;
         container.appendChild(badge);
+
+        const isRowBoundary = (i + 1) % optimalPerRow === 0;
+        const isLast = i === sortedAreas.length - 1;
+        if (isRowBoundary && !isLast) {
+            const brk = document.createElement('span');
+            brk.className = 'area-row-break';
+            brk.setAttribute('aria-hidden', 'true');
+            container.appendChild(brk);
+        }
     });
 
-    // Calculate optimal items per row to avoid orphans
-    const totalBadges = sortedAreas.length;
-    if (totalBadges > 0) {
-        // Find the best number of items per row (between 3-5)
-        let optimalPerRow = 4; // default
-
-        for (let perRow = 3; perRow <= 5; perRow++) {
-            const rows = Math.ceil(totalBadges / perRow);
-            const lastRowCount = totalBadges % perRow || perRow;
-
-            // Prefer layouts where the last row has at least half the items
-            if (lastRowCount >= Math.ceil(perRow / 2)) {
-                optimalPerRow = perRow;
-                break;
-            }
-        }
-
-        // Set CSS custom property to control grid layout
-        container.style.setProperty('--items-per-row', optimalPerRow);
-    }
+    container.style.setProperty('--items-per-row', optimalPerRow);
 }
 
 // ==========================================================================

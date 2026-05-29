@@ -1131,7 +1131,9 @@ main {
 	flex: 1;
 	min-width: 0;
 	min-height: 100vh;
-	margin-right: 250px;
+	/* Reserve space for the floating sidebar: 260 (width) + 16 (right inset).
+	   No extra visual gap needed — the sidebar's blur/border separates it. */
+	margin-right: 276px;
 }
 
 .projects-main .projects-counter {
@@ -1142,8 +1144,10 @@ main {
 	display: grid;
 	/* Cap column max at 240 (not 280) so 3 columns fit at typical desktop
 	   widths — auto-fill picks track count based on the MAX value, not min,
-	   so 280 + this gap was forcing it down to 2 tracks at ~850px grids. */
-	grid-template-columns: repeat(auto-fill, minmax(210px, 240px));
+	   so 280 + this gap was forcing it down to 2 tracks at ~850px grids.
+	   Min nudged from 210 → 200 so the 3-col threshold sits below the
+	   floating sidebar's footprint at typical laptop widths. */
+	grid-template-columns: repeat(auto-fill, minmax(200px, 240px));
 	justify-content: center;
 	gap: 3rem;
 	/* Don't stretch siblings — when one card expands taller (touch flip),
@@ -1200,6 +1204,11 @@ main {
 	opacity: 1 !important;
 	transform: scale(1) !important;
 	animation: fadeInScale 0.4s ease forwards;
+}
+/* When filters hide the poetry card, .hidden must win over #poetry-card.visible
+   (higher specificity selector below in source-order wins ties). */
+#poetry-card.hidden {
+	display: none !important;
 }
 @keyframes fadeInScale {
 	from { opacity: 0; transform: scale(0.95); }
@@ -1308,10 +1317,19 @@ main {
 	z-index: 5;
 }
 
-.card-front .area-ribbon {
+.card-front .corner-chips {
 	position: absolute;
 	top: 12px;
 	left: 12px;
+	z-index: 3;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	max-width: calc(100% - 24px);
+}
+
+.card-front .area-ribbon {
 	color: white;
 	padding: 4px 10px;
 	font-family: "JetBrains Mono", monospace;
@@ -1320,7 +1338,6 @@ main {
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
 	border-radius: 3px;
-	z-index: 3;
 	overflow: hidden;
 	/* Signature brand gradient (blue → red), continuously sliding. */
 	background: linear-gradient(110deg,
@@ -1346,6 +1363,24 @@ main {
 @media (prefers-reduced-motion: reduce) {
 	.card-front .area-ribbon { animation: none; }
 }
+
+/* AI co-built badge — mirrors .area-ribbon's chip style and stacks beneath
+   it inside .corner-chips. Chartreuse ground + dark ink. */
+.card-front .ai-badge {
+	color: var(--blot-black);
+	padding: 4px 10px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 8px;
+	font-weight: 700;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	border-radius: 3px;
+	background: var(--ai-accent);
+	box-shadow:
+		0 3px 10px var(--ai-accent-glow),
+		0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+}
+
 .card-front .body {
 	position: absolute;
 	left: 0;
@@ -1508,6 +1543,16 @@ main {
 	background: rgba(255,255,255,0.2);
 	border-color: rgba(255,255,255,0.35);
 }
+.card-back .back-tag.is-ai {
+	background: var(--ai-accent);
+	border-color: var(--ai-accent);
+	color: var(--blot-black);
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12) inset;
+}
+.card-back .back-tag.is-ai:hover {
+	background: #c5ff1f;
+	border-color: #c5ff1f;
+}
 .card-back .back-footer {
 	display: flex;
 	justify-content: space-between;
@@ -1618,25 +1663,26 @@ html.touch-device .project-card-link.flipped {
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }
 
-/* AI Project Cards */
+/* AI Project Cards — soft violet wash that pairs with the .ai-badge corner
+   chip and the violet AI tags on the back. */
 .project-card.ai-project {
 	background:
 		linear-gradient(135deg,
-			rgba(13, 40, 242, 0.3) 0%,
-			rgba(99, 102, 241, 0.2) 30%,
-			rgba(99, 102, 241, 0.1) 60%,
-			rgba(13, 40, 242, 0.05) 100%) !important;
-	border-color: rgba(99, 102, 241, 0.4) !important;
+			var(--ai-accent-glow) 0%,
+			var(--ai-accent-soft) 35%,
+			rgba(168, 85, 247, 0.08) 65%,
+			rgba(168, 85, 247, 0.03) 100%) !important;
+	border-color: var(--ai-accent-soft) !important;
 }
 
 .project-card.ai-project:hover {
 	background:
 		linear-gradient(135deg,
-			rgba(13, 40, 242, 0.4) 0%,
-			rgba(99, 102, 241, 0.3) 30%,
-			rgba(99, 102, 241, 0.15) 60%,
-			rgba(13, 40, 242, 0.08) 100%) !important;
-	border-color: rgba(99, 102, 241, 0.6) !important;
+			var(--ai-accent-glow) 0%,
+			var(--ai-accent-soft) 35%,
+			rgba(168, 85, 247, 0.12) 65%,
+			rgba(168, 85, 247, 0.05) 100%) !important;
+	border-color: var(--ai-accent) !important;
 }
 
 /* Inception Protection Modal */
@@ -1780,17 +1826,23 @@ html.touch-device .project-card-link.flipped {
 .filter-sidebar {
 	display: none;
 	position: fixed;
-	top: var(--nav-height);
-	right: 0;
-	bottom: 0;
-	width: 250px;
-	max-height: calc(100vh - var(--nav-height));
-	background-color: var(--blot-black);
-	border-left: 1px solid var(--blot-gray);
-	border-radius: 0;
+	top: calc(var(--nav-height) + 16px);
+	right: 16px;
+	bottom: var(--filter-sidebar-bottom);
+	width: 260px;
+	max-height: calc(100vh - var(--nav-height) - 16px - var(--filter-sidebar-bottom));
+	background-color: rgba(15, 15, 15, 0.92);
+	backdrop-filter: blur(14px) saturate(140%);
+	-webkit-backdrop-filter: blur(14px) saturate(140%);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 14px;
+	box-shadow:
+		0 20px 50px rgba(0, 0, 0, 0.45),
+		0 2px 8px rgba(0, 0, 0, 0.3),
+		0 0 0 1px rgba(0, 0, 0, 0.4);
 	z-index: 10003;
 	overflow-y: auto;
-	padding: 1.25rem 0.875rem;
+	padding: 1rem 1.125rem 1.25rem 1.125rem;
 	flex-shrink: 0;
 }
 
@@ -1812,9 +1864,19 @@ body:has(#projects.active) .filter-sidebar {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0.5rem 0;
-	border-bottom: 1px solid var(--blot-gray);
+	padding: 0.25rem 0 0.75rem 0;
+	margin-bottom: 0.25rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.filter-sidebar-title {
+	margin: 0;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 2px;
 	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.96);
 }
 
 .filter-close-btn {
@@ -1830,19 +1892,20 @@ body:has(#projects.active) .filter-sidebar {
 
 .sort-dropdown {
 	flex: 1;
-	padding: 0.5rem 2rem 0.5rem 0.75rem;
-	background-color: transparent;
-	background-image: url('data:image/svg+xml;utf8,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L6 6L11 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+	padding: 7px 28px 7px 10px;
+	background-color: rgba(255, 255, 255, 0.06);
+	background-image: url('data:image/svg+xml;utf8,<svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L5 5L9 1" stroke="white" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 	background-repeat: no-repeat;
-	background-position: right 0.75rem center;
-	background-size: 12px 8px;
-	border: 1px solid var(--blot-gray);
+	background-position: right 10px center;
+	background-size: 10px 6px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
 	border-radius: 4px;
-	color: var(--blot-white);
-	font-size: 0.8rem;
-	font-weight: 300;
+	color: rgba(255, 255, 255, 0.96);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	letter-spacing: 0.5px;
 	cursor: pointer;
-	transition: all var(--transition-base);
+	transition: background-color var(--transition-base), border-color var(--transition-base);
 	box-sizing: border-box;
 	appearance: none;
 	-webkit-appearance: none;
@@ -1850,52 +1913,53 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 .sort-dropdown:hover {
-	border-color: var(--blot-light-gray);
-	background-color: rgba(255, 255, 255, 0.02);
+	border-color: rgba(255, 255, 255, 0.22);
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sort-dropdown:focus {
 	outline: none;
-	border-color: var(--blot-white);
-	background-color: rgba(255, 255, 255, 0.03);
+	border-color: rgba(255, 255, 255, 0.35);
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sort-dropdown option {
-	background-color: var(--blot-dark-gray);
+	background-color: #111;
 	color: var(--blot-white);
+	font-family: "JetBrains Mono", monospace;
 	padding: 0.5rem;
 }
 
 .clear-filters-compact {
 	width: auto;
-	padding: 0.5rem 0.75rem;
+	padding: 7px 12px;
 	background: transparent;
-	border: 1px solid var(--accent-red);
-	border-radius: 0;
-	color: var(--accent-red);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	border-radius: 4px;
+	color: rgba(255, 255, 255, 0.7);
 	cursor: pointer;
-	transition: all var(--transition-base);
+	transition: background-color var(--transition-base), border-color var(--transition-base), color var(--transition-base);
 	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	font-size: 0.7rem;
-	font-weight: 300;
+	letter-spacing: 1px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 9px;
+	font-weight: 700;
 	white-space: nowrap;
 	box-sizing: border-box;
 	flex-shrink: 0;
 }
 
 .clear-filters-compact:hover {
-	background-color: var(--accent-red);
-	color: var(--blot-black);
-	border-color: var(--accent-red);
-	font-variation-settings: "wght" 600, "GRAD" -200;
+	background-color: rgba(255, 255, 255, 0.08);
+	border-color: rgba(255, 255, 255, 0.35);
+	color: rgba(255, 255, 255, 0.96);
 }
 
 .filter-section {
 	margin: 0;
 	padding-top: 0.5rem;
 	padding-bottom: 1rem;
-	border-bottom: 1px solid var(--blot-gray);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .filter-section.collapsible-section {
@@ -1916,14 +1980,65 @@ body:has(#projects.active) .filter-sidebar {
 	padding-bottom: 1.5rem;
 }
 
-.filter-section h3 {
-	font-size: 0.85rem;
+/* Made with — segmented 3-way control (All / Solo / With AI). */
+.made-with-section {
+	padding-top: 0.9375rem;
+	padding-bottom: 1.5rem;
+}
+
+.filter-segmented {
+	display: flex;
+	gap: 4px;
+	background: rgba(0, 0, 0, 0.35);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 6px;
+	padding: 3px;
+}
+
+.filter-segmented .seg-btn {
+	flex: 1;
+	background: transparent;
+	border: none;
+	color: rgba(255, 255, 255, 0.55);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 1px;
 	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	color: var(--blot-light-gray);
-	padding: 0.5rem 0 0.5rem 0;
+	padding: 7px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background 0.18s ease, color 0.18s ease;
+	white-space: nowrap;
+}
+
+.filter-segmented .seg-btn:hover {
+	color: rgba(255, 255, 255, 0.96);
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.filter-segmented .seg-btn.active {
+	color: rgba(255, 255, 255, 0.96);
+	background: rgba(255, 255, 255, 0.14);
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.filter-segmented .seg-btn[data-made-with="ai"].active {
+	background: var(--ai-accent);
+	color: var(--blot-black);
+	font-weight: 700;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset,
+				0 2px 8px var(--ai-accent-glow);
+}
+
+.filter-section h3 {
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	color: rgba(255, 255, 255, 0.55);
+	padding: 0.5rem 0 0.65rem 0;
 	line-height: 1;
-	font-family: 'Roboto Flex', sans-serif;
+	font-family: "JetBrains Mono", monospace;
 	font-weight: 700;
 }
 
@@ -1937,22 +2052,29 @@ body:has(#projects.active) .filter-sidebar {
 	margin: 0;
 	transition: color var(--transition-base), padding var(--transition-base);
 	user-select: none;
-	font-size: 0.85rem;
+	font-size: 10px;
 	line-height: 1;
 	/* Button reset styles */
 	background: none;
 	border: none;
 	text-align: left;
-	/* Custom styling */
-	color: var(--blot-light-gray);
-	font-family: 'Roboto Flex', sans-serif;
+	/* Custom styling — matches .filter-section h3 chip vocabulary */
+	color: rgba(255, 255, 255, 0.55);
+	font-family: "JetBrains Mono", monospace;
 	font-weight: 700;
+	letter-spacing: 1.5px;
 	text-transform: uppercase;
 }
 
 
+.filter-section:hover h3,
+.filter-section:hover .filter-section-header,
 .filter-section-header:hover {
-	color: var(--blot-white);
+	color: rgba(255, 255, 255, 0.96);
+}
+
+.collapsible-section:not(.collapsed) .filter-section-header {
+	color: rgba(255, 255, 255, 0.96);
 }
 
 .collapse-icon {
@@ -1972,7 +2094,7 @@ body:has(#projects.active) .filter-sidebar {
 	overflow-x: hidden;
 	transition: max-height 0.3s ease, opacity 0.3s ease;
 	opacity: 1;
-	background: var(--blot-black);
+	background: transparent;
 	padding-right: 0;
 	margin-right: 0;
 	scrollbar-width: none;
@@ -2001,29 +2123,39 @@ body:has(#projects.active) .filter-sidebar {
 .filter-option {
 	display: flex;
 	align-items: center;
-	gap: 0.5rem;
-	padding: 0 0 0.75rem 0;
+	gap: 0.625rem;
+	padding: 6px 6px;
+	margin: 0 -6px;
 	cursor: pointer;
-	transition: color var(--transition-base);
-	font-size: 0.85rem;
+	transition: background-color var(--transition-base), color var(--transition-base);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 11px;
+	letter-spacing: 0.3px;
+	color: rgba(255, 255, 255, 0.78);
+	border-radius: 4px;
 }
 
 .filter-option:hover {
-	color: var(--blot-light-gray);
+	color: rgba(255, 255, 255, 0.96);
+	background-color: rgba(255, 255, 255, 0.04);
 }
 
 .filter-option:last-child {
-	padding-bottom: 0.75rem;
+	margin-bottom: 0;
 }
 
 .filter-checkbox {
 	width: 14px;
 	height: 14px;
-	border: 1px solid var(--blot-light-gray);
+	border: 1px solid rgba(255, 255, 255, 0.3);
 	border-radius: 3px;
 	position: relative;
-	transition: all var(--transition-base);
+	transition: background-color var(--transition-base), border-color var(--transition-base);
 	flex-shrink: 0;
+}
+
+.filter-option:hover .filter-checkbox {
+	border-color: rgba(255, 255, 255, 0.5);
 }
 
 .filter-checkbox.checked {
@@ -2032,20 +2164,22 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 .filter-checkbox.checked::after {
-	content: '\2716';
+	content: "";
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	color: var(--blot-dark-gray);
-	font-size: 10px;
-	font-weight: bold;
+	width: 7px;
+	height: 4px;
+	border-left: 1.5px solid var(--blot-black);
+	border-bottom: 1.5px solid var(--blot-black);
+	transform: translate(-50%, -65%) rotate(-45deg);
 }
 
 .filter-count {
 	margin-left: auto;
-	color: var(--blot-light-gray);
-	font-size: 0.8rem;
+	color: rgba(255, 255, 255, 0.4);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
 }
 
 /* ==========================================================================
@@ -2963,9 +3097,10 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar-header h3 {
-		font-size: 1.5rem !important;
+		font-size: 1.1rem !important;
 		text-transform: uppercase;
-		letter-spacing: 0px !important;
+		letter-spacing: 2.5px !important;
+		font-family: "JetBrains Mono", monospace;
 	}
 
 	/* Close button for filter sidebar */
@@ -2997,11 +3132,12 @@ body:has(#projects.active) .filter-sidebar {
 	}
 
 	.filter-sidebar .filter-section h3 {
-		font-size: 1rem;
+		font-size: 0.78rem;
 		margin-bottom: 0;
 		text-transform: uppercase;
-		color: var(--blot-light-gray);
-		font-family: 'Roboto Flex', sans-serif;
+		letter-spacing: 1.5px;
+		color: rgba(255, 255, 255, 0.55);
+		font-family: "JetBrains Mono", monospace;
 		font-weight: 700;
 	}
 
@@ -3020,17 +3156,24 @@ body:has(#projects.active) .filter-sidebar {
 		white-space: nowrap;
 	}
 
+	.filter-sidebar .filter-segmented .seg-btn {
+		padding: 0.75rem 0.5rem;
+		font-size: 0.85rem;
+		min-height: 44px;
+	}
+
 	.filter-sidebar .filter-section {
 		margin-bottom: 0.5rem;
 	}
 
 	.filter-sidebar .filter-section-header {
 		padding: 0.5rem 0 0 0;
-		font-size: 1rem;
+		font-size: 0.78rem;
 		margin-bottom: 0;
 		text-transform: uppercase;
-		color: var(--blot-light-gray);
-		font-family: 'Roboto Flex', sans-serif;
+		letter-spacing: 1.5px;
+		color: rgba(255, 255, 255, 0.55);
+		font-family: "JetBrains Mono", monospace;
 		font-weight: 700;
 	}
 
@@ -3527,6 +3670,7 @@ body:has(#projects.active) .filter-sidebar {
 
 /* Rotating Quote Display */
 .rotating-quote-container {
+    margin-top: 96px;
     margin-bottom: 40px;
     padding: 20px 28px;
     background: linear-gradient(135deg, rgba(13, 40, 242, 0.25), rgba(230, 15, 15, 0.15));
@@ -3729,15 +3873,25 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 .about-areas-grid {
+    /* Flex-wrap so each badge sizes to its own text. populateAreaBadges()
+       injects .area-row-break elements after every N items to force wraps
+       at the orphan-free row count. Margins (not gap) are used so the row
+       break doesn't double the vertical spacing between rows. */
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
     justify-content: center;
+}
+
+.about-areas-grid .area-row-break {
+    flex-basis: 100%;
+    height: 0;
+    margin: 0;
 }
 
 .about-areas-grid .area-badge {
     display: inline-block;
     width: auto;
+    margin: 6px;
     padding: 0.3rem 0.8rem;
     font-size: 0.7rem;
     font-weight: 500;
@@ -3914,11 +4068,6 @@ body:has(#projects.active) .filter-sidebar {
         flex: 0 0 calc(50% - 8px);
     }
 
-    .about-areas-grid {
-        --items-per-row: 3;
-        grid-template-columns: repeat(var(--items-per-row), 1fr);
-    }
-
     .about-cta {
         flex-direction: column;
     }
@@ -3945,11 +4094,6 @@ body:has(#projects.active) .filter-sidebar {
     .quote-nav-btn svg {
         width: 20px;
         height: 20px;
-    }
-
-    .about-areas-grid {
-        --items-per-row: 2;
-        grid-template-columns: repeat(var(--items-per-row), 1fr);
     }
 
     .about-skills .skill-category {
