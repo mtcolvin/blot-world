@@ -1,8 +1,11 @@
-/* Mobile mininav color defaults (can be overridden per-page) */
+/* Mobile mininav color defaults (can be overridden per-page).
+   --mininav-mobile-bg falls back to --mininav-themed-bg so a project page
+   can theme both desktop backdrop and the mobile bar from a single var. */
 :root {
-  --mininav-mobile-bg: rgba(254, 254, 254, 0.85);
-  --mininav-mobile-border: rgba(26, 26, 26, 0.1);
-  --mininav-mobile-color: #1a1a1a;
+  --mininav-themed-bg: rgba(10, 10, 10, 0.9);
+  --mininav-mobile-bg: var(--mininav-themed-bg);
+  --mininav-mobile-border: rgba(255, 255, 255, 0.08);
+  --mininav-mobile-color: #f0f0f0;
 }
 
 /* Mini nav container */
@@ -151,36 +154,66 @@ nav.minimal-nav:hover .logo-fill {
   font-weight: 600;
 }
 
-/* Mobile mininav styles */
+/* Mobile mininav — slim themed bar w/ true SVG see-through cutout.
+   JS (minimal-nav.js) rewrites the inline SVG's viewBox, mask rect, and
+   nav-rect on mobile so the existing desktop cutout machinery spans the
+   full-width bar. The masked backdrop-blur + nav-rect punch the logo
+   shape out of the bar, revealing page content behind it.
+   The bar is position:fixed so it stays pinned to the viewport while
+   the page scrolls. */
 @media (max-width: 640px) {
   nav.minimal-nav {
+    position: fixed;
     width: 100% !important;
-    height: auto;
+    height: 52px !important;
+    min-height: 52px !important;
     left: 0 !important;
     right: 0 !important;
     top: 0 !important;
-    transform: none;
-    padding: 24px 16px !important;
-    background: var(--mininav-mobile-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 0 0 12px 12px !important;
+    padding: 0 16px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
     border: none !important;
     border-bottom: 1px solid var(--mininav-mobile-border) !important;
     overflow: visible;
+    z-index: 1000;
+    /* iOS Safari: force own GPU compositing layer so backdrop-filter +
+       position:fixed don't rasterize-glitch mid-scroll (which makes the
+       bar appear to shrink). translate3d is the proven incantation. */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
   }
 
-  .minimal-nav .backdrop-blur,
+  /* Show the desktop cutout machinery on mobile — JS resizes the SVG. */
   .minimal-nav svg.nav-bg {
-    display: none;
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .minimal-nav .backdrop-blur {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--mininav-mobile-bg);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+  }
+  .nav-rect {
+    fill: var(--mininav-mobile-bg);
   }
 
   .minimal-nav .minimal-nav-container {
     display: flex;
     align-items: center;
     padding-left: 0;
-    gap: 8px;
+    gap: 12px;
     color: var(--mininav-mobile-color);
+    height: 100%;
   }
 
   .back-btn-minimal {
@@ -189,31 +222,26 @@ nav.minimal-nav:hover .logo-fill {
     flex-shrink: 0;
     color: var(--mininav-mobile-color);
   }
-
   .back-btn-minimal svg {
     width: 20px;
     height: 20px;
     stroke: var(--mininav-mobile-color);
   }
 
+  /* Silhouette stays as an INVISIBLE layout placeholder — preserves
+     the back-arrow → logo → title flex spacing so the SVG cutout can
+     line up where the silhouette would have been. JS measures the
+     placeholder's position to place the cutout. */
   .min-logo-icon {
     display: flex !important;
+    visibility: hidden;
     width: 24px;
     height: 24px;
     flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--mininav-mobile-color);
-    mask-image: url('../images/logo/blot-iconmark-black-bkgnd.png');
-    -webkit-mask-image: url('../images/logo/blot-iconmark-black-bkgnd.png');
-    mask-size: contain;
-    -webkit-mask-size: contain;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
+    background: none !important;
+    mask: none !important;
+    -webkit-mask: none !important;
   }
-
   .min-logo-icon img {
     visibility: hidden;
   }
@@ -221,12 +249,11 @@ nav.minimal-nav:hover .logo-fill {
   .min-logo-title {
     display: flex !important;
     letter-spacing: -1px;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--mininav-mobile-color);
     margin-left: auto;
   }
-
   .min-logo-title span {
     display: inline-block;
     opacity: 1 !important;

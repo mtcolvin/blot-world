@@ -14,10 +14,10 @@
     </script>
     <!-- End Google Tag Manager -->
 
-	<!-- Google Fonts Roboto Flex -->
+	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
 
 	<!-- Preload critical resources -->
 	<link rel="preload" as="image" href="images/amari.jpg">
@@ -83,9 +83,12 @@
 
         :root {
             --faces-bg: #331304;
+            --faces-bg-joni: #2D000D;
             --faces-dark: #0a0a0a;
-            --faces-light: #f5f5f5;
-            --faces-accent: #E8B77D;
+            --faces-light: #f5e3d0;
+            --faces-amari: #E8B77D;
+            --faces-joni: #D1005D;
+            --faces-rule: rgba(245, 227, 208, 0.18);
 
             /* Mini Nav Color Overrides */
             --mininav-bg: transparent;
@@ -93,207 +96,407 @@
             --mininav-logo-opacity: 0;
             --mininav-logo-opacity-active: 0;
             --mininav-backdrop-display: block;
+            --mininav-themed-bg: rgba(70, 35, 15, 0.95);
+            --mininav-mobile-border: rgba(255, 255, 255, 0.12);
+            --mininav-mobile-color: #f5e3d0;
         }
 
-        /* Override backdrop mask and styling for this page */
+        /* Mini-nav backdrop tone */
         .minimal-nav .backdrop-blur {
             mask: url(#logo-cut-faces);
             -webkit-mask: url(#logo-cut-faces);
             background: rgba(70, 35, 15, 0.95);
             transition: background 0.6s ease;
         }
-
         body.joni-hover .minimal-nav .backdrop-blur {
             background: rgba(70, 20, 35, 0.95);
         }
+        .nav-rect { fill: transparent; }
 
-        .nav-rect {
-            fill: transparent;
+        body {
+            font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--faces-bg);
+            color: var(--faces-light);
+            line-height: 1.5;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.6s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+        body.joni-hover { background: var(--faces-bg-joni); }
+
+        /* ====================================================================
+           SERIES HEADER — editorial title block at the top
+           ==================================================================== */
+        .series-header {
+            position: relative;
+            padding: 96px 56px 36px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 28px;
+            align-items: end;
+            border-bottom: 1px solid var(--faces-rule);
         }
 
-		body {
-			font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-			background: var(--faces-bg);
-			color: var(--faces-light);
-			line-height: 1.6;
-			overflow: hidden;
-			margin: 0;
-			padding: 0;
-			height: 100vh;
-			transition: background-color 0.6s ease;
-		}
-
-		body.joni-hover { background: #2D000D; }
-
-        /* Gallery Container */
-        .gallery {
-            height: 100vh;
-            width: 100vw;
+        .series-eyebrow {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--faces-amari);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 2vw;
-            padding: 60px 40px 40px;
-            position: relative;
+            gap: 10px;
+            padding-bottom: 4px;
+        }
+        body.joni-hover .series-eyebrow { color: var(--faces-joni); }
+        .series-eyebrow::after {
+            content: "";
+            width: 28px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.45;
         }
 
-		/* Series label */
-		.series-label {
-			position: fixed;
-			top: var(--mininav-spacing);
-			right: var(--mininav-spacing);
-			font-size: 12px;
-			font-weight: 600;
-			text-transform: uppercase;
-			letter-spacing: 2px;
-			color: var(--faces-accent);
-			padding: 12px 20px;
-			background: rgba(0, 0, 0, 0.5);
-			backdrop-filter: blur(10px);
-			border-radius: 10px;
-			transition: color 0.6s ease;
-		}
+        .series-wordmark {
+            font-family: "Roboto Flex", sans-serif;
+            font-size: clamp(72px, 11vw, 168px);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            line-height: 0.85;
+            color: var(--faces-light);
+            font-style: italic;
+            margin: 0;
+        }
 
-		body.joni-hover .series-label { color: #D1005D; }
+        .series-meta {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(245, 227, 208, 0.6);
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 6px;
+        }
+        .series-meta strong {
+            font-weight: 700;
+            color: var(--faces-light);
+        }
 
-        /* Individual artwork piece */
-        .piece {
+        .series-description {
+            grid-column: 1 / -1;
+            font-family: "Roboto Flex", sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.55;
+            color: rgba(245, 227, 208, 0.75);
+            max-width: 56ch;
+            margin-top: 18px;
+        }
+
+        /* ====================================================================
+           DIPTYCH — two plates side by side
+           ==================================================================== */
+        .diptych {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            padding: 0;
+            position: relative;
+        }
+        .diptych::before {
+            content: "";
+            position: absolute;
+            top: 56px;
+            bottom: 56px;
+            left: 50%;
+            width: 1px;
+            background: var(--faces-rule);
+            pointer-events: none;
+        }
+
+        .plate {
+            position: relative;
+            padding: 56px 56px 48px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+            transition: background-color 0.5s ease;
+        }
+        .plate:hover {
+            background: rgba(0, 0, 0, 0.18);
+        }
+
+        .plate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .plate-no {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: rgba(245, 227, 208, 0.45);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .plate-no .num {
+            color: var(--faces-light);
+            font-size: 11px;
+        }
+
+        .plate-cta {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: rgba(245, 227, 208, 0.55);
+            padding: 5px 9px;
+            border: 1px solid rgba(245, 227, 208, 0.22);
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+        }
+        .plate-cta svg {
+            width: 9px;
+            height: 9px;
+            transition: transform 0.3s ease;
+        }
+        .plate:hover .plate-cta {
+            color: var(--faces-light);
+            border-color: rgba(245, 227, 208, 0.5);
+            background: rgba(0, 0, 0, 0.25);
+        }
+        .plate:hover .plate-cta svg {
+            transform: translateX(2px);
+        }
+
+        .plate-frame {
             position: relative;
             flex: 1;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            min-height: 0;
+            overflow: hidden;
+            border-radius: 2px;
         }
-
-        .piece .artwork-image {
+        .plate-frame img {
             max-width: 100%;
-            max-height: calc(100vh - 120px);
+            max-height: 60vh;
             width: auto;
             height: auto;
             object-fit: contain;
             display: block;
-            transition: filter 0.4s ease;
+            transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .plate:hover .plate-frame img {
+            transform: scale(1.025);
         }
 
-        /* Info overlay */
-        .piece-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 30px 20px 20px;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.35s ease, transform 0.35s ease;
-            pointer-events: none;
+        .plate-info {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--faces-rule);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px 28px;
+            align-items: end;
         }
 
-        @media (hover: hover) {
-            .piece:hover .piece-info {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        /* Touch devices: tap on the piece reveals the info overlay. */
-        @media (hover: none) {
-            .piece.touched .piece-info {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .piece-title {
-            font-size: 36px;
-            font-weight: 700;
-            letter-spacing: -1px;
+        .plate-title {
+            font-family: "Roboto Flex", sans-serif;
+            font-size: clamp(38px, 5vw, 64px);
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            line-height: 0.95;
             color: var(--faces-light);
-            margin: 0;
-            line-height: 1;
+            font-style: italic;
         }
 
-        .piece-series {
-            font-size: 12px;
-            font-weight: 500;
+        .plate-meta {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 6px;
-        }
-
-        .piece[data-slug="amari"] .piece-series { color: #E8B77D; }
-        .piece[data-slug="joni"] .piece-series { color: #D1005D; }
-
-        .piece-series .series-word {
-            opacity: 0.5;
-        }
-
-        .piece-meta {
+            text-align: right;
+            color: rgba(245, 227, 208, 0.6);
             display: flex;
-            gap: 16px;
-            margin-top: 10px;
+            flex-direction: column;
+            gap: 5px;
+            white-space: nowrap;
         }
-
-        .piece-date,
-        .piece-medium {
-            font-size: 12px;
-            font-weight: 400;
+        .plate-meta .row-label {
+            opacity: 0.55;
+            margin-right: 8px;
+            font-weight: 500;
+        }
+        .plate-meta .row-value {
             color: var(--faces-light);
-            opacity: 0.6;
+            font-weight: 700;
+        }
+
+        .plate[data-slug="amari"] .plate-no .num { color: var(--faces-amari); }
+        .plate[data-slug="joni"]  .plate-no .num { color: var(--faces-joni); }
+
+        /* ====================================================================
+           FOOTER — closing rule
+           ==================================================================== */
+        .series-footer {
+            padding: 28px 56px 36px;
+            border-top: 1px solid var(--faces-rule);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 1.8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            color: rgba(245, 227, 208, 0.45);
+        }
+        .series-footer .mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .series-footer .mark::before {
+            content: "";
+            width: 14px;
+            height: 1px;
+            background: currentColor;
         }
 
-        /* Responsive */
+        /* ====================================================================
+           RESPONSIVE — site convention: tablet ≤1024, mobile ≤640
+           ==================================================================== */
+
+        /* Tablet — keep the diptych two-up but tighten margins. */
+        @media (max-width: 1024px) {
+            .series-header {
+                padding: 84px 36px 28px;
+                gap: 20px;
+            }
+            .plate {
+                padding: 44px 36px 40px;
+            }
+            .plate-frame img {
+                max-height: 56vh;
+            }
+            .series-footer {
+                padding: 24px 36px 30px;
+            }
+        }
+
+        /* Mobile — single column, header reflows, plates stack with a
+           hairline between them (not a center-rule overlay). */
         @media (max-width: 640px) {
-            .gallery {
+            .series-header {
+                padding: 76px 20px 24px;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                align-items: start;
+            }
+            .series-eyebrow {
+                font-size: 9px;
+                letter-spacing: 2px;
+                padding-bottom: 0;
+            }
+            .series-eyebrow::after { width: 22px; }
+            .series-wordmark {
+                font-size: clamp(64px, 22vw, 96px);
+                line-height: 0.9;
+            }
+            .series-meta {
+                text-align: left;
+                flex-direction: row;
+                gap: 16px;
+                padding-bottom: 0;
+                flex-wrap: wrap;
+            }
+            .series-description {
+                font-size: 14px;
+                line-height: 1.55;
+                margin-top: 8px;
+            }
+
+            .diptych {
+                grid-template-columns: 1fr;
+            }
+            /* Center rule on desktop becomes per-plate top-border on mobile. */
+            .diptych::before { display: none; }
+
+            .plate {
+                padding: 36px 20px 32px;
+                border-top: 1px solid var(--faces-rule);
+            }
+            .plate:first-child {
+                border-top: none;
+            }
+            .plate:hover {
+                /* No persistent hover on touch — let :active feel snappy. */
+                background: transparent;
+            }
+            .plate:active {
+                background: rgba(0, 0, 0, 0.18);
+            }
+            .plate-header {
+                margin-bottom: 18px;
+            }
+            .plate-frame img {
+                max-height: 48vh;
+            }
+            .plate-info {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-top: 22px;
+                padding-top: 16px;
+            }
+            .plate-title {
+                font-size: clamp(34px, 9vw, 48px);
+            }
+            .plate-meta {
+                text-align: left;
                 flex-direction: column;
-                gap: 3vh;
-                padding: 60px 20px 20px;
+                gap: 4px;
+                white-space: normal;
+            }
+            .plate-meta .row-label {
+                font-size: 9px;
+                letter-spacing: 1.2px;
             }
 
-            .piece {
-                flex: none;
-                width: 100%;
-                height: auto;
-                max-height: 45vh;
-            }
-
-            .piece .artwork-image {
-                max-height: 40vh;
-                max-width: 90vw;
-            }
-
-			.piece-info {
-				opacity: 1;
-				transform: translateY(0);
-				padding: 16px 12px 10px;
-			}
-
-            .piece-title {
-                font-size: 24px;
-            }
-
-            .piece-meta {
+            .series-footer {
+                padding: 22px 20px 28px;
                 flex-direction: column;
-                gap: 2px;
+                gap: 8px;
+                align-items: flex-start;
+                font-size: 8.5px;
+                letter-spacing: 1.5px;
             }
-
-			.series-label {
-				font-size: 10px;
-				padding: 10px 16px;
-			}
         }
 
-        @media (max-width: 480px) {
-            .piece-title {
-                font-size: 20px;
-            }
-
-			.piece .artwork-image {
-				max-width: 95vw;
-			}
+        @media (max-width: 380px) {
+            .series-header { padding: 70px 16px 22px; }
+            .plate { padding: 30px 16px 28px; }
+            .series-description { font-size: 13.5px; }
         }
 	</style>
 </head>
@@ -326,82 +529,104 @@
 					<path d="M19 12H5M12 19l-7-7 7-7"/>
 				</svg>
 			</button>
+			<div class="min-logo-icon">
+				<img src="../../images/logo/blot-iconmark-black-bkgnd.png" alt="" width="24" height="24">
+			</div>
 			<div class="min-logo-title">
 				<span>B</span><span>L</span><span>O</span><span>T</span><span>.</span><span>W</span><span>O</span><span>R</span><span>L</span><span>D&nbsp;</span>
 			</div>
 		</div>
 	</nav>
 
-	<!-- Series Label -->
-	<div class="series-label">Faces Series</div>
+    <!-- ============================================================
+         SERIES HEADER
+         ============================================================ -->
+    <header class="series-header">
+        <p class="series-eyebrow">Digital Art · Series 01</p>
+        <h1 class="series-wordmark">Faces</h1>
+        <div class="series-meta">
+            <span><span class="row-label">Editions</span> <strong>02</strong></span>
+            <span><span class="row-label">Span</span> <strong>2023 — 2025</strong></span>
+        </div>
+        <p class="series-description">
+            An evolving series of digital portraits exploring expression, identity, and the economy of line. Each study is built from a limited palette in Affinity Designer — fewer strokes, more presence.
+        </p>
+    </header>
 
-    <!-- Gallery -->
-    <div class="gallery">
-        <!-- Amari -->
-        <div class="piece" data-slug="amari">
-            <img class="artwork-image" src="images/amari.jpg" alt="Amari - Digital Portrait" />
-            <div class="piece-info">
-                <h2 class="piece-title">Amari</h2>
-                <p class="piece-series">Faces <span class="series-word">Series</span></p>
-                <div class="piece-meta">
-                    <span class="piece-date">September 2023</span>
-                    <span class="piece-medium">Digital Art / Affinity Designer</span>
+    <!-- ============================================================
+         DIPTYCH — two plates
+         ============================================================ -->
+    <section class="diptych">
+        <a class="plate" data-slug="amari" href="../amari/amari.html" aria-label="View the Amari portrait">
+            <div class="plate-header">
+                <span class="plate-no"><span class="num">01</span> · Plate</span>
+                <span class="plate-cta">
+                    View
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 6h8M7 2l4 4-4 4"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="plate-frame">
+                <img src="images/amari.jpg" alt="Amari — Digital Portrait" />
+            </div>
+            <div class="plate-info">
+                <h2 class="plate-title">Amari</h2>
+                <div class="plate-meta">
+                    <span><span class="row-label">Released</span> <span class="row-value">Sep 2023</span></span>
+                    <span><span class="row-label">Medium</span> <span class="row-value">Affinity Designer</span></span>
                 </div>
             </div>
-        </div>
-        <!-- Joni -->
-        <div class="piece" data-slug="joni">
-            <img class="artwork-image" src="images/joni.jpg" alt="Joni - Digital Portrait" />
-            <div class="piece-info">
-                <h2 class="piece-title">Joni</h2>
-                <p class="piece-series">Faces <span class="series-word">Series</span></p>
-                <div class="piece-meta">
-                    <span class="piece-date">October 2025</span>
-                    <span class="piece-medium">Digital Art / Affinity Designer</span>
+        </a>
+
+        <a class="plate" data-slug="joni" href="../joni/joni.html" aria-label="View the Joni portrait">
+            <div class="plate-header">
+                <span class="plate-no"><span class="num">02</span> · Plate</span>
+                <span class="plate-cta">
+                    View
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 6h8M7 2l4 4-4 4"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="plate-frame">
+                <img src="images/joni.jpg" alt="Joni — Digital Portrait" />
+            </div>
+            <div class="plate-info">
+                <h2 class="plate-title">Joni</h2>
+                <div class="plate-meta">
+                    <span><span class="row-label">Released</span> <span class="row-value">Oct 2025</span></span>
+                    <span><span class="row-label">Medium</span> <span class="row-value">Affinity Designer</span></span>
                 </div>
             </div>
-        </div>
-    </div>
+        </a>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <footer class="series-footer">
+        <span class="mark">Faces / Series 01</span>
+        <span>© Matthew Colvin · BLOT.WORLD</span>
+    </footer>
 
     <!-- Minimal Nav Dynamic Color Script -->
     <script src="../../js/minimal-nav.js"></script>
 
 	<script>
-		// Background color shift on hover (desktop)
-		document.querySelectorAll('.piece').forEach(piece => {
-			piece.addEventListener('mouseenter', () => {
-				document.body.className = piece.dataset.slug === 'joni' ? 'joni-hover' : '';
+		// Background tint shifts per hovered plate (desktop pointer only).
+		document.querySelectorAll('.plate').forEach(plate => {
+			plate.addEventListener('mouseenter', () => {
+				document.body.className = plate.dataset.slug === 'joni' ? 'joni-hover' : '';
 			});
-			piece.addEventListener('mouseleave', () => {
+			plate.addEventListener('mouseleave', () => {
 				document.body.className = '';
 			});
 		});
 
-		// Touch devices: tap to reveal info + shift background; tap outside to clear.
-		if (matchMedia('(hover: none)').matches) {
-			const pieces = document.querySelectorAll('.piece');
-			pieces.forEach(piece => {
-				piece.addEventListener('click', e => {
-					e.stopPropagation();
-					const wasTouched = piece.classList.contains('touched');
-					pieces.forEach(p => p.classList.remove('touched'));
-					if (!wasTouched) {
-						piece.classList.add('touched');
-						document.body.className = piece.dataset.slug === 'joni' ? 'joni-hover' : '';
-					} else {
-						document.body.className = '';
-					}
-				});
-			});
-			document.addEventListener('click', () => {
-				pieces.forEach(p => p.classList.remove('touched'));
-				document.body.className = '';
-			});
-		}
-
-		// Disable right-click on images
+		// Disable right-click on portrait images.
 		document.addEventListener('contextmenu', function(e) {
-			if (e.target.tagName === 'IMG') {
+			if (e.target.tagName === 'IMG' && e.target.closest('.plate-frame')) {
 				e.preventDefault();
 			}
 		});

@@ -103,6 +103,78 @@
         });
     }
 
+    // ============ Mobile SVG cutout fixup ============
+    // The inline <svg class="nav-bg"> is authored at desktop dimensions
+    // (170x40). On mobile the bar is full-width × ~52px, so we rewrite
+    // the SVG's viewBox, mask rect, nav-rect, and the logo group's
+    // translate so the existing cutout machinery spans the full bar and
+    // aligns the cutout with the invisible .min-logo-icon placeholder
+    // (so it lands between the back arrow and the title).
+    if (nav) {
+        const svg = nav.querySelector('svg.nav-bg');
+        const maskRect = svg && svg.querySelector('mask > rect');
+        const navRectEl = svg && svg.querySelector('rect.nav-rect');
+        const logoGroup = svg && svg.querySelector('mask > g');
+        const origTransform = logoGroup ? logoGroup.getAttribute('transform') || '' : '';
+        const tailMatch = origTransform.match(/scale\([^)]*\)\s*translate\([^)]*\)/);
+        const transformTail = tailMatch ? tailMatch[0] : 'scale(0.028) translate(-500,-490)';
+
+        const mql = window.matchMedia('(max-width: 640px)');
+
+        function syncMobileSVG() {
+            if (!svg) return;
+            if (!mql.matches) {
+                // Desktop: restore native sizing.
+                svg.setAttribute('viewBox', '0 0 170 40');
+                svg.setAttribute('width', '170');
+                svg.setAttribute('height', '40');
+                if (maskRect) {
+                    maskRect.setAttribute('width', '170');
+                    maskRect.setAttribute('height', '40');
+                }
+                if (navRectEl) {
+                    navRectEl.setAttribute('width', '170');
+                    navRectEl.setAttribute('height', '40');
+                }
+                if (logoGroup) {
+                    logoGroup.setAttribute('transform', 'translate(46,20) ' + transformTail);
+                }
+                return;
+            }
+            const rect = nav.getBoundingClientRect();
+            const w = Math.max(Math.round(rect.width), 1);
+            const h = Math.max(Math.round(rect.height), 1);
+            svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+            svg.setAttribute('preserveAspectRatio', 'none');
+            svg.removeAttribute('width');
+            svg.removeAttribute('height');
+            if (maskRect) {
+                maskRect.setAttribute('width', String(w));
+                maskRect.setAttribute('height', String(h));
+            }
+            if (navRectEl) {
+                navRectEl.setAttribute('width', String(w));
+                navRectEl.setAttribute('height', String(h));
+            }
+            if (logoGroup) {
+                const placeholder = nav.querySelector('.min-logo-icon');
+                let cx = 26, cy = h / 2;
+                if (placeholder) {
+                    const pRect = placeholder.getBoundingClientRect();
+                    if (pRect.width > 0) {
+                        cx = pRect.left - rect.left + pRect.width / 2;
+                        cy = pRect.top - rect.top + pRect.height / 2;
+                    }
+                }
+                logoGroup.setAttribute('transform', 'translate(' + cx + ',' + cy + ') ' + transformTail);
+            }
+        }
+
+        syncMobileSVG();
+        window.addEventListener('resize', syncMobileSVG);
+        if (mql.addEventListener) mql.addEventListener('change', syncMobileSVG);
+    }
+
     if (!nav || !logoFill) return;
 
     // Get background color at nav position
