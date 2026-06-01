@@ -115,7 +115,9 @@
         .minimal-nav .back-btn-minimal { color: var(--text); }
         .minimal-nav .back-btn-minimal svg { stroke: var(--text); }
         .minimal-nav .min-logo-title { color: var(--text); }
-        .min-logo-icon { display: none; }
+        /* .min-logo-icon stays as the shared invisible mobile placeholder so
+           the painted logo can be positioned in its slot (see nav script at
+           end of body). It's hidden on desktop by minimal-nav.css. */
 
         /* Vertical Spine — sticky in-page navigation rail */
         .spine {
@@ -523,6 +525,11 @@
         .lightbox-nav svg { width: 22px; height: 22px; }
 
         @media (max-width: 640px) {
+            /* Match the other project mininavs on mobile: a flat, full-width
+               bar with just the shared bottom hairline. Drop the desktop
+               floating-pill's inset outline + drop shadow. */
+            nav.minimal-nav { box-shadow: none !important; }
+
             .lightbox-nav { width: 44px; height: 44px; }
             .lightbox-nav.prev { left: 12px; }
             .lightbox-nav.next { right: 12px; }
@@ -1288,6 +1295,65 @@
                 if (el && el.parentNode) el.parentNode.removeChild(el);
             }, 500);
         });
+    })();
+    </script>
+
+    <!-- Mobile mininav: resize the SVG to the full-width bar and center the
+         painted logo in the back-arrow → title slot. Photography keeps its
+         painted logo (not a cutout) and doesn't load the shared minimal-nav.js,
+         so this does ONLY the SVG sizing/positioning — no click handler, no
+         logo recolor. Without it the SVG (viewBox 170x40, preserveAspectRatio
+         none, width:100%) stretches the logo horizontally on mobile. -->
+    <script>
+    (function () {
+        var nav = document.querySelector('nav.minimal-nav');
+        if (!nav) return;
+        var svg = nav.querySelector('svg.nav-bg');
+        var navRect = svg && svg.querySelector('rect.nav-rect');
+        var logoPath = svg && svg.querySelector('path.logo-fill');
+        var logoGroup = logoPath && logoPath.parentNode;
+        if (!svg || !logoGroup) return;
+        var orig = logoGroup.getAttribute('transform') || '';
+        var tail = (orig.match(/scale\([^)]*\)\s*translate\([^)]*\)/) ||
+                    ['scale(0.028) translate(-500,-490)'])[0];
+        var mql = window.matchMedia('(max-width: 640px)');
+
+        function sync() {
+            if (!mql.matches) {
+                // Desktop: restore native 170x40 sizing.
+                svg.setAttribute('viewBox', '0 0 170 40');
+                svg.setAttribute('width', '170');
+                svg.setAttribute('height', '40');
+                if (navRect) { navRect.setAttribute('width', '170'); navRect.setAttribute('height', '40'); }
+                logoGroup.setAttribute('transform', 'translate(46,20) ' + tail);
+                return;
+            }
+            // Mobile: viewBox in CSS pixels so the logo's uniform scale isn't
+            // distorted, then center it on the invisible .min-logo-icon slot.
+            var r = nav.getBoundingClientRect();
+            var w = Math.max(Math.round(r.width), 1), h = Math.max(Math.round(r.height), 1);
+            svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+            svg.setAttribute('preserveAspectRatio', 'none');
+            svg.removeAttribute('width');
+            svg.removeAttribute('height');
+            if (navRect) { navRect.setAttribute('width', String(w)); navRect.setAttribute('height', String(h)); }
+            var cx = 26, cy = h / 2;
+            var ph = nav.querySelector('.min-logo-icon');
+            if (ph) {
+                var pr = ph.getBoundingClientRect();
+                if (pr.width > 0) {
+                    cx = pr.left - r.left + pr.width / 2;
+                    cy = pr.top - r.top + pr.height / 2;
+                }
+            }
+            logoGroup.setAttribute('transform', 'translate(' + cx + ',' + cy + ') ' + tail);
+        }
+
+        sync();
+        window.addEventListener('load', sync);
+        window.addEventListener('resize', sync);
+        window.addEventListener('orientationchange', sync);
+        if (mql.addEventListener) mql.addEventListener('change', sync);
     })();
     </script>
 </body>

@@ -524,6 +524,24 @@
                 font-size: 13px;
             }
 
+            /* iOS WebKit cutout fix.
+               The shared design punches the logo hole with a CSS
+               `mask: url(#logo-cut-poetry)` on the .backdrop-blur HTML layer.
+               On iOS that (a) renders blurry — WebKit rasterizes the masked
+               layer at low res — and (b) makes the position:fixed bar jitter
+               horizontally during scroll. So on mobile we instead let the
+               inline SVG <rect> (which already carries mask="url(#…)") BE the
+               visible bar: SVG-internal masking is crisp (vector) and stable.
+               The HTML blur layer is hidden; blur is dropped, but the bar is
+               95% opaque so it's imperceptible. The shared syncMobileSVG()
+               already sizes the rect and positions the cutout. */
+            .minimal-nav .backdrop-blur {
+                display: none !important;
+            }
+            .nav-rect {
+                fill: rgba(240, 73, 35, 0.95) !important;
+            }
+
             /* Mobile logo icon */
             .min-logo-icon {
                 display: flex !important;

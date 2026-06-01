@@ -316,6 +316,15 @@
             /* Mobile mininav colors - uses defaults from minimal-nav.css */
             /* Override with: --mininav-mobile-bg, --mininav-mobile-border, --mininav-mobile-color */
 
+            /* iOS WebKit cutout fix (see cafemex): the CSS mask:url(#…) on the
+               .backdrop-blur HTML layer renders blurry and makes the fixed bar
+               jitter horizontally during scroll on iOS. Instead, hide the blur
+               layer and let the masked SVG <rect> be the bar — SVG-internal
+               masking is crisp (vector) and stable. syncMobileSVG() (shared
+               minimal-nav.js, added at end of body) sizes the rect + cutout. */
+            .minimal-nav .backdrop-blur { display: none !important; }
+            .nav-rect { fill: rgba(74, 74, 74, 0.95) !important; }
+
             .container {
                 padding: 5rem 1rem calc(var(--mobile-nav-height) + 2rem) 1rem;
             }
@@ -891,5 +900,10 @@ const poems = poemsRaw.slice().sort((a, b) => {
             setupSwipeControls();
         });
     </script>
+
+    <!-- Shared mininav script: resizes the SVG cutout to the full-width mobile
+         bar (syncMobileSVG) and handles the nav click. Required for the masked
+         <rect> cutout to render correctly on mobile. -->
+    <script src="../../js/minimal-nav.js"></script>
 </body>
 </html>
