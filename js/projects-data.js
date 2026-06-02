@@ -64,20 +64,20 @@
             href: 'projects/cafemex/cafemex.html'
         },
         {
-            id: 'faces',
-            name: 'Faces',
-            dataName: 'Faces',
+            id: 'la-facade',
+            name: 'La Façade',
+            dataName: 'La Façade',
             area: 'Digital Art',
             dataTech: 'Affinity Designer',
             techDisplay: ['Affinity Designer'],
             month: 'August',
             year: '2023',
             dateDisplay: 'Aug 2023 — Oct 2025',
-            image: 'images/previews/faces-preview.jpg',
-            imageAlt: 'Faces Series',
+            image: 'images/previews/la-facade-preview.jpg',
+            imageAlt: 'La Façade',
             description: 'An evolving series of digital portraits exploring expression, identity, and the economy of line.',
             techSectionLabel: 'Tools',
-            href: 'projects/faces/faces.html'
+            href: 'projects/la-facade/la-facade.html'
         },
         {
             id: 'retail-scheduling',
