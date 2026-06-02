@@ -285,6 +285,93 @@
                 font-size: 28px;
             }
         }
+
+        /* ====================================================================
+           PIECE NAV — back to the Faces series + cycle between pieces.
+           Plain links, so they navigate instantly with no transition gif
+           (the gif is reserved for going in/out of the SPA via the mini-nav).
+           ==================================================================== */
+        /* Opacity-only fade — must NOT animate transform, or it would clobber
+           the translateX/Y(-50%) centering on these positioned controls. */
+        @keyframes pieceNavIn { from { opacity: 0; } to { opacity: 1; } }
+        .piece-nav-edge {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--joni-light);
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 50%;
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            animation: pieceNavIn 0.8s ease forwards;
+            animation-delay: 0.9s;
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            text-decoration: none;
+        }
+        .piece-nav-edge:hover {
+            color: var(--joni-accent);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.55);
+        }
+        .piece-nav-edge svg { width: 20px; height: 20px; }
+        .piece-nav-prev { left: clamp(12px, 3vw, 32px); }
+        .piece-nav-next { right: clamp(12px, 3vw, 32px); }
+        .piece-nav-prev:hover { transform: translateY(-50%) translateX(-2px); }
+        .piece-nav-next:hover { transform: translateY(-50%) translateX(2px); }
+
+        .piece-nav-back {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--joni-light);
+            text-decoration: none;
+            padding: 9px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            animation: pieceNavIn 0.8s ease forwards;
+            animation-delay: 0.9s;
+            transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+        .piece-nav-back:hover {
+            color: var(--joni-accent);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .piece-nav-back svg { width: 14px; height: 14px; }
+
+        @media (max-width: 640px) {
+            .piece-nav-edge {
+                width: 40px;
+                height: 40px;
+                background: rgba(0, 0, 0, 0.45);
+            }
+            .piece-nav-edge svg { width: 18px; height: 18px; }
+            .piece-nav-back {
+                bottom: auto;
+                top: calc(var(--mininav-spacing, 16px) + 52px);
+                font-size: 10px;
+                padding: 8px 14px;
+            }
+        }
 	</style>
 </head>
 <body>
@@ -323,7 +410,7 @@
 	</nav>
 
     <!-- Series Number Badge -->
-    <div class="series-number">01</div>
+    <div class="series-number">02</div>
 
     <!-- Gallery -->
     <div class="gallery">
@@ -340,12 +427,34 @@
         </div>
         <div class="info-right">
             <p class="artwork-date">October 2025</p>
-            <p class="artwork-medium">Digital Art / Affinity Designer</p>
+            <p class="artwork-medium">Affinity Designer</p>
         </div>
     </div>
 
+    <!-- Piece navigation: back to the series + cycle between pieces -->
+    <a class="piece-nav-edge piece-nav-prev" href="../amari/amari.html" aria-label="Previous piece: Amari">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <a class="piece-nav-edge piece-nav-next" href="../amari/amari.html" aria-label="Next piece: Amari">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    <a class="piece-nav-back" href="../faces/faces.html" aria-label="Back to the Faces series">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Faces Series
+    </a>
+
     <!-- Minimal Nav Dynamic Color Script -->
     <script src="../../js/minimal-nav.js"></script>
+
+    <script>
+        // Cycle between pieces with the arrow keys. Plain navigation — no
+        // transition gif (that's reserved for the mini-nav / SPA jumps).
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                window.location.href = '../amari/amari.html';
+            }
+        });
+    </script>
 
 </body>
 </html>

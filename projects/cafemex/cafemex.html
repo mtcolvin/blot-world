@@ -570,6 +570,12 @@
                 display: block;
             }
 
+            /* Drop the desktop-only forced break in the "Independent design…"
+               disclaimer so it wraps naturally instead of breaking awkwardly. */
+            .desktop-break {
+                display: none;
+            }
+
         }
     </style>
 </head>
@@ -762,7 +768,7 @@
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 Matthew Colvin. <span class="mobile-break">All rights reserved.</span></p>
-        <p style="margin-top: 10px;">Independent design exercise. Not affiliated with or endorsed by<br>Cafe Mexicali, who retain all rights to their name and branding.</p>
+        <p style="margin-top: 10px;">Independent design exercise. Not affiliated with or endorsed by <br class="desktop-break">Cafe Mexicali, who retain all rights to their name and branding.</p>
         <p style="margin-top: 10px;"><a href="../../index.html">Back to BLOT.WORLD</a></p>
     </footer>
 

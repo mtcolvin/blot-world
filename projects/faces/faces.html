@@ -28,9 +28,9 @@
     <link rel="stylesheet" href="../../css/minimal-nav.css">
 
 	<!-- Favicon -->
-	<link rel="icon" type="image/x-icon" href="../../favicon.ico">
-	<link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon/favicon-16x16.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" href="../../images/favicon/favicon-96x96.png" sizes="96x96">
+	<link rel="icon" type="image/svg+xml" href="../../images/favicon/favicon.svg">
+	<link rel="shortcut icon" href="../../images/favicon/favicon.ico">
 	<link rel="apple-touch-icon" sizes="180x180" href="../../images/favicon/apple-touch-icon.png">
 	<link rel="manifest" href="../../images/favicon/site.webmanifest">
 	<meta name="theme-color" content="#331304">
@@ -133,31 +133,10 @@
             position: relative;
             padding: 96px 56px 36px;
             display: grid;
-            grid-template-columns: auto 1fr auto;
+            grid-template-columns: 1fr auto;
             gap: 28px;
             align-items: end;
             border-bottom: 1px solid var(--faces-rule);
-        }
-
-        .series-eyebrow {
-            font-family: "JetBrains Mono", monospace;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--faces-amari);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-bottom: 4px;
-        }
-        body.joni-hover .series-eyebrow { color: var(--faces-joni); }
-        .series-eyebrow::after {
-            content: "";
-            width: 28px;
-            height: 1px;
-            background: currentColor;
-            opacity: 0.45;
         }
 
         .series-wordmark {
@@ -416,6 +395,8 @@
                minimal-nav.js) already sizes the rect and positions the cutout. */
             .minimal-nav .backdrop-blur { display: none !important; }
             .nav-rect { fill: rgba(70, 35, 15, 0.95) !important; }
+            /* Mobile mini-nav bar follows the piece scrolled into view. */
+            body.joni-hover .nav-rect { fill: rgba(70, 20, 35, 0.95) !important; }
 
             .series-header {
                 padding: 76px 20px 24px;
@@ -423,12 +404,6 @@
                 gap: 12px;
                 align-items: start;
             }
-            .series-eyebrow {
-                font-size: 9px;
-                letter-spacing: 2px;
-                padding-bottom: 0;
-            }
-            .series-eyebrow::after { width: 22px; }
             .series-wordmark {
                 font-size: clamp(64px, 22vw, 96px);
                 line-height: 0.9;
@@ -470,7 +445,10 @@
                 margin-bottom: 18px;
             }
             .plate-frame img {
-                max-height: 48vh;
+                /* Height pinned to a JS-sampled viewport unit (--app-vh) so the
+                   image does NOT resize when the mobile address bar shows/hides.
+                   Falls back to 48vh until the script runs. */
+                max-height: calc(var(--app-vh, 1vh) * 48);
             }
             .plate-info {
                 grid-template-columns: 1fr;
@@ -551,10 +529,8 @@
          SERIES HEADER
          ============================================================ -->
     <header class="series-header">
-        <p class="series-eyebrow">Digital Art · Series 01</p>
         <h1 class="series-wordmark">Faces</h1>
         <div class="series-meta">
-            <span><span class="row-label">Editions</span> <strong>02</strong></span>
             <span><span class="row-label">Span</span> <strong>2023 — 2025</strong></span>
         </div>
         <p class="series-description">
@@ -582,8 +558,8 @@
             <div class="plate-info">
                 <h2 class="plate-title">Amari</h2>
                 <div class="plate-meta">
-                    <span><span class="row-label">Released</span> <span class="row-value">Sep 2023</span></span>
-                    <span><span class="row-label">Medium</span> <span class="row-value">Affinity Designer</span></span>
+                    <span><span class="row-label">Created</span> <span class="row-value">Sep 2023</span></span>
+                    <span><span class="row-label">Software</span> <span class="row-value">Affinity Designer</span></span>
                 </div>
             </div>
         </a>
@@ -604,8 +580,8 @@
             <div class="plate-info">
                 <h2 class="plate-title">Joni</h2>
                 <div class="plate-meta">
-                    <span><span class="row-label">Released</span> <span class="row-value">Oct 2025</span></span>
-                    <span><span class="row-label">Medium</span> <span class="row-value">Affinity Designer</span></span>
+                    <span><span class="row-label">Created</span> <span class="row-value">Oct 2025</span></span>
+                    <span><span class="row-label">Software</span> <span class="row-value">Affinity Designer</span></span>
                 </div>
             </div>
         </a>
@@ -615,7 +591,7 @@
          FOOTER
          ============================================================ -->
     <footer class="series-footer">
-        <span class="mark">Faces / Series 01</span>
+        <span class="mark">Faces</span>
         <span>© Matthew Colvin · BLOT.WORLD</span>
     </footer>
 
@@ -623,8 +599,22 @@
     <script src="../../js/minimal-nav.js"></script>
 
 	<script>
-		// Background tint shifts per hovered plate (desktop pointer only).
-		document.querySelectorAll('.plate').forEach(plate => {
+		// Pin a stable 1% viewport-height unit (--app-vh) for the plate images.
+		// Firefox Android resizes `vh` (and doesn't honour `svh` reliably) when
+		// the address bar shows/hides, which made the images jump while
+		// scrolling. We sample innerHeight once at load and ONLY re-sample on
+		// orientation change — never on the resize events the toolbar fires —
+		// so the image height stays constant as you scroll.
+		function setAppVH() {
+			document.documentElement.style.setProperty('--app-vh', (window.innerHeight * 0.01) + 'px');
+		}
+		setAppVH();
+		window.addEventListener('orientationchange', () => setTimeout(setAppVH, 250));
+
+		const plates = document.querySelectorAll('.plate');
+
+		// Desktop: tint shifts to the hovered plate (pointer only).
+		plates.forEach(plate => {
 			plate.addEventListener('mouseenter', () => {
 				document.body.className = plate.dataset.slug === 'joni' ? 'joni-hover' : '';
 			});
@@ -632,6 +622,22 @@
 				document.body.className = '';
 			});
 		});
+
+		// Mobile: the plates stack, so tint the mini-nav (and page) to match
+		// whichever piece is scrolled into view. Gated to the mobile breakpoint
+		// so it never fights the desktop hover behaviour above.
+		if ('IntersectionObserver' in window) {
+			const mqlMobile = window.matchMedia('(max-width: 640px)');
+			const io = new IntersectionObserver((entries) => {
+				if (!mqlMobile.matches) return;
+				entries.forEach(entry => {
+					if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+						document.body.className = entry.target.dataset.slug === 'joni' ? 'joni-hover' : '';
+					}
+				});
+			}, { threshold: [0.6] });
+			plates.forEach(plate => io.observe(plate));
+		}
 
 		// Disable right-click on portrait images.
 		document.addEventListener('contextmenu', function(e) {

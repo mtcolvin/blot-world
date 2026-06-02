@@ -536,18 +536,22 @@
             .lightbox-nav svg { width: 18px; height: 18px; }
         }
 
-        /* Mobile spine — horizontal chip strip, shown when desktop spine is hidden.
-           Sticks below the minimal nav. Auto-scrolls active chip into view. */
+        /* Mobile spine — horizontal chip strip, shown when desktop spine is
+           hidden. Fixed to the bottom of the viewport. Auto-scrolls active
+           chip into view. */
         .spine-mobile {
             display: none;
-            position: sticky;
-            top: 64px;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 40;
             background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 16px;
+            border-top: 1px solid var(--border);
+            /* Extra bottom padding clears the iOS home indicator. */
+            padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
             overflow-x: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
@@ -608,15 +612,86 @@
         }
         /* Mobile — tighter padding, reflow issue-head, smaller typography. */
         @media (max-width: 640px) {
-            .issue { padding: 80px 20px 40px; }
+            /* iOS fix: scroll inside a fixed full-screen #main container instead
+               of the document. With <body> non-scrolling, iOS never toggles the
+               address bar, so the scrollport never resizes mid-scroll — which is
+               what made the mandatory snap lurch when swiping up after swiping
+               down. Snapping now holds in both directions. (Chip/spine links
+               navigate via scrollIntoView in JS, since the document no longer
+               scrolls to #anchors.) */
+            html, body { height: 100%; overflow: hidden; }
+            .main {
+                position: fixed;
+                inset: 0;
+                margin: 0;
+                padding: 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: y mandatory;
+                scroll-behavior: smooth;
+            }
+            html.zoomed .main { scroll-snap-type: none !important; }
+            .issue, .year-break { min-height: 100%; }
+
+            /* Bottom padding clears the fixed month navigator (.spine-mobile) so
+               portrait photos' captions aren't hidden behind it. */
+            .issue { padding: 80px 20px calc(74px + env(safe-area-inset-bottom)); }
             .issue-head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; padding-bottom: 14px; }
-            .issue-month { font-size: 22px; letter-spacing: 2px; }
+            .issue-month { font-size: 36px; letter-spacing: 3px; margin-bottom: 6px; }
             .issue-frame-count { text-align: left; padding-bottom: 0; }
             .issue-frame-count strong { font-size: 24px; display: inline; }
             .year-break { padding: 80px 20px 40px; grid-template-columns: 1fr; }
             .year-break .rule { display: none; }
             .year-break .year-text { font-size: 72px; text-align: center; }
-            .layout-filmstrip .frame { height: min(55vh, 380px); }
+            /* All photos share ONE height for a clean filmstrip; width is
+               natural (landscape wider, portrait narrower) with no letterbox.
+               A landscape wider than the screen simply scrolls within the
+               strip. Uniform image heights also make the captions line up. */
+            .layout-filmstrip { align-items: flex-start; }
+            .layout-filmstrip .frame {
+                height: auto;
+                max-width: none;
+                display: flex;
+                flex-direction: column;
+            }
+            .layout-filmstrip .frame img {
+                /* Short shared height so the common 4:3/3:2 landscapes fit the
+                   screen width while every photo keeps the same height. */
+                height: min(34svh, 240px);
+                width: auto;
+                max-width: none;
+                object-fit: contain;
+                display: block;
+            }
+
+            /* Caption is a clean magazine bar under the photo (no dark overlay
+               box). Location is the emphasis; the photo's day is the small
+               supporting line — the month+year is carried big in the header. */
+            .caption {
+                position: static;
+                opacity: 1;
+                transform: none;
+                background: none;
+                padding: 9px 2px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+            .caption .loc {
+                margin: 0;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: #fff;
+            }
+            .caption .date {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 1px;
+                color: var(--text-muted);
+            }
             .strip-indicator .arrow svg { width: 22px; height: 22px; }
             .strip-indicator .label { display: none; }
             .strip-wrap::after { width: 50px; }
@@ -828,7 +903,7 @@
             for (const p of g.photos) {
                 const [py, pm, pd] = p.date.split('-');
                 const locCap = p.location ? `<div class="loc">${p.location}</div>` : '';
-                const dateCap = `${MONTH_SHORT[parseInt(pm,10)]} ${pd}`;
+                const dateCap = `<span class="date">${MONTH_SHORT[parseInt(pm,10)]} ${pd}</span>`;
                 frames += `
                     <div class="frame" data-src="images/${p.file}">
                         <img src="images/${p.file}" loading="lazy" alt="">
@@ -962,7 +1037,11 @@
         // ============ Spine click → set active (no scroll auto-tracking) ============
         const spineLinks = document.querySelectorAll('.spine-month');
         spineLinks.forEach(link => {
-            link.addEventListener('click', () => {
+            link.addEventListener('click', (e) => {
+                // Scroll via scrollIntoView (not the #anchor) so it works whether
+                // the scroller is the document (desktop) or #main (mobile).
+                const target = document.getElementById(link.getAttribute('data-target'));
+                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
                 spineLinks.forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
             });
@@ -976,6 +1055,14 @@
         mobileChips.forEach(c => chipById.set(c.getAttribute('data-target'), c));
         if (mobileChips.length) {
             mobileChips[0].classList.add('active');
+            // Chip tap → scroll the #main container to that month (the #anchor
+            // href no longer scrolls, since <body> doesn't scroll on mobile).
+            mobileChips.forEach(chip => {
+                chip.addEventListener('click', (e) => {
+                    const target = document.getElementById(chip.getAttribute('data-target'));
+                    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+                });
+            });
             const setActive = id => {
                 const chip = chipById.get(id);
                 if (!chip || chip.classList.contains('active')) return;

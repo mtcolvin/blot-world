@@ -1028,11 +1028,12 @@ main {
 /* Mobile: Remove horizontal padding on projects preview */
 @media (max-width: 640px) {
 	.projects-preview-section {
+		/* Fill the container (don't bleed 1rem past it on each side) so the
+		   preview cards sit at the same gutter as the main projects grid. */
+		width: 100%;
+		margin: 0;
 		padding-left: 0;
 		padding-right: 0;
-		margin-left: -1rem;
-		margin-right: -1rem;
-		width: calc(100% + 2rem);
 	}
 
 	.projects-preview-grid {
@@ -1045,20 +1046,26 @@ main {
 		padding: 0 !important;
 	}
 
-	/* Trading-card mobile sizing — single centered column with a max width
-	   so the card isn't full viewport on wider phones/tablets. */
-	.projects-grid {
-		grid-template-columns: minmax(0, 320px);
+	/* Trading-card mobile sizing — single column that fills the width so the
+	   cards sit close to the screen edges, capped only so they don't get huge
+	   on phablets/small tablets. minmax(0,1fr) (not 1fr) keeps the track from
+	   min-sizing to the card image and blowing past the viewport.
+	   Uses #projects-grid (id) so it beats the base .projects-grid rule, which
+	   sits later in the source and would otherwise win at equal specificity. */
+	#projects-grid {
+		grid-template-columns: minmax(0, 1fr);
 		justify-content: center;
-		gap: 3.5rem;
+		gap: 2rem;
 	}
-	.projects-preview-grid {
-		grid-template-columns: minmax(0, 240px);
+	/* Preview cards fill the width too (id beats the base/tablet rules above
+	   at equal specificity). Card cap + gutter come from .project-card-link. */
+	#projects-preview-grid {
+		grid-template-columns: minmax(0, 1fr);
 		justify-content: center;
-		gap: 3.5rem;
+		gap: 2rem;
 	}
 	.project-card-link {
-		max-width: 340px;
+		max-width: 480px;
 		margin: 0 auto;
 		justify-self: center;
 		/* aspect-ratio lives on .project-card now — if we set it here too,
@@ -1429,7 +1436,11 @@ main {
 	font-weight: 700;
 	opacity: 0.85;
 }
-.card-front .flip-hint svg { width: 12px; height: 12px; }
+.card-front .flip-hint svg {
+	width: 12px;
+	height: 12px;
+	transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 
 /* === BACK === */
 .card-back {
@@ -1644,6 +1655,17 @@ html.touch-device .card-back {
    for a layered "card behind card" silhouette. */
 html.touch-device .project-card-link.flipped .card-back {
 	transform: translateY(85%) scaleX(0.9) !important;
+}
+
+/* Flip the "More info" chevron to point up when the card is expanded. */
+html.touch-device .project-card-link.flipped .flip-hint svg {
+	transform: rotate(180deg);
+}
+
+/* The portfolio card is the site you're already on (tapping it opens the
+   inception modal), so its back-footer "View" CTA is redundant on mobile. */
+html.touch-device .project-card[data-name="BLOT.WORLD Portfolio"] .view-cta {
+	display: none;
 }
 
 /* Lift the flipped card above grid neighbors during the transition so the

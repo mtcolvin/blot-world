@@ -325,6 +325,10 @@
             .minimal-nav .backdrop-blur { display: none !important; }
             .nav-rect { fill: rgba(74, 74, 74, 0.95) !important; }
 
+            /* Footer disclaimers: break the trailing phrase onto its own line
+               on mobile instead of wrapping mid-phrase. */
+            .mobile-break { display: block; }
+
             .container {
                 padding: 5rem 1rem calc(var(--mobile-nav-height) + 2rem) 1rem;
             }
@@ -364,7 +368,9 @@
                 justify-content: center;
                 gap: 0.75rem;
                 padding: 12px 16px;
-                background: rgba(254, 254, 254, 0.95);
+                /* Light-gray bar so the near-white (#fefefe) number buttons
+                   stand out against it instead of blending in. */
+                background: rgba(232, 232, 232, 0.95);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
                 border-top: 1px solid var(--upon-border);
@@ -568,8 +574,8 @@
 
         <!-- Footer -->
         <footer>
-            <p>&copy; 2025 Matthew Colvin. All rights reserved.</p>
-            <p>Poetry may not be reproduced without permission.</p>
+            <p>&copy; 2025 Matthew Colvin. <span class="mobile-break">All rights reserved.</span></p>
+            <p>Poetry may not be reproduced <span class="mobile-break">without permission.</span></p>
         </footer>
     </div>
 
