@@ -12,8 +12,9 @@
     "minify:js": "node scripts/minify-js.js",
     "build:blog": "node scripts/build-blog.js",
     "build:projects": "node scripts/build-projects.js",
+    "build:sitemap": "node scripts/build-sitemap.js",
     "update:photo-metadata": "node scripts/add-vlcsnap-metadata.js",
-    "build": "npm run build:blog && npm run build:projects && npm run optimize:images && npm run sync:photo-colors && npm run minify:css && npm run minify:js",
+    "build": "npm run build:blog && npm run build:projects && npm run build:sitemap && npm run optimize:images && npm run sync:photo-colors && npm run minify:css && npm run minify:js",
     "serve": "python3 -m http.server 8080"
   },
   "devDependencies": {
