@@ -1,0 +1,183 @@
+{
+  "_README": "SINGLE SOURCE OF TRUTH for all projects. Edit this file, then run `npm run build:projects` (or `npm run build`). The build generates js/projects-data.js (homepage cards) and injects <head> SEO meta + series navigation into each projects/<slug>/index.html between marker comments. RULES: (1) `slug` is permanent — it is the folder name + URL and must NEVER change; rename the `name` field freely instead. (2) Never hand-edit generated regions (marked GENERATED).",
+
+  "site": {
+    "domain": "https://blot.world",
+    "author": "Matthew Colvin",
+    "siteName": "BLOT.WORLD"
+  },
+
+  "projects": [
+    {
+      "slug": "blot-world",
+      "card": true,
+      "page": false,
+      "name": "Blot.World Portfolio",
+      "dataName": "BLOT.WORLD Portfolio",
+      "area": "Web Design",
+      "dataTech": "HTML,JavaScript,JSON,CSS,Python,Claude Code,ChatGPT,GitHub,GitHub Pages,Google Analytics,Google Tag Manager",
+      "techDisplay": ["HTML", "CSS", "JavaScript", "JSON", "Python", "Claude Code", "ChatGPT", "GitHub", "GitHub Pages", "Google Analytics", "Google Tag Manager"],
+      "techSectionLabel": "Tech Stack",
+      "month": "September",
+      "year": "2025",
+      "dateDisplay": "Sep 2025 — Present",
+      "image": "images/previews/inception-protection.jpg",
+      "imageAlt": "Portfolio Website",
+      "description": "The site you’re looking at. Vanilla HTML, CSS, and JavaScript — no frameworks, custom build pipeline, deployed on GitHub Pages.",
+      "href": "#",
+      "modal": true
+    },
+    {
+      "slug": "cafemex",
+      "card": true,
+      "page": true,
+      "name": "Café Mexicali Rebrand",
+      "dataName": "Cafe Mex Brand Redesign",
+      "area": "Branding & Identity",
+      "dataTech": "Affinity Designer",
+      "techDisplay": ["Affinity Designer"],
+      "techSectionLabel": "Tools",
+      "month": "September",
+      "year": "2025",
+      "dateDisplay": "Sep 2025",
+      "imageAlt": "Cafe Mex Logo",
+      "description": "Modernist refresh of a Mexican-Californian fusion restaurant. Identity system anchored on a single confident stroke.",
+      "seo": {
+        "title": "Café Mexicali Brand Redesign by Matthew Colvin",
+        "description": "Café Mexicali rebrand by Matthew Colvin — a modernist identity system for a Mexican-Californian fusion restaurant, built in Affinity Designer.",
+        "keywords": "Matthew Colvin, branding, identity design, logo, Café Mexicali, Affinity Designer",
+        "ogTitle": "Café Mexicali Rebrand by Matthew Colvin",
+        "ogDescription": "A modernist identity system anchored on a single confident stroke",
+        "themeColor": "#F04923",
+        "jsonLdType": "CreativeWork"
+      }
+    },
+    {
+      "slug": "la-facade",
+      "card": true,
+      "page": true,
+      "name": "La Façade",
+      "dataName": "La Façade",
+      "area": "Digital Art",
+      "dataTech": "Affinity Designer",
+      "techDisplay": ["Affinity Designer"],
+      "techSectionLabel": "Tools",
+      "month": "August",
+      "year": "2023",
+      "dateDisplay": "Aug 2023 — Oct 2025",
+      "imageAlt": "La Façade",
+      "description": "An evolving series of digital portraits exploring expression, identity, and the economy of line.",
+      "seo": {
+        "title": "La Façade by Matthew Colvin",
+        "description": "La Façade — digital art by Matthew Colvin. A collection of portrait studies created in Affinity Designer.",
+        "keywords": "Matthew Colvin, digital art, La Façade, portraits, Affinity Designer",
+        "ogTitle": "La Façade by Matthew Colvin",
+        "ogDescription": "A collection of digital portrait studies",
+        "themeColor": "#331304",
+        "jsonLdType": "CreativeWorkSeries"
+      },
+      "series": {
+        "name": "La Façade",
+        "members": ["amari", "joni"]
+      }
+    },
+    {
+      "slug": "retail-scheduling",
+      "card": true,
+      "page": false,
+      "redirect": true,
+      "name": "Retail Scheduling Analysis",
+      "dataName": "Retail Scheduling Analysis",
+      "area": "Data Analysis",
+      "dataTech": "Google Sheets",
+      "techDisplay": ["Google Sheets"],
+      "techSectionLabel": "Tools",
+      "month": "May",
+      "year": "2023",
+      "dateDisplay": "May — Sep 2023",
+      "image": "projects/retail-scheduling/preview.png",
+      "imageAlt": "Walmart Online Pickup & Delivery Scheduling Analysis",
+      "description": "Operational analysis of Walmart’s online pickup & delivery scheduling — surfacing inefficiencies and forecasting demand.",
+      "external": true,
+      "externalIcon": true
+    },
+    {
+      "slug": "photography",
+      "card": true,
+      "page": true,
+      "name": "Photography",
+      "dataName": "Photography Gallery",
+      "area": "Photography",
+      "dataTech": "Lightroom",
+      "techDisplay": ["Lightroom"],
+      "techSectionLabel": "Equipment & Stack",
+      "month": "August",
+      "year": "2017",
+      "dateDisplay": "2017 — Present",
+      "imageAlt": "Photography Gallery",
+      "description": "A magazine-style chronological archive — months as viewport sections with photo-derived color halos and snap navigation.",
+      "seo": {
+        "title": "Photography by Matthew Colvin",
+        "description": "Photography by Matthew Colvin — a chronological archive of moments organized by month, each a magazine issue with horizontal photo strips.",
+        "keywords": "Matthew Colvin, photography, photo gallery, visual timeline, magazine",
+        "ogTitle": "Photography by Matthew Colvin",
+        "ogDescription": "A chronological archive of moments organized by month",
+        "themeColor": "#0a0a0a",
+        "jsonLdType": "ImageGallery"
+      }
+    },
+    {
+      "slug": "poetry",
+      "card": true,
+      "page": true,
+      "hidden": true,
+      "external": true,
+      "name": "Upon a Dove on the Railroad Track",
+      "dataName": "Upon a Dove on the Railroad Track",
+      "area": "Poetry",
+      "dataTech": "English",
+      "techDisplay": ["English"],
+      "techSectionLabel": "Form",
+      "month": "Present",
+      "year": "2015",
+      "dateDisplay": "2015 — Present",
+      "imageAlt": "Poetry",
+      "description": "An evolving poem of observation, life, and the small moments that endure.",
+      "seo": {
+        "title": "Poetry Collection | Matthew Colvin",
+        "description": "Upon a Dove on the Railroad Track — an evolving poem by Matthew Colvin of observation, life, and the small moments that endure.",
+        "keywords": "Matthew Colvin, poetry, poem, Upon a Dove on the Railroad Track",
+        "ogTitle": "Upon a Dove on the Railroad Track",
+        "ogDescription": "An evolving poem of observation, life, and the small moments that endure",
+        "themeColor": "#000000",
+        "jsonLdType": "CreativeWork"
+      }
+    },
+    {
+      "slug": "amari",
+      "card": false,
+      "page": true,
+      "partOf": "la-facade",
+      "name": "Amari",
+      "dateDisplay": "September 2023",
+      "dateCreated": "2023-09",
+      "medium": "Affinity Designer",
+      "seo": {
+        "themeColor": "#331304"
+      }
+    },
+    {
+      "slug": "joni",
+      "card": false,
+      "page": true,
+      "partOf": "la-facade",
+      "name": "Joni",
+      "dateDisplay": "October 2025",
+      "dateCreated": "2025-10",
+      "medium": "Affinity Designer",
+      "seo": {
+        "themeColor": "#331304"
+      }
+    }
+  ]
+}

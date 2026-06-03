@@ -9,17 +9,37 @@ BLOT.WORLD is a vanilla JavaScript portfolio website with no framework dependenc
 ## Build Commands
 
 ```bash
-npm run build              # Full build (blog + images + minification)
+npm run build              # Full build (blog + projects + images + minification)
 npm run build:blog         # Convert Markdown posts to HTML + generate RSS feed
+npm run build:projects     # Generate project cards + inject per-page SEO meta from data/projects.json
 npm run minify:css         # Minify CSS files (creates *.min.css)
 npm run minify:js          # Minify JavaScript files (creates *.min.js)
 npm run optimize:images    # Compress images with sharp
 npm run serve              # Start local server at http://localhost:8080
 ```
 
+### Projects Workflow (single source of truth)
+
+All projects are defined in **`data/projects.json`** — the authoritative source for
+the homepage cards AND each project page's `<head>` SEO/Open Graph/JSON-LD and series
+navigation. `npm run build:projects` reads it and generates:
+- `js/projects-data.js` (`window.PROJECTS_DATA`, consumed by `renderProjectCards()` in `js/main.js`)
+- the region between `<!-- PROJECT-META:start --> … :end -->` markers in each `projects/<slug>/index.html`
+- series nav/label between `<!-- SERIES-NAV -->` / `<!-- SERIES-LABEL -->` markers on member pages (e.g. amari/joni)
+
+**Rules:**
+- **`slug` is permanent.** It is the folder name (`projects/<slug>/`) and the URL. Never
+  rename it — change the `name` field instead. (A folder `faces/` can display "La Façade".)
+- **Never hand-edit generated regions** (the marker blocks, or `js/projects-data.js`). Edit `data/projects.json` and rebuild.
+- Each project is self-contained under `projects/<slug>/`: `index.html`, `preview.{jpg,webp,avif}`, and `images/` for content. Only global assets (favicon, logo, loaders, about photos) live in top-level `images/`.
+
+**Renaming a project's display name:** edit `name` (and any `seo.*` text) in `data/projects.json`, run `npm run build:projects` — it propagates to the card, the page `<title>`/meta/OG, and every sibling page's series label/nav automatically.
+
+**Adding a project:** create `projects/<slug>/index.html` (with `<!-- PROJECT-META:start/end -->` markers in `<head>`), add `preview.jpg`, append an entry to `data/projects.json`, run `npm run build:projects`.
+
 ### Photography Workflow
 
-The photography page (`projects/photography/photography.html`) is data-driven from two files:
+The photography page (`projects/photography/index.html`) is data-driven from two files:
 - **`photo-data.js`** — hand-curated source of truth: `{ file, date, location }` per photo. Exposes `window.BLOT_PHOTOS`.
 - **`photo-colors.js`** — auto-generated dominant color per photo. Exposes `window.BLOT_PHOTO_COLORS`.
 
@@ -77,7 +97,7 @@ Organized into numbered sections:
 
 ### Project Pages
 
-Each project in `projects/` has its own HTML file (e.g., `projects/photography/photography.html`) with dedicated JS/CSS. The photography gallery has its own module (`photo-loader.js`).
+Each project lives in `projects/<slug>/index.html` (clean URL: `blot.world/projects/<slug>/`) with co-located `preview.*` and `images/`. The slug is permanent (see Projects Workflow above). Per-page SEO/meta + series nav are generated from `data/projects.json` into marker regions — do not hand-edit those. The photography gallery has its own module (`photo-loader.js`).
 
 ### Blog System
 

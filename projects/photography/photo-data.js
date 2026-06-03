@@ -6,7 +6,7 @@
  * Add a new photo: drop the file in /images/ and add an entry below.
  * Photos are sorted chronologically at render time, so order here doesn't matter.
  *
- * Consumed by projects/photography/photography.html as `window.BLOT_PHOTOS`.
+ * Consumed by projects/photography/index.html as `window.BLOT_PHOTOS`.
  */
 (function () {
     "use strict";

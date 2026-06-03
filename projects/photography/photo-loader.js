@@ -1,7 +1,7 @@
 /**
  * Photography photo data — source of truth for filenames, dates, and EXIF.
  * Updated by scripts/sync-photo-array.js (regex looks for `const photos = [...];`).
- * Consumed by projects/photography/photography.html via `window.BLOT_PHOTOS`.
+ * Consumed by projects/photography/index.html via `window.BLOT_PHOTOS`.
  */
 
 (function () {

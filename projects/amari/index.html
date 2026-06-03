@@ -20,44 +20,43 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&display=swap" rel="stylesheet">
 
 	<!-- Preload critical resources -->
-	<link rel="preload" as="image" href="../../images/projects/amari/amari.png">
+	<link rel="preload" as="image" href="images/amari.jpg">
 	
 	<!-- External Stylesheets -->
 	<link rel="stylesheet" href="../../css/root.css">
     <link rel="stylesheet" href="../../css/minimal-nav.css">	
 	
-	<!-- Favicon -->
-	<link rel="icon" type="image/x-icon" href="../../favicon.ico">
-	<link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon/favicon-16x16.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon/favicon-32x32.png">
+		<!-- Favicon -->
+	<link rel="icon" type="image/png" href="../../images/favicon/favicon-96x96.png" sizes="96x96">
+	<link rel="icon" type="image/svg+xml" href="../../images/favicon/favicon.svg">
+	<link rel="shortcut icon" href="../../images/favicon/favicon.ico">
 	<link rel="apple-touch-icon" sizes="180x180" href="../../images/favicon/apple-touch-icon.png">
 	<link rel="manifest" href="../../images/favicon/site.webmanifest">
+	<!-- PROJECT-META:start (GENERATED from data/projects.json — do not edit) -->
+	<title>Amari by Matthew Colvin</title>
 	<meta name="theme-color" content="#331304">
-	
-	<!-- SEO Meta Tags -->
-	<meta name="description" content="Amari - Digital Art by Matthew Colvin. The first piece in the La Façade series, created in September 2023.">
+
+	<!-- SEO -->
+	<meta name="description" content="Amari — digital art by Matthew Colvin. The first piece in the La Façade series.">
 	<meta name="keywords" content="Matthew Colvin, digital art, Amari, La Façade, portrait, Affinity Designer">
 	<meta name="author" content="Matthew Colvin">
+	<meta name="robots" content="index, follow">
+	<link rel="canonical" href="https://blot.world/projects/amari/">
 
-	<!-- Open Graph Meta Tags -->
-	<meta property="og:title" content="Amari - La Façade Series by Matthew Colvin">
+	<!-- Open Graph -->
+	<meta property="og:title" content="Amari — La Façade Series by Matthew Colvin">
 	<meta property="og:description" content="The first piece in the La Façade digital art series">
-	<meta property="og:image" content="../../images/projects/amari/amari.png">
-	<meta property="og:url" content="https://your-domain.com/amari.html">
+	<meta property="og:image" content="https://blot.world/projects/amari/preview.jpg">
+	<meta property="og:url" content="https://blot.world/projects/amari/">
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="BLOT.WORLD">
-	
-	<!-- Twitter Card Meta Tags -->
+
+	<!-- Twitter -->
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="Amari - La Façade Series">
+	<meta name="twitter:title" content="Amari — La Façade Series">
 	<meta name="twitter:description" content="Digital art piece by Matthew Colvin">
-	<meta name="twitter:image" content="../../images/projects/amari/amari.png">
-	
-	<meta name="robots" content="index, follow">
-	<link rel="canonical" href="https://your-actual-domain.com/amari.html">
-	
-	<title>Joni by Matthew Colvin</title>
-	
+	<meta name="twitter:image" content="https://blot.world/projects/amari/preview.jpg">
+
 	<!-- Structured Data -->
 	<script type="application/ld+json">
 	{
@@ -65,18 +64,19 @@
 	  "@type": "CreativeWork",
 	  "name": "Amari",
 	  "creator": {
-		"@type": "Person",
-		"name": "Matthew Colvin"
+	    "@type": "Person",
+	    "name": "Matthew Colvin"
 	  },
 	  "dateCreated": "2023-09",
 	  "description": "The first piece in the La Façade digital art series",
 	  "artMedium": "Digital Art",
 	  "isPartOf": {
-		"@type": "CreativeWorkSeries",
-		"name": "La Façade"
+	    "@type": "CreativeWorkSeries",
+	    "name": "La Façade"
 	  }
 	}
 	</script>
+	<!-- PROJECT-META:end -->
 	
 	<style>	
         * {
@@ -86,10 +86,10 @@
         }
         
         :root {
-            --joni-bg: #2D000D;
-            --joni-dark: #0a0a0a;
-            --joni-light: #f5f5f5;
-            --joni-accent: #D1005D;
+            --amari-bg: #331304;
+            --amari-dark: #1a0a02;
+            --amari-light: #f5f5f5;
+            --amari-accent: #E8B77D;
 
             /* Mini Nav Color Overrides */
             --mininav-bg: transparent;
@@ -103,7 +103,7 @@
         .minimal-nav .backdrop-blur {
             mask: url(#logo-cut-amari);
             -webkit-mask: url(#logo-cut-amari);
-            background: rgba(70, 20, 35, 0.95);
+            background: rgba(70, 35, 15, 0.95);
         }
 
         .nav-rect {
@@ -112,8 +112,8 @@
         
 		body {
 			font-family: "Roboto Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-			background: var(--joni-bg);
-			color: var(--joni-light);
+			background: var(--amari-bg);
+			color: var(--amari-light);
 			line-height: 1.6;
 			overflow: hidden;
 			margin: 0;
@@ -169,7 +169,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(26, 10, 2, 0.95) 0%, transparent 100%);
             opacity: 0;
             animation: fadeIn 1s ease forwards;
             animation-delay: 0.6s;
@@ -185,7 +185,7 @@
             font-size: 48px;
             font-weight: 700;
             letter-spacing: -1px;
-            color: var(--joni-light);
+            color: var(--amari-light);
             margin: 0;
             line-height: 1;
         }
@@ -195,7 +195,7 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--joni-accent);
+            color: var(--amari-accent);
             opacity: 0.9;
         }
         
@@ -209,14 +209,14 @@
         .artwork-date {
             font-size: 16px;
             font-weight: 400;
-            color: var(--joni-light);
+            color: var(--amari-light);
             opacity: 0.8;
         }
         
         .artwork-medium {
             font-size: 13px;
             font-weight: 400;
-            color: var(--joni-light);
+            color: var(--amari-light);
             opacity: 0.6;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -231,7 +231,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--joni-accent);
+            color: var(--amari-accent);
             padding: 12px 20px;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
@@ -304,7 +304,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--joni-light);
+            color: var(--amari-light);
             background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 50%;
@@ -316,7 +316,7 @@
             text-decoration: none;
         }
         .piece-nav-edge:hover {
-            color: var(--joni-accent);
+            color: var(--amari-accent);
             border-color: rgba(255, 255, 255, 0.4);
             background: rgba(0, 0, 0, 0.55);
         }
@@ -339,7 +339,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--joni-light);
+            color: var(--amari-light);
             text-decoration: none;
             padding: 9px 16px;
             background: rgba(0, 0, 0, 0.4);
@@ -352,7 +352,7 @@
             transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
         }
         .piece-nav-back:hover {
-            color: var(--joni-accent);
+            color: var(--amari-accent);
             border-color: rgba(255, 255, 255, 0.4);
             background: rgba(0, 0, 0, 0.6);
         }
@@ -410,38 +410,42 @@
 	</nav>
 
     <!-- Series Number Badge -->
-    <div class="series-number">02</div>
+    <div class="series-number">01</div>
 
     <!-- Gallery -->
     <div class="gallery">
         <div class="artwork-container">
-            <img class="artwork-image" src="images/joni.jpg" alt="Joni - Digital Portrait" />
+            <img class="artwork-image" src="images/amari.jpg" alt="Amari - Digital Portrait" />
         </div>
     </div>
 
     <!-- Artwork Info -->
     <div class="artwork-info">
         <div class="info-left">
-            <h1 class="artwork-title">Joni</h1>
+            <h1 class="artwork-title">Amari</h1>
+            <!-- SERIES-LABEL:start (GENERATED from data/projects.json — do not edit) -->
             <p class="artwork-series"><i>La Façade</i> Series</p>
+            <!-- SERIES-LABEL:end -->
         </div>
         <div class="info-right">
-            <p class="artwork-date">October 2025</p>
+            <p class="artwork-date">September 2023</p>
             <p class="artwork-medium">Affinity Designer</p>
         </div>
     </div>
 
     <!-- Piece navigation: back to the series + cycle between pieces -->
-    <a class="piece-nav-edge piece-nav-prev" href="../amari/amari.html" aria-label="Previous piece: Amari">
+    <!-- SERIES-NAV:start (GENERATED from data/projects.json — do not edit) -->
+    <a class="piece-nav-edge piece-nav-prev" href="../joni/" aria-label="Previous piece: Joni">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
     </a>
-    <a class="piece-nav-edge piece-nav-next" href="../amari/amari.html" aria-label="Next piece: Amari">
+    <a class="piece-nav-edge piece-nav-next" href="../joni/" aria-label="Next piece: Joni">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
-    <a class="piece-nav-back" href="../la-facade/la-facade.html" aria-label="Back to La Façade">
+    <a class="piece-nav-back" href="../la-facade/" aria-label="Back to La Façade">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         La Façade
     </a>
+    <!-- SERIES-NAV:end -->
 
     <!-- Minimal Nav Dynamic Color Script -->
     <script src="../../js/minimal-nav.js"></script>
@@ -450,8 +454,12 @@
         // Cycle between pieces with the arrow keys. Plain navigation — no
         // transition gif (that's reserved for the mini-nav / SPA jumps).
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                window.location.href = '../amari/amari.html';
+            if (e.key === 'ArrowLeft') {
+                const l = document.querySelector('.piece-nav-prev');
+                if (l) window.location.href = l.href;
+            } else if (e.key === 'ArrowRight') {
+                const l = document.querySelector('.piece-nav-next');
+                if (l) window.location.href = l.href;
             }
         });
     </script>
