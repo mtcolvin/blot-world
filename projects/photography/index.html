@@ -722,6 +722,10 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
+    <header style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
+        <h1>Photography by Matthew Colvin</h1>
+    </header>
+
     <!-- Mini Nav -->
     <nav class="minimal-nav" aria-label="minimal nav" onclick="window.location.href='../../index.html'">
         <div class="backdrop-blur"></div>
@@ -740,7 +744,7 @@
             </g>
         </svg>
         <div class="minimal-nav-container">
-            <button class="back-btn-minimal">
+            <button class="back-btn-minimal" aria-label="Back to BLOT.WORLD home">
                 <svg width="18" height="18" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
@@ -929,12 +933,15 @@
                 const base = `images/${p.file}`;
                 const avif = base.replace(/\.(jpe?g|png)$/i, '.avif');
                 const webp = base.replace(/\.(jpe?g|png)$/i, '.webp');
+                // Descriptive alt for screen readers / SEO, built from curated data.
+                const altText = `Photograph${p.location ? ' in ' + p.location : ''}, ${MONTH_NAMES[parseInt(pm,10)]} ${pd}, ${py}`
+                    .replace(/"/g, '&quot;');
                 frames += `
-                    <div class="frame" data-src="${base}">
+                    <div class="frame" data-src="${base}" data-alt="${altText}">
                         <picture>
                             <source srcset="${avif}" type="image/avif">
                             <source srcset="${webp}" type="image/webp">
-                            <img src="${base}" loading="lazy" alt="">
+                            <img src="${base}" loading="lazy" alt="${altText}">
                         </picture>
                         <div class="caption">${locCap}${dateCap}</div>
                     </div>`;
@@ -953,7 +960,7 @@
                         </div>
                     </header>
                     <div class="strip-wrap">
-                        <div class="layout-filmstrip">${frames}</div>
+                        <div class="layout-filmstrip" tabindex="0" role="group" aria-label="${MONTH_NAMES[monthIdx]} ${g.year} photographs (scrollable)">${frames}</div>
                         <div class="strip-indicator">
                             <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
                             <div class="label">Scroll</div>
@@ -977,6 +984,7 @@
             document.getElementById('lightbox-avif').srcset = src.replace(/\.(jpe?g|png)$/i, '.avif');
             document.getElementById('lightbox-webp').srcset = src.replace(/\.(jpe?g|png)$/i, '.webp');
             img.src = src;
+            img.alt = allFrames[lightboxIdx].getAttribute('data-alt') || '';
             lightboxScale = 1;
             img.style.transform = '';
         }
