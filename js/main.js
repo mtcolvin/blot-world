@@ -981,6 +981,21 @@ function showSection(sectionId) {
 // 8. INITIALIZATION
 // ==========================================================================
 
+// Build a <picture> that serves AVIF → WebP → original (jpg/png) fallback.
+// The build step (npm run optimize:images) guarantees an .avif and .webp
+// sibling exists for every referenced raster ≥10KB, so the <source> tags
+// never point at a missing file. `imgAttrs` is the raw attribute string for
+// the fallback <img> (must include the alt text).
+function pictureFor(src, imgAttrs) {
+	const avif = src.replace(/\.(jpe?g|png)$/i, '.avif');
+	const webp = src.replace(/\.(jpe?g|png)$/i, '.webp');
+	return `<picture>`
+		+ `<source srcset="${avif}" type="image/avif">`
+		+ `<source srcset="${webp}" type="image/webp">`
+		+ `<img src="${src}" ${imgAttrs}>`
+		+ `</picture>`;
+}
+
 // Render project cards from window.PROJECTS_DATA into #projects-grid.
 // Runs BEFORE filter/preview init so downstream code sees the populated DOM.
 function renderProjectCards(isTouchDevice) {
@@ -1034,7 +1049,7 @@ function renderProjectCards(isTouchDevice) {
                     data-year="${p.year}"
                     data-ai="${isAI}">
                     <div class="card-face card-front">
-                        <div class="card-image"><img src="${p.image}" alt="${p.imageAlt || p.name}"></div>
+                        <div class="card-image">${pictureFor(p.image, `alt="${p.imageAlt || p.name}"`)}</div>
                         <div class="corner-chips">
                             <div class="area-ribbon">${p.area}</div>
                             ${aiBadge}

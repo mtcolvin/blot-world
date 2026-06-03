@@ -66,3 +66,10 @@
 	--transition-base: 0.3s ease;
 	--transition-slow: 0.5s ease;
 }
+
+/* <picture> is a layout wrapper only — collapse it so the inner <img> behaves
+   exactly as a direct child of its container (preserves percentage sizing,
+   object-fit, and absolute positioning on cards, filmstrip frames, headshot). */
+picture {
+	display: contents;
+}

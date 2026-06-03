@@ -775,7 +775,11 @@
         <button class="lightbox-nav next" onclick="event.stopPropagation(); navLightbox(1)" aria-label="Next photo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <img id="lightbox-img" src="" alt="">
+        <picture>
+            <source id="lightbox-avif" srcset="" type="image/avif">
+            <source id="lightbox-webp" srcset="" type="image/webp">
+            <img id="lightbox-img" src="" alt="">
+        </picture>
     </div>
 
     <!-- Photo data (curated → window.BLOT_PHOTOS) -->
@@ -922,9 +926,16 @@
                 const [py, pm, pd] = p.date.split('-');
                 const locCap = p.location ? `<div class="loc">${p.location}</div>` : '';
                 const dateCap = `<span class="date">${MONTH_SHORT[parseInt(pm,10)]} ${pd}</span>`;
+                const base = `images/${p.file}`;
+                const avif = base.replace(/\.(jpe?g|png)$/i, '.avif');
+                const webp = base.replace(/\.(jpe?g|png)$/i, '.webp');
                 frames += `
-                    <div class="frame" data-src="images/${p.file}">
-                        <img src="images/${p.file}" loading="lazy" alt="">
+                    <div class="frame" data-src="${base}">
+                        <picture>
+                            <source srcset="${avif}" type="image/avif">
+                            <source srcset="${webp}" type="image/webp">
+                            <img src="${base}" loading="lazy" alt="">
+                        </picture>
                         <div class="caption">${locCap}${dateCap}</div>
                     </div>`;
             }
@@ -962,6 +973,9 @@
             lightboxIdx = (idx + allFrames.length) % allFrames.length;
             const src = allFrames[lightboxIdx].getAttribute('data-src');
             const img = document.getElementById('lightbox-img');
+            // Serve AVIF/WebP in the lightbox too, falling back to the jpg.
+            document.getElementById('lightbox-avif').srcset = src.replace(/\.(jpe?g|png)$/i, '.avif');
+            document.getElementById('lightbox-webp').srcset = src.replace(/\.(jpe?g|png)$/i, '.webp');
             img.src = src;
             lightboxScale = 1;
             img.style.transform = '';
