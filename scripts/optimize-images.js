@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 const { glob } = require('glob');
+const { isSkipped } = require('./lib/skip-list');
 
 const ROOT_DIR = path.join(__dirname, '..');
 // Scan top-level images/ AND each self-contained projects/<slug>/ folder, where
@@ -29,6 +30,9 @@ function formatBytes(bytes) {
 }
 
 async function optimizeImage(filePath) {
+  // Flat brand graphics opted out via data/no-optimize.json — leave pristine.
+  if (isSkipped(filePath)) return null;
+
   const ext = path.extname(filePath).toLowerCase();
   const originalSize = await getFileSize(filePath);
 

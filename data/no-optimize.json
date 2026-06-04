@@ -1,0 +1,9 @@
+{
+  "_comment": "Images matching a skip glob are served as their pristine original (no AVIF/WebP, no recompression, no <picture> wrapping). Use for FLAT brand graphics — logos, wordmarks, solid-color hero art — where lossy AVIF causes visible banding/color shift. Do NOT skip photographs; they compress well and hide artifacts. 'keep' globs are exceptions carved back out of a broad skip. Paths are repo-root-relative, forward slashes.",
+  "skip": [
+    "projects/cafemex/images/*"
+  ],
+  "keep": [
+    "projects/cafemex/images/mockup-*"
+  ]
+}

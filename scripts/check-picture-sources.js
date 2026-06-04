@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { glob } = require('glob');
+const { isSkipped } = require('./lib/skip-list');
 
 const ROOT = path.join(__dirname, '..');
 const missing = [];
@@ -36,6 +37,7 @@ require(path.join(ROOT, 'projects', 'photography', 'photo-data.js'));
 const photos = (global.window.BLOT_PHOTOS || []).map(p => 'projects/photography/images/' + p.file);
 
 function expect(rel, suffixes) {
+  if (isSkipped(rel)) return; // opted out of optimization — no variants expected
   const stem = rel.replace(/\.(jpe?g|png)$/i, '');
   for (const sfx of suffixes) {
     if (!fs.existsSync(path.join(ROOT, stem + sfx))) missing.push(`JS-rendered → ${stem + sfx}`);

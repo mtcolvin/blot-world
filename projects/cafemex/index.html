@@ -434,7 +434,16 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 0;
         }
-        
+
+        /* Each mockup is wrapped in <picture> (AVIF/WebP). Override the global
+           picture{display:contents} here so each <picture> is a single grid
+           item — otherwise the empty <source> tags disrupt grid auto-placement
+           and the two mockups land diagonally instead of side by side. */
+        .mockup-full picture {
+            display: block;
+            min-width: 0;
+        }
+
         .mockup-full img {
             width: 100%;
             height: 100%;
@@ -666,7 +675,7 @@
     <section class="hero">
         <div class="hero-left">
             <div class="hero-logo">
-                <picture><source srcset="images/hierarchy-monocolor.avif" type="image/avif"><source srcset="images/hierarchy-monocolor.webp" type="image/webp"><img width="1200" height="1934" src="images/hierarchy-monocolor.jpg" alt="Café Mexicali Logo" /></picture>
+                <img width="1200" height="1934" src="images/hierarchy-monocolor.jpg" alt="Café Mexicali Logo" />
             </div>
         </div>
         <div class="hero-right">
@@ -737,27 +746,27 @@
     <div class="logo-magazine">
         <div class="logo-box">
             <div class="logo-number dark">01</div>
-            <picture><source srcset="images/full-lockup-full-color.avif" type="image/avif"><source srcset="images/full-lockup-full-color.webp" type="image/webp"><img width="1200" height="276" src="images/full-lockup-full-color.png" alt="Full Lockup" /></picture>
+            <img width="1200" height="276" src="images/full-lockup-full-color.png" alt="Full Lockup" />
             <div class="logo-text text-dark">Full Lockup</div>
         </div>
         <div class="logo-box">
             <div class="logo-number light">02</div>
-            <picture><source srcset="images/full-lockup-white.avif" type="image/avif"><source srcset="images/full-lockup-white.webp" type="image/webp"><img width="1200" height="276" src="images/full-lockup-white.png" alt="Monochrome" /></picture>
+            <img width="1200" height="276" src="images/full-lockup-white.png" alt="Monochrome" />
             <div class="logo-text text-white">Monochrome</div>
         </div>
         <div class="logo-box">
             <div class="logo-number dark">03</div>
-            <picture><source srcset="images/icon-full-color.avif" type="image/avif"><source srcset="images/icon-full-color.webp" type="image/webp"><img width="1200" height="1184" src="images/icon-full-color.png" alt="Icon" /></picture>
+            <img width="1200" height="1184" src="images/icon-full-color.png" alt="Icon" />
             <div class="logo-text text-dark">Icon Mark</div>
         </div>
         <div class="logo-box">
             <div class="logo-number light">04</div>
-            <picture><source srcset="images/short-lockup-full-color.avif" type="image/avif"><source srcset="images/short-lockup-full-color.webp" type="image/webp"><img width="1200" height="793" src="images/short-lockup-full-color.png" alt="Short Lockup" /></picture>
+            <img width="1200" height="793" src="images/short-lockup-full-color.png" alt="Short Lockup" />
             <div class="logo-text text-white">Short Lockup</div>
         </div>
         <div class="logo-box">
             <div class="logo-number dark">05</div>
-            <picture><source srcset="images/lettermark-full-color.avif" type="image/avif"><source srcset="images/lettermark-full-color.webp" type="image/webp"><img width="1200" height="794" src="images/lettermark-full-color.png" alt="Lettermark" /></picture>
+            <img width="1200" height="794" src="images/lettermark-full-color.png" alt="Lettermark" />
             <div class="logo-text text-dark">Lettermark</div>
         </div>
         <div class="logo-box">
@@ -767,17 +776,17 @@
         </div>
         <div class="logo-box">
             <div class="logo-number light">07</div>
-            <picture><source srcset="images/favicon.avif" type="image/avif"><source srcset="images/favicon.webp" type="image/webp"><img width="1200" height="1184" src="images/favicon.png" alt="Favicon" /></picture>
+            <img width="1200" height="1184" src="images/favicon.png" alt="Favicon" />
             <div class="logo-text text-white">Favicon</div>
         </div>
         <div class="logo-box">
             <div class="logo-number dark">08</div>
-            <picture><source srcset="images/profile-picture.avif" type="image/avif"><source srcset="images/profile-picture.webp" type="image/webp"><img width="1200" height="1200" src="images/profile-picture.jpg" alt="Profile" /></picture>
+            <img width="1200" height="1200" src="images/profile-picture.jpg" alt="Profile" />
             <div class="logo-text text-dark">Profile Picture</div>
         </div>
         <div class="logo-box">
             <div class="logo-number dark">09</div>
-            <picture><source srcset="images/lettermark-full-color.avif" type="image/avif"><source srcset="images/lettermark-full-color.webp" type="image/webp"><img width="1200" height="794" src="images/lettermark-full-color.png" alt="Full Color" /></picture>
+            <img width="1200" height="794" src="images/lettermark-full-color.png" alt="Full Color" />
             <div class="logo-text text-dark">Lettermark</div>
         </div>
     </div>

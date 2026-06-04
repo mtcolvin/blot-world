@@ -13,6 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
 const { glob } = require('glob');
+const { isSkipped } = require('./lib/skip-list');
 
 const ROOT = path.join(__dirname, '..');
 const AVIF_Q = 60;
@@ -45,6 +46,7 @@ async function run() {
   let total = 0, files = 0;
   for (const t of TARGETS) {
     for (const src of glob.sync(t.glob, { cwd: ROOT, absolute: true })) {
+      if (isSkipped(src)) continue; // opted out — serve pristine original
       let made = 0;
       for (const w of t.widths) made += await variant(src, w);
       if (made) { files++; total += made; }
