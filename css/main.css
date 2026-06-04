@@ -1647,7 +1647,7 @@ html.touch-device .card-back {
 	/* The back's top ~15% is tucked under the front, so we need a chunky
 	   top padding to push the area badge fully past the seam (~53px hidden
 	   at 240px cards) and give it visible breathing room. */
-	padding-top: 60px;
+	padding-top: 80px;
 }
 
 /* Flipped: back slides down behind the front, peeking out below with the
@@ -2341,6 +2341,15 @@ body:has(#projects.active) .filter-sidebar {
 
 .footer-meta:active {
 	transform: scale(0.98);
+}
+
+/* "I'm just here for the vibes" — rise slightly on hover. */
+.footer-meta a span {
+	display: inline-block;
+	transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.footer-meta a:hover span {
+	transform: translateY(-3px);
 }
 
 /* ==========================================================================
