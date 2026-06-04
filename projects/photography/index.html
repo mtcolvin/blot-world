@@ -931,16 +931,18 @@
                 const locCap = p.location ? `<div class="loc">${p.location}</div>` : '';
                 const dateCap = `<span class="date">${MONTH_SHORT[parseInt(pm,10)]} ${pd}</span>`;
                 const base = `images/${p.file}`;
-                const avif = base.replace(/\.(jpe?g|png)$/i, '.avif');
-                const webp = base.replace(/\.(jpe?g|png)$/i, '.webp');
+                const stem = base.replace(/\.(jpe?g|png)$/i, '');
+                // Responsive width variants (built by scripts/build-srcset.js).
+                const galSet = (ext) => [480, 960, 1600].map(w => `${stem}-${w}.${ext} ${w}w`).join(', ');
+                const galSizes = '(max-width: 640px) 70vw, 900px';
                 // Descriptive alt for screen readers / SEO, built from curated data.
                 const altText = `Photograph${p.location ? ' in ' + p.location : ''}, ${MONTH_NAMES[parseInt(pm,10)]} ${pd}, ${py}`
                     .replace(/"/g, '&quot;');
                 frames += `
                     <div class="frame" data-src="${base}" data-alt="${altText}">
                         <picture>
-                            <source srcset="${avif}" type="image/avif">
-                            <source srcset="${webp}" type="image/webp">
+                            <source type="image/avif" srcset="${galSet('avif')}" sizes="${galSizes}">
+                            <source type="image/webp" srcset="${galSet('webp')}" sizes="${galSizes}">
                             <img src="${base}" loading="lazy" alt="${altText}">
                         </picture>
                         <div class="caption">${locCap}${dateCap}</div>

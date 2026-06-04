@@ -24,21 +24,27 @@ for (const file of glob.sync(['index.html', 'projects/*/index.html'], { cwd: ROO
   }
 }
 
-// 2) JS-rendered: card previews (projects-data.js) + gallery photos (photo-data.js)
+// 2) JS-rendered srcset variants (must match the widths used by the render code):
+//    - homepage cards  → pictureFor() in js/main.js uses [480, 960]
+//    - gallery photos   → photography inline script uses [480, 960, 1600]
+//      (+ the full-size .avif/.webp, used by the lightbox source-swap)
 const pd = fs.readFileSync(path.join(ROOT, 'js', 'projects-data.js'), 'utf8');
-const previews = [...pd.matchAll(/"image":\s*"([^"]+\.(?:jpe?g|png))"/g)]
-  .map(m => m[1]).filter(s => s.startsWith('projects/'));
+const previews = [...pd.matchAll(/"image":\s*"([^"]+\.(?:jpe?g|png))"/g)].map(m => m[1]);
 
 global.window = {};
 require(path.join(ROOT, 'projects', 'photography', 'photo-data.js'));
 const photos = (global.window.BLOT_PHOTOS || []).map(p => 'projects/photography/images/' + p.file);
 
-for (const rel of [...new Set([...previews, ...photos])]) {
-  for (const ext of ['avif', 'webp']) {
-    const sib = rel.replace(/\.(jpe?g|png)$/i, '.' + ext);
-    if (!fs.existsSync(path.join(ROOT, sib))) missing.push(`JS-rendered → ${sib}`);
+function expect(rel, suffixes) {
+  const stem = rel.replace(/\.(jpe?g|png)$/i, '');
+  for (const sfx of suffixes) {
+    if (!fs.existsSync(path.join(ROOT, stem + sfx))) missing.push(`JS-rendered → ${stem + sfx}`);
   }
 }
+const cardVariants = ['-480.avif', '-480.webp', '-960.avif', '-960.webp'];
+const photoVariants = ['-480.avif', '-480.webp', '-960.avif', '-960.webp', '-1600.avif', '-1600.webp', '.avif', '.webp'];
+for (const rel of new Set(previews)) expect(rel, cardVariants);
+for (const rel of new Set(photos)) expect(rel, photoVariants);
 
 if (missing.length) {
   console.error(`✗ check-picture-sources: ${missing.length} missing <picture> source(s):`);

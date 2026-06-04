@@ -13,12 +13,13 @@
     "build:blog": "node scripts/build-blog.js",
     "build:projects": "node scripts/build-projects.js",
     "build:sitemap": "node scripts/build-sitemap.js",
+    "build:srcset": "node scripts/build-srcset.js",
     "wrap:pictures": "node scripts/wrap-pictures.js",
     "dimensions:images": "node scripts/add-img-dimensions.js",
     "check:pictures": "node scripts/check-picture-sources.js",
     "cache:bust": "node scripts/cache-bust.js",
     "update:photo-metadata": "node scripts/add-vlcsnap-metadata.js",
-    "build": "npm run build:blog && npm run build:projects && npm run build:sitemap && npm run optimize:images && npm run wrap:pictures && npm run dimensions:images && npm run check:pictures && npm run sync:photo-colors && npm run minify:css && npm run minify:js && npm run cache:bust",
+    "build": "npm run build:blog && npm run build:projects && npm run build:sitemap && npm run optimize:images && npm run build:srcset && npm run wrap:pictures && npm run dimensions:images && npm run check:pictures && npm run sync:photo-colors && npm run minify:css && npm run minify:js && npm run cache:bust",
     "serve": "python3 -m http.server 8080"
   },
   "devDependencies": {
