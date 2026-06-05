@@ -1372,7 +1372,7 @@ main {
 }
 
 /* AI co-built badge — mirrors .area-ribbon's chip style and stacks beneath
-   it inside .corner-chips. Holographic ground + dark ink. */
+   it inside .corner-chips. "Miami" vaporwave ground + dark ink. */
 .card-front .ai-badge {
 	color: var(--blot-black);
 	padding: 4px 10px;
@@ -1690,15 +1690,15 @@ html.touch-device .project-card-link.flipped {
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }
 
-/* AI Project Cards — holographic wash that pairs with the .ai-badge corner
-   chip and the AI tags on the back: aqua-mint head fading to a chartreuse tail. */
+/* AI Project Cards — "Miami" vaporwave wash that pairs with the .ai-badge corner
+   chip and the AI tags on the back: pink head → lavender mid → aqua tail. */
 .project-card.ai-project {
 	background:
 		linear-gradient(135deg,
 			var(--ai-accent-glow) 0%,
 			var(--ai-accent-soft) 35%,
-			rgba(223, 247, 97, 0.08) 65%,
-			rgba(223, 247, 97, 0.03) 100%) !important;
+			rgba(127, 230, 230, 0.08) 65%,
+			rgba(127, 230, 230, 0.03) 100%) !important;
 	border-color: var(--ai-accent-soft) !important;
 }
 
@@ -1707,8 +1707,8 @@ html.touch-device .project-card-link.flipped {
 		linear-gradient(135deg,
 			var(--ai-accent-glow) 0%,
 			var(--ai-accent-soft) 35%,
-			rgba(223, 247, 97, 0.12) 65%,
-			rgba(223, 247, 97, 0.05) 100%) !important;
+			rgba(127, 230, 230, 0.12) 65%,
+			rgba(127, 230, 230, 0.05) 100%) !important;
 	border-color: var(--ai-accent) !important;
 }
 
