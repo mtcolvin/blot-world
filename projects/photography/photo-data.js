@@ -90,6 +90,9 @@
         { file: 'IMG_3089.jpg',                           date: '2026-03-14', location: 'Timnath, CO' },
         { file: 'IMG_3158.jpg',                           date: '2026-03-20', location: 'Fort Collins, CO' },
         { file: 'IMG_3287.jpg',                           date: '2026-03-28', location: 'Bobcat Ridge Natural Area, CO' },
-        { file: 'IMG_3298.jpg',                           date: '2026-03-29', location: 'Loveland, CO' }
+        { file: 'IMG_3298.jpg',                           date: '2026-03-29', location: 'Loveland, CO' },
+
+        { file: 'IMG_3669.jpg',                           date: '2026-05-07', location: 'Fort Collins, CO' },
+        { file: 'IMG_3682.jpg',                           date: '2026-05-09', location: 'Castle Rock, CO' }
     ];
 })();

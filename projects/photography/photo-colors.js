@@ -55,6 +55,8 @@
     "IMG_3158.jpg": "#53555f",
     "IMG_3287.jpg": "#9aa6b7",
     "IMG_3298.jpg": "#8aa4ce",
+    "IMG_3669.jpg": "#4b79c1",
+    "IMG_3682.jpg": "#7e7871",
     "IMG_4037_result_1.jpg": "#541533",
     "IMG_5567_result.jpg": "#635e9c",
     "IMG_6346_result_1.jpg": "#81aac4",
