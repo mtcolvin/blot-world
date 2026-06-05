@@ -40,10 +40,13 @@
 	--gradient-blue: #0D28F2;
 	/* Dedicated AI co-built accent — used by the corner badge on cards,
 	   the AI-tag chips on the back, and the "Made with → With AI" filter.
-	   Lavender extends the accent-purple family and pairs with dark text. */
-	--ai-accent: #C7B8FF;
-	--ai-accent-glow: rgba(199, 184, 255, 0.35);
-	--ai-accent-soft: rgba(199, 184, 255, 0.18);
+	   Holographic iridescent sweep from lavender through periwinkle/aqua/mint to
+	   chartreuse; pairs with dark text. --ai-accent is a solid mid-hue used for
+	   borders & checkbox fills; --ai-accent-holo is the gradient for filled surfaces. */
+	--ai-accent: #A9E6D6;
+	--ai-accent-holo: linear-gradient(120deg, #C7B8FF 0%, #A9C7FF 22%, #9FE6E0 45%, #BFF2A8 70%, #E4FA5C 100%);
+	--ai-accent-glow: rgba(159, 230, 224, 0.35);
+	--ai-accent-soft: rgba(159, 230, 224, 0.18);
 	
 	/* Sizing */
 	--headshot-size: clamp(80px, 22vw, 130px);

@@ -1286,65 +1286,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     NightSky.init();
 
-    // Helper function to sync background and poetry card
-    const syncBackgroundAndPoetry = (showGrid) => {
+    // Secret poetry card is shown only in stars (night-sky) mode.
+    const syncBackgroundAndPoetry = (showStars) => {
         const poetryCard = document.getElementById('poetry-card');
-        console.log('syncBackgroundAndPoetry called with showGrid:', showGrid);
-        console.log('Poetry card element:', poetryCard);
-
-        if (poetryCard) {
-            console.log('Poetry card classes before:', poetryCard.className);
-            if (showGrid) {
-                // Grid mode = show poetry card
-                poetryCard.classList.add('visible');
-                console.log('Poetry card shown (grid mode)');
-            } else {
-                // Night sky mode = hide poetry card
-                poetryCard.classList.remove('visible');
-                console.log('Poetry card hidden (night sky mode)');
-            }
-            console.log('Poetry card classes after:', poetryCard.className);
-            console.log('Poetry card computed display:', window.getComputedStyle(poetryCard).display);
-            updateProjectCounter();
-        } else {
-            console.error('Poetry card element not found!');
-        }
+        if (!poetryCard) return;
+        poetryCard.classList.toggle('visible', showStars);
+        updateProjectCounter();
     };
 
     const bgToggleBtn = document.getElementById('bg-toggle-btn');
-    console.log('Toggle button element:', bgToggleBtn);
-
     if (bgToggleBtn) {
-        console.log('Poetry toggle button found and event listener attached');
         bgToggleBtn.addEventListener('click', (e) => {
-            console.log('========== TOGGLE CLICKED ==========');
-            console.log('Event:', e);
-            console.log('NightSky.isActive BEFORE toggle:', NightSky.isActive);
             e.preventDefault();
             e.stopPropagation();
-
             NightSky.toggle();
-            console.log('NightSky.isActive AFTER toggle:', NightSky.isActive);
-
-            // Sync poetry card with background mode
-            // If night sky is active, hide poetry. If grid is active, show poetry.
-            const shouldShowPoetry = !NightSky.isActive;
-            console.log('Should show poetry:', shouldShowPoetry);
-            syncBackgroundAndPoetry(shouldShowPoetry);
-            console.log('========== TOGGLE COMPLETE ==========');
+            // Stars mode is active when the night sky is on.
+            syncBackgroundAndPoetry(NightSky.isActive);
         });
-    } else {
-        console.error('bg-toggle-btn not found!');
     }
 
-    // Restore both background and poetry card state on page load
-    const savedMode = localStorage.getItem('backgroundMode');
-    const showGrid = savedMode === 'grid';
-    console.log('========== PAGE LOAD STATE ==========');
-    console.log('Saved background mode:', savedMode);
-    console.log('Show grid:', showGrid);
-    syncBackgroundAndPoetry(showGrid);
-    console.log('========== PAGE LOAD COMPLETE ==========');
+    // Restore poetry card state on page load (grid by default → hidden).
+    syncBackgroundAndPoetry(localStorage.getItem('backgroundMode') === 'night-sky');
 });
 
 
@@ -1421,20 +1383,18 @@ const NightSky = {
 
 		// Apply saved background mode (default to grid unless explicitly night-sky)
 		const savedMode = localStorage.getItem('backgroundMode');
-		console.log('[NightSky.init] savedMode from localStorage:', savedMode);
 
 		const applyMode = () => {
 			const background = document.getElementById('global-background');
 			if (savedMode === 'night-sky') {
-				console.log('[NightSky.init] Applying night-sky mode');
+				// Stars mode is only entered via the eclipse/background toggle.
 				this.isActive = true;
 				background?.classList.add('night-sky-mode');
 				if (!this.animationFrame) {
 					this.animate();
 				}
 			} else {
-				// Default to grid mode (includes 'grid', null, undefined, etc.)
-				console.log('[NightSky.init] Applying grid mode (default)');
+				// Default to grid — includes 'grid', null, undefined.
 				this.isActive = false;
 				background?.classList.remove('night-sky-mode');
 				if (this.animationFrame) {

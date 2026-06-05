@@ -443,12 +443,12 @@
 
                 window.addEventListener('resize', () => this.resize());
 
-                // Check saved preference and apply
+                // Check saved preference and apply (grid is the default)
                 const savedMode = localStorage.getItem('backgroundMode');
-                if (savedMode === 'grid') {
-                    this.deactivate();
-                } else {
+                if (savedMode === 'night-sky') {
                     this.activate();
+                } else {
+                    this.deactivate();
                 }
             },
 

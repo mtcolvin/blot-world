@@ -1372,7 +1372,7 @@ main {
 }
 
 /* AI co-built badge — mirrors .area-ribbon's chip style and stacks beneath
-   it inside .corner-chips. Chartreuse ground + dark ink. */
+   it inside .corner-chips. Holographic ground + dark ink. */
 .card-front .ai-badge {
 	color: var(--blot-black);
 	padding: 4px 10px;
@@ -1382,7 +1382,9 @@ main {
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
 	border-radius: 3px;
-	background: var(--ai-accent);
+	background: var(--ai-accent-holo);
+	background-size: 200% 200%;
+	animation: ai-holo-shift 6s ease-in-out infinite;
 	box-shadow:
 		0 3px 10px var(--ai-accent-glow),
 		0 0 0 1px rgba(0, 0, 0, 0.15) inset;
@@ -1555,14 +1557,17 @@ main {
 	border-color: rgba(255,255,255,0.35);
 }
 .card-back .back-tag.is-ai {
-	background: var(--ai-accent);
+	background: var(--ai-accent-holo);
+	background-size: 200% 200%;
+	animation: ai-holo-shift 6s ease-in-out infinite;
 	border-color: var(--ai-accent);
 	color: var(--blot-black);
 	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12) inset;
 }
 .card-back .back-tag.is-ai:hover {
-	background: #c5ff1f;
-	border-color: #c5ff1f;
+	/* keep the holographic gradient, just brighten it */
+	filter: brightness(1.12) saturate(1.05);
+	border-color: var(--blot-white);
 }
 .card-back .back-footer {
 	display: flex;
@@ -1685,15 +1690,15 @@ html.touch-device .project-card-link.flipped {
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }
 
-/* AI Project Cards — soft violet wash that pairs with the .ai-badge corner
-   chip and the violet AI tags on the back. */
+/* AI Project Cards — holographic wash that pairs with the .ai-badge corner
+   chip and the AI tags on the back: aqua-mint head fading to a chartreuse tail. */
 .project-card.ai-project {
 	background:
 		linear-gradient(135deg,
 			var(--ai-accent-glow) 0%,
 			var(--ai-accent-soft) 35%,
-			rgba(168, 85, 247, 0.08) 65%,
-			rgba(168, 85, 247, 0.03) 100%) !important;
+			rgba(223, 247, 97, 0.08) 65%,
+			rgba(223, 247, 97, 0.03) 100%) !important;
 	border-color: var(--ai-accent-soft) !important;
 }
 
@@ -1702,9 +1707,22 @@ html.touch-device .project-card-link.flipped {
 		linear-gradient(135deg,
 			var(--ai-accent-glow) 0%,
 			var(--ai-accent-soft) 35%,
-			rgba(168, 85, 247, 0.12) 65%,
-			rgba(168, 85, 247, 0.05) 100%) !important;
+			rgba(223, 247, 97, 0.12) 65%,
+			rgba(223, 247, 97, 0.05) 100%) !important;
 	border-color: var(--ai-accent) !important;
+}
+
+/* Holographic shimmer for filled AI surfaces (badge, AI tag chip, "With AI" filter) */
+@keyframes ai-holo-shift {
+	0%, 100% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.card-front .ai-badge,
+	.card-back .back-tag.is-ai,
+	.filter-segmented .seg-btn[data-made-with="ai"].active {
+		animation: none;
+	}
 }
 
 /* Inception Protection Modal */
@@ -2046,7 +2064,9 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 .filter-segmented .seg-btn[data-made-with="ai"].active {
-	background: var(--ai-accent);
+	background: var(--ai-accent-holo);
+	background-size: 200% 200%;
+	animation: ai-holo-shift 6s ease-in-out infinite;
 	color: var(--blot-black);
 	font-weight: 700;
 	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset,
@@ -2164,6 +2184,12 @@ body:has(#projects.active) .filter-sidebar {
 
 .filter-option:last-child {
 	margin-bottom: 0;
+}
+
+/* Breathing room beneath the final option so it isn't flush with the dropdown's bottom edge */
+#area-filter-options .filter-option:last-child,
+#tech-filter-options .filter-option:last-child {
+	padding-bottom: 22px;
 }
 
 .filter-checkbox {
