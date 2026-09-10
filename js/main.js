@@ -1110,6 +1110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     populateAreaBadges();
     initializeBlog();
     QuoteRotator.init();
+    SayingRotator.init();
     NameTyper.init();
     checkTagsOverflow();
 
@@ -1728,11 +1729,127 @@ const NameTyper = {
 };
 
 // ==========================================================================
-// ABOUT SECTION - ROTATING QUOTES
+// ABOUT SECTION - ROTATING QUOTES & SAYINGS
 // ==========================================================================
 
-const QuoteRotator = {
-    quotes: [
+// Two rotators run in the About section: attributed quotes, and the sayings
+// block beneath it. They share this implementation — every DOM lookup is
+// scoped to cfg.container so neither instance touches the other's text,
+// controls, or typing-dots icon.
+function createRotator(cfg) {
+    return {
+        items: cfg.items,
+        currentIndex: 0,
+        autoRotateInterval: null,
+
+        init() {
+            this.root = document.getElementById(cfg.container);
+            if (!this.root) return;
+
+            this.stage = this.root.querySelector('.rotating-quote');
+            this.textEl = this.root.querySelector('.rotating-quote-text');
+            this.authorEl = this.root.querySelector('.rotating-quote-author');
+            if (!this.stage || !this.textEl || !this.authorEl) return;
+
+            this.createIndicators();
+            this.show(0);
+            this.setupEventListeners();
+            // Stagger the start so the two blocks don't flip in unison.
+            setTimeout(() => this.startAutoRotate(), cfg.startDelay || 0);
+        },
+
+        createIndicators() {
+            const container = this.root.querySelector('.quote-indicators');
+            if (!container) return;
+
+            // Universal typing-dots indicator (no per-item dots). Stable at low
+            // opacity while an item is showing; three dots bounce in sequence
+            // on change via the .animating class added in show().
+            container.innerHTML = `
+                <div class="quote-icon" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            this.icon = container.querySelector('.quote-icon');
+            // The third dot has the latest stagger (0.24s + 0.6s = 0.84s). When
+            // its animation ends, all dots are done — safe to drop .animating
+            // so the next change can re-trigger cleanly.
+            const lastDot = this.icon?.querySelector('span:last-child');
+            lastDot?.addEventListener('animationend', () => this.icon.classList.remove('animating'));
+        },
+
+        setupEventListeners() {
+            this.root.querySelector('[data-rotator-prev]')?.addEventListener('click', () => this.prev());
+            this.root.querySelector('[data-rotator-next]')?.addEventListener('click', () => this.next());
+
+            // Touch swipe — left = next, right = previous.
+            let startX = 0, startY = 0;
+            this.stage.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            this.stage.addEventListener('touchend', e => {
+                const t = e.changedTouches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                    if (dx < 0) this.next();
+                    else this.prev();
+                }
+            }, { passive: true });
+        },
+
+        show(index) {
+            // Fade out
+            this.textEl.classList.remove('active');
+            this.authorEl.classList.remove('active');
+
+            setTimeout(() => {
+                // Update content. A saying with no source leaves the cite empty —
+                // CSS :empty hides it so no stray em dash is rendered.
+                this.textEl.textContent = this.items[index].text;
+                this.authorEl.textContent = this.items[index].author || '';
+
+                // Fade in
+                this.textEl.classList.add('active');
+                this.authorEl.classList.add('active');
+
+                // Pulse the universal icon to signal the item changed.
+                if (this.icon) {
+                    this.icon.classList.remove('animating');
+                    void this.icon.offsetWidth;  // force reflow so the class re-application restarts the animation
+                    this.icon.classList.add('animating');
+                }
+
+                this.currentIndex = index;
+            }, 300);
+        },
+
+        next() {
+            this.show((this.currentIndex + 1) % this.items.length);
+            this.resetAutoRotate();
+        },
+
+        prev() {
+            this.show((this.currentIndex - 1 + this.items.length) % this.items.length);
+            this.resetAutoRotate();
+        },
+
+        startAutoRotate() {
+            this.autoRotateInterval = setInterval(() => this.next(), cfg.interval);
+        },
+
+        resetAutoRotate() {
+            clearInterval(this.autoRotateInterval);
+            this.startAutoRotate();
+        }
+    };
+}
+
+const QuoteRotator = createRotator({
+    container: 'quote-block',
+    interval: 8000,
+    items: [
         {
             text: "So remember to look up at the stars and not down at your feet. Try to make sense of what you see and hold on to that childlike wonder about what makes the universe exist.",
             author: "Stephen Hawking"
@@ -1781,121 +1898,75 @@ const QuoteRotator = {
             text: "Rivers know this: there is no hurry. We shall get there some day.",
             author: "A.A. Milne"
         }
-    ],
-    currentIndex: 0,
-    autoRotateInterval: null,
+    ]
+});
 
-    init() {
-        if (!document.getElementById('rotating-quote')) return;
-
-        this.createIndicators();
-        this.showQuote(0);
-        this.setupEventListeners();
-        this.startAutoRotate();
-    },
-
-    createIndicators() {
-        const container = document.getElementById('quote-indicators');
-        if (!container) return;
-
-        // Universal typing-dots indicator (no per-quote dots). Stable at low
-        // opacity while a quote is showing; three dots bounce in sequence
-        // on change via the .animating class added in showQuote().
-        container.innerHTML = `
-            <div class="quote-icon" aria-hidden="true">
-                <span></span><span></span><span></span>
-            </div>
-        `;
-        const icon = container.querySelector('.quote-icon');
-        // The third dot has the latest stagger (0.24s + 0.6s = 0.84s). When
-        // its animation ends, all dots are done — safe to drop .animating
-        // so the next quote change can re-trigger cleanly.
-        const lastDot = icon?.querySelector('span:last-child');
-        lastDot?.addEventListener('animationend', () => icon.classList.remove('animating'));
-    },
-
-    setupEventListeners() {
-        document.getElementById('quote-prev')?.addEventListener('click', () => this.prevQuote());
-        document.getElementById('quote-next')?.addEventListener('click', () => this.nextQuote());
-
-        // Touch swipe — left = next, right = previous.
-        const container = document.getElementById('rotating-quote');
-        if (!container) return;
-        let startX = 0, startY = 0;
-        container.addEventListener('touchstart', e => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, { passive: true });
-        container.addEventListener('touchend', e => {
-            const t = e.changedTouches[0];
-            const dx = t.clientX - startX;
-            const dy = t.clientY - startY;
-            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-                if (dx < 0) this.nextQuote();
-                else this.prevQuote();
-            }
-        }, { passive: true });
-    },
-
-    showQuote(index) {
-        const quoteText = document.querySelector('.rotating-quote-text');
-        const quoteAuthor = document.querySelector('.rotating-quote-author');
-
-        if (!quoteText || !quoteAuthor) return;
-
-        // Fade out
-        quoteText.classList.remove('active');
-        quoteAuthor.classList.remove('active');
-
-        setTimeout(() => {
-            // Update content
-            quoteText.textContent = this.quotes[index].text;
-            quoteAuthor.textContent = this.quotes[index].author;
-
-            // Fade in
-            quoteText.classList.add('active');
-            quoteAuthor.classList.add('active');
-
-            // Pulse the universal icon to signal the quote changed.
-            const icon = document.querySelector('.quote-icon');
-            if (icon) {
-                icon.classList.remove('animating');
-                void icon.offsetWidth;  // force reflow so the class re-application restarts the animation
-                icon.classList.add('animating');
-            }
-
-            this.currentIndex = index;
-        }, 300);
-    },
-
-    nextQuote() {
-        const nextIndex = (this.currentIndex + 1) % this.quotes.length;
-        this.showQuote(nextIndex);
-        this.resetAutoRotate();
-    },
-
-    prevQuote() {
-        const prevIndex = (this.currentIndex - 1 + this.quotes.length) % this.quotes.length;
-        this.showQuote(prevIndex);
-        this.resetAutoRotate();
-    },
-
-    goToQuote(index) {
-        this.showQuote(index);
-        this.resetAutoRotate();
-    },
-
-    startAutoRotate() {
-        this.autoRotateInterval = setInterval(() => {
-            this.nextQuote();
-        }, 8000); // Change quote every 8 seconds
-    },
-
-    resetAutoRotate() {
-        clearInterval(this.autoRotateInterval);
-        this.startAutoRotate();
-    }
-};
+// Sayings are proverbs rather than authored lines. Where a saying's origin is
+// well documented it is credited to that tradition; the rest are marked simply
+// "Proverb" rather than assigned a culture we can't stand behind.
+const SayingRotator = createRotator({
+    container: 'saying-block',
+    interval: 11000,
+    startDelay: 4000,
+    items: [
+        {
+            text: "Fall seven times, stand up eight.",
+            author: "Japanese proverb"
+        },
+        {
+            text: "Hurry, hurry has no blessing.",
+            author: "Swahili proverb"
+        },
+        {
+            text: "Measure seven times, cut once.",
+            author: "Russian proverb"
+        },
+        {
+            text: "The shrimp that falls asleep is carried off by the current.",
+            author: "Spanish proverb"
+        },
+        {
+            text: "There is no bad from which good does not come.",
+            author: "Spanish proverb"
+        },
+        {
+            text: "The nail that sticks out gets hammered down.",
+            author: "Japanese proverb"
+        },
+        {
+            text: "Dripping water hollows out stone.",
+            author: "Latin proverb"
+        },
+        {
+            text: "Make haste slowly.",
+            author: "Latin proverb"
+        },
+        {
+            text: "It takes a village to raise a child.",
+            author: "African proverb"
+        },
+        {
+            text: "I am because we are.",
+            author: "Ubuntu, Southern Africa"
+        },
+        {
+            text: "Talk does not cook rice.",
+            author: "Chinese proverb"
+        },
+        {
+            text: "This too shall pass.",
+            author: "Persian adage"
+        },
+        {
+            text: "Still waters run deep.",
+            author: "Proverb"
+        },
+        {
+            text: "Empty vessels make the most sound.",
+            author: "Proverb"
+        }
+    ]
+});
 
 // ==========================================================================
 // BLOG SECTION FUNCTIONALITY

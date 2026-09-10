@@ -3826,6 +3826,38 @@ body:has(#projects.active) .filter-sidebar {
     justify-content: center;
 }
 
+/* Sayings rotator — same machinery as the quote block above it, muted one
+   step so the pair reads as quote-then-footnote rather than two equal cards.
+   The quote block's 40px bottom margin is the gap between them. */
+.saying-container {
+    margin-top: 0;
+    background: linear-gradient(135deg, rgba(13, 40, 242, 0.12), rgba(230, 15, 15, 0.07));
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.saying-label {
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blot-light-gray);
+    opacity: 0.55;
+    margin-bottom: 4px;
+}
+
+/* Sayings are one or two lines, never a full paragraph — no need for the
+   120px stage the quotes need. */
+.saying-container .rotating-quote {
+    height: 84px;
+}
+
+/* Cite is left empty for any saying with no documented source; without this
+   the ::before em dash would render on its own. */
+.rotating-quote-author:empty {
+    display: none;
+}
+
 /* Universal typing-dots indicator — three dots stable at low opacity, bounce
    in sequence (chat-typing style) on quote change via .animating class. */
 .quote-icon {
@@ -4095,6 +4127,13 @@ body:has(#projects.active) .filter-sidebar {
            clipped by the 120px fixed height from base. */
         height: auto;
         min-height: 110px;
+    }
+
+    /* Same reasoning for the shorter sayings stage — the base rule sets a
+       fixed 84px and outranks the .rotating-quote override above. */
+    .saying-container .rotating-quote {
+        height: auto;
+        min-height: 84px;
     }
 
     .rotating-quote-text {

@@ -73,7 +73,7 @@ The application uses a module pattern with these key components:
 - **FilterSystem** - Dynamic project filtering with URL persistence
 - **URLManager** - URL parameter handling
 - **NightSky** - Animated background effect
-- **QuoteRotator** - Rotating quotes display
+- **createRotator(cfg)** - Factory behind the two About-section rotators: **QuoteRotator** (attributed quotes, `#quote-block`) and **SayingRotator** (proverbs, `#saying-block`). All DOM lookups are scoped to `cfg.container`, so each block needs its own `.rotating-quote`, `.quote-indicators`, and `[data-rotator-prev/next]` controls
 - **BlogState** - Blog post management
 
 ### CSS Organization (`css/main.css`)

@@ -74,7 +74,7 @@
     
     <!-- ==================== STYLESHEETS ==================== -->
     <link rel="stylesheet" href="css/root.min.css?v=687914c9">
-	<link rel="stylesheet" href="css/main.min.css?v=2ebd6739">
+	<link rel="stylesheet" href="css/main.min.css?v=587c7391">
 	<link rel="stylesheet" href="css/about-section.min.css?v=5267738e">
 	<link rel="stylesheet" href="blog/css/post.min.css?v=3a151226">
     
@@ -568,19 +568,41 @@
 				</div>
 
 				<!-- Rotating Quote Display -->
-				<div class="rotating-quote-container">
-					<div class="rotating-quote" id="rotating-quote">
+				<div class="rotating-quote-container" id="quote-block">
+					<div class="rotating-quote">
 						<blockquote class="rotating-quote-text"></blockquote>
 						<cite class="rotating-quote-author"></cite>
 					</div>
 					<div class="quote-controls">
-						<button class="quote-nav-btn" id="quote-prev" aria-label="Previous quote">
+						<button class="quote-nav-btn" data-rotator-prev aria-label="Previous quote">
 							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 								<path d="M15 18l-6-6 6-6"/>
 							</svg>
 						</button>
-						<div class="quote-indicators" id="quote-indicators"></div>
-						<button class="quote-nav-btn" id="quote-next" aria-label="Next quote">
+						<div class="quote-indicators"></div>
+						<button class="quote-nav-btn" data-rotator-next aria-label="Next quote">
+							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M9 18l6-6-6-6"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+
+				<!-- Rotating Sayings Display -->
+				<div class="rotating-quote-container saying-container" id="saying-block">
+					<span class="saying-label">Sayings</span>
+					<div class="rotating-quote">
+						<blockquote class="rotating-quote-text"></blockquote>
+						<cite class="rotating-quote-author"></cite>
+					</div>
+					<div class="quote-controls">
+						<button class="quote-nav-btn" data-rotator-prev aria-label="Previous saying">
+							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M15 18l-6-6 6-6"/>
+							</svg>
+						</button>
+						<div class="quote-indicators"></div>
+						<button class="quote-nav-btn" data-rotator-next aria-label="Next saying">
 							<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 								<path d="M9 18l6-6-6-6"/>
 							</svg>
@@ -817,6 +839,6 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script src="js/projects-data.js?v=3d476654" defer></script>
-    <script src="js/main.min.js?v=a7b66707" defer></script>
+    <script src="js/main.min.js?v=a9b57a24" defer></script>
 </body>
 </html>
