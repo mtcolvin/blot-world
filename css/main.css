@@ -3835,17 +3835,6 @@ body:has(#projects.active) .filter-sidebar {
     border-color: rgba(255, 255, 255, 0.06);
 }
 
-.saying-label {
-    display: block;
-    text-align: center;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--blot-light-gray);
-    opacity: 0.55;
-    margin-bottom: 4px;
-}
-
 /* Sayings are one or two lines, never a full paragraph — no need for the
    120px stage the quotes need. */
 .saying-container .rotating-quote {
