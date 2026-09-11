@@ -1745,6 +1745,9 @@ function createRotator(cfg) {
         init() {
             this.root = document.getElementById(cfg.container);
             if (!this.root) return;
+            // Items come from a separate data script; bail rather than throw
+            // in show() if that file failed to load.
+            if (!this.items.length) return;
 
             this.stage = this.root.querySelector('.rotating-quote');
             this.textEl = this.root.querySelector('.rotating-quote-text');
@@ -1849,123 +1852,16 @@ function createRotator(cfg) {
 const QuoteRotator = createRotator({
     container: 'quote-block',
     interval: 8000,
-    items: [
-        {
-            text: "So remember to look up at the stars and not down at your feet. Try to make sense of what you see and hold on to that childlike wonder about what makes the universe exist.",
-            author: "Stephen Hawking"
-        },
-        {
-            text: "He ought to find it more profitable to play by the rules than to undermine the system.",
-            author: "Satoshi Nakamoto"
-        },
-        {
-            text: "If I have seen further, it is by standing on the shoulders of giants.",
-            author: "Isaac Newton"
-        },
-        {
-            text: "Not knowing when the dawn will come I open every door.",
-            author: "Emily Dickinson"
-        },
-        {
-            text: "If you want the rainbow, you got to put up with the rain.",
-            author: "Dolly Parton"
-        },
-        {
-            text: "We do not inherit the earth from our ancestors; we borrow it from our children.",
-            author: "Proverb"
-        },
-        {
-            text: "Understanding is love's other name.",
-            author: "Thích Nhất Hạnh"
-        },
-        {
-            text: "We're all just walking each other home.",
-            author: "Ram Dass"
-        },
-        {
-            text: "Everyone you meet is fighting a battle you know absolutely nothing about. Be kind. Always.",
-            author: "Robin Williams"
-        },
-        {
-            text: "Don't gain the world and lose your soul; wisdom is better than silver or gold.",
-            author: "Bob Marley"
-        },
-        {
-            text: "Learning never exhausts the mind.",
-            author: "Leonardo da Vinci"
-        },
-        {
-            text: "Rivers know this: there is no hurry. We shall get there some day.",
-            author: "A.A. Milne"
-        }
-    ]
+    items: window.QUOTES_DATA || []
 });
 
-// Sayings are proverbs rather than authored lines. Where a saying's origin is
-// well documented it is credited to that tradition; the rest are marked simply
-// "Proverb" rather than assigned a culture we can't stand behind.
+// Sayings are proverbs rather than authored lines; see js/sayings-data.js for
+// how origins are credited.
 const SayingRotator = createRotator({
     container: 'saying-block',
     interval: 11000,
     startDelay: 4000,
-    items: [
-        {
-            text: "Fall seven times, stand up eight.",
-            author: "Japanese proverb"
-        },
-        {
-            text: "Hurry, hurry has no blessing.",
-            author: "Swahili proverb"
-        },
-        {
-            text: "Measure seven times, cut once.",
-            author: "Russian proverb"
-        },
-        {
-            text: "The shrimp that falls asleep is carried off by the current.",
-            author: "Spanish proverb"
-        },
-        {
-            text: "There is no bad from which good does not come.",
-            author: "Spanish proverb"
-        },
-        {
-            text: "The nail that sticks out gets hammered down.",
-            author: "Japanese proverb"
-        },
-        {
-            text: "Dripping water hollows out stone.",
-            author: "Latin proverb"
-        },
-        {
-            text: "Make haste slowly.",
-            author: "Latin proverb"
-        },
-        {
-            text: "It takes a village to raise a child.",
-            author: "African proverb"
-        },
-        {
-            text: "I am because we are.",
-            author: "Ubuntu, Southern Africa"
-        },
-        {
-            text: "Talk does not cook rice.",
-            author: "Chinese proverb"
-        },
-        {
-            text: "This too shall pass.",
-            author: "Persian adage"
-        },
-        {
-            text: "Still waters run deep.",
-            author: "Proverb"
-        },
-        {
-            text: "Empty vessels make the most sound.",
-            author: "Proverb"
-        }
-    ]
+    items: window.SAYINGS_DATA || []
 });
 
 // ==========================================================================

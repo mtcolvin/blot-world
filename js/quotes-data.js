@@ -1,0 +1,60 @@
+/**
+ * Quotes shown by the About section's upper rotator.
+ *
+ * HAND-CURATED — unlike its neighbour js/projects-data.js, nothing generates
+ * this file. Edit it directly and hard refresh; there is no build step. Run
+ * `npm run minify:js && npm run cache:bust` only when deploying.
+ *
+ * Each entry: { text, author }. `author` may be omitted — the cite renders
+ * empty and CSS :empty hides it, so no orphan em dash appears.
+ */
+window.QUOTES_DATA = [
+    {
+        text: "So remember to look up at the stars and not down at your feet. Try to make sense of what you see and hold on to that childlike wonder about what makes the universe exist.",
+        author: "Stephen Hawking"
+    },
+    {
+        text: "He ought to find it more profitable to play by the rules than to undermine the system.",
+        author: "Satoshi Nakamoto"
+    },
+    {
+        text: "If I have seen further, it is by standing on the shoulders of giants.",
+        author: "Isaac Newton"
+    },
+    {
+        text: "Not knowing when the dawn will come I open every door.",
+        author: "Emily Dickinson"
+    },
+    {
+        text: "If you want the rainbow, you got to put up with the rain.",
+        author: "Dolly Parton"
+    },
+    {
+        text: "We do not inherit the earth from our ancestors; we borrow it from our children.",
+        author: "Proverb"
+    },
+    {
+        text: "Understanding is love's other name.",
+        author: "Thích Nhất Hạnh"
+    },
+    {
+        text: "We're all just walking each other home.",
+        author: "Ram Dass"
+    },
+    {
+        text: "Everyone you meet is fighting a battle you know absolutely nothing about. Be kind. Always.",
+        author: "Robin Williams"
+    },
+    {
+        text: "Don't gain the world and lose your soul; wisdom is better than silver or gold.",
+        author: "Bob Marley"
+    },
+    {
+        text: "Learning never exhausts the mind.",
+        author: "Leonardo da Vinci"
+    },
+    {
+        text: "Rivers know this: there is no hurry. We shall get there some day.",
+        author: "A.A. Milne"
+    }
+];

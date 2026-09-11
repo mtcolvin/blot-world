@@ -37,6 +37,19 @@ navigation. `npm run build:projects` reads it and generates:
 
 **Adding a project:** create `projects/<slug>/index.html` (with `<!-- PROJECT-META:start/end -->` markers in `<head>`), add `preview.jpg`, append an entry to `data/projects.json`, run `npm run build:projects`.
 
+### Rotator Content (quotes & sayings)
+
+The two About-section rotators read their content from two **hand-curated** files:
+- **`js/quotes-data.js`** — `window.QUOTES_DATA`, attributed quotes (upper block)
+- **`js/sayings-data.js`** — `window.SAYINGS_DATA`, proverbs (lower block)
+
+**Rules:**
+- **Nothing generates these.** They sit beside the generated `js/projects-data.js` but are edited by hand — there is no build step and no `data/*.json` source. Edit and hard refresh.
+- Entry shape is `{ text, author }`. `author` is optional: omit it and the `<cite>` renders empty, which CSS `:empty` hides so no orphan em dash appears.
+- For sayings, `author` names a *tradition* ("Japanese proverb"), and only where the origin is well documented. Anything whose usual attribution is disputed is marked plainly "Proverb" rather than credited to a culture that can't be stood behind.
+- Both are loaded `defer` **before** `js/main.min.js` in `index.html` — deferred scripts run in order, so the globals exist before the rotators are built. A rotator with an empty `items` bails in `init()` rather than throwing.
+- After editing, deploy with `npm run minify:js && npm run cache:bust`. **The cache-bust step is not optional** — `index.html` references these files with `?v=` hashes, so skipping it leaves returning visitors on the cached copy.
+
 ### Photography Workflow
 
 The photography page (`projects/photography/index.html`) is data-driven from two files:
@@ -73,7 +86,7 @@ The application uses a module pattern with these key components:
 - **FilterSystem** - Dynamic project filtering with URL persistence
 - **URLManager** - URL parameter handling
 - **NightSky** - Animated background effect
-- **createRotator(cfg)** - Factory behind the two About-section rotators: **QuoteRotator** (attributed quotes, `#quote-block`) and **SayingRotator** (proverbs, `#saying-block`). All DOM lookups are scoped to `cfg.container`, so each block needs its own `.rotating-quote`, `.quote-indicators`, and `[data-rotator-prev/next]` controls
+- **createRotator(cfg)** - Factory behind the two About-section rotators: **QuoteRotator** (attributed quotes, `#quote-block`) and **SayingRotator** (proverbs, `#saying-block`). All DOM lookups are scoped to `cfg.container`, so each block needs its own `.rotating-quote`, `.quote-indicators`, and `[data-rotator-prev/next]` controls. Content lives in `js/quotes-data.js` / `js/sayings-data.js` (see Rotator Content below)
 - **BlogState** - Blog post management
 
 ### CSS Organization (`css/main.css`)

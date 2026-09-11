@@ -838,6 +838,10 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script src="js/projects-data.js?v=3d476654" defer></script>
-    <script src="js/main.min.js?v=a9b57a24" defer></script>
+    <!-- Rotator content. Deferred scripts run in order, so these globals exist
+         before main.min.js builds the rotators from them. -->
+    <script src="js/quotes-data.js?v=8637103f" defer></script>
+    <script src="js/sayings-data.js?v=2b8c0aaf" defer></script>
+    <script src="js/main.min.js?v=f5bd23a2" defer></script>
 </body>
 </html>
