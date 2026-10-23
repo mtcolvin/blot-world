@@ -28,6 +28,23 @@
       "modal": true
     },
     {
+      "slug": "clarity",
+      "card": true,
+      "page": false,
+      "name": "Clarity",
+      "dataName": "Clarity Health Record",
+      "area": "Software Development",
+      "dataTech": "Python,FastAPI,SQLite,React,Recharts,Vite,pydicom,Claude Code,GitHub Actions,GitHub Pages",
+      "techDisplay": ["Python", "FastAPI", "SQLite", "React", "Recharts", "Vite", "pydicom", "Claude Code", "GitHub Actions", "GitHub Pages"],
+      "techSectionLabel": "Tech Stack",
+      "month": "July",
+      "year": "2026",
+      "dateDisplay": "Jul 2026 — Present",
+      "imageAlt": "Clarity showing a lab trend chart with guideline lines",
+      "description": "A local-first personal health record: lab trends, flags, and a medical-imaging viewer, with nothing leaving your machine. Live demo with invented data.",
+      "href": "https://clarity.blot.world/"
+    },
+    {
       "slug": "cafemex",
       "card": true,
       "page": true,
