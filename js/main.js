@@ -1035,7 +1035,7 @@ function renderProjectCards(isTouchDevice) {
             .join('');
         const isAI = isAITech(p.dataTech);
         const aiBadge = isAI
-            ? '<div class="ai-badge" aria-label="Co-built with AI">CO-BUILT</div>'
+            ? '<div class="ai-badge" role="img" aria-label="Co-built with AI" title="Co-built with AI"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12.8 2.5c.7 5.2 3.3 7.8 8.5 8.5v2c-5.2.7-7.8 3.3-8.5 8.5h-1.6c-.7-5.2-3.3-7.8-8.4-8.5v-2c5.1-.7 7.7-3.3 8.4-8.5z"/></svg></div>'
             : '';
         const cardClass = isAI ? 'project-card ai-project' : 'project-card';
         const extIcon = p.externalIcon ? externalIcon : '';
@@ -1053,8 +1053,8 @@ function renderProjectCards(isTouchDevice) {
                         <div class="card-image">${pictureFor(p.image, `alt="${p.imageAlt || p.name}"`)}</div>
                         <div class="corner-chips">
                             <div class="area-ribbon">${p.area}</div>
-                            ${aiBadge}
                         </div>
+                        ${aiBadge}
                         <div class="body">
                             <div class="card-name">${p.name}${extIcon}</div>
                             <div class="meta">
