@@ -38,9 +38,9 @@
             "modal": true
         },
         {
-            "id": "clarity",
-            "name": "Clarity",
-            "dataName": "Clarity Health Record",
+            "id": "amberlin",
+            "name": "Amberlin",
+            "dataName": "Amberlin Health Record",
             "area": "Software Development",
             "dataTech": "Python,FastAPI,SQLite,React,Recharts,Vite,pydicom,Claude Code,GitHub Actions,GitHub Pages",
             "techDisplay": [
@@ -58,11 +58,11 @@
             "month": "July",
             "year": "2026",
             "dateDisplay": "Jul 2026 — Present",
-            "image": "projects/clarity/preview.jpg",
-            "imageAlt": "Clarity showing a lab trend chart with guideline lines",
+            "image": "projects/amberlin/preview.jpg",
+            "imageAlt": "Amberlin wordmark above a small lab trend chart with one flagged point",
             "description": "A local-first personal health record: lab trends, flags, and a medical-imaging viewer, with nothing leaving your machine. Live demo with invented data.",
             "techSectionLabel": "Tech Stack",
-            "href": "https://clarity.blot.world/"
+            "href": "https://amberlin.blot.world/"
         },
         {
             "id": "cafemex",
