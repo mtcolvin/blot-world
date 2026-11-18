@@ -1074,6 +1074,16 @@ main {
 	}
 }
 
+/* Narrow windows that aren't phones (e.g. a laptop browser at half width):
+   two columns instead of one, so cards don't balloon to ~480px wide. */
+@media (min-width: 481px) and (max-width: 640px) {
+	#projects-grid,
+	#projects-preview-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.5rem;
+	}
+}
+
 .section-header {
 	margin-bottom: 1rem;
 }
@@ -1389,9 +1399,40 @@ main {
 	background: rgba(10, 10, 10, 0.55);
 	-webkit-backdrop-filter: blur(6px);
 	backdrop-filter: blur(6px);
-	box-shadow:
-		0 0 0 1px rgba(201, 169, 255, 0.5) inset,
-		0 3px 10px rgba(201, 169, 255, 0.2);
+}
+/* Rotating holo ring (pink → lilac → aqua), same mask technique as
+   .card-front::before but with its own angle so the two spin independently. */
+@property --ai-badge-angle {
+	syntax: "<angle>";
+	inherits: false;
+	initial-value: 0deg;
+}
+@keyframes ai-badge-spin {
+	to { --ai-badge-angle: 360deg; }
+}
+.card-front .ai-badge::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	padding: 2px;
+	background: conic-gradient(
+		from var(--ai-badge-angle),
+		#FF9EC4, #C9A9FF, #7FE6E6, #C9A9FF, #FF9EC4
+	);
+	-webkit-mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	mask-composite: exclude;
+	pointer-events: none;
+	animation: ai-badge-spin 2.5s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+	.card-front .ai-badge::before { animation: none; }
 }
 
 .card-front .body {
@@ -2729,6 +2770,11 @@ body:has(#projects.active) .filter-sidebar {
 	.projects-counter-mobile {
 		display: block;
 		order: 1;
+	}
+
+	/* The desktop counter is otherwise still shown here, doubling the line. */
+	.projects-counter-desktop {
+		display: none;
 	}
 
 	.projects-title-row h2 {
@@ -4807,6 +4853,16 @@ body:has(#projects.active) .filter-sidebar {
     .post-excerpt {
         font-size: 16px;
     }
+}
+
+/* Narrow non-phone windows: keep "Showing X of Y" beside the Projects heading
+   rather than stacked under it. Sits after the 640px block so it wins. */
+@media (min-width: 481px) and (max-width: 640px) {
+	.projects-title-row {
+		flex-direction: row;
+		align-items: center;
+		gap: 1rem;
+	}
 }
 
 /* ==========================================================================
