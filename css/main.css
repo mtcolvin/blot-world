@@ -1757,14 +1757,13 @@ html.touch-device .project-card-link.flipped {
 	border-color: var(--ai-accent) !important;
 }
 
-/* Holographic shimmer for filled AI surfaces (badge, AI tag chip, "With AI" filter) */
+/* Holographic shimmer for filled AI surfaces (the AI tag chip on card backs) */
 @keyframes ai-holo-shift {
 	0%, 100% { background-position: 0% 50%; }
 	50% { background-position: 100% 50%; }
 }
 @media (prefers-reduced-motion: reduce) {
-	.card-back .back-tag.is-ai,
-	.filter-segmented .seg-btn[data-made-with="ai"].active {
+	.card-back .back-tag.is-ai {
 		animation: none;
 	}
 }
@@ -2070,51 +2069,103 @@ body:has(#projects.active) .filter-sidebar {
 	padding-bottom: 1.5rem;
 }
 
+/* A recessed tray. Two indicators sit behind the labels (added by JS, which
+   sets .has-indicators): a lighter fill marking the selected option, and an
+   outline that rests on it, follows the pointer, and slides back on leave.
+   Without JS the buttons keep their own .active background. */
 .filter-segmented {
+	position: relative;
 	display: flex;
 	gap: 4px;
-	background: rgba(0, 0, 0, 0.35);
-	border: 1px solid rgba(255, 255, 255, 0.06);
-	border-radius: 6px;
-	padding: 3px;
+	background: rgba(0, 0, 0, 0.55);
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: 8px;
+	padding: 4px;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.3);
 }
 
 .filter-segmented .seg-btn {
+	position: relative;
+	z-index: 2;
 	flex: 1;
 	background: transparent;
 	border: none;
-	color: rgba(255, 255, 255, 0.55);
+	color: rgba(255, 255, 255, 0.45);
 	font-family: "JetBrains Mono", monospace;
 	font-size: 10px;
 	font-weight: 700;
 	letter-spacing: 1px;
 	text-transform: uppercase;
-	padding: 7px 8px;
-	border-radius: 4px;
+	padding: 8px 6px;
+	border-radius: 5px;
 	cursor: pointer;
-	transition: background 0.18s ease, color 0.18s ease;
+	transition: background 0.18s ease, color 0.2s ease;
 	white-space: nowrap;
 }
+.filter-segmented .seg-btn:focus-visible { outline: none; }
+.filter-segmented .seg-btn:hover,
+.filter-segmented .seg-btn.is-hover { color: rgba(255, 255, 255, 0.8); }
+.filter-segmented .seg-btn.active { color: rgba(255, 255, 255, 0.96); }
+.filter-segmented .seg-btn[data-made-with="ai"]:hover,
+.filter-segmented .seg-btn[data-made-with="ai"].is-hover { color: rgba(201, 169, 255, 0.85); }
+.filter-segmented .seg-btn[data-made-with="ai"].active { color: var(--ai-accent); }
 
-.filter-segmented .seg-btn:hover {
-	color: rgba(255, 255, 255, 0.96);
-	background: rgba(255, 255, 255, 0.06);
+/* No-JS fallback fill */
+.filter-segmented:not(.has-indicators) .seg-btn.active { background: rgba(255, 255, 255, 0.2); }
+
+.filter-segmented .seg-thumb,
+.filter-segmented .seg-outline {
+	position: absolute;
+	top: 4px;
+	bottom: 4px;
+	left: 0;
+	border-radius: 5px;
+	pointer-events: none;
+	transition:
+		transform 0.32s cubic-bezier(0.3, 0.7, 0.2, 1),
+		width 0.32s cubic-bezier(0.3, 0.7, 0.2, 1),
+		background 0.2s ease,
+		box-shadow 0.2s ease;
 }
-
-.filter-segmented .seg-btn.active {
-	color: rgba(255, 255, 255, 0.96);
-	background: rgba(255, 255, 255, 0.14);
-	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+.filter-segmented .seg-thumb {
+	z-index: 1;
+	background: rgba(255, 255, 255, 0.2);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
-
-.filter-segmented .seg-btn[data-made-with="ai"].active {
-	background: var(--ai-accent-holo);
-	background-size: 200% 200%;
-	animation: ai-holo-shift 6s ease-in-out infinite;
-	color: var(--blot-black);
-	font-weight: 700;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset,
-				0 2px 8px var(--ai-accent-glow);
+.filter-segmented .seg-thumb.ai { background: rgba(201, 169, 255, 0.24); }
+.filter-segmented .seg-outline {
+	z-index: 3;
+	box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.8) inset;
+}
+/* On "With AI" the outline becomes the card badge's rotating ring. */
+.filter-segmented .seg-outline.ai { box-shadow: none; }
+.filter-segmented .seg-outline::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	padding: 2px;
+	background: conic-gradient(
+		from var(--ai-badge-angle),
+		#FF9EC4, #C9A9FF, #7FE6E6, #C9A9FF, #FF9EC4
+	);
+	-webkit-mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	mask-composite: exclude;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	animation: ai-badge-spin 2.5s linear infinite;
+}
+.filter-segmented .seg-outline.ai::before { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+	.filter-segmented .seg-thumb,
+	.filter-segmented .seg-outline { transition: none; }
+	.filter-segmented .seg-outline::before { animation: none; }
 }
 
 .filter-section h3 {
@@ -3209,16 +3260,6 @@ body:has(#projects.active) .filter-sidebar {
 		font-family: "JetBrains Mono", monospace;
 	}
 
-	/* Close button for filter sidebar */
-	.filter-close-btn {
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0.25rem;
-		display: flex !important;
-		align-items: center;
-		justify-content: center;
-	}
 
 	/* Overlay backdrop - DISABLED */
 	.filter-overlay {
@@ -4855,13 +4896,41 @@ body:has(#projects.active) .filter-sidebar {
     }
 }
 
-/* Narrow non-phone windows: keep "Showing X of Y" beside the Projects heading
-   rather than stacked under it. Sits after the 640px block so it wins. */
+/* Narrow non-phone windows: keep "Showing X of Y" on the Projects heading's
+   line, pushed to the right edge. The base rule's max-width reserves room for
+   the desktop sidebar, which is a full-screen panel at this size, so drop it.
+   Sits after the 640px block so it wins. */
 @media (min-width: 481px) and (max-width: 640px) {
 	.projects-title-row {
 		flex-direction: row;
+		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
+		max-width: none;
+	}
+}
+
+/* <=640px: the filter panel is full-screen. The filter button leaves the
+   navbar (it's a sibling of <nav> in the markup) so it can sit ABOVE the
+   panel and morph into its close arrow in place; the panel's own close
+   button is hidden, and its header lines "Filters" up with the button. */
+@media (max-width: 640px) {
+	.mobile-filter-nav-btn {
+		position: fixed !important;
+		top: calc((var(--nav-height) - 52px) / 2);
+		right: 0.5rem;
+		z-index: 10011;
+	}
+	.filter-sidebar {
+		padding-top: 0;
+	}
+	.filter-sidebar .filter-sidebar-header {
+		box-sizing: border-box;
+		height: var(--nav-height);
+		padding: 0 60px 0 0;
+	}
+	.filter-close-btn {
+		display: none !important;
 	}
 }
 

@@ -74,7 +74,7 @@
     
     <!-- ==================== STYLESHEETS ==================== -->
     <link rel="stylesheet" href="css/root.min.css?v=687914c9">
-	<link rel="stylesheet" href="css/main.min.css?v=0cb6fe92">
+	<link rel="stylesheet" href="css/main.min.css?v=2499c9b8">
 	<link rel="stylesheet" href="css/about-section.min.css?v=5267738e">
 	<link rel="stylesheet" href="blog/css/post.min.css?v=3a151226">
     
@@ -187,15 +187,6 @@
                 <span></span>
             </div>
 
-            <!-- Mobile Filter Button -->
-            <button class="mobile-filter-nav-btn" id="mobile-filter-nav-btn" aria-label="Toggle filters">
-                <svg width="36" height="36" viewBox="0 0 28 28" fill="none">
-                    <rect x="2" y="2" width="24" height="24" rx="5" fill="white"/>
-                    <circle cx="12" cy="16" r="5" stroke="black" stroke-width="2" fill="none"/>
-                    <circle cx="16" cy="12" r="5" stroke="black" stroke-width="2" fill="none"/>
-                </svg>
-            </button>
-
             <!-- Social Icons -->
             <div class="social-icons">
 				<a href="https://github.com/mtcolvin" target="_blank" class="github" title="GitHub" aria-label="GitHub Profile">
@@ -226,6 +217,15 @@
             </div>
         </div>
     </nav>
+    <!-- Mobile Filter Button. Lives outside <nav> so that at <=640px it can sit
+         above the full-screen filter panel and morph into its close arrow
+         (js/main.js swaps in the morphing version of this icon). -->
+    <button class="mobile-filter-nav-btn" id="mobile-filter-nav-btn" aria-label="Toggle filters" aria-controls="filter-sidebar" aria-expanded="false">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="4" fill="black"/>
+            <path d="M5 7H19M8 12H16M11 17H13" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </button>
 
     <!-- ==================== MOBILE NAVIGATION ==================== -->
     <div class="mobile-nav" id="mobile-nav">
@@ -842,6 +842,6 @@
          before main.min.js builds the rotators from them. -->
     <script src="js/quotes-data.js?v=8637103f" defer></script>
     <script src="js/sayings-data.js?v=2b8c0aaf" defer></script>
-    <script src="js/main.min.js?v=1d83bbf4" defer></script>
+    <script src="js/main.min.js?v=2cc2fb3f" defer></script>
 </body>
 </html>

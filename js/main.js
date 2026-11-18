@@ -1083,6 +1083,168 @@ function renderProjectCards(isTouchDevice) {
     grid.innerHTML = html;
 }
 
+// ==========================================================================
+// FILTER ICON MORPH
+// The mobile filter button's icon (three narrowing lines) morphs into a
+// right-pointing close arrow while the full-screen filter panel is open, and
+// back when it closes. Every stroke is a loop of N points, so a line can turn
+// into an arrow arm by plain point interpolation (works in every browser,
+// unlike animating the SVG `d` property). The top and bottom lines become the
+// arms; the middle one shrinks into the tip.
+// ==========================================================================
+const FilterIconMorph = {
+    N: 64,
+
+    // A polyline drawn out-and-back as a closed loop, resampled to N points.
+    strokeLoop(pts) {
+        const half = this.N / 2, seg = [];
+        let total = 0;
+        for (let i = 1; i < pts.length; i++) {
+            const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+            seg.push(d);
+            total += d;
+        }
+        const out = [];
+        for (let k = 0; k < half; k++) {
+            let dist = (k / (half - 1)) * total, i = 0;
+            while (i < seg.length - 1 && dist > seg[i]) { dist -= seg[i]; i++; }
+            const t = seg[i] ? Math.min(dist / seg[i], 1) : 0;
+            out.push([pts[i][0] + (pts[i + 1][0] - pts[i][0]) * t, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * t]);
+        }
+        return out.concat(out.slice().reverse());
+    },
+
+    init(button, sidebar) {
+        const NS = 'http://www.w3.org/2000/svg';
+        const tip = [15, 12];
+        const point = Array.from({ length: this.N }, () => tip.slice());
+        const shapes = [
+            { from: this.strokeLoop([[5, 7], [19, 7]]), to: this.strokeLoop([[10, 7], tip]), sw: [2, 2.5] },
+            { from: this.strokeLoop([[11, 17], [13, 17]]), to: this.strokeLoop([[10, 17], tip]), sw: [2, 2.5] },
+            { from: this.strokeLoop([[8, 12], [16, 12]]), to: point, sw: [2, 0], fade: true },
+        ];
+
+        const svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('width', '36');
+        svg.setAttribute('height', '36');
+        svg.setAttribute('aria-hidden', 'true');
+        const rect = document.createElementNS(NS, 'rect');
+        [['x', 2], ['y', 2], ['width', 20], ['height', 20], ['rx', 4], ['fill', 'black']]
+            .forEach(([k, v]) => rect.setAttribute(k, v));
+        svg.appendChild(rect);
+        const paths = shapes.map(() => {
+            const p = document.createElementNS(NS, 'path');
+            p.setAttribute('fill', 'none');
+            p.setAttribute('stroke', 'white');
+            p.setAttribute('stroke-linecap', 'round');
+            p.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(p);
+            return p;
+        });
+
+        const render = t => {
+            shapes.forEach((s, i) => {
+                const d = s.from.map((a, k) => {
+                    const b = s.to[k];
+                    return (a[0] + (b[0] - a[0]) * t).toFixed(2) + ' ' + (a[1] + (b[1] - a[1]) * t).toFixed(2);
+                });
+                paths[i].setAttribute('d', 'M' + d.join('L') + 'Z');
+                paths[i].setAttribute('stroke-width', s.sw[0] + (s.sw[1] - s.sw[0]) * t);
+                if (s.fade) paths[i].setAttribute('opacity', Math.max(0, 1 - t * 1.4));
+            });
+        };
+
+        const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let current = 0, raf = 0;
+        const morphTo = target => {
+            cancelAnimationFrame(raf);
+            if (reduceMotion.matches) { current = target; render(current); return; }
+            const start = current, t0 = performance.now(), dur = 400;
+            const step = now => {
+                const k = Math.min((now - t0) / dur, 1);
+                current = start + (target - start) * ease(k);
+                render(current);
+                if (k < 1) raf = requestAnimationFrame(step);
+            };
+            raf = requestAnimationFrame(step);
+        };
+
+        render(0);
+        button.replaceChildren(svg);
+
+        // Follow the panel's state however it opens or closes (button, Escape,
+        // swipe, overlay), rather than hooking each of those separately.
+        new MutationObserver(() => {
+            const open = sidebar.classList.contains('active');
+            button.setAttribute('aria-expanded', open ? 'true' : 'false');
+            button.setAttribute('aria-label', open ? 'Close filters' : 'Open filters');
+            morphTo(open ? 1 : 0);
+        }).observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+    },
+};
+
+// ==========================================================================
+// MADE-WITH TRAY
+// Two indicators behind the segmented control's labels: a fill on the
+// selected option (follows the .active class FilterSystem sets) and an
+// outline that rests on it, follows hover/focus, and slides back on leave.
+// ==========================================================================
+const MadeWithTray = {
+    init() {
+        document.querySelectorAll('.made-with-section .filter-segmented').forEach(tray => {
+            const buttons = [...tray.querySelectorAll('.seg-btn')];
+            if (!buttons.length) return;
+            const thumb = document.createElement('div');
+            const outline = document.createElement('div');
+            thumb.className = 'seg-thumb';
+            outline.className = 'seg-outline';
+            thumb.setAttribute('aria-hidden', 'true');
+            outline.setAttribute('aria-hidden', 'true');
+            tray.prepend(thumb);
+            tray.append(outline);
+            tray.classList.add('has-indicators');
+
+            const active = () => buttons.find(b => b.classList.contains('active')) || buttons[0];
+            let hovered = null;
+            const place = (el, btn) => {
+                el.style.width = btn.offsetWidth + 'px';
+                el.style.transform = `translateX(${btn.offsetLeft}px)`;
+                el.classList.toggle('ai', btn.dataset.madeWith === 'ai');
+            };
+            const sync = () => {
+                place(thumb, active());
+                place(outline, hovered || active());
+                buttons.forEach(b => b.classList.toggle('is-hover', b === hovered));
+            };
+            // Snap into place with no slide (first layout, panel shown, resize).
+            const snap = () => {
+                thumb.style.transition = outline.style.transition = 'none';
+                sync();
+                void tray.offsetWidth;
+                thumb.style.transition = outline.style.transition = '';
+            };
+
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', () => { hovered = btn; sync(); });
+                btn.addEventListener('focus', () => { hovered = btn; sync(); });
+                btn.addEventListener('blur', () => { hovered = null; sync(); });
+            });
+            tray.addEventListener('mouseleave', () => { hovered = null; sync(); });
+
+            // Selection changes come from FilterSystem (click, URL state, reset).
+            // Watch only aria-pressed, which FilterSystem sets alongside .active
+            // and which this code never touches, so sync() can't retrigger itself.
+            const selectionObserver = new MutationObserver(sync);
+            buttons.forEach(b => selectionObserver.observe(b, { attributes: true, attributeFilter: ['aria-pressed'] }));
+            // The tray has no size while its panel is hidden; re-snap when it gets one.
+            new ResizeObserver(snap).observe(tray);
+            snap();
+        });
+    },
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('loading');
 
@@ -1226,6 +1388,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterCloseBtn = document.getElementById('filter-close-btn');
     const filterSidebar = document.getElementById('filter-sidebar');
     const filterOverlay = document.getElementById('filter-overlay');
+
+    if (mobileFilterNavBtn && filterSidebar) FilterIconMorph.init(mobileFilterNavBtn, filterSidebar);
+    MadeWithTray.init();
 
     const toggleFilterSidebar = () => {
         filterSidebar.classList.toggle('active');
