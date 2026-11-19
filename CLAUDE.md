@@ -53,6 +53,17 @@ Everything is derived from those two fields — nothing else to edit:
 
 **Domain colors** live in `css/root.css` as `--domain-<lowercased name>` (`--domain-art`, `--domain-code`, …), read via `domainColorVar()` in `js/main.js`. **Adding a new domain = add its `--domain-<name>` variable**; a domain without one falls back to grey (`--domain-fallback`). `root.css` changes need `npm run minify:css && npm run cache:bust`.
 
+### Project Cards (front face)
+
+Rendered by `renderProjectCards()` in `js/main.js` from `data/projects.json`; styles under `.card-front` in `css/main.css`.
+
+- **Top-left — domain tag:** dark pill with faint edge, `● DOMAIN / DISCIPLINE`, dot in the domain color (see above).
+- **Top-right — AI badge** (only when `dataTech` includes an AI tool): same pill size, no visible border; the sparkle and "AI" carry the holo sweep (`.ai-spark` / `.ai-holo-text`, shared with the "With AI" filter).
+- **Bottom:** small mono date line (`.card-date`) above the title, and just the ↻ flip arrow at bottom-right (its "Flip" / "More info" label is kept as `title` + `.sr-only`). Titles sit naturally at the bottom — not forced to a common start height.
+- **Title font:** Space Grotesk 700, uppercase, 18px — the site's heading voice (matches "PROJECTS"). `text-wrap: balance` keeps two-line titles even ("Amberlin / Health App", not "Amberlin Health / App").
+- **Cover images** (`projects/<slug>/preview.jpg`, 900×1320): flat background with one centered graphic. Keep the hero inside roughly y 140–860 — the domain tag covers the top-left and the title fade starts around y 880. After replacing one: delete that project's old `preview.{avif,webp}` and `preview-{480,960}.*` (variant scripts skip files that exist), run `npm run optimize:images && npm run build:srcset && npm run check:pictures`, then `npm run cache:bust`. **`optimize:images` also re-compresses other previews (e.g. Amberlin's) — `git checkout` any it touched that you didn't mean to change.**
+- **Renaming:** edit `name`; leave `dataName` alone — it's the value analytics reports (`project_name`), so changing it breaks click history.
+
 ### Rotator Content (quotes & sayings)
 
 The two About-section rotators read their content from two **hand-curated** files:
