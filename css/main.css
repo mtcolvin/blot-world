@@ -4201,7 +4201,7 @@ body:has(#projects.active) .filter-sidebar {
 .about-areas-grid .domain-group-name {
     margin: 0;
     font-family: 'Space Grotesk', 'Roboto Flex', sans-serif;
-    font-size: 22px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: -0.2px;
     line-height: 1;
