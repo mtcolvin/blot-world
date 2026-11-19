@@ -117,7 +117,6 @@
       "month": "May",
       "year": "2023",
       "dateDisplay": "May — Sep 2023",
-      "image": "projects/retail-scheduling/preview.png",
       "imageAlt": "Walmart Online Pickup & Delivery Scheduling Analysis",
       "description": "Operational analysis of Walmart’s online pickup & delivery scheduling — surfacing inefficiencies and forecasting demand.",
       "external": true,
