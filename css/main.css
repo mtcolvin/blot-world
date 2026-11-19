@@ -695,12 +695,18 @@ main {
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
-	padding: 0.7rem 2rem 0.9rem 1.8rem;
-	font-size: 0.8rem;
-	font-weight: 525;
-	letter-spacing: 2px;
+	justify-content: center;
+	gap: 0.55rem;
+	/* Buttons don't inherit the page font, so set the label font explicitly
+	   (it was falling back to Arial). Even padding keeps the text centered. */
+	padding: 0.85rem 1.6rem;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 0.75rem;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: 1.5px;
 	text-transform: uppercase;
+	white-space: nowrap;
 	cursor: pointer;
 	color: var(--blot-white);
 	border: none;
@@ -997,6 +1003,13 @@ main {
 	align-items: center;
 	margin-bottom: 2rem;
 	text-align: left;
+	/* Span exactly the card columns (3 × 240px + 2 gaps) so the title starts
+	   over the first card and the button ends over the last, like the
+	   Projects page header. */
+	width: 100%;
+	max-width: calc(3 * 240px + 2 * 3rem);
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .projects-preview-header h3 {
@@ -1013,7 +1026,7 @@ main {
 	   and shrink (not stretch) when the section is narrower. */
 	grid-template-columns: repeat(3, minmax(0, 240px));
 	justify-content: center;
-	gap: 5rem;
+	gap: 3rem;  /* matches .projects-grid on the Projects page */
 	width: 100%;
 }
 
@@ -1022,6 +1035,9 @@ main {
 	.projects-preview-grid {
 		grid-template-columns: repeat(2, minmax(0, 240px));
 		gap: 3rem;
+	}
+	.projects-preview-header {
+		max-width: calc(2 * 240px + 3rem);
 	}
 }
 
@@ -1044,6 +1060,7 @@ main {
 
 	.projects-preview-header {
 		padding: 0 !important;
+		max-width: none;  /* cards fill the width on phones */
 	}
 
 	/* Trading-card mobile sizing — single column that fills the width so the
@@ -2043,6 +2060,89 @@ body:has(#projects.active) .filter-sidebar {
 	color: var(--blot-white);
 	font-family: "JetBrains Mono", monospace;
 	padding: 0.5rem;
+}
+
+/* Desktop sort menu (SortMenu in js/main.js): the trigger reuses
+   .sort-dropdown so it looks exactly like the old select; the popup list is
+   styled like the sidebar instead of the OS default. The native select is
+   kept (visually hidden) as the source of truth. */
+.sort-native-hidden {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	pointer-events: none;
+}
+.sort-menu {
+	position: relative;
+	flex: 1;
+	min-width: 0;
+	z-index: 20;
+}
+.sort-menu-trigger {
+	width: 100%;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.sort-menu.is-open .sort-menu-trigger {
+	border-color: rgba(255, 255, 255, 0.35);
+	background-color: rgba(255, 255, 255, 0.1);
+	background-image: url('data:image/svg+xml;utf8,<svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 5L5 1L9 5" stroke="white" stroke-opacity="0.85" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+}
+.sort-menu-list {
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 4px;
+	list-style: none;
+	background: rgba(20, 20, 20, 0.98);
+	-webkit-backdrop-filter: blur(14px);
+	backdrop-filter: blur(14px);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 6px;
+	box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-4px);
+	transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s;
+}
+.sort-menu-list:focus { outline: none; }
+.sort-menu.is-open .sort-menu-list {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s;
+}
+.sort-menu-option {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 9px;
+	border-radius: 4px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 10px;
+	letter-spacing: 0.5px;
+	color: rgba(255, 255, 255, 0.72);
+	cursor: pointer;
+	white-space: nowrap;
+}
+.sort-menu-option svg { opacity: 0; flex-shrink: 0; }
+.sort-menu-option.is-active {
+	background: rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.96);
+}
+.sort-menu-option[aria-selected="true"] {
+	color: var(--blot-white);
+	font-weight: 700;
+}
+.sort-menu-option[aria-selected="true"] svg { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+	.sort-menu-list, .sort-menu.is-open .sort-menu-list { transition: none; transform: none; }
 }
 
 .clear-filters-compact {
@@ -3177,8 +3277,7 @@ body:has(#projects.active) .filter-sidebar {
 	.projects-preview-header .btn-gradient-3d {
 		align-self: stretch;
 		width: 100%;
-		padding: 0.75rem 1.5rem;
-		font-size: 1.1rem;
+		padding: 0.9rem 1.5rem;
 		/* Simplify 3D effects for tablet */
 		clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 	}
@@ -4325,7 +4424,7 @@ body:has(#projects.active) .filter-sidebar {
     content: '—';
     position: absolute;
     left: 0;
-    color: var(--primary-blue);
+    color: var(--accent-red);
 }
 
 /* Gen AI group: lilac (the AI color) on the heading and dashes, and the AI

@@ -176,6 +176,24 @@ function initBackTagsReveal() {
 	});
 }
 
+// A card counts as "listed" unless it is the secret poetry card while the
+// site-wide stars toggle is off. Unlisted cards contribute nothing to the
+// filters (domains, disciplines, technologies) or the About areas, so you
+// never see a discipline whose card you can't see.
+function isCardListed(cardEl) {
+	const link = cardEl && cardEl.closest('.project-card-link');
+	return !(link && link.id === 'poetry-card' && !link.classList.contains('visible'));
+}
+
+// Start date as a sortable number (YYYYMM). month/year in data/projects.json
+// are the project's START; a missing or non-month value (e.g. poetry's
+// "Present") counts as month 0, i.e. the start of that year.
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+	'July', 'August', 'September', 'October', 'November', 'December'];
+function startDateValue(month, year) {
+	return (parseInt(year, 10) || 0) * 100 + (MONTHS.indexOf(month) + 1);
+}
+
 // Domain colors live in css/root.css as --domain-<lowercased name>.
 function domainColorVar(domain) {
 	const key = String(domain || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -687,6 +705,7 @@ const FilterSystem = {
 		const domainMap = new Map();
 
 		projects.forEach(project => {
+			if (!isCardListed(project)) return;
 			const domain = project.dataset.domain;
 			if (domain) {
 				if (!domainMap.has(domain)) domainMap.set(domain, { count: 0, disciplines: new Map() });
@@ -855,6 +874,25 @@ const FilterSystem = {
 		this.applyFilters();
 	},
 
+	// Rebuild the filter lists after a card is shown / hidden (the poetry
+	// toggle), dropping any selection whose option no longer exists so a
+	// hidden card can't leave an invisible filter applied.
+	refreshListedProjects() {
+		this.generateDynamicFilters();
+		const f = AppState.activeFilters;
+		const domains = new Set(this.domainData.map(d => d.name));
+		const disciplineKeys = new Set(this.domainData.flatMap(d => d.disciplines.map(s => this.disciplineKey(d.name, s.name))));
+		const techs = new Set(Array.from(document.querySelectorAll('#tech-filter-options .filter-option')).map(o => o.dataset.value));
+		const before = JSON.stringify([f.domain, f.discipline, f.tech]);
+		f.domain = f.domain.filter(d => domains.has(d));
+		f.discipline = f.discipline.filter(k => disciplineKeys.has(k));
+		f.tech = f.tech.filter(t => techs.has(t));
+		this.buildDomainTree();
+		this.restoreSelections();
+		setTimeout(() => this.attachEventListeners(), 100);
+		if (JSON.stringify([f.domain, f.discipline, f.tech]) !== before) this.applyFilters();
+	},
+
 	// Open any domain whose disciplines are individually selected (URL restore).
 	openSelectedDomains() {
 		AppState.activeFilters.discipline.forEach(k => {
@@ -1016,6 +1054,7 @@ const FilterSystem = {
 	
 	applyFromState() {
 		document.getElementById('sort-select').value = AppState.activeFilters.sort;
+		SortMenu.sync();
 
 		document.querySelectorAll('.filter-checkbox').forEach(cb => {
 			cb.classList.remove('checked');
@@ -1040,6 +1079,7 @@ const FilterSystem = {
 		});
 
 		document.getElementById('sort-select').value = 'date-desc';
+		SortMenu.sync();
 
 		AppState.resetFilters();
 		this.buildDomainTree();
@@ -1051,24 +1091,8 @@ const FilterSystem = {
 		const grid = document.getElementById('projects-grid');
 		const cards = Array.from(grid.children);
 
-		// Helper function to convert month name to number
-		const monthToNumber = (month) => {
-			if (month === 'Present') return 13; // Treat "Present" as later than December
-			const months = {
-				'January': 1, 'February': 2, 'March': 3, 'April': 4,
-				'May': 5, 'June': 6, 'July': 7, 'August': 8,
-				'September': 9, 'October': 10, 'November': 11, 'December': 12
-			};
-			return months[month] || 0;
-		};
-
-		// Helper function to get date value for comparison
-		const getDateValue = (card) => {
-			const year = parseInt(card.dataset.year) || 0;
-			const month = monthToNumber(card.dataset.month || '');
-			// Create a comparable number: year * 100 + month
-			return year * 100 + month;
-		};
+		// Dates sort by START (see startDateValue); ties keep data order.
+		const getDateValue = (card) => startDateValue(card.dataset.month, card.dataset.year);
 
 		cards.sort((a, b) => {
 			const aCard = a.querySelector('.project-card');
@@ -1217,6 +1241,102 @@ function handleSortChange(selectElement) {
 	FilterSystem.applyFilters();
 }
 
+// ==========================================================================
+// SORT MENU — a styled dropdown for the "Sort by" control on desktop.
+// The native <select> stays in the DOM as the source of truth (filters, URL
+// state and Clear all read/write its value); this just replaces the
+// OS-drawn popup list, which can't be styled. Touch devices keep the native
+// picker. Call SortMenu.sync() after changing the select's value in code.
+// ==========================================================================
+const SortMenu = {
+	init() {
+		this.select = document.getElementById('sort-select');
+		if (!this.select || document.documentElement.classList.contains('touch-device')) return;
+
+		const check = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+		this.root = document.createElement('div');
+		this.root.className = 'sort-menu';
+		this.root.innerHTML =
+			'<button type="button" class="sort-dropdown sort-menu-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Sort by">'
+			+ '<span class="sort-menu-label"></span></button>'
+			+ '<ul class="sort-menu-list" role="listbox" tabindex="-1" aria-label="Sort by">'
+			+ [...this.select.options].map(o =>
+				`<li role="option" class="sort-menu-option" data-value="${o.value}" aria-selected="false"><span>${o.text}</span>${check}</li>`
+			).join('')
+			+ '</ul>';
+		this.select.classList.add('sort-native-hidden');
+		this.select.tabIndex = -1;
+		this.select.setAttribute('aria-hidden', 'true');
+		this.select.before(this.root);
+
+		this.trigger = this.root.querySelector('.sort-menu-trigger');
+		this.list = this.root.querySelector('.sort-menu-list');
+		this.options = [...this.list.querySelectorAll('.sort-menu-option')];
+
+		this.trigger.addEventListener('click', () => this.toggle());
+		this.trigger.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); this.open(); }
+		});
+		this.options.forEach((opt, i) => {
+			opt.addEventListener('click', () => this.choose(opt.dataset.value));
+			opt.addEventListener('mousemove', () => this.setActive(i));
+		});
+		this.list.addEventListener('keydown', (e) => this.onListKey(e));
+		document.addEventListener('click', (e) => { if (!this.root.contains(e.target)) this.close(); });
+		this.sync();
+	},
+
+	sync() {
+		if (!this.root) return;
+		const value = this.select.value;
+		this.root.querySelector('.sort-menu-label').textContent =
+			this.select.options[this.select.selectedIndex]?.text || '';
+		this.options.forEach(o => o.setAttribute('aria-selected', String(o.dataset.value === value)));
+	},
+
+	isOpen() { return this.root.classList.contains('is-open'); },
+	toggle() { this.isOpen() ? this.close() : this.open(); },
+
+	open() {
+		this.root.classList.add('is-open');
+		this.trigger.setAttribute('aria-expanded', 'true');
+		this.setActive(Math.max(0, this.options.findIndex(o => o.dataset.value === this.select.value)));
+		this.list.focus();
+	},
+
+	close(refocus) {
+		if (!this.isOpen()) return;
+		this.root.classList.remove('is-open');
+		this.trigger.setAttribute('aria-expanded', 'false');
+		if (refocus) this.trigger.focus();
+	},
+
+	setActive(i) {
+		this.active = i;
+		this.options.forEach((o, j) => o.classList.toggle('is-active', j === i));
+	},
+
+	choose(value) {
+		if (this.select.value !== value) {
+			this.select.value = value;
+			handleSortChange(this.select);
+		}
+		this.sync();
+		this.close(true);
+	},
+
+	onListKey(e) {
+		const n = this.options.length;
+		if (e.key === 'ArrowDown') { e.preventDefault(); this.setActive((this.active + 1) % n); }
+		else if (e.key === 'ArrowUp') { e.preventDefault(); this.setActive((this.active - 1 + n) % n); }
+		else if (e.key === 'Home') { e.preventDefault(); this.setActive(0); }
+		else if (e.key === 'End') { e.preventDefault(); this.setActive(n - 1); }
+		else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.choose(this.options[this.active].dataset.value); }
+		else if (e.key === 'Escape') { e.preventDefault(); this.close(true); }
+		else if (e.key === 'Tab') { this.close(); }
+	}
+};
+
 function clearAllFilters() {
 	FilterSystem.clearAll();
 }
@@ -1250,7 +1370,11 @@ function pictureFor(src, imgAttrs) {
 function renderProjectCards(isTouchDevice) {
     const grid = document.getElementById('projects-grid');
     if (!grid) return;
-    const projects = window.PROJECTS_DATA || [];
+    // Newest start date first, so the grid and the Recent Projects preview
+    // (which clones the first three cards) are in order from the start.
+    // Array.prototype.sort is stable: same-month projects keep data order.
+    const projects = [...(window.PROJECTS_DATA || [])]
+        .sort((a, b) => startDateValue(b.month, b.year) - startDateValue(a.month, a.year));
 
     // Desktop hovers to flip; touch taps to expand — reflect that in the hint.
     const hintLabel = isTouchDevice ? 'More info' : 'Flip';
@@ -1548,6 +1672,7 @@ document.addEventListener('DOMContentLoaded', function() {
     FilterSystem.init();
     FilterSidebarSticky.init();
     ProjectsHeaderAlign.init();
+    SortMenu.init();
     ProjectsPreview.populate();
     populateAreaBadges();
     initializeBlog();
@@ -1738,6 +1863,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!poetryCard) return;
         poetryCard.classList.toggle('visible', showStars);
         updateProjectCounter();
+        // Poetry's domain, discipline and tools appear / disappear with it.
+        FilterSystem.refreshListedProjects();
+        populateAreaBadges();
     };
 
     const bgToggleBtn = document.getElementById('bg-toggle-btn');
@@ -2076,6 +2204,7 @@ function populateAreaBadges() {
 
     const domains = new Map();
     document.querySelectorAll('#projects-grid .project-card').forEach(card => {
+        if (!isCardListed(card)) return;
         const domain = card.dataset.domain;
         if (!domain) return;
         if (!domains.has(domain)) domains.set(domain, new Set());

@@ -76,7 +76,7 @@
     
     <!-- ==================== STYLESHEETS ==================== -->
     <link rel="stylesheet" href="css/root.min.css?v=a5281347">
-	<link rel="stylesheet" href="css/main.min.css?v=ab7d5921">
+	<link rel="stylesheet" href="css/main.min.css?v=b9818ac3">
 	<link rel="stylesheet" href="css/about-section.min.css?v=5267738e">
 	<link rel="stylesheet" href="blog/css/post.min.css?v=b444af5e">
     
@@ -289,10 +289,10 @@
             <h3>Sort by</h3>
             <div class="filter-controls">
                 <select id="sort-select" class="sort-dropdown" onchange="handleSortChange(this)">
-                    <option value="date-desc" selected>Date (Newest First)</option>
-                    <option value="date-asc">Date (Oldest First)</option>
-                    <option value="name-asc">Name (A-Z)</option>
-                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="date-desc" selected>Newest first</option>
+                    <option value="date-asc">Oldest first</option>
+                    <option value="name-asc">Name A–Z</option>
+                    <option value="name-desc">Name Z–A</option>
                 </select>
                 <button class="clear-filters-compact" onclick="clearAllFilters()">Clear</button>
             </div>
@@ -368,7 +368,8 @@
                     <div class="projects-preview-header">
                         <h3>Recent Projects</h3>
                         <button class="btn-gradient-3d" onclick="showSection('projects')">
-                            >
+                            All projects
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                         </button>
                     </div>
                     <div class="projects-preview-grid" id="projects-preview-grid"></div>
@@ -554,18 +555,18 @@
 				<!-- Call to Action -->
 				<div class="about-cta">
 					<button class="btn-gradient-3d" onclick="window.open('documents/matthew-colvin-resume.pdf')" target="_blank" rel="noopener noreferrer">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+						Résumé
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 							<path d="M12 3v13m0 0l-4-4m4 4l4-4"/>
 							<path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
 						</svg>
-						Résumé
 					</button>
 					<button class="btn-gradient-3d" onclick="window.location.href='mailto:mtcolvin99@gmail.com'">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+						Get in touch
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
 							<path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
 							<path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/>
 						</svg>
-						Get in touch
 					</button>
 				</div>
 
@@ -844,6 +845,6 @@
          before main.min.js builds the rotators from them. -->
     <script src="js/quotes-data.js?v=c928a63e" defer></script>
     <script src="js/sayings-data.js?v=800457c2" defer></script>
-    <script src="js/main.min.js?v=1d103387" defer></script>
+    <script src="js/main.min.js?v=ac05b417" defer></script>
 </body>
 </html>
