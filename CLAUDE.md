@@ -37,6 +37,22 @@ navigation. `npm run build:projects` reads it and generates:
 
 **Adding a project:** create `projects/<slug>/index.html` (with `<!-- PROJECT-META:start/end -->` markers in `<head>`), add `preview.jpg`, append an entry to `data/projects.json`, run `npm run build:projects`.
 
+### Domains & Disciplines (project taxonomy)
+
+Each project has a two-level classification in `data/projects.json` (there is no `area` field anymore):
+- **`domain`** — the broad field: `Art`, `Code`, `Data`, `Design`, `Writing`
+- **`discipline`** — the specific kind of work inside it: `Digital`, `Photography`, `Web`, `Software`, `Analysis`, `Branding`, `Poetry`
+
+New kinds of work become a new **discipline** under an existing domain (e.g. painting → `Art`/`Painting`, a novel → `Writing`/`Novels`), not a new domain. The same discipline name can exist under two domains; the filter keys them as `Domain/Discipline`.
+
+Everything is derived from those two fields — nothing else to edit:
+- **Card tag** (top-left): dark pill `● DOMAIN / DISCIPLINE`, dot in the domain color. Card back shows the same.
+- **Filter sidebar**: the Domain section is a tree (`FilterSystem.buildDomainTree()`) — one branch per domain in its color, expandable to its disciplines. URL params: `?domain=Art,Code&discipline=Code/Software`.
+- **About → Areas of Work** (`populateAreaBadges()`): one column per domain over a sideways brace in its color, disciplines listed beneath; rows that aren't full are centered.
+- **Analytics**: the card-click `dataLayer` event sends `project_area` (= domain) and `project_discipline`.
+
+**Domain colors** live in `css/root.css` as `--domain-<lowercased name>` (`--domain-art`, `--domain-code`, …), read via `domainColorVar()` in `js/main.js`. **Adding a new domain = add its `--domain-<name>` variable**; a domain without one falls back to grey (`--domain-fallback`). `root.css` changes need `npm run minify:css && npm run cache:bust`.
+
 ### Rotator Content (quotes & sayings)
 
 The two About-section rotators read their content from two **hand-curated** files:
@@ -83,7 +99,8 @@ The application uses a module pattern with these key components:
 - **Navigation** - Hash-based routing and section transitions
 - **HeroAnimations** - Hero section effects
 - **ProjectsPreview** - Preview section logic
-- **FilterSystem** - Dynamic project filtering with URL persistence
+- **FilterSystem** - Dynamic project filtering with URL persistence: the Domain tree (domain/discipline, see Domains & Disciplines above), Technologies checklist, and Made-with segmented control (styled by **MadeWithTray**: background fills only, no outlines)
+- **ProjectsHeaderAlign** - Pads the Projects title row so the title lines up with the first card column and "Showing X of Y" with the last (the grid centers its tracks, so the inset changes with column count). If both can't fit on one line, adds `.header-wrap` and the counter drops below the title
 - **URLManager** - URL parameter handling
 - **NightSky** - Animated background effect
 - **createRotator(cfg)** - Factory behind the two About-section rotators: **QuoteRotator** (attributed quotes, `#quote-block`) and **SayingRotator** (proverbs, `#saying-block`). All DOM lookups are scoped to `cfg.container`, so each block needs its own `.rotating-quote`, `.quote-indicators`, and `[data-rotator-prev/next]` controls. Content lives in `js/quotes-data.js` / `js/sayings-data.js` (see Rotator Content below)
@@ -159,7 +176,11 @@ Key CSS variables:
 --blot-black: #0a0a0a;
 --primary-blue: #0D28F2;
 --accent-red: #E60F0F;
+--ai-accent: #C9A9FF;      /* AI co-built lilac */
+--domain-art: #FF4040;     /* one --domain-* per domain, see Domains & Disciplines */
 ```
+
+**AI mark:** the card's AI badge and the "With AI" filter share `.ai-spark` (masked sparkle) and `.ai-holo-text` in `css/main.css`. The sliding pink → lilac → aqua sweep is defined once there, so changing it updates both.
 
 ## File Naming
 
