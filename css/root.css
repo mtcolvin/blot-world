@@ -48,6 +48,17 @@
 	--ai-accent-holo: linear-gradient(120deg, #FF9EC4 0%, #C9A9FF 45%, #7FE6E6 100%);
 	--ai-accent-glow: rgba(255, 158, 196, 0.35);
 	--ai-accent-soft: rgba(201, 169, 255, 0.18);
+
+	/* Domain colors — one per top-level domain in data/projects.json.
+	   Keyed by the lowercased domain name (`--domain-<name>`); JS reads them
+	   via var(--domain-<name>) for the card tag dot, the filter tree and the
+	   About brackets. Adding a domain = add a variable here. */
+	--domain-art: #FF4040;
+	--domain-code: #2BD9A8;
+	--domain-data: #C77DFF;
+	--domain-design: #5B70FF;
+	--domain-writing: #F2B33D;
+	--domain-fallback: #888888;
 	
 	/* Sizing */
 	--headshot-size: clamp(80px, 22vw, 130px);

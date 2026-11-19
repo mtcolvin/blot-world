@@ -12,7 +12,8 @@
             "id": "blot-world",
             "name": "Blot.World Portfolio",
             "dataName": "BLOT.WORLD Portfolio",
-            "area": "Web Design",
+            "domain": "Code",
+            "discipline": "Web",
             "dataTech": "HTML,JavaScript,JSON,CSS,Python,Claude Code,ChatGPT,GitHub,GitHub Pages,Google Analytics,Google Tag Manager",
             "techDisplay": [
                 "HTML",
@@ -41,7 +42,8 @@
             "id": "amberlin",
             "name": "Amberlin",
             "dataName": "Amberlin Health Record",
-            "area": "Software Development",
+            "domain": "Code",
+            "discipline": "Software",
             "dataTech": "Python,FastAPI,SQLite,React,Recharts,Vite,pydicom,Claude Code,GitHub Actions,GitHub Pages",
             "techDisplay": [
                 "Python",
@@ -68,7 +70,8 @@
             "id": "cafemex",
             "name": "Café Mexicali Rebrand",
             "dataName": "Cafe Mex Brand Redesign",
-            "area": "Branding & Identity",
+            "domain": "Design",
+            "discipline": "Branding",
             "dataTech": "Affinity Designer",
             "techDisplay": [
                 "Affinity Designer"
@@ -86,7 +89,8 @@
             "id": "la-facade",
             "name": "La Façade",
             "dataName": "La Façade",
-            "area": "Digital Art",
+            "domain": "Art",
+            "discipline": "Digital",
             "dataTech": "Affinity Designer",
             "techDisplay": [
                 "Affinity Designer"
@@ -104,7 +108,8 @@
             "id": "retail-scheduling",
             "name": "Retail Scheduling Analysis",
             "dataName": "Retail Scheduling Analysis",
-            "area": "Data Analysis",
+            "domain": "Data",
+            "discipline": "Analysis",
             "dataTech": "Google Sheets",
             "techDisplay": [
                 "Google Sheets"
@@ -124,7 +129,8 @@
             "id": "photography",
             "name": "Photography",
             "dataName": "Photography Gallery",
-            "area": "Photography",
+            "domain": "Art",
+            "discipline": "Photography",
             "dataTech": "Lightroom",
             "techDisplay": [
                 "Lightroom"
@@ -142,7 +148,8 @@
             "id": "poetry",
             "name": "Upon a Dove on the Railroad Track",
             "dataName": "Upon a Dove on the Railroad Track",
-            "area": "Poetry",
+            "domain": "Writing",
+            "discipline": "Poetry",
             "dataTech": "English",
             "techDisplay": [
                 "English"

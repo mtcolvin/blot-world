@@ -23,13 +23,15 @@
         if (!card) return;
 
         const projectName = card.getAttribute('data-name') || null;
-        const projectArea = card.getAttribute('data-area') || null;
+        const projectArea = card.getAttribute('data-domain') || null;
+        const projectDiscipline = card.getAttribute('data-discipline') || null;
         const projectUrl = link.getAttribute('href') || null;
 
         dataLayer.push({
             event: 'project_card_click',
             project_name: projectName,
             project_area: projectArea,
+            project_discipline: projectDiscipline,
             project_url: projectUrl
         });
     }, true);
@@ -73,8 +75,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- ==================== STYLESHEETS ==================== -->
-    <link rel="stylesheet" href="css/root.min.css?v=687914c9">
-	<link rel="stylesheet" href="css/main.min.css?v=2499c9b8">
+    <link rel="stylesheet" href="css/root.min.css?v=614e501b">
+	<link rel="stylesheet" href="css/main.min.css?v=e435796a">
 	<link rel="stylesheet" href="css/about-section.min.css?v=5267738e">
 	<link rel="stylesheet" href="blog/css/post.min.css?v=3a151226">
     
@@ -302,19 +304,19 @@
             <div class="filter-segmented" role="group" aria-label="Filter by who built it">
                 <button type="button" class="seg-btn active" data-made-with="all" aria-pressed="true">All</button>
                 <button type="button" class="seg-btn" data-made-with="solo" aria-pressed="false">Solo</button>
-                <button type="button" class="seg-btn" data-made-with="ai" aria-pressed="false">With AI</button>
+                <button type="button" class="seg-btn" data-made-with="ai" aria-pressed="false"><span class="ai-spark" aria-hidden="true"></span><span class="ai-holo-text">With AI</span></button>
             </div>
         </div>
 
-        <!-- Area Filters -->
+        <!-- Domain Filters (tree) -->
         <div class="filter-section collapsible-section collapsed">
-            <button class="filter-section-header" aria-expanded="false" aria-controls="area-filter-options">
-                <span>Area</span>
+            <button class="filter-section-header" aria-expanded="false" aria-controls="domain-filter-options">
+                <span>Domain</span>
                 <svg class="collapse-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M5 8 L10 13 L15 8"/>
                 </svg>
             </button>
-            <div class="filter-options collapsible-content" id="area-filter-options"></div>
+            <div class="filter-options collapsible-content domain-tree" id="domain-filter-options"></div>
         </div>
 
         <!-- Technology Filters -->
@@ -837,11 +839,11 @@
     </div>
 
     <!-- ==================== SCRIPTS ==================== -->
-    <script src="js/projects-data.js?v=ef815c31" defer></script>
+    <script src="js/projects-data.js?v=80a6c12a" defer></script>
     <!-- Rotator content. Deferred scripts run in order, so these globals exist
          before main.min.js builds the rotators from them. -->
-    <script src="js/quotes-data.js?v=8637103f" defer></script>
-    <script src="js/sayings-data.js?v=2b8c0aaf" defer></script>
-    <script src="js/main.min.js?v=2cc2fb3f" defer></script>
+    <script src="js/quotes-data.js?v=c928a63e" defer></script>
+    <script src="js/sayings-data.js?v=800457c2" defer></script>
+    <script src="js/main.min.js?v=c817c7ce" defer></script>
 </body>
 </html>

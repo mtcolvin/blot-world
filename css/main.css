@@ -1127,6 +1127,18 @@ main {
 .projects-counter {
 	color: var(--blot-light-gray);
 	font-size: 0.9rem;
+	white-space: nowrap;
+}
+
+/* Set by ProjectsHeaderAlign when the title and counter don't both fit
+   between the card edges (one narrow column): the counter drops to its own
+   line, right-aligned to the cards. */
+.projects-title-row.header-wrap {
+	flex-wrap: wrap;
+	row-gap: 0;
+}
+.projects-title-row.header-wrap .projects-counter-desktop {
+	margin-left: auto;
 }
 
 .projects-counter-mobile {
@@ -1343,96 +1355,120 @@ main {
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 6px;
-	max-width: calc(100% - 60px); /* leaves room for the corner .ai-badge */
+	max-width: calc(100% - 24px);
+}
+/* Leave room for the AI pill in the opposite corner. */
+.project-card.ai-project .card-front .corner-chips {
+	max-width: calc(100% - 78px);
 }
 
-.card-front .area-ribbon {
-	color: white;
-	padding: 4px 10px;
+/* Domain tag — dark pill, faint edge, dot in the domain's color
+   (--domain-color is set inline from css/root.css --domain-<name>). */
+.card-front .domain-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	max-width: 100%;
+	height: 22px;
+	box-sizing: border-box;
+	padding: 0 10px 0 8px;
+	border-radius: 999px;
+	background: #0d0d0d;
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
 	font-family: "JetBrains Mono", monospace;
-	font-size: 8px;
-	font-weight: 700;
-	letter-spacing: 1.5px;
+	font-size: 9.5px;
+	letter-spacing: 1.1px;
 	text-transform: uppercase;
-	border-radius: 3px;
+	line-height: 1;
+	white-space: nowrap;
 	overflow: hidden;
-	/* Signature brand gradient (blue → red), continuously sliding. */
-	background: linear-gradient(110deg,
-		var(--primary-blue) 0%,
-		var(--accent-red) 25%,
-		var(--primary-blue) 50%,
-		var(--accent-red) 75%,
-		var(--primary-blue) 100%
-	);
-	background-size: 200% 100%;
-	animation: ribbon-gradient 4s linear infinite;
-	box-shadow:
-		0 3px 10px rgba(13, 40, 242, 0.35),
-		0 0 0 1px rgba(255, 255, 255, 0.18) inset;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+.card-front .domain-tag-dot {
+	width: 7px;
+	height: 7px;
+	flex-shrink: 0;
+	border-radius: 50%;
+	background: var(--domain-color, var(--domain-fallback));
+	box-shadow: 0 0 6px var(--domain-color, var(--domain-fallback));
+}
+.card-front .domain-tag-name {
+	font-weight: 700;
+	color: var(--blot-white);
+	flex-shrink: 0;
+}
+.card-front .domain-tag-sep {
+	color: rgba(255, 255, 255, 0.5);
+	flex-shrink: 0;
+}
+.card-front .domain-tag-discipline {
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.82);
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-@keyframes ribbon-gradient {
-	from { background-position: 0% 50%; }
-	to   { background-position: 100% 50%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.card-front .area-ribbon { animation: none; }
-}
-
-/* AI co-built badge — a sparkle on dark glass in the card's top-right corner,
-   opposite the area ribbon. The lilac is --ai-accent, tying it to the AI tags on
-   the card's back and the "With AI" filter. */
+/* AI co-built badge — same pill as the domain tag (a transparent edge keeps
+   the size identical), with the "Miami" holo sweep on the sparkle and the
+   label instead of on a ring. */
 .card-front .ai-badge {
 	position: absolute;
 	top: 12px;
 	right: 12px;
 	z-index: 3;
-	display: flex;
+	display: inline-flex;
 	align-items: center;
-	justify-content: center;
-	width: 24px;
-	height: 24px;
+	gap: 5px;
+	height: 22px;
+	box-sizing: border-box;
+	padding: 0 9px 0 8px;
+	border-radius: 999px;
+	background: #0d0d0d;
+	border: 1px solid transparent;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 9.5px;
+	font-weight: 700;
+	letter-spacing: 1.1px;
+	line-height: 1;
 	color: var(--ai-accent);
-	border-radius: 5px;
-	background: rgba(10, 10, 10, 0.55);
-	-webkit-backdrop-filter: blur(6px);
-	backdrop-filter: blur(6px);
 }
-/* Rotating holo ring (pink → lilac → aqua), same mask technique as
-   .card-front::before but with its own angle so the two spin independently. */
-@property --ai-badge-angle {
-	syntax: "<angle>";
-	inherits: false;
-	initial-value: 0deg;
+/* Shared AI mark — the sparkle (masked so it can take any fill) and its
+   label. Plain by default (currentColor); inside the card badge and on the
+   selected "With AI" filter they carry the sliding "Miami" holo sweep. */
+.ai-spark {
+	display: inline-block;
+	width: 1.05em;
+	height: 1.05em;
+	flex-shrink: 0;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.8 2.5c.7 5.2 3.3 7.8 8.5 8.5v2c-5.2.7-7.8 3.3-8.5 8.5h-1.6c-.7-5.2-3.3-7.8-8.4-8.5v-2c5.1-.7 7.7-3.3 8.4-8.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.8 2.5c.7 5.2 3.3 7.8 8.5 8.5v2c-5.2.7-7.8 3.3-8.5 8.5h-1.6c-.7-5.2-3.3-7.8-8.4-8.5v-2c5.1-.7 7.7-3.3 8.4-8.5z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
-@keyframes ai-badge-spin {
-	to { --ai-badge-angle: 360deg; }
+.card-front .ai-badge .ai-spark,
+.card-front .ai-badge .ai-holo-text,
+.filter-segmented .seg-btn[data-made-with="ai"].active .ai-spark,
+.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text {
+	background: linear-gradient(90deg, #FF9EC4, #C9A9FF, #7FE6E6, #C9A9FF, #FF9EC4);
+	background-size: 200% 100%;
+	animation: ai-holo-slide 2.5s linear infinite;
 }
-.card-front .ai-badge::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	padding: 2px;
-	background: conic-gradient(
-		from var(--ai-badge-angle),
-		#FF9EC4, #C9A9FF, #7FE6E6, #C9A9FF, #FF9EC4
-	);
-	-webkit-mask:
-		linear-gradient(#fff 0 0) content-box,
-		linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-	mask:
-		linear-gradient(#fff 0 0) content-box,
-		linear-gradient(#fff 0 0);
-	mask-composite: exclude;
-	pointer-events: none;
-	animation: ai-badge-spin 2.5s linear infinite;
+.card-front .ai-badge .ai-holo-text,
+.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text {
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+@keyframes ai-holo-slide {
+	from { background-position: 0% 50%; }
+	to   { background-position: 200% 50%; }
 }
 @media (prefers-reduced-motion: reduce) {
-	.card-front .ai-badge::before { animation: none; }
+	.card-front .ai-badge .ai-spark,
+	.card-front .ai-badge .ai-holo-text,
+	.filter-segmented .seg-btn[data-made-with="ai"].active .ai-spark,
+	.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text { animation: none; }
 }
 
 .card-front .body {
@@ -1528,8 +1564,8 @@ main {
 	width: 7px;
 	height: 7px;
 	border-radius: 50%;
-	background: white;
-	box-shadow: 0 0 10px rgba(255,255,255,0.7);
+	background: var(--domain-color, white);
+	box-shadow: 0 0 10px var(--domain-color, rgba(255,255,255,0.7));
 }
 .card-back .back-name {
 	font-family: "Bebas Neue", sans-serif;
@@ -2106,66 +2142,59 @@ body:has(#projects.active) .filter-sidebar {
 .filter-segmented .seg-btn:hover,
 .filter-segmented .seg-btn.is-hover { color: rgba(255, 255, 255, 0.8); }
 .filter-segmented .seg-btn.active { color: rgba(255, 255, 255, 0.96); }
+.filter-segmented .seg-btn[data-made-with="ai"] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}
+.filter-segmented .seg-btn[data-made-with="ai"] .ai-spark { color: rgba(201, 169, 255, 0.55); }
 .filter-segmented .seg-btn[data-made-with="ai"]:hover,
 .filter-segmented .seg-btn[data-made-with="ai"].is-hover { color: rgba(201, 169, 255, 0.85); }
+.filter-segmented .seg-btn[data-made-with="ai"]:hover .ai-spark,
+.filter-segmented .seg-btn[data-made-with="ai"].is-hover .ai-spark { color: rgba(201, 169, 255, 0.95); }
 .filter-segmented .seg-btn[data-made-with="ai"].active { color: var(--ai-accent); }
 
 /* No-JS fallback fill */
 .filter-segmented:not(.has-indicators) .seg-btn.active { background: rgba(255, 255, 255, 0.2); }
 
 .filter-segmented .seg-thumb,
-.filter-segmented .seg-outline {
+.filter-segmented .seg-hover {
 	position: absolute;
 	top: 4px;
 	bottom: 4px;
 	left: 0;
+	z-index: 1;
 	border-radius: 5px;
 	pointer-events: none;
 	transition:
 		transform 0.32s cubic-bezier(0.3, 0.7, 0.2, 1),
 		width 0.32s cubic-bezier(0.3, 0.7, 0.2, 1),
 		background 0.2s ease,
-		box-shadow 0.2s ease;
+		opacity 0.2s ease;
 }
+/* Selected: solid fill. */
 .filter-segmented .seg-thumb {
-	z-index: 1;
 	background: rgba(255, 255, 255, 0.2);
 	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
-.filter-segmented .seg-thumb.ai { background: rgba(201, 169, 255, 0.24); }
-.filter-segmented .seg-outline {
-	z-index: 3;
-	box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.8) inset;
+/* With AI selected: the card badge's dark pill, lifted off the tray. */
+.filter-segmented .seg-thumb.ai {
+	background: #16131c;
+	box-shadow:
+		0 3px 10px rgba(0, 0, 0, 0.45),
+		0 0 0 1px rgba(201, 169, 255, 0.14) inset;
 }
-/* On "With AI" the outline becomes the card badge's rotating ring. */
-.filter-segmented .seg-outline.ai { box-shadow: none; }
-.filter-segmented .seg-outline::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	padding: 2px;
-	background: conic-gradient(
-		from var(--ai-badge-angle),
-		#FF9EC4, #C9A9FF, #7FE6E6, #C9A9FF, #FF9EC4
-	);
-	-webkit-mask:
-		linear-gradient(#fff 0 0) content-box,
-		linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-	mask:
-		linear-gradient(#fff 0 0) content-box,
-		linear-gradient(#fff 0 0);
-	mask-composite: exclude;
+/* Hovered / keyboard-focused: fainter fill, hidden over the selected option. */
+.filter-segmented .seg-hover {
+	background: rgba(255, 255, 255, 0.08);
 	opacity: 0;
-	transition: opacity 0.2s ease;
-	animation: ai-badge-spin 2.5s linear infinite;
 }
-.filter-segmented .seg-outline.ai::before { opacity: 1; }
+.filter-segmented .seg-hover.ai { background: rgba(201, 169, 255, 0.12); }
+.filter-segmented .seg-hover.is-visible { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
 	.filter-segmented .seg-thumb,
-	.filter-segmented .seg-outline { transition: none; }
-	.filter-segmented .seg-outline::before { animation: none; }
+	.filter-segmented .seg-hover { transition: none; }
 }
 
 .filter-section h3 {
@@ -2282,7 +2311,6 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 /* Breathing room beneath the final option so it isn't flush with the dropdown's bottom edge */
-#area-filter-options .filter-option:last-child,
 #tech-filter-options .filter-option:last-child {
 	padding-bottom: 22px;
 }
@@ -2323,6 +2351,114 @@ body:has(#projects.active) .filter-sidebar {
 	color: rgba(255, 255, 255, 0.4);
 	font-family: "JetBrains Mono", monospace;
 	font-size: 10px;
+}
+
+/* Domain filter tree — a trunk with one branch per domain in its color,
+   ending at the domain's dot; opening a domain lists its disciplines as
+   indented twigs. Branches dim when their domain is off. Rows are fixed
+   heights (30 / 26px) because the SVG line segments are drawn to them. */
+/* Breathing room under the last row. A pseudo-element (not padding on the
+   container) so it's clipped along with the rows when the section collapses
+   to max-height: 0 — padding would still show. */
+.domain-tree::after {
+	content: "";
+	display: block;
+	height: 22px;
+	flex-shrink: 0;
+}
+.domain-row,
+.discipline-row {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+.domain-row { height: 30px; }
+.discipline-row { height: 26px; }
+.domain-tree .tree-lines {
+	position: absolute;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+}
+.domain-tree .tree-lines path {
+	fill: none;
+	stroke-width: 1.5;
+	stroke-linecap: round;
+	stroke-opacity: 0.3;
+	transition: stroke-opacity var(--transition-base);
+}
+.domain-tree .tree-branch { stroke: var(--domain-color); }
+.domain-tree .tree-next { stroke: var(--next-color); }
+.discipline-row .tree-branch { stroke-width: 1.25; }
+.domain-tree .is-lit .tree-branch,
+.domain-tree .next-lit .tree-next { stroke-opacity: 1; }
+
+.domain-toggle,
+.discipline-toggle,
+.domain-expand {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font-family: "JetBrains Mono", monospace;
+	letter-spacing: 0.3px;
+	text-align: left;
+	transition: color var(--transition-base);
+}
+.domain-toggle {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 100%;
+	padding: 0 4px 0 20px;
+	font-size: 11px;
+	color: rgba(255, 255, 255, 0.78);
+}
+.domain-toggle:hover,
+.domain-row.is-lit .domain-toggle { color: rgba(255, 255, 255, 0.96); }
+.domain-row.is-on .domain-label { font-weight: 700; }
+.domain-dot {
+	width: 10px;
+	height: 10px;
+	box-sizing: border-box;
+	flex-shrink: 0;
+	border-radius: 50%;
+	border: 1.5px solid var(--domain-color);
+	transition: background var(--transition-base), box-shadow var(--transition-base);
+}
+.domain-row.is-on .domain-dot {
+	background: var(--domain-color);
+	box-shadow: 0 0 8px var(--domain-color);
+}
+.domain-row.is-partial .domain-dot {
+	background: radial-gradient(circle, var(--domain-color) 0 2px, transparent 2.5px);
+}
+.domain-expand {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 100%;
+	padding: 0;
+	color: rgba(255, 255, 255, 0.55);
+}
+.domain-expand:hover { color: rgba(255, 255, 255, 0.96); }
+.domain-expand svg { transition: transform var(--transition-base); }
+.domain-row.is-open .domain-expand svg { transform: rotate(90deg); }
+.domain-expand-spacer { width: 24px; flex-shrink: 0; }
+.discipline-toggle {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	height: 100%;
+	padding: 0 28px 0 40px;
+	font-size: 10.5px;
+	color: rgba(255, 255, 255, 0.65);
+}
+.discipline-toggle:hover { color: rgba(255, 255, 255, 0.96); }
+.discipline-row.is-lit .discipline-toggle {
+	color: rgba(255, 255, 255, 0.96);
+	font-weight: 700;
 }
 
 /* ==========================================================================
@@ -4041,53 +4177,57 @@ body:has(#projects.active) .filter-sidebar {
 }
 
 .about-areas-grid {
-    /* Flex-wrap so each badge sizes to its own text. populateAreaBadges()
-       injects .area-row-break elements after every N items to force wraps
-       at the orphan-free row count. Margins (not gap) are used so the row
-       break doesn't double the vertical spacing between rows. */
+    /* Fixed-width columns in a centered flex-wrap: any row that isn't full
+       (e.g. 3 + 2 on tablet, 2 + 2 + 1 on phone) sits centered. */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    column-gap: 12px;
+    row-gap: 32px;
 }
 
-.about-areas-grid .area-row-break {
-    flex-basis: 100%;
-    height: 0;
+.about-areas-grid .domain-group {
+    flex: 0 0 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.about-areas-grid .domain-group-name {
     margin: 0;
-}
-
-.about-areas-grid .area-badge {
-    display: inline-block;
-    width: auto;
-    margin: 6px;
-    padding: 0.3rem 0.8rem;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    text-align: center;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-red) 100%);
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    line-height: 1;
     color: var(--blot-white);
-    border-radius: 12px;
-    position: relative;
-    transition: all 0.3s ease;
 }
 
-.about-areas-grid .area-badge::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
-    border-radius: 12px;
-    pointer-events: none;
+.about-areas-grid .domain-brace path {
+    stroke: var(--domain-color);
+    stroke-width: 1.75;
+    stroke-linecap: round;
 }
 
-.about-areas-grid .area-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+.about-areas-grid .domain-group-disciplines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.about-areas-grid .domain-group-disciplines li {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    line-height: 20px;
+    text-transform: uppercase;
+    color: #d4d4d4;
 }
 
 /* Skills & Tools */

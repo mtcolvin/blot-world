@@ -122,7 +122,8 @@ const PageLoader = {
 const AppState = {
 	activeFilters: {
 		status: ['all'],
-		area: [],
+		domain: [],
+		discipline: [],
 		tech: [],
 		madeWith: 'all',
 		sort: 'date-desc'
@@ -133,7 +134,8 @@ const AppState = {
 	resetFilters() {
 		this.activeFilters = {
 			status: ['all'],
-			area: [],
+			domain: [],
+			discipline: [],
 			tech: [],
 			madeWith: 'all',
 			sort: 'date-desc'
@@ -144,6 +146,12 @@ const AppState = {
 // Tag substrings that flag a project as AI co-built. Match is case-insensitive
 // and substring-based against dataTech, so "Claude Code" matches "claude".
 const AI_TECH_TAGS = ['claude', 'chatgpt', 'grok', 'gemini', 'copilot'];
+
+// Domain colors live in css/root.css as --domain-<lowercased name>.
+function domainColorVar(domain) {
+	const key = String(domain || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+	return key ? `var(--domain-${key}, var(--domain-fallback))` : 'var(--domain-fallback)';
+}
 
 function isAITech(techValue) {
 	if (!techValue) return false;
@@ -492,6 +500,78 @@ const ProjectsPreview = {
 };
 
 // ==========================================================================
+// 4a. PROJECTS HEADER — line the "Projects" title up with the first card
+// column and "Showing X of Y" with the last. The grid centers its auto-fill
+// tracks inside .projects-main, so the cards sit inset from the header row
+// by an amount that changes with the track count. Measure it and pad the
+// header row to match.
+// ==========================================================================
+
+const ProjectsHeaderAlign = {
+	init() {
+		this.row = document.querySelector('#projects .projects-title-row');
+		this.grid = document.getElementById('projects-grid');
+		if (!this.row || !this.grid) return;
+		const update = () => this.update();
+		if ('ResizeObserver' in window) {
+			new ResizeObserver(update).observe(this.grid);
+		}
+		window.addEventListener('resize', update);
+		update();
+	},
+
+	update() {
+		const { row, grid } = this;
+		row.style.paddingLeft = '';
+		row.style.paddingRight = '';
+		row.classList.remove('header-wrap');
+		const gridRect = grid.getBoundingClientRect();
+		// Hidden section (display: none) — nothing to measure yet.
+		if (!gridRect.width) return;
+
+		const cs = getComputedStyle(grid);
+		const tracks = cs.gridTemplateColumns.split(' ').map(parseFloat).filter(n => !isNaN(n));
+		if (!tracks.length) return;
+		const gap = parseFloat(cs.columnGap) || 0;
+		const used = tracks.reduce((a, b) => a + b, 0) + gap * (tracks.length - 1);
+		const cardsLeft = gridRect.left + (gridRect.width - used) / 2;
+		const cardsRight = cardsLeft + used;
+		const rowRect = row.getBoundingClientRect();
+		const wantLeft = Math.max(0, cardsLeft - rowRect.left);
+		const wantRight = Math.max(0, rowRect.right - cardsRight);
+		if (wantLeft <= 1 && wantRight <= 1) return;
+
+		// With a single narrow column there may not be room for the title and
+		// counter side by side between the card edges. Rather than squeeze
+		// either onto two lines, let the counter wrap to its own line
+		// (right-aligned under the title) and still align both to the cards.
+		const rowStyle = getComputedStyle(row);
+		const visibleKids = Array.from(row.children)
+			.filter(el => getComputedStyle(el).display !== 'none');
+		const stacked = rowStyle.flexDirection.startsWith('column');
+		const rowGap = parseFloat(rowStyle.columnGap) || 0;
+		const kidsWidth = stacked
+			? Math.max(...visibleKids.map(el => el.scrollWidth))
+			: visibleKids.reduce((sum, el) => sum + el.scrollWidth, 0)
+				+ rowGap * Math.max(0, visibleKids.length - 1);
+		let room = Math.max(0, row.clientWidth - kidsWidth);
+		let padLeft, padRight;
+		if (!stacked && room < wantLeft + wantRight) {
+			row.classList.add('header-wrap');
+			// Each line now only has to fit its widest item.
+			room = Math.max(0, row.clientWidth - Math.max(...visibleKids.map(el => el.scrollWidth)));
+			padLeft = Math.min(wantLeft, room);
+			padRight = Math.min(wantRight, room - padLeft);
+		} else {
+			padLeft = Math.min(wantLeft, room);
+			padRight = Math.min(wantRight, room - padLeft);
+		}
+		if (padLeft > 1) row.style.paddingLeft = `${Math.round(padLeft)}px`;
+		if (padRight > 1) row.style.paddingRight = `${Math.round(padRight)}px`;
+	}
+};
+
+// ==========================================================================
 // 4b. FILTER SIDEBAR — pushes up off the bottom when the footer scrolls in
 // so the fixed panel never overlaps the footer.
 // ==========================================================================
@@ -574,14 +654,21 @@ const FilterSystem = {
 	generateDynamicFilters() {
 		const projects = document.querySelectorAll('#projects-grid .project-card');
 		const techCounts = new Map();
-		const areaCounts = new Map();
-		
+		// domain name -> { count, disciplines: Map(name -> count) }
+		const domainMap = new Map();
+
 		projects.forEach(project => {
-			const area = project.dataset.area;
-			if (area) {
-				areaCounts.set(area, (areaCounts.get(area) || 0) + 1);
+			const domain = project.dataset.domain;
+			if (domain) {
+				if (!domainMap.has(domain)) domainMap.set(domain, { count: 0, disciplines: new Map() });
+				const entry = domainMap.get(domain);
+				entry.count++;
+				const discipline = project.dataset.discipline;
+				if (discipline) {
+					entry.disciplines.set(discipline, (entry.disciplines.get(discipline) || 0) + 1);
+				}
 			}
-			
+
 			const techString = project.dataset.tech;
 			if (techString) {
 				const techs = techString.split(',').map(tech => tech.trim());
@@ -593,22 +680,157 @@ const FilterSystem = {
 			}
 		});
 		
-		this.buildAreaFilters(areaCounts);
+		this.domainData = Array.from(domainMap.entries())
+			.sort((a, b) => a[0].localeCompare(b[0]))
+			.map(([name, entry]) => ({
+				name,
+				count: entry.count,
+				disciplines: Array.from(entry.disciplines.entries())
+					.sort((a, b) => a[0].localeCompare(b[0]))
+					.map(([d, n]) => ({ name: d, count: n }))
+			}));
+		this.buildDomainTree();
 		this.buildTechFilters(techCounts);
 	},
-	
-	buildAreaFilters(areaCounts) {
-		const container = document.getElementById('area-filter-options');
+
+	// ---- Domain tree (T2) -------------------------------------------------
+	// A trunk with one branch per domain, each in its domain color, ending at
+	// the domain's dot. Opening a domain lists its disciplines as indented
+	// twigs off that dot. Disciplines are keyed "Domain/Discipline" so the same
+	// discipline name under two domains stays distinct.
+	openDomains: new Set(),
+	domainData: [],
+
+	disciplineKey(domain, discipline) {
+		return `${domain}/${discipline}`;
+	},
+
+	isDomainLit(d) {
+		const f = AppState.activeFilters;
+		return f.domain.includes(d.name)
+			|| d.disciplines.some(s => f.discipline.includes(this.disciplineKey(d.name, s.name)));
+	},
+
+	buildDomainTree() {
+		const container = document.getElementById('domain-filter-options');
 		if (!container) return;
-		
-		container.innerHTML = '';
-		
-		const sortedAreas = Array.from(areaCounts.entries())
-			.sort((a, b) => a[0].localeCompare(b[0]));
-		
-		sortedAreas.forEach(([area, count]) => {
-			const option = this.createFilterOption('area', area, area, count);
-			container.appendChild(option);
+
+		const f = AppState.activeFilters;
+		const chevron = '<svg viewBox="0 0 20 20" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg>';
+		const rows = [];
+
+		this.domainData.forEach((d, i) => {
+			const next = this.domainData[i + 1];
+			const on = f.domain.includes(d.name);
+			const lit = this.isDomainLit(d);
+			const partial = lit && !on;
+			const open = this.openDomains.has(d.name) && d.disciplines.length > 0;
+			const nextLit = next && this.isDomainLit(next);
+			const vars = `--domain-color: ${domainColorVar(d.name)};${next ? ` --next-color: ${domainColorVar(next.name)};` : ''}`;
+			const rowClass = ['domain-row', lit && 'is-lit', on && 'is-on', partial && 'is-partial', nextLit && 'next-lit', open && 'is-open']
+				.filter(Boolean).join(' ');
+
+			rows.push(
+				`<div class="${rowClass}" style="${vars}">`
+				+ '<svg class="tree-lines" width="40" height="30" viewBox="0 0 40 30" fill="none" aria-hidden="true">'
+				+ (next ? '<path class="tree-next" d="M4 9V30"/>' : '')
+				+ '<path class="tree-branch" d="M4 0V9Q4 15 10 15H17"/>'
+				+ (open ? '<path class="tree-branch" d="M25 21V30"/>' : '')
+				+ '</svg>'
+				+ `<button type="button" class="domain-toggle" data-domain="${d.name}" aria-pressed="${on}">`
+				+ '<span class="domain-dot" aria-hidden="true"></span>'
+				+ `<span class="domain-label">${d.name}</span>`
+				+ `<span class="filter-count">${d.count}</span>`
+				+ '</button>'
+				+ (d.disciplines.length
+					? `<button type="button" class="domain-expand" data-domain="${d.name}" aria-expanded="${open}" aria-label="${open ? 'Hide' : 'Show'} ${d.name} disciplines">${chevron}</button>`
+					: '<span class="domain-expand-spacer" aria-hidden="true"></span>')
+				+ '</div>'
+			);
+
+			if (!open) return;
+			d.disciplines.forEach((s, j) => {
+				const key = this.disciplineKey(d.name, s.name);
+				const sOn = on || f.discipline.includes(key);
+				const last = j === d.disciplines.length - 1;
+				const cls = ['discipline-row', sOn && 'is-lit', nextLit && 'next-lit'].filter(Boolean).join(' ');
+				rows.push(
+					`<div class="${cls}" style="${vars}">`
+					+ '<svg class="tree-lines" width="40" height="26" viewBox="0 0 40 26" fill="none" aria-hidden="true">'
+					+ (next ? '<path class="tree-next" d="M4 0V26"/>' : '')
+					+ `<path class="tree-branch" d="M25 0V7Q25 13 31 13H36${last ? '' : 'M25 7V26'}"/>`
+					+ '</svg>'
+					+ `<button type="button" class="discipline-toggle" data-domain="${d.name}" data-discipline="${s.name}" aria-pressed="${sOn}">`
+					+ `<span class="discipline-label">${s.name}</span>`
+					+ `<span class="filter-count">${s.count}</span>`
+					+ '</button>'
+					+ '</div>'
+				);
+			});
+		});
+
+		container.innerHTML = rows.join('');
+
+		if (!container.dataset.bound) {
+			container.dataset.bound = 'true';
+			container.addEventListener('click', (e) => this.handleDomainTreeClick(e));
+		}
+	},
+
+	handleDomainTreeClick(e) {
+		const f = AppState.activeFilters;
+		const expand = e.target.closest('.domain-expand');
+		const domainBtn = e.target.closest('.domain-toggle');
+		const disciplineBtn = e.target.closest('.discipline-toggle');
+
+		if (expand) {
+			const name = expand.dataset.domain;
+			if (this.openDomains.has(name)) this.openDomains.delete(name);
+			else this.openDomains.add(name);
+			this.buildDomainTree();
+			return;
+		}
+
+		if (domainBtn) {
+			const name = domainBtn.dataset.domain;
+			// A domain covers all of its disciplines, so drop any individual picks.
+			f.discipline = f.discipline.filter(k => !k.startsWith(`${name}/`));
+			f.domain = f.domain.includes(name)
+				? f.domain.filter(d => d !== name)
+				: [...f.domain, name];
+		} else if (disciplineBtn) {
+			const domain = disciplineBtn.dataset.domain;
+			const key = this.disciplineKey(domain, disciplineBtn.dataset.discipline);
+			const d = this.domainData.find(x => x.name === domain);
+			const allKeys = d ? d.disciplines.map(s => this.disciplineKey(domain, s.name)) : [key];
+
+			if (f.domain.includes(domain)) {
+				// Unpicking one discipline of a fully-selected domain: keep the rest.
+				f.domain = f.domain.filter(x => x !== domain);
+				f.discipline = [...f.discipline, ...allKeys.filter(k => k !== key)];
+			} else if (f.discipline.includes(key)) {
+				f.discipline = f.discipline.filter(k => k !== key);
+			} else {
+				f.discipline = [...f.discipline, key];
+				// Every discipline picked = the whole domain.
+				if (allKeys.every(k => f.discipline.includes(k))) {
+					f.discipline = f.discipline.filter(k => !allKeys.includes(k));
+					f.domain = [...f.domain, domain];
+				}
+			}
+		} else {
+			return;
+		}
+
+		this.buildDomainTree();
+		this.applyFilters();
+	},
+
+	// Open any domain whose disciplines are individually selected (URL restore).
+	openSelectedDomains() {
+		AppState.activeFilters.discipline.forEach(k => {
+			const domain = k.split('/')[0];
+			if (domain) this.openDomains.add(domain);
 		});
 	},
 	
@@ -674,16 +896,7 @@ const FilterSystem = {
 		const filterValue = filterOption.dataset.value;
 		const checkbox = filterOption.querySelector('.filter-checkbox');
 		
-		if (filterType === 'area') {
-			if (checkbox.classList.contains('checked')) {
-				checkbox.classList.remove('checked');
-				AppState.activeFilters.area = AppState.activeFilters.area
-					.filter(area => area !== filterValue);
-			} else {
-				checkbox.classList.add('checked');
-				AppState.activeFilters.area.push(filterValue);
-			}
-		} else if (filterType === 'tech') {
+		if (filterType === 'tech') {
 			if (checkbox.classList.contains('checked')) {
 				checkbox.classList.remove('checked');
 				AppState.activeFilters.tech = AppState.activeFilters.tech
@@ -710,12 +923,17 @@ const FilterSystem = {
 
 		projectCards.forEach(card => {
 			const projectCard = card.querySelector('.project-card');
-			const area = projectCard?.dataset.area;
+			const domain = projectCard?.dataset.domain;
+			const discipline = projectCard?.dataset.discipline;
 			const tech = projectCard?.dataset.tech;
 			const isAI = projectCard?.dataset.ai === 'true';
 
-			const areaMatch = AppState.activeFilters.area.length === 0 ||
-							AppState.activeFilters.area.includes(area);
+			// Domain and discipline picks are one OR group: a card matches if
+			// its whole domain is selected or its own discipline is.
+			const { domain: domainFilters, discipline: disciplineFilters } = AppState.activeFilters;
+			const domainMatch = (domainFilters.length === 0 && disciplineFilters.length === 0)
+				|| domainFilters.includes(domain)
+				|| disciplineFilters.includes(this.disciplineKey(domain, discipline));
 
 			const techMatch = AppState.activeFilters.tech.length === 0 ||
 							AppState.activeFilters.tech.some(filterTech =>
@@ -726,7 +944,7 @@ const FilterSystem = {
 				|| (madeWith === 'ai' && isAI)
 				|| (madeWith === 'solo' && !isAI);
 
-			const allMatch = areaMatch && techMatch && madeWithMatch;
+			const allMatch = domainMatch && techMatch && madeWithMatch;
 
 			// Poetry card visibility is controlled by background toggle AND filters
 			if (card.id === 'poetry-card') {
@@ -771,13 +989,6 @@ const FilterSystem = {
 			cb.classList.remove('checked');
 		});
 
-		AppState.activeFilters.area.forEach(area => {
-			const checkbox = document.querySelector(
-				`[data-filter="area"][data-value="${area}"] .filter-checkbox`
-			);
-			if (checkbox) checkbox.classList.add('checked');
-		});
-
 		AppState.activeFilters.tech.forEach(tech => {
 			const checkbox = document.querySelector(
 				`[data-filter="tech"][data-value="${tech}"] .filter-checkbox`
@@ -785,6 +996,8 @@ const FilterSystem = {
 			if (checkbox) checkbox.classList.add('checked');
 		});
 
+		this.openSelectedDomains();
+		this.buildDomainTree();
 		this.syncMadeWithUI();
 		this.applyFilters();
 	},
@@ -797,6 +1010,7 @@ const FilterSystem = {
 		document.getElementById('sort-select').value = 'date-desc';
 
 		AppState.resetFilters();
+		this.buildDomainTree();
 		this.syncMadeWithUI();
 		this.applyFilters();
 	},
@@ -863,13 +1077,13 @@ const FilterSystem = {
 	
 	regenerateWithSelections() {
 		const currentSelections = {
-			area: [...AppState.activeFilters.area],
 			tech: [...AppState.activeFilters.tech]
 		};
-		
+
+		// The domain tree renders straight from AppState, so it survives the
+		// rebuild without any restore step.
 		this.generateDynamicFilters();
-		
-		AppState.activeFilters.area = currentSelections.area;
+
 		AppState.activeFilters.tech = currentSelections.tech;
 		
 		this.restoreSelections();
@@ -884,14 +1098,7 @@ const FilterSystem = {
 		document.querySelectorAll('.filter-checkbox').forEach(cb => {
 			cb.classList.remove('checked');
 		});
-		
-		AppState.activeFilters.area.forEach(area => {
-			const checkbox = document.querySelector(
-				`[data-filter="area"][data-value="${area}"] .filter-checkbox`
-			);
-			if (checkbox) checkbox.classList.add('checked');
-		});
-		
+
 		AppState.activeFilters.tech.forEach(tech => {
 			const checkbox = document.querySelector(
 				`[data-filter="tech"][data-value="${tech}"] .filter-checkbox`
@@ -909,8 +1116,12 @@ const URLManager = {
 	serialize() {
 		const params = new URLSearchParams();
 
-		if (AppState.activeFilters.area.length > 0) {
-			params.set('area', AppState.activeFilters.area.join(','));
+		if (AppState.activeFilters.domain.length > 0) {
+			params.set('domain', AppState.activeFilters.domain.join(','));
+		}
+
+		if (AppState.activeFilters.discipline.length > 0) {
+			params.set('discipline', AppState.activeFilters.discipline.join(','));
 		}
 
 		if (AppState.activeFilters.tech.length > 0) {
@@ -933,14 +1144,19 @@ const URLManager = {
 
 		const filters = {
 			status: ['all'],
-			area: [],
+			domain: [],
+			discipline: [],
 			tech: [],
 			madeWith: 'all',
 			sort: 'date-desc'
 		};
 
-		if (urlParams.has('area')) {
-			filters.area = urlParams.get('area').split(',');
+		if (urlParams.has('domain')) {
+			filters.domain = urlParams.get('domain').split(',').filter(Boolean);
+		}
+
+		if (urlParams.has('discipline')) {
+			filters.discipline = urlParams.get('discipline').split(',').filter(k => k.includes('/'));
 		}
 
 		if (urlParams.has('tech')) {
@@ -1034,16 +1250,28 @@ function renderProjectCards(isTouchDevice) {
             .map(t => `<span class="back-tag${isAITech(t) ? ' is-ai' : ''}">${t}</span>`)
             .join('');
         const isAI = isAITech(p.dataTech);
+        // AI pill: same form factor as the domain tag; the holo gradient
+        // lives on the sparkle and the "AI" label, not on an edge.
         const aiBadge = isAI
-            ? '<div class="ai-badge" role="img" aria-label="Co-built with AI" title="Co-built with AI"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12.8 2.5c.7 5.2 3.3 7.8 8.5 8.5v2c-5.2.7-7.8 3.3-8.5 8.5h-1.6c-.7-5.2-3.3-7.8-8.4-8.5v-2c5.1-.7 7.7-3.3 8.4-8.5z"/></svg></div>'
+            ? '<div class="ai-badge" role="img" aria-label="Co-built with AI" title="Co-built with AI"><span class="ai-spark" aria-hidden="true"></span><span class="ai-holo-text" aria-hidden="true">AI</span></div>'
             : '';
+        const domainVar = domainColorVar(p.domain);
+        const domainTag = p.domain
+            ? `<div class="domain-tag" style="--domain-color: ${domainVar}">`
+                + '<span class="domain-tag-dot" aria-hidden="true"></span>'
+                + `<span class="domain-tag-name">${p.domain}</span>`
+                + (p.discipline ? `<span class="domain-tag-sep" aria-hidden="true">/</span><span class="domain-tag-discipline">${p.discipline}</span>` : '')
+                + '</div>'
+            : '';
+        const backDomain = [p.domain, p.discipline].filter(Boolean).join(' / ');
         const cardClass = isAI ? 'project-card ai-project' : 'project-card';
         const extIcon = p.externalIcon ? externalIcon : '';
 
         return `
             <a ${linkAttrs}>
                 <div class="${cardClass}"
-                    data-area="${p.area}"
+                    data-domain="${p.domain || ''}"
+                    data-discipline="${p.discipline || ''}"
                     data-tech="${p.dataTech}"
                     data-name="${p.dataName}"
                     data-month="${p.month}"
@@ -1052,7 +1280,7 @@ function renderProjectCards(isTouchDevice) {
                     <div class="card-face card-front">
                         <div class="card-image">${pictureFor(p.image, `alt="${p.imageAlt || p.name}"`)}</div>
                         <div class="corner-chips">
-                            <div class="area-ribbon">${p.area}</div>
+                            ${domainTag}
                         </div>
                         ${aiBadge}
                         <div class="body">
@@ -1065,7 +1293,7 @@ function renderProjectCards(isTouchDevice) {
                     </div>
                     <div class="card-face card-back">
                         <div class="back-scroll">
-                            <div class="back-area"><span class="dot"></span>${p.area}</div>
+                            <div class="back-area" style="--domain-color: ${domainVar}"><span class="dot"></span>${backDomain}</div>
                             <div class="back-name">${p.name}</div>
                             <div class="back-divider"></div>
                             <div class="back-desc">${p.description}</div>
@@ -1187,9 +1415,10 @@ const FilterIconMorph = {
 
 // ==========================================================================
 // MADE-WITH TRAY
-// Two indicators behind the segmented control's labels: a fill on the
-// selected option (follows the .active class FilterSystem sets) and an
-// outline that rests on it, follows hover/focus, and slides back on leave.
+// Two background fills behind the segmented control's labels, no outlines:
+// a solid fill on the selected option (follows the .active class FilterSystem
+// sets) and a fainter fill that follows hover/focus. The hover fill hides
+// when it would sit on the selected option, and slides back on leave.
 // ==========================================================================
 const MadeWithTray = {
     init() {
@@ -1197,13 +1426,13 @@ const MadeWithTray = {
             const buttons = [...tray.querySelectorAll('.seg-btn')];
             if (!buttons.length) return;
             const thumb = document.createElement('div');
-            const outline = document.createElement('div');
+            const hoverFill = document.createElement('div');
             thumb.className = 'seg-thumb';
-            outline.className = 'seg-outline';
+            hoverFill.className = 'seg-hover';
             thumb.setAttribute('aria-hidden', 'true');
-            outline.setAttribute('aria-hidden', 'true');
+            hoverFill.setAttribute('aria-hidden', 'true');
+            tray.prepend(hoverFill);
             tray.prepend(thumb);
-            tray.append(outline);
             tray.classList.add('has-indicators');
 
             const active = () => buttons.find(b => b.classList.contains('active')) || buttons[0];
@@ -1214,16 +1443,18 @@ const MadeWithTray = {
                 el.classList.toggle('ai', btn.dataset.madeWith === 'ai');
             };
             const sync = () => {
-                place(thumb, active());
-                place(outline, hovered || active());
+                const current = active();
+                place(thumb, current);
+                place(hoverFill, hovered || current);
+                hoverFill.classList.toggle('is-visible', !!hovered && hovered !== current);
                 buttons.forEach(b => b.classList.toggle('is-hover', b === hovered));
             };
             // Snap into place with no slide (first layout, panel shown, resize).
             const snap = () => {
-                thumb.style.transition = outline.style.transition = 'none';
+                thumb.style.transition = hoverFill.style.transition = 'none';
                 sync();
                 void tray.offsetWidth;
-                thumb.style.transition = outline.style.transition = '';
+                thumb.style.transition = hoverFill.style.transition = '';
             };
 
             buttons.forEach(btn => {
@@ -1268,6 +1499,7 @@ document.addEventListener('DOMContentLoaded', function() {
     HeroAnimations.initRotatingTagline();
     FilterSystem.init();
     FilterSidebarSticky.init();
+    ProjectsHeaderAlign.init();
     ProjectsPreview.populate();
     populateAreaBadges();
     initializeBlog();
@@ -1784,60 +2016,39 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================================================
-// ABOUT SECTION - AUTO-POPULATE AREA BADGES
+// ABOUT SECTION - AREAS OF WORK (domain bracket tree)
 // ==========================================================================
+// One column per domain: the name, a sideways brace in the domain color
+// pointing up at it, and the domain's disciplines underneath. Columns are a
+// fixed width in a centered flex-wrap, so any row that isn't full is centered.
 
 function populateAreaBadges() {
     const container = document.getElementById('area-badges-container');
     if (!container) return;
 
-    // Get all unique areas from project cards
-    const projectCards = document.querySelectorAll('#projects-grid .project-card');
-    const areas = new Set();
-
-    projectCards.forEach(card => {
-        const area = card.dataset.area;
-        if (area) {
-            areas.add(area);
-        }
+    const domains = new Map();
+    document.querySelectorAll('#projects-grid .project-card').forEach(card => {
+        const domain = card.dataset.domain;
+        if (!domain) return;
+        if (!domains.has(domain)) domains.set(domain, new Set());
+        if (card.dataset.discipline) domains.get(domain).add(card.dataset.discipline);
     });
 
-    // Convert to array and sort alphabetically
-    const sortedAreas = Array.from(areas).sort();
+    const brace = '<svg class="domain-brace" width="120" height="14" viewBox="0 0 120 14" fill="none" aria-hidden="true">'
+        + '<path d="M2 13C2 8 4 7 8 7H54C58 7 60 5 60 1C60 5 62 7 66 7H112C116 7 118 8 118 13"/></svg>';
 
-    // Calculate optimal items per row to avoid orphans
-    const totalBadges = sortedAreas.length;
-    let optimalPerRow = 4; // default
-    for (let perRow = 3; perRow <= 5; perRow++) {
-        const lastRowCount = totalBadges % perRow || perRow;
-        // Prefer layouts where the last row has at least half the items
-        if (lastRowCount >= Math.ceil(perRow / 2)) {
-            optimalPerRow = perRow;
-            break;
-        }
-    }
-
-    // Render badges with .area-row-break flex children injected after every
-    // Nth badge — forces wrap without making badges uniform width (each
-    // badge keeps its natural text-content width).
-    container.innerHTML = '';
-    sortedAreas.forEach((area, i) => {
-        const badge = document.createElement('span');
-        badge.className = 'area-badge';
-        badge.textContent = area;
-        container.appendChild(badge);
-
-        const isRowBoundary = (i + 1) % optimalPerRow === 0;
-        const isLast = i === sortedAreas.length - 1;
-        if (isRowBoundary && !isLast) {
-            const brk = document.createElement('span');
-            brk.className = 'area-row-break';
-            brk.setAttribute('aria-hidden', 'true');
-            container.appendChild(brk);
-        }
-    });
-
-    container.style.setProperty('--items-per-row', optimalPerRow);
+    container.innerHTML = Array.from(domains.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([domain, disciplines]) => {
+            const items = Array.from(disciplines).sort()
+                .map(d => `<li>${d}</li>`).join('');
+            return `<div class="domain-group" style="--domain-color: ${domainColorVar(domain)}">`
+                + `<h4 class="domain-group-name">${domain}</h4>`
+                + brace
+                + `<ul class="domain-group-disciplines">${items}</ul>`
+                + '</div>';
+        })
+        .join('');
 }
 
 // ==========================================================================
