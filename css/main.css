@@ -1568,10 +1568,14 @@ main {
 	box-shadow: 0 0 10px var(--domain-color, rgba(255,255,255,0.7));
 }
 .card-back .back-name {
-	font-family: "Bebas Neue", sans-serif;
-	font-size: 21px;
-	letter-spacing: 1.2px;
-	line-height: 1;
+	/* Matches the front title (Space Grotesk caps). */
+	font-family: 'Space Grotesk', 'Roboto Flex', sans-serif;
+	font-weight: 700;
+	font-size: 17px;
+	letter-spacing: -0.2px;
+	line-height: 1.08;
+	text-transform: uppercase;
+	text-wrap: balance;
 	margin-bottom: 5px;
 	color: white;
 }
@@ -4196,11 +4200,12 @@ body:has(#projects.active) .filter-sidebar {
 
 .about-areas-grid .domain-group-name {
     margin: 0;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 30px;
-    font-weight: 400;
-    letter-spacing: 1.5px;
+    font-family: 'Space Grotesk', 'Roboto Flex', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
     line-height: 1;
+    text-transform: uppercase;
     color: var(--blot-white);
 }
 
