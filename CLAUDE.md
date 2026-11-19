@@ -69,8 +69,10 @@ Rendered by `renderProjectCards()` in `js/main.js` from `data/projects.json`; st
 Top to bottom — no date, no divider, no footer:
 - **Title** (`.back-name`, Space Grotesk caps), then the **domain line** as its subtitle (`● CODE / SOFTWARE`), then the **description**.
 - **Button** right after the description (`.view-cta`, outlined pill). Text comes from `ctaLabel` in `data/projects.json` ("Live demo", "Open sheet", …; defaults to "View project"); the icon is added automatically — the **box-with-arrow external-link icon** when it leaves the site (`external` or an `http(s)` href), **→** when it stays. Card fronts carry no external-link icon; it lives only on this button. Keep the `.view-cta` class: on touch, tapping it is what navigates.
-- **Tools**, pinned to the bottom: `techSectionLabel`, up to **6** chips, then a **`+N`** chip. Hovering `+N` (desktop) or tapping it (touch) slides up `.back-tags-sheet` listing every tool; leaving the card / tapping the sheet closes it (`initBackTagsReveal()` in `js/main.js`). On touch the hover rules are disabled (`html:not(.touch-device)`) because a tap leaves a sticky `:hover`.
+- **Tools**, pinned to the bottom: `techSectionLabel`, up to **6** chips (`TAGS_SHOWN` in `renderProjectCards()`), then a **`+N`** chip for the rest. Cards with 6 or fewer tools get no `+N` and no sheet.
+- **`+N` sheet** (`.back-tags-sheet`): a frosted panel that slides up over the **entire card back**, headed `TECH STACK · 10`, listing every tool. Opens on hover / keyboard focus of `+N` (desktop) or a tap on it (touch); closes when the pointer leaves the card or the sheet is tapped. Logic in `initBackTagsReveal()` (`js/main.js`): `+N` sits inside the card's `<a>`, so its click is caught in the capture phase to stop navigation and the touch-drawer collapse. On touch the hover rules are off (`html:not(.touch-device)`) because a tap leaves a sticky `:hover`, and the sheet gets `padding-top: 80px` to clear the part of the back tucked under the front.
 - **AI tools** sort first and keep the **same chip shape**; only the name carries the holo sweep (`.back-tag.is-ai .ai-holo-text`).
+- **Touch (≤ tablet, `html.touch-device`)**: no 3D flip — the first tap slides the back out below the front as a drawer, tapping the button navigates, tapping anywhere else collapses it. The Blot World card hides its button on touch (you're already on the site).
 
 ### Rotator Content (quotes & sayings)
 
@@ -202,7 +204,8 @@ Key CSS variables:
 
 **AI styling rules** (lilac means AI — keep every other purple off it; that's why Data is lime and the mobile-nav highlight is white/blue):
 - **The mark** — ✦ sparkle (`.ai-spark`) + label, with the holo sweep on both — is a **flag**, used only where the question is "was this project made with AI?": the card-front **AI badge** and the **"With AI"** filter. Don't add sparkles anywhere else.
-- **AI tools are tools.** On card backs they keep the normal chip shape with only the name in holo text; in the Technologies filter they stay alphabetical, with lilac text and a lilac-filled checkbox when checked (`.filter-option.is-ai`). The About "Gen AI" skill group is styled like every other group.
+- **AI tools are tools.** On card backs they keep the normal chip shape with only the name in holo text; in the Technologies filter they stay alphabetical, with lilac text and a lilac-filled checkbox when checked (`.filter-option.is-ai`). The About "Gen AI" skill group (`.skill-category.is-ai`) gets a lilac heading and dashes and the AI sweep as its hover border — still no sparkles.
+- **Brand vs AI hover borders:** the other About skill cards and the principle cards use the sliding brand gradient (blue → red, `brand-slide`) as their top border on hover; only Gen AI uses the AI sweep.
 - **One gradient, one motion:** `--ai-holo-sweep` in `css/root.css` (lilac-dominant, with a pink and an aqua stop passing through; starts and ends on lilac so it loops) animated by `ai-holo-slide` (2.5s linear). Every holo element uses it — change it there.
 
 ## File Naming

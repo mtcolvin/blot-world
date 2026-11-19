@@ -1686,24 +1686,23 @@ main {
 	outline: none;
 }
 
-/* "+N" reveal: a frosted sheet slides up over the description listing every
-   tool. Opens on hover / keyboard focus of the chip (and stays while the
+/* "+N" reveal: a frosted sheet slides up over the whole card back listing
+   every tool. Opens on hover / keyboard focus of the chip (and stays while the
    pointer is on it), or via .show-all, toggled by click / tap in JS. */
 .card-back .back-tags-sheet {
 	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	top: 28%;
+	top: 0;
 	z-index: 4;
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	padding: 14px;
-	background: rgba(12, 10, 28, 0.88);
-	-webkit-backdrop-filter: blur(10px);
-	backdrop-filter: blur(10px);
-	border-top: 1px solid rgba(255, 255, 255, 0.18);
+	padding: 16px 14px 14px;
+	background: rgba(12, 10, 28, 0.9);
+	-webkit-backdrop-filter: blur(12px);
+	backdrop-filter: blur(12px);
 	cursor: pointer;
 	opacity: 0;
 	visibility: hidden;
@@ -1721,6 +1720,9 @@ html:not(.touch-device) .card-back .back-tags-sheet:hover,
 	transform: none;
 	transition: opacity 0.2s ease, transform 0.25s ease, visibility 0s;
 }
+/* Touch drawer: the back's top is tucked under the front, so push the
+   sheet's content down past it (matches the back's own padding-top). */
+html.touch-device .card-back .back-tags-sheet { padding-top: 80px; }
 @media (prefers-reduced-motion: reduce) {
 	.card-back .back-tags-sheet { transition: none; transform: none; }
 }
