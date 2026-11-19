@@ -382,8 +382,8 @@ nav {
 .mobile-nav-links a:hover,
 .mobile-nav-links a.active {
 	cursor: pointer;
-	color: var(--accent-purple);
-	text-shadow: 0 0 8px var(--accent-purple-glow);
+	color: var(--blot-white);
+	text-shadow: 0 0 10px rgba(13, 40, 242, 0.85);
 }
 
 /* Menu item animations */
@@ -1448,13 +1448,15 @@ main {
 .card-front .ai-badge .ai-spark,
 .card-front .ai-badge .ai-holo-text,
 .filter-segmented .seg-btn[data-made-with="ai"].active .ai-spark,
-.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text {
-	background: linear-gradient(90deg, #FF9EC4, #C9A9FF, #7FE6E6, #C9A9FF, #FF9EC4);
+.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text,
+.card-back .back-tag.is-ai .ai-holo-text {
+	background: var(--ai-holo-sweep);
 	background-size: 200% 100%;
 	animation: ai-holo-slide 2.5s linear infinite;
 }
 .card-front .ai-badge .ai-holo-text,
-.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text {
+.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text,
+.card-back .back-tag.is-ai .ai-holo-text {
 	-webkit-background-clip: text;
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
@@ -1468,7 +1470,8 @@ main {
 	.card-front .ai-badge .ai-spark,
 	.card-front .ai-badge .ai-holo-text,
 	.filter-segmented .seg-btn[data-made-with="ai"].active .ai-spark,
-	.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text { animation: none; }
+	.filter-segmented .seg-btn[data-made-with="ai"].active .ai-holo-text,
+	.card-back .back-tag.is-ai .ai-holo-text { animation: none; }
 }
 
 .card-front .body {
@@ -1548,25 +1551,6 @@ main {
 	pointer-events: none;
 	opacity: 0.6;
 }
-.card-back .back-area {
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
-	font-family: "JetBrains Mono", monospace;
-	font-size: 9px;
-	letter-spacing: 1.5px;
-	text-transform: uppercase;
-	color: white;
-	margin-bottom: 10px;
-	font-weight: 700;
-}
-.card-back .back-area .dot {
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-	background: var(--domain-color, white);
-	box-shadow: 0 0 10px var(--domain-color, rgba(255,255,255,0.7));
-}
 .card-back .back-name {
 	/* Matches the front title (Space Grotesk caps). */
 	font-family: 'Space Grotesk', 'Roboto Flex', sans-serif;
@@ -1576,15 +1560,28 @@ main {
 	line-height: 1.08;
 	text-transform: uppercase;
 	text-wrap: balance;
-	margin-bottom: 5px;
+	margin-bottom: 7px;
 	color: white;
 }
-.card-back .back-divider {
-	width: 28px;
-	height: 2px;
-	background: white;
-	margin-bottom: 10px;
-	box-shadow: 0 0 8px rgba(255,255,255,0.6);
+/* Domain line sits under the title as its subtitle (no separator rule). */
+.card-back .back-area {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 9px;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.85);
+	margin-bottom: 11px;
+	font-weight: 700;
+}
+.card-back .back-area .dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--domain-color, white);
+	box-shadow: 0 0 10px var(--domain-color, rgba(255,255,255,0.7));
 }
 .card-back .back-desc {
 	font-size: 11px;
@@ -1592,114 +1589,140 @@ main {
 	color: rgba(255,255,255,0.92);
 	margin-bottom: 12px;
 }
-.card-back .back-section {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 9px;
-	letter-spacing: 2px;
-	text-transform: uppercase;
-	color: rgba(255,255,255,0.75);
-	margin-bottom: 8px;
-}
-.card-back .back-tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 5px 6px;
-}
 
-/* Scrollable region — everything above the footer scrolls together */
+/* Name, domain, description and the button scroll together if a long
+   description ever overflows; the tags stay pinned to the bottom. */
 .card-back .back-scroll {
 	flex: 1;
 	min-height: 0;
 	overflow-y: auto;
 	padding-right: 4px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 	scrollbar-width: thin;
 	scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
 }
-.card-back .back-scroll::-webkit-scrollbar {
-	width: 4px;
-}
-.card-back .back-scroll::-webkit-scrollbar-track {
-	background: transparent;
-}
+.card-back .back-scroll::-webkit-scrollbar { width: 4px; }
+.card-back .back-scroll::-webkit-scrollbar-track { background: transparent; }
 .card-back .back-scroll::-webkit-scrollbar-thumb {
 	background: rgba(255, 255, 255, 0.35);
 	border-radius: 2px;
 }
+
+/* The button: an outlined pill right after the description, naming where it
+   goes (ctaLabel in data/projects.json; ↗ leaves the site, → stays). */
+.card-face.card-back .view-cta {
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 6px 11px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	color: white;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 9.5px;
+	font-weight: 700;
+	letter-spacing: 1.4px;
+	text-transform: uppercase;
+	line-height: 1;
+	white-space: nowrap;
+	transition: background-color var(--transition-base), color var(--transition-base);
+}
+.project-card-link:hover .card-back .view-cta,
+.project-card-link:focus-visible .card-back .view-cta {
+	background: white;
+	color: #0a0a0a;
+}
+
+/* Tools: label + up to six chips + "+N", pinned to the bottom. */
+.card-back .back-tags-block {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	padding-top: 12px;
+}
+.card-back .back-section {
+	font-family: "JetBrains Mono", monospace;
+	font-size: 8.5px;
+	font-weight: 700;
+	letter-spacing: 1.8px;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.7);
+}
+.card-back .back-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 5px;
+}
 .card-back .back-tag {
 	font-family: "JetBrains Mono", monospace;
-	font-size: 10px;
-	letter-spacing: 0.5px;
-	padding: 3px 8px;
+	font-size: 9px;
+	letter-spacing: 0.3px;
+	padding: 2px 6px;
 	border-radius: 3px;
 	background: rgba(255,255,255,0.12);
 	border: 1px solid rgba(255,255,255,0.22);
 	color: rgba(255,255,255,0.96);
 	white-space: nowrap;
-	transition: background 0.2s ease, border-color 0.2s ease;
 }
-.card-back .back-tag:hover {
-	background: rgba(255,255,255,0.2);
-	border-color: rgba(255,255,255,0.35);
-}
+/* AI tools: same chip, darker so the holo name reads; the name carries the
+   sweep (see .ai-holo-text above). */
 .card-back .back-tag.is-ai {
-	background: var(--ai-accent-holo);
-	background-size: 200% 200%;
-	animation: ai-holo-shift 6s ease-in-out infinite;
-	border-color: var(--ai-accent);
-	color: var(--blot-black);
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12) inset;
-}
-.card-back .back-tag.is-ai:hover {
-	/* keep the holographic gradient, just brighten it */
-	filter: brightness(1.12) saturate(1.05);
-	border-color: var(--blot-white);
-}
-.card-back .back-footer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 10px;
-	padding-top: 14px;
-	margin-top: 14px;
-	border-top: 1px solid rgba(255,255,255,0.22);
-	font-family: "JetBrains Mono", monospace;
-	font-size: 10px;
-	color: rgba(255,255,255,0.78);
-	letter-spacing: 1px;
-}
-.card-back .back-footer > span:first-child {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	min-width: 0;
-}
-.card-back .back-footer .view-cta {
-	flex-shrink: 0;
-}
-.card-face.card-back .view-cta,
-.card-back .back-footer .view-cta {
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
-	color: #0a0a0a;
-	background: #ffffff;
-	padding: 6px 12px;
-	border-radius: 4px;
-	font-family: "JetBrains Mono", monospace;
-	font-size: 10px;
+	background: rgba(0, 0, 0, 0.28);
 	font-weight: 700;
-	letter-spacing: 1.5px;
-	text-transform: uppercase;
-	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-	text-decoration: none;
-	line-height: 1;
 }
-.card-face.card-back .view-cta svg,
-.card-back .back-footer .view-cta svg {
-	width: 12px;
-	height: 12px;
-	stroke: currentColor;
-	flex-shrink: 0;
+.card-back .back-tag-more {
+	font-weight: 700;
+	background: rgba(0, 0, 0, 0.22);
+	border: 1px dashed rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+}
+.card-back .back-tag-more:hover,
+.card-back .back-tag-more:focus-visible {
+	background: rgba(0, 0, 0, 0.4);
+	border-color: white;
+	outline: none;
+}
+
+/* "+N" reveal: a frosted sheet slides up over the description listing every
+   tool. Opens on hover / keyboard focus of the chip (and stays while the
+   pointer is on it), or via .show-all, toggled by click / tap in JS. */
+.card-back .back-tags-sheet {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 28%;
+	z-index: 4;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 14px;
+	background: rgba(12, 10, 28, 0.88);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	border-top: 1px solid rgba(255, 255, 255, 0.18);
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(12px);
+	transition: opacity 0.2s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+}
+/* Hover only where hover is real: on touch screens a tap leaves a sticky
+   :hover behind, so touch relies on the .show-all tap toggle alone. */
+html:not(.touch-device) .card-back .back-tags-block:has(.back-tag-more:hover) .back-tags-sheet,
+html:not(.touch-device) .card-back .back-tags-sheet:hover,
+.card-back .back-tags-block:has(.back-tag-more:focus-visible) .back-tags-sheet,
+.card-back .back-tags-block.show-all .back-tags-sheet {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition: opacity 0.2s ease, transform 0.25s ease, visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+	.card-back .back-tags-sheet { transition: none; transform: none; }
 }
 
 /* ==========================================================================
@@ -1753,7 +1776,7 @@ html.touch-device .project-card-link.flipped .flip-hint svg {
 }
 
 /* The portfolio card is the site you're already on (tapping it opens the
-   inception modal), so its back-footer "View" CTA is redundant on mobile. */
+   inception modal), so its back "You're here" button is redundant on mobile. */
 html.touch-device .project-card[data-name="BLOT.WORLD Portfolio"] .view-cta {
 	display: none;
 }
@@ -1774,39 +1797,6 @@ html.touch-device .project-card-link.flipped {
 
 /* Hide series tags — series info now lives in project titles */
 .series-tag { display: none !important; }
-
-/* AI Project Cards — "Miami" vaporwave wash that pairs with the .ai-badge corner
-   chip and the AI tags on the back: pink head → lavender mid → aqua tail. */
-.project-card.ai-project {
-	background:
-		linear-gradient(135deg,
-			var(--ai-accent-glow) 0%,
-			var(--ai-accent-soft) 35%,
-			rgba(127, 230, 230, 0.08) 65%,
-			rgba(127, 230, 230, 0.03) 100%) !important;
-	border-color: var(--ai-accent-soft) !important;
-}
-
-.project-card.ai-project:hover {
-	background:
-		linear-gradient(135deg,
-			var(--ai-accent-glow) 0%,
-			var(--ai-accent-soft) 35%,
-			rgba(127, 230, 230, 0.12) 65%,
-			rgba(127, 230, 230, 0.05) 100%) !important;
-	border-color: var(--ai-accent) !important;
-}
-
-/* Holographic shimmer for filled AI surfaces (the AI tag chip on card backs) */
-@keyframes ai-holo-shift {
-	0%, 100% { background-position: 0% 50%; }
-	50% { background-position: 100% 50%; }
-}
-@media (prefers-reduced-motion: reduce) {
-	.card-back .back-tag.is-ai {
-		animation: none;
-	}
-}
 
 /* Inception Protection Modal */
 .inception-modal {
@@ -2348,6 +2338,17 @@ body:has(#projects.active) .filter-sidebar {
 	border-left: 1.5px solid var(--blot-black);
 	border-bottom: 1.5px solid var(--blot-black);
 	transform: translate(-50%, -65%) rotate(-45deg);
+}
+
+/* AI tools in the Technologies list: always lilac, filled lilac when checked
+   (they stay in alphabetical order). */
+.filter-option.is-ai,
+.filter-option.is-ai:hover { color: var(--ai-accent); }
+.filter-option.is-ai .filter-checkbox { border-color: rgba(201, 169, 255, 0.55); }
+.filter-option.is-ai:hover .filter-checkbox { border-color: var(--ai-accent); }
+.filter-option.is-ai .filter-checkbox.checked {
+	background-color: var(--ai-accent);
+	border-color: var(--ai-accent);
 }
 
 .filter-count {
@@ -4145,7 +4146,12 @@ body:has(#projects.active) .filter-sidebar {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--gradient-purple), var(--gradient-blue));
+    /* The brand sweep (blue → red → blue), sliding while the card is hovered —
+       same gradient as the card borders. */
+    background: linear-gradient(90deg,
+        var(--primary-blue) 0%, var(--accent-red) 25%, var(--primary-blue) 50%,
+        var(--accent-red) 75%, var(--primary-blue) 100%);
+    background-size: 200% 100%;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -4157,6 +4163,7 @@ body:has(#projects.active) .filter-sidebar {
 
 .principle-card:hover::before {
     opacity: 1;
+    animation: brand-slide 3s linear infinite;
 }
 
 .principle-card h4 {
@@ -4269,7 +4276,12 @@ body:has(#projects.active) .filter-sidebar {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--gradient-purple), var(--gradient-blue));
+    /* The brand sweep (blue → red → blue), sliding while the card is hovered —
+       same gradient as the card borders. */
+    background: linear-gradient(90deg,
+        var(--primary-blue) 0%, var(--accent-red) 25%, var(--primary-blue) 50%,
+        var(--accent-red) 75%, var(--primary-blue) 100%);
+    background-size: 200% 100%;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -4281,6 +4293,7 @@ body:has(#projects.active) .filter-sidebar {
 
 .about-skills .skill-category:hover::before {
     opacity: 1;
+    animation: brand-slide 3s linear infinite;
 }
 
 .about-skills .skill-category h4 {
@@ -4311,6 +4324,30 @@ body:has(#projects.active) .filter-sidebar {
     position: absolute;
     left: 0;
     color: var(--primary-blue);
+}
+
+/* Gen AI group: lilac (the AI color) on the heading and dashes, and the AI
+   holo sweep instead of the brand sweep on its hover border. No sparkles —
+   those are reserved for the AI flag. */
+.about-skills .skill-category.is-ai h4,
+.about-skills .skill-category.is-ai li::before {
+    color: var(--ai-accent);
+}
+.about-skills .skill-category.is-ai::before {
+    background: var(--ai-holo-sweep);
+    background-size: 200% 100%;
+}
+.about-skills .skill-category.is-ai:hover::before {
+    animation-name: ai-holo-slide;
+}
+
+@keyframes brand-slide {
+    from { background-position: 0% 50%; }
+    to   { background-position: 200% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .about-skills .skill-category:hover::before,
+    .principle-card:hover::before { animation: none; }
 }
 
 /* Call to Action */

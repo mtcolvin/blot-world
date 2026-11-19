@@ -10,6 +10,7 @@
   "projects": [
     {
       "slug": "blot-world",
+      "ctaLabel": "You’re here",
       "card": true,
       "page": false,
       "name": "Blot World Portfolio",
@@ -30,6 +31,7 @@
     },
     {
       "slug": "amberlin",
+      "ctaLabel": "Live demo",
       "card": true,
       "page": false,
       "name": "Amberlin Health App",
@@ -48,6 +50,7 @@
     },
     {
       "slug": "cafemex",
+      "ctaLabel": "View project",
       "card": true,
       "page": true,
       "name": "Café Mexicali Rebrand",
@@ -74,6 +77,7 @@
     },
     {
       "slug": "la-facade",
+      "ctaLabel": "View series",
       "card": true,
       "page": true,
       "name": "La Façade",
@@ -104,10 +108,11 @@
     },
     {
       "slug": "retail-scheduling",
+      "ctaLabel": "Open sheet",
       "card": true,
       "page": false,
       "redirect": true,
-      "name": "Retail Scheduling Analysis",
+      "name": "Scheduling Analysis",
       "dataName": "Retail Scheduling Analysis",
       "domain": "Data",
       "discipline": "Analysis",
@@ -124,6 +129,7 @@
     },
     {
       "slug": "photography",
+      "ctaLabel": "View gallery",
       "card": true,
       "page": true,
       "name": "Photography",
@@ -150,6 +156,7 @@
     },
     {
       "slug": "poetry",
+      "ctaLabel": "Read the poems",
       "card": true,
       "page": true,
       "hidden": true,

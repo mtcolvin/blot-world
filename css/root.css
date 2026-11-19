@@ -34,20 +34,18 @@
 	--accent: #ffffff;
 	--primary-blue: #0D28F2;
 	--accent-red: #E60F0F;
-	--accent-purple: #BB86FC;
-	--accent-purple-glow: rgba(187, 134, 252, 0.3);
-	--gradient-purple: #6366f1;
 	--gradient-blue: #0D28F2;
-	/* Dedicated AI co-built accent — used by the corner badge on cards,
-	   the AI-tag chips on the back, and the "Made with → With AI" filter.
-	   "Miami" vaporwave sweep: hot pink → lavender → aqua; pairs with dark text.
-	   --ai-accent is a solid mid-hue (lavender) for borders & checkbox fills;
-	   --ai-accent-holo is the gradient for filled surfaces. --glow is the pink
-	   head (badge shadow + card-wash start), --soft the lavender mid. */
+	/* AI — lilac means AI and nothing else on the site, so keep other purples
+	   off it. --ai-accent is the solid lilac (text, checkbox fills, quiet
+	   states). --ai-holo-sweep is the one moving gradient: lilac-dominant,
+	   with a pink and an aqua stop passing through. It loops seamlessly at
+	   background-size 200% (starts and ends on lilac); the ai-holo-slide
+	   animation in main.css moves it. Used only on the AI sparkle and on AI
+	   text (badge, "With AI" filter, AI tool names on card backs). */
 	--ai-accent: #C9A9FF;
-	--ai-accent-holo: linear-gradient(120deg, #FF9EC4 0%, #C9A9FF 45%, #7FE6E6 100%);
-	--ai-accent-glow: rgba(255, 158, 196, 0.35);
-	--ai-accent-soft: rgba(201, 169, 255, 0.18);
+	--ai-holo-sweep: linear-gradient(90deg,
+		#C9A9FF 0%, #C9A9FF 14%, #FF9EC4 25%, #C9A9FF 36%,
+		#C9A9FF 64%, #7FD8F0 75%, #C9A9FF 86%, #C9A9FF 100%);
 
 	/* Domain colors — one per top-level domain in data/projects.json.
 	   Keyed by the lowercased domain name (`--domain-<name>`); JS reads them
@@ -55,7 +53,7 @@
 	   About brackets. Adding a domain = add a variable here. */
 	--domain-art: #FF4040;
 	--domain-code: #2BD9A8;
-	--domain-data: #C77DFF;
+	--domain-data: #A3E635;  /* lime — kept off purple, which means AI */
 	--domain-design: #5B70FF;
 	--domain-writing: #F2B33D;
 	--domain-fallback: #888888;

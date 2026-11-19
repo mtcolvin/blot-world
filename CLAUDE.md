@@ -51,7 +51,7 @@ Everything is derived from those two fields — nothing else to edit:
 - **About → Areas of Work** (`populateAreaBadges()`): one column per domain over a sideways brace in its color, disciplines listed beneath; rows that aren't full are centered.
 - **Analytics**: the card-click `dataLayer` event sends `project_area` (= domain) and `project_discipline`.
 
-**Domain colors** live in `css/root.css` as `--domain-<lowercased name>` (`--domain-art`, `--domain-code`, …), read via `domainColorVar()` in `js/main.js`. **Adding a new domain = add its `--domain-<name>` variable**; a domain without one falls back to grey (`--domain-fallback`). `root.css` changes need `npm run minify:css && npm run cache:bust`.
+**Domain colors** live in `css/root.css` as `--domain-<lowercased name>` (`--domain-art`, `--domain-code`, …; Data is lime `#A3E635` — never purple, which means AI), read via `domainColorVar()` in `js/main.js`. **Adding a new domain = add its `--domain-<name>` variable**; a domain without one falls back to grey (`--domain-fallback`). `root.css` changes need `npm run minify:css && npm run cache:bust`.
 
 ### Project Cards (front face)
 
@@ -63,6 +63,14 @@ Rendered by `renderProjectCards()` in `js/main.js` from `data/projects.json`; st
 - **Title font:** Space Grotesk 700, uppercase, 18px — the site's heading voice (matches "PROJECTS"). The card back name and the About domain names use it too. Bebas Neue is no longer loaded on the homepage; only the photography page still uses it (via its own font link). `text-wrap: balance` keeps two-line titles even ("Amberlin / Health App", not "Amberlin Health / App").
 - **Cover images** (`projects/<slug>/preview.jpg`, 900×1320): flat background with one centered graphic. Keep the hero inside roughly y 140–860 — the domain tag covers the top-left and the title fade starts around y 880. After replacing one: delete that project's old `preview.{avif,webp}` and `preview-{480,960}.*` (variant scripts skip files that exist), run `npm run optimize:images && npm run build:srcset && npm run check:pictures`, then `npm run cache:bust`. **`optimize:images` also re-compresses other previews (e.g. Amberlin's) — `git checkout` any it touched that you didn't mean to change.**
 - **Renaming:** edit `name`; leave `dataName` alone — it's the value analytics reports (`project_name`), so changing it breaks click history.
+
+### Project Cards (back face)
+
+Top to bottom — no date, no divider, no footer:
+- **Title** (`.back-name`, Space Grotesk caps), then the **domain line** as its subtitle (`● CODE / SOFTWARE`), then the **description**.
+- **Button** right after the description (`.view-cta`, outlined pill). Text comes from `ctaLabel` in `data/projects.json` ("Live demo", "Open sheet", …; defaults to "View project"); the icon is added automatically — the **box-with-arrow external-link icon** when it leaves the site (`external` or an `http(s)` href), **→** when it stays. Card fronts carry no external-link icon; it lives only on this button. Keep the `.view-cta` class: on touch, tapping it is what navigates.
+- **Tools**, pinned to the bottom: `techSectionLabel`, up to **6** chips, then a **`+N`** chip. Hovering `+N` (desktop) or tapping it (touch) slides up `.back-tags-sheet` listing every tool; leaving the card / tapping the sheet closes it (`initBackTagsReveal()` in `js/main.js`). On touch the hover rules are disabled (`html:not(.touch-device)`) because a tap leaves a sticky `:hover`.
+- **AI tools** sort first and keep the **same chip shape**; only the name carries the holo sweep (`.back-tag.is-ai .ai-holo-text`).
 
 ### Rotator Content (quotes & sayings)
 
@@ -187,11 +195,15 @@ Key CSS variables:
 --blot-black: #0a0a0a;
 --primary-blue: #0D28F2;
 --accent-red: #E60F0F;
---ai-accent: #C9A9FF;      /* AI co-built lilac */
+--ai-accent: #C9A9FF;      /* lilac — means AI, nothing else */
+--ai-holo-sweep: …;        /* the one AI gradient, lilac-dominant */
 --domain-art: #FF4040;     /* one --domain-* per domain, see Domains & Disciplines */
 ```
 
-**AI mark:** the card's AI badge and the "With AI" filter share `.ai-spark` (masked sparkle) and `.ai-holo-text` in `css/main.css`. The sliding pink → lilac → aqua sweep is defined once there, so changing it updates both.
+**AI styling rules** (lilac means AI — keep every other purple off it; that's why Data is lime and the mobile-nav highlight is white/blue):
+- **The mark** — ✦ sparkle (`.ai-spark`) + label, with the holo sweep on both — is a **flag**, used only where the question is "was this project made with AI?": the card-front **AI badge** and the **"With AI"** filter. Don't add sparkles anywhere else.
+- **AI tools are tools.** On card backs they keep the normal chip shape with only the name in holo text; in the Technologies filter they stay alphabetical, with lilac text and a lilac-filled checkbox when checked (`.filter-option.is-ai`). The About "Gen AI" skill group is styled like every other group.
+- **One gradient, one motion:** `--ai-holo-sweep` in `css/root.css` (lilac-dominant, with a pink and an aqua stop passing through; starts and ends on lilac so it loops) animated by `ai-holo-slide` (2.5s linear). Every holo element uses it — change it there.
 
 ## File Naming
 

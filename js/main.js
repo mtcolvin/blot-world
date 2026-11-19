@@ -147,6 +147,35 @@ const AppState = {
 // and substring-based against dataTech, so "Claude Code" matches "claude".
 const AI_TECH_TAGS = ['claude', 'chatgpt', 'grok', 'gemini', 'copilot'];
 
+// Card back "+N" chip: hovering it (CSS) or clicking / tapping / pressing
+// Enter on it (here) slides up a sheet listing every tool. The chip sits
+// inside the card's <a>, so the click is caught in the capture phase and kept
+// from navigating or collapsing the touch drawer. Clicking the open sheet
+// closes it; leaving the card resets it.
+function initBackTagsReveal() {
+	const toggle = (block, force) => block && block.classList.toggle('show-all', force);
+	document.addEventListener('click', (e) => {
+		const more = e.target.closest('.back-tag-more');
+		const sheet = e.target.closest('.back-tags-sheet');
+		if (!more && !sheet) return;
+		e.preventDefault();
+		e.stopPropagation();
+		toggle(e.target.closest('.back-tags-block'), more ? undefined : false);
+	}, true);
+	document.addEventListener('keydown', (e) => {
+		const more = e.target.closest && e.target.closest('.back-tag-more');
+		if (!more || (e.key !== 'Enter' && e.key !== ' ')) return;
+		e.preventDefault();
+		e.stopPropagation();
+		toggle(more.closest('.back-tags-block'));
+	}, true);
+	document.addEventListener('mouseout', (e) => {
+		const link = e.target.closest('.project-card-link');
+		if (!link || link.contains(e.relatedTarget)) return;
+		link.querySelectorAll('.back-tags-block.show-all').forEach(b => toggle(b, false));
+	});
+}
+
 // Domain colors live in css/root.css as --domain-<lowercased name>.
 function domainColorVar(domain) {
 	const key = String(domain || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -851,7 +880,10 @@ const FilterSystem = {
 	
 	createFilterOption(filterType, value, label, count) {
 		const optionDiv = document.createElement('div');
-		optionDiv.className = 'filter-option';
+		// AI tools stay in alphabetical order; .is-ai only recolors them lilac.
+		optionDiv.className = filterType === 'tech' && isAITech(value)
+			? 'filter-option is-ai'
+			: 'filter-option';
 		optionDiv.dataset.filter = filterType;
 		optionDiv.dataset.value = value;
 		
@@ -1225,8 +1257,8 @@ function renderProjectCards(isTouchDevice) {
     const flipArrow = isTouchDevice
         ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
         : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
-    const viewArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
-    const externalIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" style="margin-left:4px;vertical-align:baseline;flex-shrink:0;"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/><path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/></svg>';
+    // Box-with-arrow "opens elsewhere" icon, used on the back's button.
+    const externalIcon = '<svg class="cta-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/><path d="M5 5h5V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5h-2v5H5V5z"/></svg>';
 
     const html = projects.map(p => {
         const linkAttrs = [
@@ -1238,17 +1270,33 @@ function renderProjectCards(isTouchDevice) {
             p.modal ? 'onclick="event.preventDefault(); showInceptionModal();"' : ''
         ].filter(Boolean).join(' ');
 
-        // AI-co-built treatment: sort AI-related tags to the front, tag them
-        // with .is-ai for the violet styling, and surface a "CO-BUILT" badge on
-        // the front when any AI tool is in the stack.
+        // Back-face tool tags. AI tools sort first and keep the same chip
+        // shape as the rest; only their name carries the holo sweep. Six show;
+        // the rest sit behind a "+N" chip that reveals a sheet with all of them.
+        const TAGS_SHOWN = 6;
         const orderedTags = [...(p.techDisplay || [])].sort((a, b) => {
             const aAI = isAITech(a) ? 0 : 1;
             const bAI = isAITech(b) ? 0 : 1;
             return aAI - bAI;
         });
-        const tags = orderedTags
-            .map(t => `<span class="back-tag${isAITech(t) ? ' is-ai' : ''}">${t}</span>`)
-            .join('');
+        const tagChip = t => isAITech(t)
+            ? `<span class="back-tag is-ai"><span class="ai-holo-text">${t}</span></span>`
+            : `<span class="back-tag">${t}</span>`;
+        const hiddenCount = Math.max(0, orderedTags.length - TAGS_SHOWN);
+        const tags = orderedTags.slice(0, TAGS_SHOWN).map(tagChip).join('')
+            + (hiddenCount
+                ? `<span class="back-tag back-tag-more" role="button" tabindex="0" aria-label="Show all ${orderedTags.length} tools">+${hiddenCount}</span>`
+                : '');
+        const tagsSheet = hiddenCount
+            ? `<div class="back-tags-sheet" aria-hidden="true">`
+                + `<div class="back-section">${p.techSectionLabel} · ${orderedTags.length}</div>`
+                + `<div class="back-tags">${orderedTags.map(tagChip).join('')}</div>`
+                + '</div>'
+            : '';
+        // Where the back's button goes: the box-arrow icon when it leaves the
+        // site, → when it stays.
+        const leavesSite = p.external || /^https?:\/\//.test(p.href || '');
+        const ctaText = `${p.ctaLabel || 'View project'} ${leavesSite ? externalIcon : '<span aria-hidden="true">→</span>'}`;
         const isAI = isAITech(p.dataTech);
         // AI pill: same form factor as the domain tag; the holo gradient
         // lives on the sparkle and the "AI" label, not on an edge.
@@ -1265,7 +1313,6 @@ function renderProjectCards(isTouchDevice) {
             : '';
         const backDomain = [p.domain, p.discipline].filter(Boolean).join(' / ');
         const cardClass = isAI ? 'project-card ai-project' : 'project-card';
-        const extIcon = p.externalIcon ? externalIcon : '';
 
         return `
             <a ${linkAttrs}>
@@ -1286,22 +1333,22 @@ function renderProjectCards(isTouchDevice) {
                         <div class="body">
                             <div class="card-date">${p.dateDisplay}</div>
                             <div class="card-title-row">
-                                <div class="card-name">${p.name}${extIcon}</div>
+                                <div class="card-name">${p.name}</div>
                                 <span class="flip-hint" title="${hintLabel}">${flipArrow}<span class="sr-only">${hintLabel}</span></span>
                             </div>
                         </div>
                     </div>
                     <div class="card-face card-back">
                         <div class="back-scroll">
-                            <div class="back-area" style="--domain-color: ${domainVar}"><span class="dot"></span>${backDomain}</div>
                             <div class="back-name">${p.name}</div>
-                            <div class="back-divider"></div>
+                            <div class="back-area" style="--domain-color: ${domainVar}"><span class="dot"></span>${backDomain}</div>
                             <div class="back-desc">${p.description}</div>
-                            <div class="back-tags">${tags}</div>
+                            <span class="view-cta">${ctaText}</span>
                         </div>
-                        <div class="back-footer">
-                            <span>${p.dateDisplay}</span>
-                            <span class="view-cta">View ${viewArrow}</span>
+                        <div class="back-tags-block">
+                            <div class="back-section">${p.techSectionLabel}</div>
+                            <div class="back-tags">${tags}</div>
+                            ${tagsSheet}
                         </div>
                     </div>
                 </div>
@@ -1493,6 +1540,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     renderProjectCards(isTouchDevice);
+    initBackTagsReveal();
 
     PageLoader.init();
     Navigation.init();

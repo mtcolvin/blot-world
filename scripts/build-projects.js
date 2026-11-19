@@ -87,6 +87,7 @@ function generateCards(projects, site) {
                 imageAlt: p.imageAlt || p.name,
                 description: p.description,
                 techSectionLabel: p.techSectionLabel || 'Tools',
+                ctaLabel: p.ctaLabel || 'View project',
                 href: p.href || `projects/${p.slug}/`
             };
             if (p.external) card.external = true;

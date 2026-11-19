@@ -35,6 +35,7 @@
             "imageAlt": "Portfolio Website",
             "description": "The site you’re looking at. Vanilla HTML, CSS, and JavaScript — no frameworks, custom build pipeline, deployed on GitHub Pages.",
             "techSectionLabel": "Tech Stack",
+            "ctaLabel": "You’re here",
             "href": "#",
             "modal": true
         },
@@ -64,6 +65,7 @@
             "imageAlt": "Amberlin wordmark above a small lab trend chart with one flagged point",
             "description": "A local-first personal health record: lab trends, flags, and a medical-imaging viewer, with nothing leaving your machine. Live demo with invented data.",
             "techSectionLabel": "Tech Stack",
+            "ctaLabel": "Live demo",
             "href": "https://amberlin.blot.world/"
         },
         {
@@ -83,6 +85,7 @@
             "imageAlt": "Cafe Mex Logo",
             "description": "Modernist refresh of a Mexican-Californian fusion restaurant. Identity system anchored on a single confident stroke.",
             "techSectionLabel": "Tools",
+            "ctaLabel": "View project",
             "href": "projects/cafemex/"
         },
         {
@@ -102,11 +105,12 @@
             "imageAlt": "La Façade",
             "description": "An evolving series of digital portraits exploring expression, identity, and the economy of line.",
             "techSectionLabel": "Tools",
+            "ctaLabel": "View series",
             "href": "projects/la-facade/"
         },
         {
             "id": "retail-scheduling",
-            "name": "Retail Scheduling Analysis",
+            "name": "Scheduling Analysis",
             "dataName": "Retail Scheduling Analysis",
             "domain": "Data",
             "discipline": "Analysis",
@@ -121,6 +125,7 @@
             "imageAlt": "Walmart Online Pickup & Delivery Scheduling Analysis",
             "description": "Operational analysis of Walmart’s online pickup & delivery scheduling — surfacing inefficiencies and forecasting demand.",
             "techSectionLabel": "Tools",
+            "ctaLabel": "Open sheet",
             "href": "projects/retail-scheduling/",
             "external": true,
             "externalIcon": true
@@ -142,6 +147,7 @@
             "imageAlt": "Photography Gallery",
             "description": "A magazine-style chronological archive — months as viewport sections with photo-derived color halos and snap navigation.",
             "techSectionLabel": "Equipment & Stack",
+            "ctaLabel": "View gallery",
             "href": "projects/photography/"
         },
         {
@@ -161,6 +167,7 @@
             "imageAlt": "Poetry",
             "description": "An evolving poem of observation, life, and the small moments that endure.",
             "techSectionLabel": "Form",
+            "ctaLabel": "Read the poems",
             "href": "projects/poetry/",
             "external": true,
             "hidden": true

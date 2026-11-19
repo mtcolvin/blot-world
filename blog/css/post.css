@@ -235,7 +235,7 @@ body {
     border-radius: 3px;
     font-family: 'Courier New', monospace;
     font-size: 13px;
-    color: var(--gradient-purple);
+    color: #7FD4FF;
 }
 
 .post-content pre {
