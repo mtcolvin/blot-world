@@ -1284,10 +1284,10 @@ function renderProjectCards(isTouchDevice) {
                         </div>
                         ${aiBadge}
                         <div class="body">
-                            <div class="card-name">${p.name}${extIcon}</div>
-                            <div class="meta">
-                                <span>${p.dateDisplay}</span>
-                                <span class="flip-hint">${hintLabel} ${flipArrow}</span>
+                            <div class="card-date">${p.dateDisplay}</div>
+                            <div class="card-title-row">
+                                <div class="card-name">${p.name}${extIcon}</div>
+                                <span class="flip-hint" title="${hintLabel}">${flipArrow}<span class="sr-only">${hintLabel}</span></span>
                             </div>
                         </div>
                     </div>

@@ -1476,52 +1476,52 @@ main {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	padding: clamp(36px, 18%, 70px) 14px 12px;
-	background: linear-gradient(180deg, transparent, rgba(0,0,0,0.96) 65%);
+	padding: clamp(40px, 20%, 78px) 16px 14px;
+	background: linear-gradient(180deg, transparent, rgba(0,0,0,0.96) 60%);
 	z-index: 3;
 }
-.card-front .card-name {
-	font-family: "Bebas Neue", sans-serif;
-	font-size: 20px;
-	letter-spacing: 1.5px;
-	color: white;
-	line-height: 1.05;
-	margin-bottom: 4px;
-}
-.card-front .meta {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 10px;
+.card-front .card-date {
 	font-family: "JetBrains Mono", monospace;
 	font-size: 10px;
-	color: rgba(255,255,255,0.65);
-	letter-spacing: 1px;
+	letter-spacing: 1.2px;
 	text-transform: uppercase;
-	padding-top: 8px;
-	border-top: 1px solid rgba(255,255,255,0.12);
-}
-.card-front .meta > span:first-child {
+	color: rgba(255, 255, 255, 0.62);
+	margin-bottom: 6px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	min-width: 0;
 }
-.card-front .meta .flip-hint {
-	flex-shrink: 0;
-	white-space: nowrap;
+.card-front .card-title-row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 10px;
+}
+.card-front .card-name {
+	/* Space Grotesk caps — the site's heading voice (matches "PROJECTS"). */
+	font-family: 'Space Grotesk', 'Roboto Flex', sans-serif;
+	font-weight: 700;
+	font-size: 18px;
+	letter-spacing: -0.2px;
+	line-height: 1.08;
+	text-transform: uppercase;
+	color: white;
+	min-width: 0;
+	/* Even out two-line titles ("Amberlin / Health App", not
+	   "Amberlin Health / App"). */
+	text-wrap: balance;
 }
 .card-front .flip-hint {
-	color: white;
+	flex-shrink: 0;
+	align-self: flex-end;
 	display: flex;
-	align-items: center;
-	gap: 4px;
-	font-weight: 700;
-	opacity: 0.85;
+	color: white;
+	opacity: 0.7;
+	margin-bottom: 3px;
 }
 .card-front .flip-hint svg {
-	width: 12px;
-	height: 12px;
+	width: 13px;
+	height: 13px;
 	transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 

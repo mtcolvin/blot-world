@@ -10,7 +10,7 @@
     window.PROJECTS_DATA = [
         {
             "id": "blot-world",
-            "name": "Blot.World Portfolio",
+            "name": "Blot World Portfolio",
             "dataName": "BLOT.WORLD Portfolio",
             "domain": "Code",
             "discipline": "Web",
@@ -40,7 +40,7 @@
         },
         {
             "id": "amberlin",
-            "name": "Amberlin",
+            "name": "Amberlin Health App",
             "dataName": "Amberlin Health Record",
             "domain": "Code",
             "discipline": "Software",
